@@ -8,7 +8,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Table } from '@tanstack/react-table';
 
-function DataGridColumnVisibility<TData>({ table, trigger }: { table: Table<TData>; trigger: ReactNode }) {
+function DataGridColumnVisibility<TData>({
+  table,
+  trigger,
+}: {
+  table: Table<TData>;
+  trigger: ReactNode;
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>

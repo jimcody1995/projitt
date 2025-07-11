@@ -4,13 +4,14 @@ import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle, Check, Eye, EyeOff } from 'lucide-react';
-import { signIn } from 'next-auth/react';
+import { Check } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import phoneNumber from '@/constants/phoneNumber.json';
+import PinField from 'react-pin-field';
+
 import {
   Select,
   SelectContent,
@@ -28,8 +29,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { LoaderCircleIcon } from 'lucide-react';
-import { Icons } from '@/components/common/icons';
 import { getSignupSchema, SignupSchemaType } from '../forms/signup-schema';
+import { getVerifyCodeSchema, VerifyCodeSchemaType } from '../forms/verify-code-schema';
 
 export default function Page() {
   const router = useRouter();
@@ -41,25 +42,39 @@ export default function Page() {
   const [showRecaptcha, setShowRecaptcha] = useState(false);
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
+  const [checkEmail, setCheckEmail] = useState(false);
 
   const form = useForm<SignupSchemaType>({
     resolver: zodResolver(getSignupSchema()),
     defaultValues: {
       email: '',
       companyName: '',
-      companySize: '',
-      password: '',
-      passwordConfirmation: '',
+      firstName: '',
+      lastName: '',
+      country: 'us',
+      phoneNumber: '',
+      industry: '',
+      companySize: 'small',
+      interests: [],
       accept: false,
     },
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const result = await form.trigger();
-    if (!result) return;
+  const verifyForm = useForm<VerifyCodeSchemaType>({
+    resolver: zodResolver(getVerifyCodeSchema()),
+    defaultValues: {
+      code: '',
+    },
+  });
 
+  const onSubmit = async (e: SignupSchemaType) => {
+    setCheckEmail(true);
     setShowRecaptcha(true);
+  };
+
+  const handleCheckEmail = async (e: VerifyCodeSchemaType) => {
+    // if (!result) return;
+    router.push('/company-profile');
   };
 
   const handleVerifiedSubmit = async (token: string) => {
@@ -123,278 +138,381 @@ export default function Page() {
             <img src="/images/signup/dashboard.png" alt="logo" className="rounded-[12px] " />
           </div>
         </div>
-        <div className="lg:w-[50%] w-full lg:min-w-[737px] md:px-[136px] px-[30px] pt-[130px] pb-[80px] bg-white">
-          <Suspense>
-            <Form {...form}>
-              <form onSubmit={handleSubmit} className="block w-full space-y-5">
-                <div className="space-y-1.5 pb-3">
-                  <h1 className="text-2xl font-semibold tracking-tight">Create Account</h1>
-                </div>
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[14px]/[22px] text-[#353535]">Work Email Address</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter work email addresss"
-                          {...field}
-                          className="h-[48px]"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex flex-col sm:flex-row gap-[16px] w-full">
-                  <div className="w-full">
-                    <FormField
-                      control={form.control}
-                      name="companyName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[14px]/[22px] text-[#353535]">Company Name</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Enter company name"
-                              type="text"
-                              className="h-[48px]"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+        {!checkEmail ? (
+          <div className="lg:w-[50%] w-full lg:min-w-[737px] md:px-[136px] px-[30px] pt-[130px] pb-[80px] bg-white">
+            <Suspense>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="block w-full space-y-5">
+                  <div className="space-y-1.5 pb-3">
+                    <h1 className="text-2xl font-semibold tracking-tight">Create Account</h1>
                   </div>
-                  <div className="w-full">
-                    <FormField
-                      control={form.control}
-                      name="companySize"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[14px]/[22px] text-[#353535]">What is your company size?</FormLabel>
-                          <FormControl>
-                            <Select defaultValue="small" indicatorVisibility={false}>
-                              <SelectTrigger className="h-[48px]">
-                                <SelectValue placeholder="Select a size" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="small">1-10</SelectItem>
-                                <SelectItem value="medium">11-100</SelectItem>
-                                <SelectItem value="large">101-1000</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-[16px] w-full">
-                  <div className="w-full">
-                    <FormField
-                      control={form.control}
-                      name="firstName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[14px]/[22px] text-[#353535]">First Name</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Enter your first name"
-                              type="text"
-                              className="h-[48px]"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="w-full">
-                    <FormField
-                      control={form.control}
-                      name="lastName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-[14px]/[22px] text-[#353535]">Last Name</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Enter your last name"
-                              type="text"
-                              className="h-[48px]"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-                
-                <FormField
-                  control={form.control}
-                  name="country"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[14px]/[22px] text-[#353535]">Country</FormLabel>
-                      <FormControl>
-                        <Select indicatorVisibility={false}>
-                          <SelectTrigger className="h-[48px]">
-                            <SelectValue placeholder="Select country" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="us">United States</SelectItem>
-                            <SelectItem value="uk">United Kingdom</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <p className="text-[14px]/[22px] text-[#353535] mb-[10px]">Phone Number</p>
-                <div className="flex flex-col sm:flex-row gap-[16px] w-full">
-                  
-                  <div className="w-[300px]">
-                    <Select
-                      defaultValue="US"
-                      indicatorVisibility={false}
-                      onValueChange={(value) => {
-                        setCode(phoneNumber.find((item) => item.key === value)?.code || '');
-                      }}
-                    >
-                      <SelectTrigger className="h-[48px]">
-                        <SelectValue placeholder="Select a country" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {phoneNumber.map((item) => (
-                          <SelectItem key={item.key} value={item.key}>
-                            {item.value}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex-1">
-                    <FormField
-                      control={form.control}
-                      name="phoneNumber"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              placeholder={`+${code}(555)000-0000`}
-                              type="text"
-                              className="h-[48px]"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="industry"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Select Industry</FormLabel>
-                      <FormControl>
-                        <Select defaultValue="manufacturing" indicatorVisibility={false}>
-                          <SelectTrigger className="h-[48px]">
-                            <SelectValue placeholder="Select industry" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="manufacturing">Manufacturing</SelectItem>
-                            <SelectItem value="retail">Retail</SelectItem>
-                            <SelectItem value="healthcare">Healthcare</SelectItem>
-                            <SelectItem value="technology">Technology</SelectItem>
-                            <SelectItem value="finance">Finance</SelectItem>
-                            <SelectItem value="education">Education</SelectItem>
-                            <SelectItem value="governemnt">Government</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="interests"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[14px]/[22px] text-[#353535]">What Product(s) are you interested in?</FormLabel>
-                      <div className="flex flex-col gap-[18px]">
-                        {[
-                          { label: 'HR Management', value: 'hr_management' },
-                          { label: 'Vendor & Contract Management', value: 'vendor_contract_management' },
-                          { label: 'Asset & Facility Management', value: 'asset_facility_management' },
-                          { label: 'Finance & Operation', value: 'finance_operation' },
-                        ].map((option) => (
-                          <label key={option.value} className="flex items-center gap-2">
-                            <Checkbox
-                              checked={Array.isArray(field.value) ? field.value.includes(option.value) : false}
-                              onCheckedChange={(checked) => {
-                                let newValue = Array.isArray(field.value) ? [...field.value] : [];
-                                if (checked) {
-                                  if (!newValue.includes(option.value)) {
-                                    newValue.push(option.value);
-                                  }
-                                } else {
-                                  newValue = newValue.filter((v) => v !== option.value);
-                                }
-                                field.onChange(newValue);
-                              }}
-                            />
-                            <span className="text-sm">{option.label}</span>
-                          </label>
-                        ))}
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex items-center space-x-2 pt-[40px]">
                   <FormField
                     control={form.control}
-                    name="accept"
+                    name="email"
                     render={({ field }) => (
                       <FormItem>
+                        <FormLabel className="text-[14px]/[22px] text-[#353535]">
+                          Work Email Address
+                        </FormLabel>
                         <FormControl>
-                          <div className="flex  gap-2.5">
-                            <Checkbox
-                              id="accept"
-                              checked={field.value}
-                              onCheckedChange={(checked) => field.onChange(!!checked)}
-                            />
-                            <label htmlFor="accept" className="text-[14px]/[20px] text-[#626262]">
-                              By creating an account, you have read and agree to the Terms of
-                              Service and our Privacy Policy
-                            </label>
-                          </div>
+                          <Input
+                            placeholder="Enter work email addresss"
+                            {...field}
+                            className="h-[48px]"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                </div>
+                  <div className="flex flex-col sm:flex-row gap-[16px] w-full">
+                    <div className="w-full">
+                      <FormField
+                        control={form.control}
+                        name="companyName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-[14px]/[22px] text-[#353535]">
+                              Company Name
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter company name"
+                                type="text"
+                                className="h-[48px]"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="w-full">
+                      <FormField
+                        control={form.control}
+                        name="companySize"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-[14px]/[22px] text-[#353535]">
+                              What is your company size?
+                            </FormLabel>
+                            <FormControl>
+                              <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                                indicatorVisibility={false}
+                              >
+                                <SelectTrigger className="h-[48px]">
+                                  <SelectValue placeholder="Select a size" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="small">1-10</SelectItem>
+                                  <SelectItem value="medium">11-100</SelectItem>
+                                  <SelectItem value="large">101-1000</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-[16px] w-full">
+                    <div className="w-full">
+                      <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-[14px]/[22px] text-[#353535]">
+                              First Name
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter your first name"
+                                type="text"
+                                className="h-[48px]"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="w-full">
+                      <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-[14px]/[22px] text-[#353535]">
+                              Last Name
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter your last name"
+                                type="text"
+                                className="h-[48px]"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
 
-                <div className="flex flex-col gap-2.5">
-                  <Button type="submit" disabled={isProcessing} className="h-[48px]">
-                    {isProcessing ? <LoaderCircleIcon className="size-4 animate-spin" /> : null}
-                    Continue
+                  <FormField
+                    control={form.control}
+                    name="country"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[14px]/[22px] text-[#353535]">Country</FormLabel>
+                        <FormControl>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            indicatorVisibility={false}
+                          >
+                            <SelectTrigger className="h-[48px]">
+                              <SelectValue placeholder="Select country" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="us">United States</SelectItem>
+                              <SelectItem value="uk">United Kingdom</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <p className="text-[14px]/[22px] text-[#353535] mb-[10px]">Phone Number</p>
+                  <div className="flex flex-col sm:flex-row gap-[16px] w-full">
+                    <div className="w-[300px]">
+                      <Select
+                        defaultValue="US"
+                        indicatorVisibility={false}
+                        onValueChange={(value) => {
+                          setCode(phoneNumber.find((item) => item.key === value)?.code || '');
+                        }}
+                      >
+                        <SelectTrigger className="h-[48px]">
+                          <SelectValue placeholder="Select a country" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {phoneNumber.map((item) => (
+                            <SelectItem key={item.key} value={item.key}>
+                              {item.value}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex-1">
+                      <FormField
+                        control={form.control}
+                        name="phoneNumber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                placeholder={`+${code}(555)000-0000`}
+                                type="text"
+                                className="h-[48px]"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="industry"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Select Industry</FormLabel>
+                        <FormControl>
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            indicatorVisibility={false}
+                          >
+                            <SelectTrigger className="h-[48px]">
+                              <SelectValue placeholder="Select industry" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                              <SelectItem value="retail">Retail</SelectItem>
+                              <SelectItem value="healthcare">Healthcare</SelectItem>
+                              <SelectItem value="technology">Technology</SelectItem>
+                              <SelectItem value="finance">Finance</SelectItem>
+                              <SelectItem value="education">Education</SelectItem>
+                              <SelectItem value="governemnt">Government</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="interests"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[14px]/[22px] text-[#353535]">
+                          What Product(s) are you interested in?
+                        </FormLabel>
+                        <div className="flex flex-col gap-[18px]">
+                          {[
+                            { label: 'HR Management', value: 'hr_management' },
+                            {
+                              label: 'Vendor & Contract Management',
+                              value: 'vendor_contract_management',
+                            },
+                            {
+                              label: 'Asset & Facility Management',
+                              value: 'asset_facility_management',
+                            },
+                            { label: 'Finance & Operation', value: 'finance_operation' },
+                          ].map((option) => (
+                            <label key={option.value} className="flex items-center gap-2">
+                              <Checkbox
+                                checked={
+                                  Array.isArray(field.value)
+                                    ? field.value.includes(option.value)
+                                    : false
+                                }
+                                onCheckedChange={(checked) => {
+                                  let newValue = Array.isArray(field.value) ? [...field.value] : [];
+                                  if (checked) {
+                                    if (!newValue.includes(option.value)) {
+                                      newValue.push(option.value);
+                                    }
+                                  } else {
+                                    newValue = newValue.filter((v) => v !== option.value);
+                                  }
+                                  field.onChange(newValue);
+                                }}
+                              />
+                              <span className="text-sm">{option.label}</span>
+                            </label>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex items-center space-x-2 pt-[40px]">
+                    <FormField
+                      control={form.control}
+                      name="accept"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <div className="flex  gap-2.5">
+                              <Checkbox
+                                id="accept"
+                                checked={field.value}
+                                onCheckedChange={(checked) => field.onChange(!!checked)}
+                              />
+                              <label htmlFor="accept" className="text-[14px]/[20px] text-[#626262]">
+                                By creating an account, you have read and agree to the Terms of
+                                Service and our Privacy Policy
+                              </label>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-2.5">
+                    <Button type="submit" disabled={isProcessing} className="h-[48px]">
+                      {isProcessing ? <LoaderCircleIcon className="size-4 animate-spin" /> : null}
+                      Continue
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </Suspense>
+          </div>
+        ) : (
+          <div className="lg:w-[50%] w-full flex items-center h-[100vh] justify-center">
+            <div className="sm:w-[560px] w-full sm:px-[48px] px-[20px] py-[44px]">
+              <Form {...verifyForm}>
+                <form
+                  onSubmit={verifyForm.handleSubmit(handleCheckEmail)}
+                  className="block w-full space-y-5"
+                >
+                  <div className="space-y-1 pb-3">
+                    <h1 className="text-[22px]/[30px] font-semibold tracking-tight">
+                      Check Your Email
+                    </h1>
+                    <p className="text-[14px]/[20px] text-[#787878]">
+                      Almost there! Enter the 6-digit code sent to your email to confirm
+                    </p>
+                  </div>
+                  <div>
+                    <FormField
+                      control={verifyForm.control}
+                      name="code"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <div className="flex justify-center gap-[10px]">
+                              <PinField
+                                {...field}
+                                length={6}
+                                onComplete={(code) => console.log('Entered Code:', code)}
+                                className="border border-gray-300 rounded-md sm:w-[56px] w-[40px] h-12 text-center text-xl mx-1 focus:outline-none focus:ring-[3px] focus:ring-[#0D978B33]"
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <p className="text-[14px]/[20px] text-[#787878] mt-[14px]">
+                      Didn't receive your code?{' '}
+                      <span className="text-[#0D978B] font-medium">Resend Code</span>
+                    </p>
+                  </div>
+                  <Button
+                    type="submit"
+                    disabled={!!success || isProcessing}
+                    className="w-full h-[48px] text-[14px]/[20px] font-semibold"
+                  >
+                    {isProcessing ? <LoaderCircleIcon className="animate-spin" /> : null}
+                    Verify & Continue
                   </Button>
-                </div>
-              </form>
-            </Form>
-          </Suspense>
-        </div>
+
+                  <div className="flex justify-center">
+                    <span
+                      className="text-[14px]/[20px] text-[#0D978B] hover:text-[#086159] text-center cursor-pointer"
+                      onClick={() => {
+                        setCheckEmail(false);
+                      }}
+                    >
+                      Change email
+                    </span>
+                  </div>
+                </form>
+              </Form>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

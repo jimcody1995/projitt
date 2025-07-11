@@ -52,7 +52,7 @@ const accordionTriggerVariants = cva(
       variant: 'default',
       indicator: 'arrow',
     },
-  },
+  }
 );
 
 const accordionContentVariants = cva(
@@ -68,7 +68,7 @@ const accordionContentVariants = cva(
     defaultVariants: {
       variant: 'default',
     },
-  },
+  }
 );
 
 // Context
@@ -87,7 +87,7 @@ function Accordion(
   props: React.ComponentProps<typeof AccordionPrimitive.Root> &
     VariantProps<typeof accordionRootVariants> & {
       indicator?: 'arrow' | 'plus';
-    },
+    }
 ) {
   const { className, variant = 'default', indicator = 'arrow', children, ...rest } = props;
 
@@ -131,9 +131,14 @@ function AccordionTrigger(props: React.ComponentProps<typeof AccordionPrimitive.
         {...rest}
       >
         {children}
-        {indicator === 'plus' && <Plus className="size-4 shrink-0 transition-transform duration-200" strokeWidth={1} />}
+        {indicator === 'plus' && (
+          <Plus className="size-4 shrink-0 transition-transform duration-200" strokeWidth={1} />
+        )}
         {indicator === 'arrow' && (
-          <ChevronDown className="size-4 shrink-0 transition-transform duration-200" strokeWidth={1} />
+          <ChevronDown
+            className="size-4 shrink-0 transition-transform duration-200"
+            strokeWidth={1}
+          />
         )}
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>

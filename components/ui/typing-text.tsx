@@ -157,7 +157,10 @@ export function TypingText({
           <motion.span
             variants={cursorVariants}
             animate="blinking"
-            className={cn('inline-block ms-1 font-normal text-foreground select-none w-px', cursorClassName)}
+            className={cn(
+              'inline-block ms-1 font-normal text-foreground select-none w-px',
+              cursorClassName
+            )}
           >
             {cursor}
           </motion.span>

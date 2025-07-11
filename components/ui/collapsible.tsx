@@ -8,7 +8,9 @@ function Collapsible({ ...props }: React.ComponentProps<typeof CollapsiblePrimit
   return <CollapsiblePrimitive.Root data-slot="collapsible" {...props} />;
 }
 
-function CollapsibleTrigger({ ...props }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleTrigger>) {
+function CollapsibleTrigger({
+  ...props
+}: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleTrigger>) {
   return <CollapsiblePrimitive.CollapsibleTrigger data-slot="collapsible-trigger" {...props} />;
 }
 
@@ -22,7 +24,7 @@ function CollapsibleContent({
       data-slot="collapsible-content"
       className={cn(
         'overflow-hidden transition-all data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down',
-        className,
+        className
       )}
       {...props}
     >

@@ -116,7 +116,7 @@ const tabsTriggerVariants = cva(
       variant: 'default',
       size: 'md',
     },
-  },
+  }
 );
 
 // Variants for TabsContent
@@ -131,7 +131,7 @@ const tabsContentVariants = cva(
     defaultVariants: {
       variant: 'default',
     },
-  },
+  }
 );
 
 // Context

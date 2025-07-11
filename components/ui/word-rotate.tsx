@@ -164,7 +164,11 @@ export function WordRotate({
   }, [shouldStart, duration, pauseDuration, words.length, loop]);
 
   return (
-    <motion.span ref={ref} className={cn('inline-block overflow-hidden', containerClassName)} {...props}>
+    <motion.span
+      ref={ref}
+      className={cn('inline-block overflow-hidden', containerClassName)}
+      {...props}
+    >
       <motion.span
         key={currentWord}
         initial="initial"

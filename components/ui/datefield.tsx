@@ -53,8 +53,8 @@ function DateSegment({ className, ...props }: DateSegmentProps) {
             data-focused:bg-accent data-focused:data-placeholder:text-foreground data-focused:text-foreground             
             data-disabled:cursor-not-allowed data-disabled:opacity-50
           `,
-          className,
-        ),
+          className
+        )
       )}
       {...props}
       data-invalid
@@ -78,7 +78,7 @@ function DateInput({ className, variant = 'md', ...props }: Omit<DateInputProps,
     <DateInputRa
       data-slot="input"
       className={composeRenderProps(className, (className) =>
-        cn(inputVariants({ variant }), dateInputStyles, className),
+        cn(inputVariants({ variant }), dateInputStyles, className)
       )}
       {...props}
     >

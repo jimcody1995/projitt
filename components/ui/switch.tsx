@@ -49,7 +49,7 @@ const switchVariants = cva(
       permanent: false,
       size: 'md',
     },
-  },
+  }
 );
 
 const switchThumbVariants = cva(
@@ -79,7 +79,7 @@ const switchThumbVariants = cva(
       shape: 'pill',
       size: 'md',
     },
-  },
+  }
 );
 
 const switchIndicatorVariants = cva(
@@ -123,7 +123,7 @@ const switchIndicatorVariants = cva(
       state: 'off',
       permanent: false,
     },
-  },
+  }
 );
 
 function SwitchWrapper({
@@ -134,7 +134,11 @@ function SwitchWrapper({
 }: React.HTMLAttributes<HTMLDivElement> & { permanent?: boolean }) {
   return (
     <SwitchContext.Provider value={{ permanent }}>
-      <div data-slot="switch-wrapper" className={cn('relative inline-flex items-center', className)} {...props}>
+      <div
+        data-slot="switch-wrapper"
+        className={cn('relative inline-flex items-center', className)}
+        {...props}
+      >
         {children}
       </div>
     </SwitchContext.Provider>

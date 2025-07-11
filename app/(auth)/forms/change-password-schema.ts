@@ -13,9 +13,7 @@ export const getChangePasswordSchema = () => {
     });
 };
 
-export type ChangePasswordSchemaType = z.infer<
-  ReturnType<typeof getChangePasswordSchema>
->;
+export type ChangePasswordSchemaType = z.infer<ReturnType<typeof getChangePasswordSchema>>;
 
 export const getChangePasswordApiSchema = () => {
   return z.object({
@@ -26,6 +24,4 @@ export const getChangePasswordApiSchema = () => {
   });
 };
 
-export type ChangePasswordApiSchemaType = z.infer<
-  ReturnType<typeof getChangePasswordApiSchema>
->;
+export type ChangePasswordApiSchemaType = z.infer<ReturnType<typeof getChangePasswordApiSchema>>;

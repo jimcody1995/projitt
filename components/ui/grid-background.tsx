@@ -4,7 +4,17 @@ import * as React from 'react';
 import { HTMLMotionProps, motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 
-type GridSize = '4:4' | '5:5' | '6:6' | '6:8' | '8:8' | '8:12' | '10:10' | '12:12' | '12:16' | '16:16';
+type GridSize =
+  | '4:4'
+  | '5:5'
+  | '6:6'
+  | '6:8'
+  | '8:8'
+  | '8:12'
+  | '10:10'
+  | '12:12'
+  | '12:16'
+  | '16:16';
 
 type GridBackgroundProps = HTMLMotionProps<'div'> & {
   children?: React.ReactNode;
@@ -84,7 +94,7 @@ function GridBackground({
           duration: speed + Math.random() * 2,
         };
       }),
-    [count, beamColors, speed, cols, rows],
+    [count, beamColors, speed, cols, rows]
   );
 
   const gridStyle = {
@@ -139,7 +149,7 @@ function GridBackground({
               'absolute rounded-full backdrop-blur-sm z-20',
               beam.color,
               beam.direction === 'horizontal' ? 'w-6 h-0.5' : 'w-0.5 h-6',
-              shadow,
+              shadow
             )}
             style={{
               ...(beam.direction === 'horizontal'
@@ -164,11 +174,17 @@ function GridBackground({
               ...(beam.direction === 'horizontal'
                 ? {
                     // Move across the full width of the container
-                    x: beam.startPosition === 'start' ? [0, 'calc(100vw + 24px)'] : [0, 'calc(-100vw - 24px)'],
+                    x:
+                      beam.startPosition === 'start'
+                        ? [0, 'calc(100vw + 24px)']
+                        : [0, 'calc(-100vw - 24px)'],
                   }
                 : {
                     // Move across the full height of the container
-                    y: beam.startPosition === 'start' ? [0, 'calc(100vh + 24px)'] : [0, 'calc(-100vh - 24px)'],
+                    y:
+                      beam.startPosition === 'start'
+                        ? [0, 'calc(100vh + 24px)']
+                        : [0, 'calc(-100vh - 24px)'],
                   }),
             }}
             transition={{

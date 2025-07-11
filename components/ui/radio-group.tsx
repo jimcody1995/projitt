@@ -39,7 +39,8 @@ function RadioGroup({
   variant,
   size,
   ...props
-}: React.ComponentProps<typeof RadioGroupPrimitive.Root> & VariantProps<typeof radioGroupVariants>) {
+}: React.ComponentProps<typeof RadioGroupPrimitive.Root> &
+  VariantProps<typeof radioGroupVariants>) {
   return (
     <RadioGroupContext.Provider value={{ variant: variant ?? 'primary', size: size ?? 'md' }}>
       <RadioGroupPrimitive.Root
@@ -55,10 +56,10 @@ function RadioGroup({
 const radioItemVariants = cva(
   `
     peer aspect-square rounded-full border outline-hidden ring-offset-background focus:outline-none focus-visible:ring-2 
-    focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50
+    focus-visible:ring- focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50
     aria-invalid:border-destructive/60 aria-invalid:ring-destructive/10 dark:aria-invalid:border-destructive dark:aria-invalid:ring-destructive/20
     [[data-invalid=true]_&]:border-destructive/60 [[data-invalid=true]_&]:ring-destructive/10  dark:[[data-invalid=true]_&]:border-destructive dark:[[data-invalid=true]_&]:ring-destructive/20
-    border-input text-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-foreground  
+    border-[#787878] text-primary data-[state=checked]:bg-[#0D978B] data-[state=checked]:border-[#0D978B] data-[state=checked]:text-white  
   `,
   {
     variants: {
@@ -71,7 +72,7 @@ const radioItemVariants = cva(
     defaultVariants: {
       size: 'md',
     },
-  },
+  }
 );
 
 function RadioGroupItem({
@@ -89,7 +90,10 @@ function RadioGroupItem({
       className={cn(radioItemVariants({ size: effectiveSize }), className)}
       {...props}
     >
-      <RadioGroupPrimitive.Indicator data-slot="radio-group-indicator" className="flex items-center justify-center">
+      <RadioGroupPrimitive.Indicator
+        data-slot="radio-group-indicator"
+        className="flex items-center justify-center"
+      >
         <Circle className="fill-current text-current" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>

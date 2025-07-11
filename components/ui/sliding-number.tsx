@@ -32,7 +32,15 @@ function Digit({
   );
 }
 
-function Number({ mv, number, digitHeight }: { mv: MotionValue<number>; number: number; digitHeight: number }) {
+function Number({
+  mv,
+  number,
+  digitHeight,
+}: {
+  mv: MotionValue<number>;
+  number: number;
+  digitHeight: number;
+}) {
   const y = useTransform(mv, (latest: number) => {
     const placeValue = latest % 10;
     const offset = (10 + number - placeValue) % 10;

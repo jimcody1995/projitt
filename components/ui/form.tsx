@@ -5,7 +5,14 @@ import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Slot } from '@radix-ui/react-slot';
 import { Label as LabelPrimitive } from 'radix-ui';
-import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext } from 'react-hook-form';
+import {
+  Controller,
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  FormProvider,
+  useFormContext,
+} from 'react-hook-form';
 
 const Form = FormProvider;
 
@@ -66,7 +73,12 @@ function FormItem({ className, ...props }: React.HTMLAttributes<HTMLDivElement>)
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div data-slot="form-item" className={cn('flex flex-col gap-2.5', className)} data-invalid={!!error} {...props} />
+      <div
+        data-slot="form-item"
+        className={cn('flex flex-col gap-2.5', className)}
+        data-invalid={!!error}
+        {...props}
+      />
     </FormItemContext.Provider>
   );
 }
@@ -115,7 +127,11 @@ function FormDescription({ className, ...props }: React.HTMLAttributes<HTMLParag
   );
 }
 
-function FormMessage({ className, children, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
+function FormMessage({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message) : children;
 
@@ -135,4 +151,13 @@ function FormMessage({ className, children, ...props }: React.HTMLAttributes<HTM
   );
 }
 
-export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useFormField };
+export {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useFormField,
+};

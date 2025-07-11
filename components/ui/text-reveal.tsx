@@ -262,7 +262,10 @@ export function TextReveal({
           visible: {
             ...originalVariant.visible,
             transition: {
-              ...((originalVariant.visible as Record<string, unknown>).transition as Record<string, unknown>),
+              ...((originalVariant.visible as Record<string, unknown>).transition as Record<
+                string,
+                unknown
+              >),
               duration,
             },
           },

@@ -1,7 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { AnimatePresence, Easing, motion, useMotionValue, useSpring, useTransform } from 'motion/react';
+import {
+  AnimatePresence,
+  Easing,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from 'motion/react';
 import { cn } from '@/lib/utils';
 
 type AnimationVariantType = 'spring' | 'tween' | 'inertia' | 'decay' | 'keyframes';
@@ -60,7 +67,12 @@ const StaggeredContent = ({ content }: { content: React.ReactNode }) => {
   );
 };
 
-export function AvatarGroup({ children, className, tooltipClassName, animation = 'default' }: AvatarGroupProps) {
+export function AvatarGroup({
+  children,
+  className,
+  tooltipClassName,
+  animation = 'default',
+}: AvatarGroupProps) {
   const contextValue: AvatarGroupContextValue = {
     tooltipClassName,
     animation,
@@ -94,11 +106,11 @@ export function AvatarGroupItem({
 
   // Extract tooltip from children
   const tooltipChild = React.Children.toArray(children).find(
-    (child) => React.isValidElement(child) && child.type === AvatarGroupTooltip,
+    (child) => React.isValidElement(child) && child.type === AvatarGroupTooltip
   );
 
   const otherChildren = React.Children.toArray(children).filter(
-    (child) => !(React.isValidElement(child) && child.type === AvatarGroupTooltip),
+    (child) => !(React.isValidElement(child) && child.type === AvatarGroupTooltip)
   );
 
   const tooltipContent =
@@ -183,7 +195,7 @@ export function AvatarGroupItem({
             }}
             className={cn(
               'absolute -top-16 left-1/2 z-50 flex -translate-x-1/2 flex-col items-center justify-center rounded-md bg-black px-4 py-2 text-xs font-medium text-white shadow-xl',
-              finalTooltipClassName,
+              finalTooltipClassName
             )}
           >
             <motion.div
@@ -200,7 +212,11 @@ export function AvatarGroupItem({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
             />
-            {animation === 'reveal' ? <StaggeredContent content={tooltipContent} /> : tooltipContent}
+            {animation === 'reveal' ? (
+              <StaggeredContent content={tooltipContent} />
+            ) : (
+              tooltipContent
+            )}
           </motion.div>
         )}
       </AnimatePresence>

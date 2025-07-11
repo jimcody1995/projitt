@@ -25,10 +25,12 @@ const githubButtonVariants = cva(
       variant: 'default',
       size: 'default',
     },
-  },
+  }
 );
 
-interface GithubButtonProps extends React.ComponentProps<'button'>, VariantProps<typeof githubButtonVariants> {
+interface GithubButtonProps
+  extends React.ComponentProps<'button'>,
+    VariantProps<typeof githubButtonVariants> {
   /** Whether to round stars */
   roundStars?: boolean;
   /** Whether to show Github icon */
@@ -265,7 +267,11 @@ function GithubButton({
         >
           <span>{currentStars > 0 && formatNumber(currentStars)}</span>
         </motion.div>
-        {fixedWidth && <span className="opacity-0 h-0 overflow-hidden tabular-nums">{formatNumber(targetStars)}</span>}
+        {fixedWidth && (
+          <span className="opacity-0 h-0 overflow-hidden tabular-nums">
+            {formatNumber(targetStars)}
+          </span>
+        )}
       </div>
     </button>
   );

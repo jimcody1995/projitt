@@ -52,7 +52,7 @@ function DataGridTableBase({ children }: { children: ReactNode }) {
         'w-full align-middle caption-bottom text-left rtl:text-right text-foreground font-normal text-sm',
         !props.tableLayout?.columnsDraggable && 'border-separate border-spacing-0',
         props.tableLayout?.width === 'fixed' ? 'table-fixed' : 'table-auto',
-        props.tableClassNames?.base,
+        props.tableClassNames?.base
       )}
     >
       {children}
@@ -67,7 +67,7 @@ function DataGridTableHead({ children }: { children: ReactNode }) {
     <thead
       className={cn(
         props.tableClassNames?.header,
-        props.tableLayout?.headerSticky && props.tableClassNames?.headerSticky,
+        props.tableLayout?.headerSticky && props.tableClassNames?.headerSticky
       )}
     >
       {children}
@@ -93,7 +93,7 @@ function DataGridTableHeadRow<TData>({
         props.tableLayout?.cellBorder && '[&_>:last-child]:border-e-0',
         props.tableLayout?.stripped && 'bg-transparent',
         props.tableLayout?.headerBackground === false && 'bg-transparent',
-        props.tableClassNames?.headerRow,
+        props.tableClassNames?.headerRow
       )}
     >
       {children}
@@ -146,7 +146,7 @@ function DataGridTableHeadRowCell<TData>({
         header.column.columnDef.meta?.headerClassName,
         column.getIndex() === 0 || column.getIndex() === header.headerGroup.headers.length - 1
           ? props.tableClassNames?.edgeCell
-          : '',
+          : ''
       )}
     >
       {children}
@@ -181,8 +181,9 @@ function DataGridTableBody({ children }: { children: ReactNode }) {
     <tbody
       className={cn(
         '[&_tr:last-child]:border-0',
-        props.tableLayout?.rowRounded && '[&_td:first-child]:rounded-s-lg [&_td:last-child]:rounded-e-lg',
-        props.tableClassNames?.body,
+        props.tableLayout?.rowRounded &&
+          '[&_td:first-child]:rounded-s-lg [&_td:last-child]:rounded-e-lg',
+        props.tableClassNames?.body
       )}
     >
       {children}
@@ -204,7 +205,7 @@ function DataGridTableBodyRowSkeleton({ children }: { children: ReactNode }) {
         props.tableLayout?.cellBorder && '[&_>:last-child]:border-e-0',
         props.tableLayout?.stripped && 'odd:bg-muted/90 hover:bg-transparent odd:hover:bg-muted',
         table.options.enableRowSelection && '[&_>:first-child]:relative',
-        props.tableClassNames?.bodyRow,
+        props.tableClassNames?.bodyRow
       )}
     >
       {children}
@@ -212,7 +213,13 @@ function DataGridTableBodyRowSkeleton({ children }: { children: ReactNode }) {
   );
 }
 
-function DataGridTableBodyRowSkeletonCell<TData>({ children, column }: { children: ReactNode; column: Column<TData> }) {
+function DataGridTableBodyRowSkeletonCell<TData>({
+  children,
+  column,
+}: {
+  children: ReactNode;
+  column: Column<TData>;
+}) {
   const { props, table } = useDataGrid();
   const bodyCellSpacing = bodyCellSpacingVariants({
     size: props.tableLayout?.dense ? 'dense' : 'default',
@@ -231,7 +238,7 @@ function DataGridTableBodyRowSkeletonCell<TData>({ children, column }: { childre
           '[&[data-pinned=left][data-last-col=left]]:border-e! [&[data-pinned=right][data-last-col=right]]:border-s! [&[data-pinned][data-last-col]]:border-border data-pinned:bg-background/90 data-pinned:backdrop-blur-xs"',
         column.getIndex() === 0 || column.getIndex() === table.getVisibleFlatColumns().length - 1
           ? props.tableClassNames?.edgeCell
-          : '',
+          : ''
       )}
     >
       {children}
@@ -267,7 +274,7 @@ function DataGridTableBodyRow<TData>({
         props.tableLayout?.cellBorder && '[&_>:last-child]:border-e-0',
         props.tableLayout?.stripped && 'odd:bg-muted/90 hover:bg-transparent odd:hover:bg-muted',
         table.options.enableRowSelection && '[&_>:first-child]:relative',
-        props.tableClassNames?.bodyRow,
+        props.tableClassNames?.bodyRow
       )}
     >
       {children}
@@ -333,7 +340,7 @@ function DataGridTableBodyRowCell<TData>({
           '[&[data-pinned=left][data-last-col=left]]:border-e! [&[data-pinned=right][data-last-col=right]]:border-s! [&[data-pinned][data-last-col]]:border-border data-pinned:bg-background/90 data-pinned:backdrop-blur-xs"',
         column.getIndex() === 0 || column.getIndex() === row.getVisibleCells().length - 1
           ? props.tableClassNames?.edgeCell
-          : '',
+          : ''
       )}
     >
       {children}
@@ -366,7 +373,14 @@ function DataGridTableLoader() {
           fill="none"
           viewBox="0 0 24 24"
         >
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"></circle>
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="3"
+          ></circle>
           <path
             className="opacity-75"
             fill="currentColor"
@@ -379,11 +393,20 @@ function DataGridTableLoader() {
   );
 }
 
-function DataGridTableRowSelect<TData>({ row, size }: { row: Row<TData>; size?: 'sm' | 'md' | 'lg' }) {
+function DataGridTableRowSelect<TData>({
+  row,
+  size,
+}: {
+  row: Row<TData>;
+  size?: 'sm' | 'md' | 'lg';
+}) {
   return (
     <>
       <div
-        className={cn('hidden absolute top-0 bottom-0 start-0 w-[2px] bg-primary', row.getIsSelected() && 'block')}
+        className={cn(
+          'hidden absolute top-0 bottom-0 start-0 w-[2px] bg-primary',
+          row.getIsSelected() && 'block'
+        )}
       ></div>
       <Checkbox
         checked={row.getIsSelected()}
@@ -401,7 +424,9 @@ function DataGridTableRowSelectAll({ size }: { size?: 'sm' | 'md' | 'lg' }) {
 
   return (
     <Checkbox
-      checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
+      checked={
+        table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
+      }
       disabled={isLoading || recordCount === 0}
       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
       aria-label="Select all"
@@ -426,7 +451,9 @@ function DataGridTable<TData>() {
 
                 return (
                   <DataGridTableHeadRowCell header={header} key={index}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                     {props.tableLayout?.columnsResizable && column.getCanResize() && (
                       <DataGridTableHeadRowCellResize header={header} />
                     )}

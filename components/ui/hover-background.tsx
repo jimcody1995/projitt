@@ -14,7 +14,13 @@ type HoverBackgroundProps = HTMLMotionProps<'div'> & {
   };
 };
 
-function HoverBackground({ className, objectCount = 12, children, colors = {}, ...props }: HoverBackgroundProps) {
+function HoverBackground({
+  className,
+  objectCount = 12,
+  children,
+  colors = {},
+  ...props
+}: HoverBackgroundProps) {
   const {
     background = 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900',
     objects = [
@@ -67,7 +73,7 @@ function HoverBackground({ className, objectCount = 12, children, colors = {}, .
           baseRotation: Math.random() * 360, // Random starting rotation offset
         };
       }),
-    [objectCount, objects],
+    [objectCount, objects]
   );
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -134,7 +140,7 @@ function HoverBackground({ className, objectCount = 12, children, colors = {}, .
           className={cn(
             'absolute backdrop-blur-sm border border-white/10',
             obj.color,
-            obj.shape === 'circle' ? 'rounded-full' : 'rounded-lg rotate-45',
+            obj.shape === 'circle' ? 'rounded-full' : 'rounded-lg rotate-45'
           )}
           style={{
             left: `${obj.x}%`,

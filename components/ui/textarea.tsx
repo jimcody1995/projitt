@@ -23,7 +23,7 @@ const textareaVariants = cva(
     defaultVariants: {
       variant: 'md',
     },
-  },
+  }
 );
 
 function Textarea({
@@ -31,7 +31,13 @@ function Textarea({
   variant,
   ...props
 }: React.ComponentProps<'textarea'> & VariantProps<typeof textareaVariants>) {
-  return <textarea data-slot="textarea" className={cn(textareaVariants({ variant }), className)} {...props} />;
+  return (
+    <textarea
+      data-slot="textarea"
+      className={cn(textareaVariants({ variant }), className)}
+      {...props}
+    />
+  );
 }
 
 export { Textarea, textareaVariants };

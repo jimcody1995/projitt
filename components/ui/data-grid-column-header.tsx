@@ -84,7 +84,7 @@ function DataGridColumnHeader<TData, TValue>({
       <div
         className={cn(
           'text-accent-foreground font-normal inline-flex h-full items-center gap-1.5 text-[0.8125rem] leading-[calc(1.125/0.8125)] [&_svg]:size-3.5 [&_svg]:opacity-60',
-          className,
+          className
         )}
       >
         {icon && icon}
@@ -99,7 +99,7 @@ function DataGridColumnHeader<TData, TValue>({
         variant="ghost"
         className={cn(
           'text-secondary-foreground rounded-md font-normal -ms-2 px-2 h-7 hover:bg-secondary data-[state=open]:bg-secondary hover:text-foreground data-[state=open]:text-foreground',
-          className,
+          className
         )}
         disabled={isLoading || recordCount === 0}
         onClick={() => {
@@ -152,7 +152,9 @@ function DataGridColumnHeader<TData, TValue>({
           <DropdownMenuContent className="w-40" align="start">
             {filter && <DropdownMenuLabel>{filter}</DropdownMenuLabel>}
 
-            {filter && (column.getCanSort() || column.getCanPin() || visibility) && <DropdownMenuSeparator />}
+            {filter && (column.getCanSort() || column.getCanPin() || visibility) && (
+              <DropdownMenuSeparator />
+            )}
 
             {column.getCanSort() && (
               <>
@@ -168,7 +170,9 @@ function DataGridColumnHeader<TData, TValue>({
                 >
                   <ArrowUp className="size-3.5!" />
                   <span className="grow">Asc</span>
-                  {column.getIsSorted() === 'asc' && <Check className="size-4 opacity-100! text-primary" />}
+                  {column.getIsSorted() === 'asc' && (
+                    <Check className="size-4 opacity-100! text-primary" />
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
@@ -182,26 +186,37 @@ function DataGridColumnHeader<TData, TValue>({
                 >
                   <ArrowDown className="size-3.5!" />
                   <span className="grow">Desc</span>
-                  {column.getIsSorted() === 'desc' && <Check className="size-4 opacity-100! text-primary" />}
+                  {column.getIsSorted() === 'desc' && (
+                    <Check className="size-4 opacity-100! text-primary" />
+                  )}
                 </DropdownMenuItem>
               </>
             )}
 
-            {(filter || column.getCanSort()) && (column.getCanSort() || column.getCanPin() || visibility) && (
-              <DropdownMenuSeparator />
-            )}
+            {(filter || column.getCanSort()) &&
+              (column.getCanSort() || column.getCanPin() || visibility) && (
+                <DropdownMenuSeparator />
+              )}
 
             {props.tableLayout?.columnsPinnable && column.getCanPin() && (
               <>
-                <DropdownMenuItem onClick={() => column.pin(column.getIsPinned() === 'left' ? false : 'left')}>
+                <DropdownMenuItem
+                  onClick={() => column.pin(column.getIsPinned() === 'left' ? false : 'left')}
+                >
                   <ArrowLeftToLine className="size-3.5!" aria-hidden="true" />
                   <span className="grow">Pin to left</span>
-                  {column.getIsPinned() === 'left' && <Check className="size-4 opacity-100! text-primary" />}
+                  {column.getIsPinned() === 'left' && (
+                    <Check className="size-4 opacity-100! text-primary" />
+                  )}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => column.pin(column.getIsPinned() === 'right' ? false : 'right')}>
+                <DropdownMenuItem
+                  onClick={() => column.pin(column.getIsPinned() === 'right' ? false : 'right')}
+                >
                   <ArrowRightToLine className="size-3.5!" aria-hidden="true" />
                   <span className="grow">Pin to right</span>
-                  {column.getIsPinned() === 'right' && <Check className="size-4 opacity-100! text-primary" />}
+                  {column.getIsPinned() === 'right' && (
+                    <Check className="size-4 opacity-100! text-primary" />
+                  )}
                 </DropdownMenuItem>
               </>
             )}
@@ -260,7 +275,10 @@ function DataGridColumnHeader<TData, TValue>({
             )}
           </DropdownMenuContent>
         </DropdownMenu>
-        {props.tableLayout?.columnsPinnable && column.getCanPin() && column.getIsPinned() && headerPin()}
+        {props.tableLayout?.columnsPinnable &&
+          column.getCanPin() &&
+          column.getIsPinned() &&
+          headerPin()}
       </div>
     );
   };

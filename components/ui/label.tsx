@@ -17,7 +17,7 @@ const labelVariants = cva(
     defaultVariants: {
       variant: 'primary',
     },
-  },
+  }
 );
 
 function Label({
@@ -25,7 +25,13 @@ function Label({
   variant,
   ...props
 }: React.ComponentProps<typeof LabelPrimitive.Root> & VariantProps<typeof labelVariants>) {
-  return <LabelPrimitive.Root data-slot="label" className={cn(labelVariants({ variant }), className)} {...props} />;
+  return (
+    <LabelPrimitive.Root
+      data-slot="label"
+      className={cn(labelVariants({ variant }), className)}
+      {...props}
+    />
+  );
 }
 
 export { Label };

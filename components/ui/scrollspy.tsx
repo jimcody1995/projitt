@@ -44,7 +44,7 @@ export function Scrollspy({
       }
       prevIdTracker.current = sectionId;
     },
-    [anchorElementsRef, dataAttribute, history, onUpdate],
+    [anchorElementsRef, dataAttribute, history, onUpdate]
   );
 
   const handleScroll = useCallback(() => {
@@ -75,8 +75,11 @@ export function Scrollspy({
     // If at bottom, force last anchor
     if (scrollElement) {
       const scrollHeight =
-        scrollElement === window ? document.documentElement.scrollHeight : (scrollElement as HTMLElement).scrollHeight;
-      const clientHeight = scrollElement === window ? window.innerHeight : (scrollElement as HTMLElement).clientHeight;
+        scrollElement === window
+          ? document.documentElement.scrollHeight
+          : (scrollElement as HTMLElement).scrollHeight;
+      const clientHeight =
+        scrollElement === window ? window.innerHeight : (scrollElement as HTMLElement).clientHeight;
       if (scrollTop + clientHeight >= scrollHeight - 2) {
         activeIdx = anchorElementsRef.current.length - 1;
       }
@@ -97,7 +100,8 @@ export function Scrollspy({
   const scrollTo = useCallback(
     (anchorElement: HTMLElement) => (event?: Event) => {
       if (event) event.preventDefault();
-      const sectionId = anchorElement.getAttribute(`data-${dataAttribute}-anchor`)?.replace('#', '') || null;
+      const sectionId =
+        anchorElement.getAttribute(`data-${dataAttribute}-anchor`)?.replace('#', '') || null;
       if (!sectionId) return;
       const sectionElement = document.getElementById(sectionId);
       if (!sectionElement) return;
@@ -121,7 +125,7 @@ export function Scrollspy({
       }
       setActiveSection(sectionId, true);
     },
-    [dataAttribute, offset, smooth, targetRef, setActiveSection],
+    [dataAttribute, offset, smooth, targetRef, setActiveSection]
   );
 
   // Scroll to the section if the ID is present in the URL hash
@@ -129,7 +133,9 @@ export function Scrollspy({
     const hash = CSS.escape(window.location.hash.replace('#', ''));
 
     if (hash) {
-      const targetElement = document.querySelector(`[data-${dataAttribute}-anchor="${hash}"]`) as HTMLElement;
+      const targetElement = document.querySelector(
+        `[data-${dataAttribute}-anchor="${hash}"]`
+      ) as HTMLElement;
       if (targetElement) {
         scrollTo(targetElement)();
       }
@@ -139,7 +145,9 @@ export function Scrollspy({
   useEffect(() => {
     // Query elements and store them in the ref, avoiding unnecessary re-renders
     if (selfRef.current) {
-      anchorElementsRef.current = Array.from(selfRef.current.querySelectorAll(`[data-${dataAttribute}-anchor]`));
+      anchorElementsRef.current = Array.from(
+        selfRef.current.querySelectorAll(`[data-${dataAttribute}-anchor]`)
+      );
     }
 
     anchorElementsRef.current?.forEach((item) => {

@@ -73,7 +73,7 @@ export function Marquee({
           'flex-row': !vertical,
           'flex-col': vertical,
         },
-        className,
+        className
       )}
       aria-label={ariaLabel}
       aria-live={ariaLive}
@@ -92,7 +92,7 @@ export function Marquee({
                   !vertical && 'animate-marquee flex-row',
                   vertical && 'animate-marquee-vertical flex-col',
                   pauseOnHover && 'group-hover:[animation-play-state:paused]',
-                  reverse && '[animation-direction:reverse]',
+                  reverse && '[animation-direction:reverse]'
                 )}
               >
                 {children}
@@ -100,7 +100,7 @@ export function Marquee({
             ))}
           </>
         ),
-        [repeat, children, vertical, pauseOnHover, reverse],
+        [repeat, children, vertical, pauseOnHover, reverse]
       )}
     </div>
   );

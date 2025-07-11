@@ -26,7 +26,11 @@ interface DataGridColumnFilterProps<TData, TValue> {
   }[];
 }
 
-function DataGridColumnFilter<TData, TValue>({ column, title, options }: DataGridColumnFilterProps<TData, TValue>) {
+function DataGridColumnFilter<TData, TValue>({
+  column,
+  title,
+  options,
+}: DataGridColumnFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
 
@@ -51,7 +55,11 @@ function DataGridColumnFilter<TData, TValue>({ column, title, options }: DataGri
                   options
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
-                      <Badge variant="secondary" key={option.value} className="rounded-sm px-1 font-normal">
+                      <Badge
+                        variant="secondary"
+                        key={option.value}
+                        className="rounded-sm px-1 font-normal"
+                      >
                         {option.label}
                       </Badge>
                     ))
@@ -85,7 +93,9 @@ function DataGridColumnFilter<TData, TValue>({ column, title, options }: DataGri
                     <div
                       className={cn(
                         'me-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
-                        isSelected ? 'bg-primary text-primary-foreground' : 'opacity-50 [&_svg]:invisible',
+                        isSelected
+                          ? 'bg-primary text-primary-foreground'
+                          : 'opacity-50 [&_svg]:invisible'
                       )}
                     >
                       <Check className={cn('h-4 w-4')} />
