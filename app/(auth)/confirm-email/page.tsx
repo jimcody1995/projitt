@@ -97,32 +97,37 @@ export default function Page() {
 
   return (
     <>
-      <div className="absolute w-full bottom-[50px] pl-[80px] pr-[80px] flex justify-between">
-        <div className="flex gap-[16px]">
-          <span className="text-[14px]/[22px] underline text-[#a19e9e]">Terms of Service</span>
-          <div className="w-[1px] h-[20px] bg-[#a19e9e]"></div>
-          <span className="text-[14px]/[22px] underline text-[#a19e9e]">Privacy Policy</span>
+      <div className="w-full h-full flex flex-col justify-between gap-[30px]">
+        <div className="pt-[60px] flex justify-center w-full">
+          <img src="/images/logo.png" alt="logo" className=" h-[48px]" />
         </div>
-        <span className="text-[14px]/[22px] text-[#a19e9e]">© 2025 Projitt</span>
-      </div>
-      <div className="absolute w-full top-[60px] flex justify-center">
-        <img src="/images/logo.png" alt="logo" className="h-[48px]" />
-      </div>
-      <div className="absolute w-full bottom-[48px] flex justify-center">
-        <img src="/images/poweredBy.png" alt="logo" className="h-[28px]" />
-      </div>
-      <div className="w-full h-full flex justify-center items-center">
-        <div className="w-[544px] border border-[#e9e9e9] rounded-[16px] bg-white py-[63px] px-[40px]">
-          <p className="text-[22px]/[30px] font-semibold tracking-tight text-[#353535] text-center">
-            Confirm your Email
-          </p>
-          <p className="text-[18px]/[30px] mt-[14px] text-[#4B4B4B] text-center">
-            We’ve sent a confirmation link to{' '}
-            <span className="text-[#0D978B]">admin@zaidllc.com</span>.
-          </p>
-          <p className="text-[18px]/[30px] text-[#4B4B4B] text-center">
-            Click the link in that email to verify your account and access your Projitt dashboard.
-          </p>
+        <div className="w-full flex-1 flex justify-center items-center pb-[10px]">
+          <div className="w-[544px] border border-[#e9e9e9] rounded-[16px] bg-white py-[63px] px-[40px]">
+            <p className="text-[22px]/[30px] font-semibold tracking-tight text-[#353535] text-center">
+              Confirm your Email
+            </p>
+            <p className="text-[18px]/[30px] mt-[14px] text-[#4B4B4B] text-center">
+              We’ve sent a confirmation link to{' '}
+              <span className="text-[#0D978B]">admin@zaidllc.com</span>.
+            </p>
+            <p className="text-[18px]/[30px] text-[#4B4B4B] text-center">
+              Click the link in that email to verify your account and access your Projitt dashboard.
+            </p>
+          </div>
+        </div>
+        <div>
+          <div className="w-full flex justify-center md:mb-[-25px] mb-0">
+            <img src="/images/poweredBy.png" alt="logo" className="h-[28px]" />
+          </div>
+          <div className=" w-full pb-[50px] pl-[80px] pr-[80px] flex md:flex-row flex-col items-center justify-between gap-[10px] md:mt-0 mt-[10px]">
+            <div className="flex gap-[16px]">
+              <span className="text-[14px]/[22px] underline text-[#a19e9e]">Terms of Service</span>
+              <div className="w-[1px] h-[20px] bg-[#a19e9e]"></div>
+              <span className="text-[14px]/[22px] underline text-[#a19e9e]">Privacy Policy</span>
+            </div>
+
+            <span className="text-[14px]/[22px] text-[#a19e9e]">© 2025 Projitt</span>
+          </div>
         </div>
       </div>
     </>

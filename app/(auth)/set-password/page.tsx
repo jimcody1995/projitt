@@ -98,127 +98,133 @@ export default function Page() {
 
   return (
     <>
-      <div className="absolute w-full bottom-[50px] pl-[80px] pr-[80px] flex justify-between">
-        <div className="flex gap-[16px]">
-          <span className="text-[14px]/[22px] underline text-[#a19e9e]">Terms of Service</span>
-          <div className="w-[1px] h-[20px] bg-[#a19e9e]"></div>
-          <span className="text-[14px]/[22px] underline text-[#a19e9e]">Privacy Policy</span>
+      <div className="w-full h-full flex flex-col justify-between gap-[30px]">
+        <div className="pt-[60px] flex justify-center w-full">
+          <img src="/images/logo.png" alt="logo" className=" h-[48px]" />
         </div>
-        <span className="text-[14px]/[22px] text-[#a19e9e]">© 2025 Projitt</span>
-      </div>
-      <div className="absolute w-full top-[60px] flex justify-center">
-        <img src="/images/logo.png" alt="logo" className="h-[48px]" />
-      </div>
-      <div className="absolute w-full bottom-[48px] flex justify-center">
-        <img src="/images/poweredBy.png" alt="logo" className="h-[28px]" />
-      </div>
-      <div className="w-full h-full flex justify-center items-center">
-        <div className="w-[482px] border border-[#e9e9e9] rounded-[16px] bg-white py-[40px] px-[40px]">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="block w-full space-y-4">
-              <div className="">
-                <h1 className="text-[22px]/[30px] font-semibold tracking-tight text-[#353535]">
-                  Set up your Account
-                </h1>
-                <p className="text-[14px]/[20px] mt-[10px] text-[#4B4B4B]">
-                  Create your login credentials to get started with Projitt.
-                </p>
-              </div>
-              <Label className="text-[14px]/[22px] font-normal text-[#353535]">Email Address</Label>
-              <Input
-                type="email"
-                disabled
-                value="admin@zaidllc.com"
-                className="h-[48px] mt-[10px]"
-              />
-              <FormField
-                control={form.control}
-                name="newPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[14px]/[22px] font-normal text-[#353535]">
-                      New Password
-                    </FormLabel>
-                    <div className="relative">
-                      <FormControl>
-                        <Input
-                          type={passwordVisible ? 'text' : 'password'}
-                          placeholder="Enter new password"
-                          {...field}
-                          className="h-[48px]"
-                        />
-                      </FormControl>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        mode="icon"
-                        onClick={() => setPasswordVisible(!passwordVisible)}
-                        className="absolute end-0 top-1/2 -translate-y-1/2 h-7 w-7 me-1.5 bg-transparent!"
-                        aria-label={passwordVisible ? 'Hide password' : 'Show password'}
-                      >
-                        {passwordVisible ? (
-                          <EyeOff className="text-muted-foreground" />
-                        ) : (
-                          <Eye className="text-muted-foreground" />
-                        )}
-                      </Button>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <div className="w-full flex-1 flex justify-center items-center pb-[10px]">
+          <div className="w-[482px] border border-[#e9e9e9] rounded-[16px] bg-white py-[40px] px-[40px]">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="block w-full space-y-4">
+                <div className="">
+                  <h1 className="text-[22px]/[30px] font-semibold tracking-tight text-[#353535]">
+                    Set up your Account
+                  </h1>
+                  <p className="text-[14px]/[20px] mt-[10px] text-[#4B4B4B]">
+                    Create your login credentials to get started with Projitt.
+                  </p>
+                </div>
+                <Label className="text-[14px]/[22px] font-normal text-[#353535]">Email Address</Label>
+                <Input
+                  type="email"
+                  disabled
+                  value="admin@zaidllc.com"
+                  className="h-[48px] mt-[10px]"
+                />
+                <FormField
+                  control={form.control}
+                  name="newPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[14px]/[22px] font-normal text-[#353535]">
+                        New Password
+                      </FormLabel>
+                      <div className="relative">
+                        <FormControl>
+                          <Input
+                            type={passwordVisible ? 'text' : 'password'}
+                            placeholder="Enter new password"
+                            {...field}
+                            className="h-[48px]"
+                          />
+                        </FormControl>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          mode="icon"
+                          onClick={() => setPasswordVisible(!passwordVisible)}
+                          className="absolute end-0 top-1/2 -translate-y-1/2 h-7 w-7 me-1.5 bg-transparent!"
+                          aria-label={passwordVisible ? 'Hide password' : 'Show password'}
+                        >
+                          {passwordVisible ? (
+                            <EyeOff className="text-muted-foreground" />
+                          ) : (
+                            <img src="/images/icons/eye.svg" alt="eye" className='w-[15px]' />
 
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-[14px]/[22px] font-normal text-[#353535]">
-                      Confirm New Password
-                    </FormLabel>
-                    <div className="relative">
-                      <FormControl>
-                        <Input
-                          type={passwordConfirmationVisible ? 'text' : 'password'}
-                          placeholder="Confirm new password"
-                          {...field}
-                          className="h-[48px]"
-                        />
-                      </FormControl>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        mode="icon"
-                        onClick={() => setPasswordConfirmationVisible(!passwordConfirmationVisible)}
-                        className="absolute end-0 top-1/2 -translate-y-1/2 h-7 w-7 me-1.5 bg-transparent!"
-                        aria-label={
-                          passwordConfirmationVisible
-                            ? 'Hide password confirmation'
-                            : 'Show password confirmation'
-                        }
-                      >
-                        {passwordConfirmationVisible ? (
-                          <EyeOff className="text-muted-foreground" />
-                        ) : (
-                          <Eye className="text-muted-foreground" />
-                        )}
-                      </Button>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                          )}
+                        </Button>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <Button
-                type="submit"
-                disabled={isProcessing}
-                className="w-full h-[48px] text-[14px]/[20px] font-semibold"
-              >
-                {isProcessing && <LoaderCircleIcon className="size-4 animate-spin" />}
-                Confirm
-              </Button>
-            </form>
-          </Form>
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[14px]/[22px] font-normal text-[#353535]">
+                        Confirm New Password
+                      </FormLabel>
+                      <div className="relative">
+                        <FormControl>
+                          <Input
+                            type={passwordConfirmationVisible ? 'text' : 'password'}
+                            placeholder="Confirm new password"
+                            {...field}
+                            className="h-[48px]"
+                          />
+                        </FormControl>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          mode="icon"
+                          onClick={() => setPasswordConfirmationVisible(!passwordConfirmationVisible)}
+                          className="absolute end-0 top-1/2 -translate-y-1/2 h-7 w-7 me-1.5 bg-transparent!"
+                          aria-label={
+                            passwordConfirmationVisible
+                              ? 'Hide password confirmation'
+                              : 'Show password confirmation'
+                          }
+                        >
+                          {passwordConfirmationVisible ? (
+                            <EyeOff className="text-muted-foreground" />
+                          ) : (
+                            <img src="/images/icons/eye.svg" alt="eye" className='w-[15px]' />
+                          )}
+                        </Button>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="submit"
+                  disabled={isProcessing}
+                  className="w-full h-[48px] text-[14px]/[20px] font-semibold"
+                >
+                  {isProcessing && <LoaderCircleIcon className="size-4 animate-spin" />}
+                  Confirm
+                </Button>
+              </form>
+            </Form>
+          </div>
+        </div>
+        <div>
+          <div className="w-full flex justify-center md:mb-[-25px] mb-0">
+            <img src="/images/poweredBy.png" alt="logo" className="h-[28px]" />
+          </div>
+          <div className=" w-full pb-[50px] pl-[80px] pr-[80px] flex md:flex-row flex-col items-center justify-between gap-[10px] md:mt-0 mt-[10px]">
+            <div className="flex gap-[16px]">
+              <span className="text-[14px]/[22px] underline text-[#a19e9e]">Terms of Service</span>
+              <div className="w-[1px] h-[20px] bg-[#a19e9e]"></div>
+              <span className="text-[14px]/[22px] underline text-[#a19e9e]">Privacy Policy</span>
+            </div>
+
+            <span className="text-[14px]/[22px] text-[#a19e9e]">© 2025 Projitt</span>
+          </div>
         </div>
       </div>
     </>

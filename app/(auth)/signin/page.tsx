@@ -4,8 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff } from 'lucide-react';
-import { signIn } from 'next-auth/react';
+import { EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -20,6 +19,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { LoaderCircleIcon } from 'lucide-react';
 import { getSigninSchema, SigninSchemaType } from '../forms/signin-schema';
+import { toast } from 'sonner';
+import { customToast } from '@/components/common/toastr';
 
 export default function Page() {
   const router = useRouter();
@@ -37,35 +38,36 @@ export default function Page() {
   });
 
   async function onSubmit(values: SigninSchemaType) {
-    setIsProcessing(true);
+    // setIsProcessing(true);
     setError(null);
+    customToast('Invalid credentials', 'Check your email and password', 'error');
+    // try {
+    //   const response = await signIn('credentials', {
+    //     redirect: false,
+    //     email: values.email,
+    //     password: values.password,
+    //     rememberMe: values.rememberMe,
+    //   });
 
-    try {
-      const response = await signIn('credentials', {
-        redirect: false,
-        email: values.email,
-        password: values.password,
-        rememberMe: values.rememberMe,
-      });
-
-      if (response?.error) {
-        const errorData = JSON.parse(response.error);
-        setError(errorData.message);
-      } else {
-        router.push('/');
-      }
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.'
-      );
-    } finally {
-      setIsProcessing(false);
-    }
+    //   if (response?.error) {
+    //     const errorData = JSON.parse(response.error);
+    //     setError(errorData.message);
+    //     toast.error(errorData.message);
+    //   } else {
+    //     router.push('/');
+    //   }
+    // } catch (err) {
+    //   setError(
+    //     err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.'
+    //   );
+    // } finally {
+    //   setIsProcessing(false);
+    // }
   }
 
   return (
     <>
-      <div className="w-full h-full flex flex-col justify-between">
+      <div className="w-full h-full flex flex-col justify-between gap-[30px]">
         <div className="pt-[60px] flex justify-center w-full">
           <img src="/images/zaidLLC.png" alt="logo" className=" h-[48px]" />
         </div>
@@ -124,7 +126,7 @@ export default function Page() {
                           {passwordVisible ? (
                             <EyeOff className="text-muted-foreground" />
                           ) : (
-                            <Eye className="text-muted-foreground" />
+                            <img src="/images/icons/eye.svg" alt="eye" className='w-[15px]' />
                           )}
                         </Button>
                       </div>
@@ -172,17 +174,19 @@ export default function Page() {
             </Form>
           </div>
         </div>
-        <div className="w-full flex justify-center md:mb-[-25px] mb-0">
-          <img src="/images/poweredBy.png" alt="logo" className="h-[28px]" />
-        </div>
-        <div className=" w-full pb-[50px] pl-[80px] pr-[80px] flex md:flex-row flex-col items-center justify-between gap-[10px] md:mt-0 mt-[10px]">
-          <div className="flex gap-[16px]">
-            <span className="text-[14px]/[22px] underline text-[#a19e9e]">Terms of Service</span>
-            <div className="w-[1px] h-[20px] bg-[#a19e9e]"></div>
-            <span className="text-[14px]/[22px] underline text-[#a19e9e]">Privacy Policy</span>
+        <div>
+          <div className="w-full flex justify-center md:mb-[-25px] mb-0">
+            <img src="/images/poweredBy.png" alt="logo" className="h-[28px]" />
           </div>
+          <div className=" w-full pb-[50px] pl-[80px] pr-[80px] flex md:flex-row flex-col items-center justify-between gap-[10px] md:mt-0 mt-[10px]">
+            <div className="flex gap-[16px]">
+              <span className="text-[14px]/[22px] underline text-[#a19e9e]">Terms of Service</span>
+              <div className="w-[1px] h-[20px] bg-[#a19e9e]"></div>
+              <span className="text-[14px]/[22px] underline text-[#a19e9e]">Privacy Policy</span>
+            </div>
 
-          <span className="text-[14px]/[22px] text-[#a19e9e]">© 2025 Projitt</span>
+            <span className="text-[14px]/[22px] text-[#a19e9e]">© 2025 Projitt</span>
+          </div>
         </div>
       </div>
     </>

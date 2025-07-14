@@ -42,7 +42,7 @@ export default function Page() {
   const [showRecaptcha, setShowRecaptcha] = useState(false);
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
-  const [checkEmail, setCheckEmail] = useState(false);
+  const [checkEmail, setCheckEmail] = useState(true);
 
   const form = useForm<SignupSchemaType>({
     resolver: zodResolver(getSignupSchema()),
@@ -127,7 +127,7 @@ export default function Page() {
 
   return (
     <div className="w-[100vw] h-[100vh] bg-[#fafafa] relative overflow-y-auto">
-      <div className="flex">
+      <div className="flex h-full">
         <div className="lg:block hidden flex-1 relative bg-[#0D978B] overflow-hidden pt-[60px] xl:pl-[68px] xl:pr-[146px] pl-[50px] pr-[50px]">
           <img src="/images/white-logo.svg" alt="logo" className="h-[40px]" />
           <p className="text-[28px]/[36px] text-[#fff] mt-[97px] font-semibold md:break-words break-all">
@@ -139,7 +139,10 @@ export default function Page() {
           </div>
         </div>
         {!checkEmail ? (
-          <div className="lg:w-[50%] w-full lg:min-w-[737px] md:px-[136px] px-[30px] pt-[130px] pb-[80px] bg-white">
+          <div className="lg:w-[50%] w-full lg:min-w-[737px] md:px-[136px] px-[30px] lg:pt-[130px] pt-[40px] pb-[80px] bg-white">
+            <div className="w-full flex justify-center mb-[20px] lg:hidden">
+              <img src="/images/logo.png" alt="logo" className="h-[48px]" />
+            </div>
             <Suspense>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="block w-full space-y-5">
@@ -449,8 +452,11 @@ export default function Page() {
             </Suspense>
           </div>
         ) : (
-          <div className="lg:w-[50%] w-full flex items-center h-[100vh] justify-center">
-            <div className="sm:w-[560px] w-full sm:px-[48px] px-[20px] py-[44px]">
+          <div className="lg:w-[50%] w-full lg:min-w-[737px] md:px-[136px] px-[30px] lg:pt-[130px] pt-[40px] pb-[80px] bg-white flex flex-col justify-center items-center">
+            <div className="w-full flex justify-center mb-[20px] lg:hidden">
+              <img src="/images/logo.png" alt="logo" className="h-[48px]" />
+            </div>
+            <div className="sm:w-[560px] w-full sm:px-[48px] px-[20px] h-full flex flex-col justify-center items-center">
               <Form {...verifyForm}>
                 <form
                   onSubmit={verifyForm.handleSubmit(handleCheckEmail)}
@@ -471,12 +477,12 @@ export default function Page() {
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <div className="flex justify-center gap-[10px]">
+                            <div className="flex justify-between">
                               <PinField
                                 {...field}
                                 length={6}
                                 onComplete={(code) => console.log('Entered Code:', code)}
-                                className="border border-gray-300 rounded-md sm:w-[56px] w-[40px] h-12 text-center text-xl mx-1 focus:outline-none focus:ring-[3px] focus:ring-[#0D978B33]"
+                                className="border border-[#bcbcbc] rounded-[10px] sm:w-[56px] w-full h-[56px] text-center text-xl mx-1 focus:outline-none focus:ring-[3px] focus:ring-[#0D978B33]"
                               />
                             </div>
                           </FormControl>

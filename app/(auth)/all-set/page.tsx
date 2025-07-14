@@ -97,8 +97,8 @@ export default function Page() {
 
   return (
     <>
-      <div className="w-full h-full flex flex-col justify-between overflow-y-auto">
-        <div className=" flex flex-col flex-1">
+      <div className="w-full h-full flex flex-col justify-between overflow-y-auto gap-[56px]">
+        <div className=" flex flex-col flex-1 gap-[56px]">
           <div className="h-[95px] border-b border-[#e9e9e9] w-full flex items-center justify-center">
             <img src="/images/logo.png" alt="logo" className="h-[40px]" />
           </div>
@@ -107,16 +107,8 @@ export default function Page() {
               <div className="relative w-[100px] h-[100px] flex items-center justify-center">
                 <div className="absolute w-[100px] h-[100px] rounded-full bg-[#0D978B33] ripple"></div>
                 <div className="absolute w-[70px] h-[70px] rounded-full bg-[#0D978B] opacity-[20%] ripple delay-300"></div>
-                <div className="relative z-10 flex items-center justify-center w-[40px] h-[40px] rounded-full bg-[#0D978B] text-white">
-                  <svg
-                    className="w-[30px] h-[30px]"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    viewBox="0 0 24 24"
-                  >
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
+                <div className="relative z-10 flex items-center justify-center ">
+                  <img src="/images/icons/check-double.svg" alt="" className="w-[40px] h-[40px]" />
                 </div>
               </div>
               <p className="text-[22px]/[30px] font-semibold tracking-tight text-[#353535] text-center mt-[13px]">

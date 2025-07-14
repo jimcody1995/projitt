@@ -22,3 +22,8 @@
 .ripple-delay {
   animation-delay: 0.3s;
 }
+
+table {
+  border-collapse: separate !important;
+  border-spacing: 4px !important;
+}

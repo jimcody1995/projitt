@@ -17,7 +17,7 @@ interface DateTimePickProps {
 
 export default function DateTimePick({ step, setStep }: DateTimePickProps) {
   const [time, setTime] = useState<string | undefined>(undefined);
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date, setDate] = useState<Date[] | undefined>(undefined);
   const [timezone, setTimezone] = useState<string | undefined>(undefined);
   const [confirmed, setConfirmed] = useState<boolean>(false);
   const form = useForm<CompanySchemaType>({
@@ -34,10 +34,24 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps) {
     console.log(values);
     setStep('step2');
   };
+  const availableDates = [
+    new Date(2025, 6, 12),
+    new Date(2025, 6, 16),
+    new Date(2025, 6, 17),
+    new Date(2025, 6, 18),
+    new Date(2025, 6, 19),
+    new Date(2025, 6, 22),
+    new Date(2025, 6, 23),
+    new Date(2025, 6, 25),
+    new Date(2025, 6, 26),
+    new Date(2025, 6, 29),
+    new Date(2025, 6, 30),
+    new Date(2025, 6, 31)
+  ];
   return (
     <div className="w-full h-full flex justify-center items-center px-[10px] ">
-      <div className="lg:w-[1000px] w-full border border-[#e9e9e9] rounded-[20px] bg-white py-[48px] px-[48px] flex md:flex-row flex-col justify-between items-center gap-[20px]">
-        <div className="lg:w-[400px] md:w-[50%] flex flex-col gap-[19px]">
+      <div className="lg:w-[1000px] w-full border border-[#e9e9e9] rounded-[20px] bg-white py-[48px] px-[48px] flex lg:flex-row flex-col justify-between items-center gap-[20px]">
+        <div className="lg:w-[400px] w-full flex flex-col gap-[19px]">
           <p className="text-[22px]/[30px] font-medium md:w-[300px] w-full">
             Let’s Set Up Your Account Together
           </p>
@@ -47,9 +61,21 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps) {
           </p>
         </div>
         {!date && !confirmed && (
-          <div className="lg:w-[443px] w-full border-[1.25px] border-[#e9e9e9] rounded-[15px] py-[25px] px-[30px] gap-[24px] flex flex-col">
+          <div className="sm:w-[443px] w-full border-[1.25px] border-[#e9e9e9] rounded-[15px] py-[25px] px-[30px] gap-[24px] flex flex-col">
             <p className="text-[18px]/[24px] text-[#353535] font-medium text-center">Pick a Date</p>
-            <Calendar mode="single" selected={date} onSelect={(date) => setDate(date)} />
+            <Calendar mode="multiple" selected={date} onSelect={(date) => setDate(date)}
+              classNames={{
+                day: "bg-[#D6EEEC] rounded-[10px] text-[#0D978B] px-0 py-px text-[17px]",
+                disabled: "bg-white text-[#787878]",
+              }}
+              disabled={date => {
+                return !availableDates.some(
+                  (available) =>
+                    date.getDate() === available.getDate() &&
+                    date.getMonth() === available.getMonth() &&
+                    date.getFullYear() === available.getFullYear()
+                )
+              }} />
           </div>
         )}
         {date && !confirmed && (!timezone || !time) && (
@@ -59,7 +85,7 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps) {
                 <ArrowLeft onClick={() => setDate(undefined)} className="w-[15px]" />
               </button>
               <p className="text-[18px]/[24px] text-[#353535] font-semibold">
-                {moment(date).format('dddd, MMMM D, YYYY')}
+                {moment(date?.[0]).format('dddd, MMMM D, YYYY')}
               </p>
             </div>
             <div className="flex flex-col gap-[10px] border-b-1 border-[#e9e9e9] pb-[16px]">
@@ -101,19 +127,19 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps) {
               </div>
               <div className="flex flex-col gap-[24px]">
                 <div className="flex gap-[10px]">
-                  <Clock4 className="w-[24px] h-[24px]" />
+                  <Clock4 className="w-[20px] h-[20px] text-[#4b4b4b]" />
                   <p className="text-[16px]/[24px] text-[#4b4b4b] font-medium">
                     {moment(time, 'HH:mm').format('hh:mm A')}
                   </p>
                 </div>
                 <div className="flex gap-[10px]">
-                  <Calendar1 className="w-[24px] h-[24px]" />
+                  <img src="/images/icons/calendar.svg" alt="" className="w-[20px] h-[20px]" />
                   <p className="text-[16px]/[24px] text-[#4b4b4b] font-medium">
-                    {moment(date).format('dddd, MMMM D, YYYY')}
+                    {moment(date?.[0]).format('dddd, MMMM D, YYYY')}
                   </p>
                 </div>
                 <div className="flex gap-[10px]">
-                  <Globe2 className="w-[24px] h-[24px]" />
+                  <img src="/images/icons/timezone.svg" alt="" className="w-[20px] h-[20px]" />
                   <p className="text-[16px]/[24px] text-[#4b4b4b] font-medium">{timezone}</p>
                 </div>
               </div>
@@ -128,19 +154,11 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps) {
         )}
         {confirmed && (
           <div className="sm:w-[443px] w-full border-[1.25px] border-[#e9e9e9] rounded-[15px] py-[32px] px-[30px] gap-[24px] flex flex-col">
-            <div className="relative w-[36px] h-[36px] flex items-center justify-center">
-              <div className="absolute w-[36px] h-[36px] rounded-full bg-[#0D978B33] ripple"></div>
-              <div className="absolute w-[24px] h-[24px] rounded-full bg-[#0D978B] opacity-[20%] ripple delay-300"></div>
-              <div className="relative z-10 flex items-center justify-center w-[20px] h-[20px] rounded-full bg-[#0D978B] text-white">
-                <svg
-                  className="w-[16px] h-[16px]"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  viewBox="0 0 24 24"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
+            <div className="relative w-[56px] h-[56px] flex items-center justify-center">
+              <div className="absolute z-3 w-[56px] h-[56px] rounded-full bg-[#0D978B33] ripple"></div>
+              <div className="absolute z-2 w-[36px] h-[36px] rounded-full bg-[#0D978B] opacity-[20%] ripple delay-300"></div>
+              <div className="absolute z-10 flex items-center justify-center w-[20px] h-[20px] rounded-full ">
+                <img src="/images/icons/check-double.svg" alt="" className="w-[21px] h-[21px]" />
               </div>
             </div>
 
@@ -160,7 +178,7 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps) {
               <div className="flex gap-[10px]">
                 <Calendar1 className="w-[24px] h-[24px]" />
                 <p className="text-[16px]/[24px] text-[#4b4b4b] font-medium">
-                  {moment(date).format('dddd, MMMM D, YYYY')}
+                  {moment(date?.[0]).format('dddd, MMMM D, YYYY')}
                 </p>
               </div>
               <div className="flex gap-[10px]">
