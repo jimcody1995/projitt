@@ -176,8 +176,7 @@ export default function Page() {
                             {passwordVisible ? (
                               <EyeOff className="text-muted-foreground" />
                             ) : (
-                              <img src="/images/icons/eye.svg" alt="eye" className='w-[15px]' />
-
+                              <img src="/images/icons/eye.svg" alt="eye" className="w-[15px]" />
                             )}
                           </Button>
                         </div>
@@ -220,8 +219,7 @@ export default function Page() {
                             {passwordConfirmationVisible ? (
                               <EyeOff className="text-muted-foreground" />
                             ) : (
-                              <img src="/images/icons/eye.svg" alt="eye" className='w-[15px]' />
-
+                              <img src="/images/icons/eye.svg" alt="eye" className="w-[15px]" />
                             )}
                           </Button>
                         </div>

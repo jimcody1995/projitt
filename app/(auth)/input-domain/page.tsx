@@ -24,12 +24,11 @@ export default function InputDomain() {
 
   return (
     <>
-
       <div className="absolute w-full h-full overflow-hidden">
         <div className="w-[618px] h-[618px] bg-[#0d978b] top-[379px] left-[769px] opacity-[10%] rounded-full absolute z-[2] blur-[100px]"></div>
         <div className="w-[483px] h-[483px] bg-[#ffa750] top-[660px] left-[264px] opacity-[10%] rounded-full absolute z-[2] blur-[100px]"></div>
       </div>
-      <div className='h-full overflow-y-auto'>
+      <div className="h-full overflow-y-auto">
         <div className="w-full h-full flex flex-col justify-between">
           <div className="mt-[60px] flex flex-col items-center w-full relative z-[3] px-[10px]">
             <img src="/images/logo.png" alt="logo" className="h-[52px]" />
@@ -47,8 +46,14 @@ export default function InputDomain() {
                       <FormItem>
                         <FormControl>
                           <div className="relative">
-                            <Input placeholder="Company Domain" {...field} className="h-[48px] pl-[10px]" />
-                            <span className="absolute top-[50%] right-[16px] -translate-y-[50%] text-[14px]/[20px] text-[#353535]">.projitt.com</span>
+                            <Input
+                              placeholder="Company Domain"
+                              {...field}
+                              className="h-[48px] pl-[10px]"
+                            />
+                            <span className="absolute top-[50%] right-[16px] -translate-y-[50%] text-[14px]/[20px] text-[#353535]">
+                              .projitt.com
+                            </span>
                           </div>
                         </FormControl>
                         <FormMessage />

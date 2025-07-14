@@ -46,7 +46,7 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps) {
     new Date(2025, 6, 26),
     new Date(2025, 6, 29),
     new Date(2025, 6, 30),
-    new Date(2025, 6, 31)
+    new Date(2025, 6, 31),
   ];
   return (
     <div className="w-full h-full flex justify-center items-center px-[10px] ">
@@ -63,19 +63,23 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps) {
         {!date && !confirmed && (
           <div className="sm:w-[443px] w-full border-[1.25px] border-[#e9e9e9] rounded-[15px] py-[25px] px-[30px] gap-[24px] flex flex-col">
             <p className="text-[18px]/[24px] text-[#353535] font-medium text-center">Pick a Date</p>
-            <Calendar mode="multiple" selected={date} onSelect={(date) => setDate(date)}
+            <Calendar
+              mode="multiple"
+              selected={date}
+              onSelect={(date) => setDate(date)}
               classNames={{
-                day: "bg-[#D6EEEC] rounded-[10px] text-[#0D978B] px-0 py-px text-[17px]",
-                disabled: "bg-white text-[#787878]",
+                day: 'bg-[#D6EEEC] rounded-[10px] text-[#0D978B] px-0 py-px text-[17px]',
+                disabled: 'bg-white text-[#787878]',
               }}
-              disabled={date => {
+              disabled={(date) => {
                 return !availableDates.some(
                   (available) =>
                     date.getDate() === available.getDate() &&
                     date.getMonth() === available.getMonth() &&
                     date.getFullYear() === available.getFullYear()
-                )
-              }} />
+                );
+              }}
+            />
           </div>
         )}
         {date && !confirmed && (!timezone || !time) && (

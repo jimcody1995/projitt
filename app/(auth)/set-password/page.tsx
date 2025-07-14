@@ -114,7 +114,9 @@ export default function Page() {
                     Create your login credentials to get started with Projitt.
                   </p>
                 </div>
-                <Label className="text-[14px]/[22px] font-normal text-[#353535]">Email Address</Label>
+                <Label className="text-[14px]/[22px] font-normal text-[#353535]">
+                  Email Address
+                </Label>
                 <Input
                   type="email"
                   disabled
@@ -149,8 +151,7 @@ export default function Page() {
                           {passwordVisible ? (
                             <EyeOff className="text-muted-foreground" />
                           ) : (
-                            <img src="/images/icons/eye.svg" alt="eye" className='w-[15px]' />
-
+                            <img src="/images/icons/eye.svg" alt="eye" className="w-[15px]" />
                           )}
                         </Button>
                       </div>
@@ -180,7 +181,9 @@ export default function Page() {
                           type="button"
                           variant="ghost"
                           mode="icon"
-                          onClick={() => setPasswordConfirmationVisible(!passwordConfirmationVisible)}
+                          onClick={() =>
+                            setPasswordConfirmationVisible(!passwordConfirmationVisible)
+                          }
                           className="absolute end-0 top-1/2 -translate-y-1/2 h-7 w-7 me-1.5 bg-transparent!"
                           aria-label={
                             passwordConfirmationVisible
@@ -191,7 +194,7 @@ export default function Page() {
                           {passwordConfirmationVisible ? (
                             <EyeOff className="text-muted-foreground" />
                           ) : (
-                            <img src="/images/icons/eye.svg" alt="eye" className='w-[15px]' />
+                            <img src="/images/icons/eye.svg" alt="eye" className="w-[15px]" />
                           )}
                         </Button>
                       </div>

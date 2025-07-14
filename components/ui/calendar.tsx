@@ -39,13 +39,11 @@ function Calendar({
         range_middle: 'range-middle',
         today:
           '*:after:pointer-events-none *:after:absolute *:after:bottom-1 *:after:start-1/2 *:after:z-10 *:after:size-[3px] *:after:-translate-x-1/2 rtl:*:after:translate-x-1/2 *:after:rounded-full *:after:bg-[#0d978b] [&[data-selected]:not(.range-middle)>*]:after:bg-[#0d978b] [&[data-disabled]>*]:after:bg-foreground/30 *:after:transition-colors',
-        outside:
-          '!text-[#E9E9E9] data-selected:bg-accent/50 data-selected:text-muted-foreground',
+        outside: '!text-[#E9E9E9] data-selected:bg-accent/50 data-selected:text-muted-foreground',
         hidden: 'invisible',
         week_number: 'size-8 p-0 text-xs font-medium text-muted-foreground/80',
         ...classNames,
       }}
-
       components={{
         Chevron: (props) => {
           if (props.orientation === 'left') {

@@ -20,13 +20,12 @@ export default function Page() {
   const router = useRouter();
 
   return (
-
     <>
       <div className="absolute w-full h-full overflow-hidden">
         <div className="w-[618px] h-[618px] bg-[#0d978b] top-[379px] left-[769px] opacity-[10%] rounded-full absolute z-[2] blur-[100px]"></div>
         <div className="w-[483px] h-[483px] bg-[#ffa750] top-[660px] left-[264px] opacity-[10%] rounded-full absolute z-[2] blur-[100px]"></div>
       </div>
-      <div className='h-full overflow-y-auto'>
+      <div className="h-full overflow-y-auto">
         <div className="w-full h-full flex flex-col justify-between">
           <div className="mt-[60px] flex flex-col items-center w-full relative z-[3] px-[10px]">
             <img src="/images/logo.png" alt="logo" className="h-[52px]" />
@@ -38,8 +37,8 @@ export default function Page() {
               </div>
               <Input disabled value="https://company.projitt.com" className="h-[48px] mt-[14px]" />
               <p className="text-[14px]/[20px]  text-[#626262] mt-[20px]">
-                Check your browser’s address bar when logged in to projitt or ask a colleague. The text
-                just before .projitt.com is your company domain
+                Check your browser’s address bar when logged in to projitt or ask a colleague. The
+                text just before .projitt.com is your company domain
               </p>
               <Button
                 className="h-[48px] w-full text-[14px]/[20px] font-semibold mt-[30px]"
