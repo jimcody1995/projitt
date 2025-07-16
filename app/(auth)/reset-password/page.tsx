@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, ArrowLeft, Check } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { any, z } from 'zod';
 import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,12 +18,15 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { LoaderCircleIcon } from 'lucide-react';
+import { forgotPasssword } from '@/api/user';
+import { customToast } from '@/components/common/toastr';
 
 export default function Page() {
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
   const [showRecaptcha, setShowRecaptcha] = useState(false);
 
   const formSchema = z.object({
@@ -41,42 +44,25 @@ export default function Page() {
     e.preventDefault();
     const result = await form.trigger();
     if (!result) return;
-    setChecking(true);
-    setShowRecaptcha(true);
+    try {
+      const values = form.getValues();
+      setIsProcessing(true);
+      const response = await forgotPasssword({ email: values.email });
+      if (response?.data?.status === false) {
+        customToast("Error", response?.data?.error, "error")
+        return
+      }
+      setEmail(values.email)
+      setChecking(true)
+
+      form.reset();
+    } catch (err: any) {
+      customToast("Error", err.response.data.message, "error")
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
-  const handleVerifiedSubmit = async (token: string) => {
-    // try {
-    //   const values = form.getValues();
-    //   setIsProcessing(true);
-    //   setError(null);
-    //   setSuccess(null);
-    //   setShowRecaptcha(false);
-    //   const response = await apiFetch('/api/auth/reset-password', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'x-recaptcha-token': token,
-    //     },
-    //     body: JSON.stringify(values),
-    //   });
-    //   const data = await response.json();
-    //   if (!response.ok) {
-    //     setError(data.message);
-    //     return;
-    //   }
-    //   setSuccess(data.message);
-    //   form.reset();
-    // } catch (err) {
-    //   setError(
-    //     err instanceof Error
-    //       ? err.message
-    //       : 'An unexpected error occurred. Please try again.',
-    //   );
-    // } finally {
-    //   setIsProcessing(false);
-    // }
-  };
 
   return (
     <>
@@ -170,7 +156,7 @@ export default function Page() {
                   </h1>
                   <p className="text-[18px]/[30px] text-[#4b4b4b] text-center">
                     We’ve sent you a secure link to reset your password at{' '}
-                    <span className="text-[#0d978b]">admin@zaidllc.com</span>
+                    <span className="text-[#0d978b]">{email}</span>
                   </p>
                 </div>
               </div>

@@ -9,6 +9,7 @@ import '@/components/keenicons/assets/styles.css';
 import { Metadata } from 'next';
 import { QueryProvider } from '@/providers/query-provider';
 import { ThemeProvider } from '@/providers/theme-provider';
+import { SessionProvider } from '@/context/SessionContext';
 
 const inter = Geist({ subsets: ['latin'] });
 
@@ -26,16 +27,18 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           inter.className
         )}
       >
-        <QueryProvider>
-          <SettingsProvider>
-            <ThemeProvider>
-              <TooltipsProvider>
-                <Suspense>{children}</Suspense>
-                <Toaster />
-              </TooltipsProvider>
-            </ThemeProvider>
-          </SettingsProvider>
-        </QueryProvider>
+        <SessionProvider>
+          <QueryProvider>
+            <SettingsProvider>
+              <ThemeProvider>
+                <TooltipsProvider>
+                  <Suspense>{children}</Suspense>
+                  <Toaster />
+                </TooltipsProvider>
+              </ThemeProvider>
+            </SettingsProvider>
+          </QueryProvider>
+        </SessionProvider>
       </body>
     </html>
   );

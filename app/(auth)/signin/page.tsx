@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,48 +21,71 @@ import { LoaderCircleIcon } from 'lucide-react';
 import { getSigninSchema, SigninSchemaType } from '../forms/signin-schema';
 import { toast } from 'sonner';
 import { customToast } from '@/components/common/toastr';
+import { login } from '@/api/user';
+import { useSession } from '@/context/SessionContext';
+import axios from 'axios';
 
 export default function Page() {
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const form = useForm<SigninSchemaType>({
+  const { setSession, session } = useSession()
+  const form = useForm({
     resolver: zodResolver(getSigninSchema()),
     defaultValues: {
-      email: 'demo@kt.com',
-      password: 'demo123',
-      rememberMe: false,
-    },
+      email: "",
+      password: "",
+      rememberMe: false
+    }
   });
 
-  async function onSubmit(values: SigninSchemaType) {
-    // setIsProcessing(true);
-    setError(null);
-    customToast('Invalid credentials', 'Check your email and password', 'error');
-    // try {
-    //   const response = await signIn('credentials', {
-    //     redirect: false,
-    //     email: values.email,
-    //     password: values.password,
-    //     rememberMe: values.rememberMe,
-    //   });
+  useEffect(() => {
+    const userInfoRaw = localStorage.getItem("userInfo");
+    if (userInfoRaw) {
+      try {
+        const userInfo = JSON.parse(userInfoRaw);
+        form.reset({
+          email: userInfo.email || "",
+          password: userInfo.password || "",
+          rememberMe: userInfo.rememberMe || false
+        });
+      } catch (e) {
+        console.error("Invalid localStorage JSON", e);
+      }
+    }
+  }, []);
 
-    //   if (response?.error) {
-    //     const errorData = JSON.parse(response.error);
-    //     setError(errorData.message);
-    //     toast.error(errorData.message);
-    //   } else {
-    //     router.push('/');
-    //   }
-    // } catch (err) {
-    //   setError(
-    //     err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.'
-    //   );
-    // } finally {
-    //   setIsProcessing(false);
-    // }
+  useEffect(() => {
+    if (session.token) {
+      router.replace("/dashboard")
+    }
+  }, [session.token])
+
+  async function onSubmit(values: SigninSchemaType) {
+    setIsProcessing(true);
+    setError(null);
+    try {
+
+      const response = await login(values);
+      if (response?.data?.status === false) {
+        customToast("Error", response?.data?.error, "error")
+        return
+      }
+      setSession(response?.data?.data?.token || "")
+      if (values.rememberMe) {
+        localStorage.setItem("userInfo", JSON.stringify(values))
+      }
+      else {
+        localStorage.removeItem("userInfo")
+      }
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response?.data?.data?.token}`
+      router.push("/dashboard")
+    } catch (err: any) {
+      customToast("Error", err.response.data.message, "error")
+    } finally {
+      setIsProcessing(false);
+    }
   }
 
   return (
@@ -80,7 +103,6 @@ export default function Page() {
                     Log in to your account
                   </h1>
                 </div>
-
                 <FormField
                   control={form.control}
                   name="email"
