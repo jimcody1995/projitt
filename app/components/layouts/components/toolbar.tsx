@@ -8,6 +8,7 @@ import { MENU_SIDEBAR } from '@/config/menu.config';
 import { MenuItem } from '@/config/types';
 import { cn } from '@/lib/utils';
 import { useMenu } from '@/hooks/use-menu';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 export interface ToolbarHeadingProps {
   title?: string | ReactNode;

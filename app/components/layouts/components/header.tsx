@@ -8,17 +8,29 @@ import {
   Bell,
   CircleQuestionMark,
   Search,
+  Menu,
+  SquareChevronRight,
 } from 'lucide-react';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useScrollPosition } from '@/hooks/use-scroll-position';
+import {
+  Sheet,
+  SheetBody,
+  SheetContent,
+  SheetHeader,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Container } from '@/components/common/container';
 import { Breadcrumb } from './breadcrumb';
 import { Input } from '@/components/ui/input';
 import { LanguageDropdown } from '../../partials/topbar/language-dropdown';
 import { ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import { SidebarMenu } from './sidebar-menu';
+import { MegaMenuMobile } from './mega-menu-mobile';
 
 export function Header() {
   const [isSidebarSheetOpen, setIsSidebarSheetOpen] = useState(false);
@@ -44,17 +56,44 @@ export function Header() {
       )}
     >
       <Container className="flex justify-between items-stretch lg:gap-4 lg:px-[48px]">
+        <div className="flex gap-1 lg:hidden items-center gap-2.5">
+          <div className="flex items-center">
+            {mobileMode && (
+              <Sheet
+                open={isSidebarSheetOpen}
+                onOpenChange={setIsSidebarSheetOpen}
+              >
+                <SheetTrigger asChild>
+                  <Button variant="ghost" mode="icon">
+                    <Menu className="text-muted-foreground/70" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent
+                  className="p-0 gap-0 w-[275px]"
+                  side="left"
+                  close={false}
+                >
+                  <SheetHeader className="p-0 space-y-0" />
+                  <SheetBody className="p-0 overflow-y-auto">
+                    <SidebarMenu />
+                  </SheetBody>
+                </SheetContent>
+              </Sheet>
+            )}
+
+          </div>
+        </div>
         {pathname.startsWith('/account') ? (
           <Breadcrumb />
         ) : (
           <div className="flex h-full items-center gap-2.5">
-            <div className="relative">
+            <div className="relative hidden md:block">
               <Search className="size-[18px] text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2" />
               <Input
                 placeholder="Search something"
                 // value={searchQuery}
                 // onChange={(e) => setSearchQuery(e.target.value)}
-                className="ps-9 w-[278px]"
+                className="ps-9 md:w-[278px] "
               />
             </div>
           </div>

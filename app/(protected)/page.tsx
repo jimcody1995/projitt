@@ -47,7 +47,7 @@ export default function Dashboard() {
         <div className="flex flex-col ">
             <p className="text-[24px]/[30px] text-[#1C1C1C] font-semibold">Home</p>
             <p className="text-[14px]/[20px] text-[#353535] font-[500]">Explore your active modules, discover more features, and configure your subscription.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 ">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-[31px]">
                 {modules.map((item, index) => (
                     <div className="bg-white  rounded-[12px] border border-[#e9e9e9] pt-[24px] px-[24px]" key={index}>
                         <div className="flex w-full justify-between">
@@ -61,7 +61,7 @@ export default function Dashboard() {
                             {item.features.map(({ Icon, ...feature }, i) => (
                                 <div className="flex gap-[17px] items-center" key={i}>
                                     {feature.status === "Not subscribed" ? <LockKeyhole className="size-[20px] mt-[-36px] text-[#8F8F8F]" /> : <Icon className="size-[20px] mt-[-36px] text-[#0D978B]" />}
-                                    <div className={`flex-1 flex justify-between border-b border-[#e9e9e9] pb-[16px] mb-[16px] ${index === item.features.length - 1 ? 'mb-0 border-b-0 pb-0' : ' '}`}>
+                                    <div className={`flex-1 flex justify-between border-b border-[#e9e9e9] pb-[16px] mb-[16px] ${i === item.features.length - 1 ? 'mb-0 border-b-0 pb-0' : ' '}`}>
                                         <div className="flex w-full justify-between">
                                             <div className="w-[243px] text-[#8f8f8f]">
                                                 <p className={`text-[12px]/[16px] font-[500] ${feature.status === "Not subscribed" ? "text-[#8F8F8F]" : "text-[#353535]"}`}>{feature.name} <span className="text-[#0D978B] bg-[#d6eeec] p-[4px] rounded-[4px] ml-[12px] text-[10px]/[12px]">Most Popular</span></p>
