@@ -49,7 +49,7 @@ export default function Dashboard() {
             <p className="text-[14px]/[20px] text-[#353535] font-[500]">Explore your active modules, discover more features, and configure your subscription.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 ">
                 {modules.map((item, index) => (
-                    <div className="bg-white  rounded-[12px] border border-[#e9e9e9] pt-[24px] px-[24px]">
+                    <div className="bg-white  rounded-[12px] border border-[#e9e9e9] pt-[24px] px-[24px]" key={index}>
                         <div className="flex w-full justify-between">
                             <p className="text-[14px]/[16px] text-[#4b4b4b] font-[500] ">{item.title}</p>
                             <button className="text-[12px]/[16px] text-[#0d978b] font-[500] flex items-center gap-[8px] cursor-pointer">
@@ -58,8 +58,8 @@ export default function Dashboard() {
                             </button>
                         </div>
                         <div className="mt-[32px]">
-                            {item.features.map(({ Icon, ...feature }, index) => (
-                                <div className="flex gap-[17px] items-center">
+                            {item.features.map(({ Icon, ...feature }, i) => (
+                                <div className="flex gap-[17px] items-center" key={i}>
                                     {feature.status === "Not subscribed" ? <LockKeyhole className="size-[20px] mt-[-36px] text-[#8F8F8F]" /> : <Icon className="size-[20px] mt-[-36px] text-[#0D978B]" />}
                                     <div className={`flex-1 flex justify-between border-b border-[#e9e9e9] pb-[16px] mb-[16px] ${index === item.features.length - 1 ? 'mb-0 border-b-0 pb-0' : ' '}`}>
                                         <div className="flex w-full justify-between">
