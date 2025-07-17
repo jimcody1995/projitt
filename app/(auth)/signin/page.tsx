@@ -57,10 +57,10 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    if (session.token) {
-      router.replace("/dashboard")
+    if (session.authenticated) {
+      router.replace("/")
     }
-  }, [session.token])
+  }, [session.authenticated])
 
   async function onSubmit(values: SigninSchemaType) {
     setIsProcessing(true);
@@ -72,7 +72,7 @@ export default function Page() {
         customToast("Error", response?.data?.error, "error")
         return
       }
-      setSession(response?.data?.data?.token || "")
+      setSession({ token: response?.data?.data?.token || "", authenticated: true })
       if (values.rememberMe) {
         localStorage.setItem("userInfo", JSON.stringify(values))
       }
@@ -80,7 +80,7 @@ export default function Page() {
         localStorage.removeItem("userInfo")
       }
       axios.defaults.headers.common['Authorization'] = `Bearer ${response?.data?.data?.token}`
-      router.push("/dashboard")
+      router.push("/")
     } catch (err: any) {
       customToast("Error", err.response.data.message, "error")
     } finally {

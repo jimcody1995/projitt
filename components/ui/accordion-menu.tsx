@@ -39,9 +39,9 @@ interface AccordionMenuProps {
 const AccordionMenuContext = React.createContext<AccordionMenuContextValue>({
   matchPath: () => false,
   selectedValue: '',
-  setSelectedValue: () => {},
+  setSelectedValue: () => { },
   nestedStates: {},
-  setNestedStates: () => {},
+  setNestedStates: () => { },
 });
 
 function AccordionMenu({
@@ -159,7 +159,7 @@ function AccordionMenuGroup({ children, className, ...props }: AccordionMenuGrou
     <div
       data-slot="accordion-menu-group"
       role="group"
-      className={cn('space-y-0.5', classNames?.group, className)}
+      className={cn('space-y-[0px]', classNames?.group, className)}
       {...props}
     >
       {children}
@@ -203,7 +203,7 @@ function AccordionMenuSeparator({ className, ...props }: AccordionMenuSeparatorP
 }
 
 const itemVariants = cva(
-  'relative cursor-pointer select-none flex w-full text-start items-center text-foreground rounded-lg gap-2 px-2 py-1.5 text-sm outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground disabled:opacity-50 disabled:bg-transparent focus-visible:bg-accent focus-visible:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:opacity-60 [&_svg:not([class*=size-])]:size-4 [&_svg]:shrink-0 [&_a]:flex [&>a]:w-full [&>a]:items-center [&>a]:gap-2',
+  'relative cursor-pointer select-none flex w-full text-start  rounded-[6px] gap-2 px-[6px]  !text-[13px]/[20px] !leading-[20px] outline-hidden transition-colors hover:bg-[accent] hover:text-accent-foreground data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground disabled:opacity-50 disabled:bg-transparent focus-visible:bg-accent focus-visible:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:opacity-60 [&_svg:not([class*=size-])]:size-4 [&_svg]:shrink-0 [&_a]:flex [&>a]:w-full [&>a]:items-center [&>a]:gap-2',
   {
     variants: {
       variant: {
@@ -296,7 +296,7 @@ function AccordionMenuSubTrigger({
       <AccordionPrimitive.Trigger
         data-slot="accordion-menu-sub-trigger"
         className={cn(
-          'w-full relative flex items-center cursor-pointer select-none text-start rounded-lg gap-2 px-2 py-1.5 text-sm outline-hidden text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground [&_svg]:pointer-events-none [&_svg:not([role=img]):not([class*=text-])]:opacity-60 [&_svg:not([class*=size-])]:size-4 [&_svg]:shrink-0',
+          'w-full relative flex items-center cursor-pointer select-none text-start rounded-[6px]  gap-2 px-2 py-1.5 text-sm outline-hidden text-[#4b4b4b] transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground [&_svg]:pointer-events-none [&_svg:not([role=img]):not([class*=text-])]:opacity-60 [&_svg:not([class*=size-])]:size-4 [&_svg]:shrink-0',
           classNames?.subTrigger,
           className
         )}
@@ -317,15 +317,15 @@ function AccordionMenuSubTrigger({
 
 type AccordionMenuSubContentProps = (
   | (React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content> & {
-      type: 'single';
-      collapsible: boolean;
-      defaultValue?: string;
-    })
+    type: 'single';
+    collapsible: boolean;
+    defaultValue?: string;
+  })
   | (React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content> & {
-      type: 'multiple';
-      collapsible?: boolean;
-      defaultValue?: string | string[];
-    })
+    type: 'multiple';
+    collapsible?: boolean;
+    defaultValue?: string | string[];
+  })
 ) & {
   parentValue: string;
 };
@@ -383,7 +383,7 @@ function AccordionMenuSubContent({
         </AccordionPrimitive.Root>
       ) : (
         <AccordionPrimitive.Root
-          className={cn('w-full py-0.5', classNames?.subWrapper)}
+          className={cn('w-full py-0.5 pt-[10px]', classNames?.subWrapper)}
           type="single"
           collapsible={collapsible}
           value={currentValue as string}

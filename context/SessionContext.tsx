@@ -4,7 +4,7 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 
 type Session = {
     token: string | null
-    user?: any
+    authenticated: boolean
 }
 
 type SessionContextType = {
@@ -16,21 +16,21 @@ type SessionContextType = {
 const SessionContext = createContext<SessionContextType | undefined>(undefined)
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
-    const [session, setSessionState] = useState<Session>({ token: null })
+    const [session, setSessionState] = useState<Session>({ token: null, authenticated: false })
     useEffect(() => {
         const stored = localStorage.getItem("session")
         if (stored) {
-            setSessionState({ token: stored })
+            setSessionState({ token: stored, authenticated: true })
             axios.defaults.headers.common["Authorization"] = `Bearer ${stored}`
         }
     }, [])
     const setSession = (session: Session) => {
-        setSessionState(session)
-        localStorage.setItem("session", JSON.stringify(session))
+        setSessionState({ ...session })
+        localStorage.setItem("session", JSON.stringify(session.token))
     }
 
     const clearSession = () => {
-        setSessionState({ token: null })
+        setSessionState({ token: null, authenticated: false })
         localStorage.removeItem("session")
     }
 

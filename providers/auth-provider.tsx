@@ -14,7 +14,7 @@ export function AuthProvider({ children, session }: AuthProviderProps) {
       ? process.env.NEXT_PUBLIC_BASE_PATH
       : process.env.NEXT_PUBLIC_BASE_PATH) || '';
   return (
-    <SessionProvider session={session} basePath={`${basePath}/api/auth`}>
+    <SessionProvider session={session} basePath={`${basePath}/user`}>
       {children}
     </SessionProvider>
   );
