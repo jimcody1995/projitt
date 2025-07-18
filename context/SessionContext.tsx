@@ -17,16 +17,11 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined)
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
     const [session, setSessionState] = useState<Session>({ token: null, authenticated: false })
-    useEffect(() => {
-        const stored = localStorage.getItem("session")
-        if (stored) {
-            setSessionState({ token: stored, authenticated: true })
-            axios.defaults.headers.common["Authorization"] = `Bearer ${stored}`
-        }
-    }, [])
+
     const setSession = (session: Session) => {
         setSessionState({ ...session })
         localStorage.setItem("session", JSON.stringify(session.token))
+        axios.defaults.headers.common["Authorization"] = `Bearer ${session.token}`
     }
 
     const clearSession = () => {

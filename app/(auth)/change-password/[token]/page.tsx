@@ -16,14 +16,15 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useParams } from 'next/navigation';
 import { LoaderCircleIcon } from 'lucide-react';
-import { ChangePasswordSchemaType, getChangePasswordSchema } from '../forms/change-password-schema';
-import Link from 'next/link';
+import { ChangePasswordSchemaType, getChangePasswordSchema } from '../../forms/change-password-schema';
+import { resetPassword } from '@/api/user';
+import { customToast } from '@/components/common/toastr';
 
 export default function Page() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams?.get('token') || null;
+  const { token } = useParams();
 
   const [verifyingToken, setVerifyingToken] = useState(false);
   const [isValidToken, setIsValidToken] = useState(false);
@@ -36,64 +37,67 @@ export default function Page() {
   const form = useForm<ChangePasswordSchemaType>({
     resolver: zodResolver(getChangePasswordSchema()),
     defaultValues: {
+      email: '',
       newPassword: '',
       confirmPassword: '',
     },
   });
 
-  useEffect(() => {
-    const verifyToken = async () => {
-      // try {
-      //   setVerifyingToken(true);
-      //   const response = await apiFetch('/api/auth/reset-password-verify', {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify({ token }),
-      //   });
-      //   if (response.ok) {
-      //     setIsValidToken(true);
-      //   } else {
-      //     const errorData = await response.json();
-      //     setError(errorData.message || 'Invalid or expired token.');
-      //   }
-      // } catch {
-      //   setError('Unable to verify the reset token.');
-      // } finally {
-      //   setVerifyingToken(false);
-      // }
-    };
+  // useEffect(() => {
+  //   const verifyToken = async () => {
+  //     // try {
+  //     //   setVerifyingToken(true);
+  //     //   const response = await apiFetch('/api/auth/reset-password-verify', {
+  //     //     method: 'POST',
+  //     //     headers: { 'Content-Type': 'application/json' },
+  //     //     body: JSON.stringify({ token }),
+  //     //   });
+  //     //   if (response.ok) {
+  //     //     setIsValidToken(true);
+  //     //   } else {
+  //     //     const errorData = await response.json();
+  //     //     setError(errorData.message || 'Invalid or expired token.');
+  //     //   }
+  //     // } catch {
+  //     //   setError('Unable to verify the reset token.');
+  //     // } finally {
+  //     //   setVerifyingToken(false);
+  //     // }
+  //   };
 
-    if (token) {
-      verifyToken();
-    } else {
-      setError('No reset token provided.');
-    }
-  }, [token]);
+  //   if (router.query.token) {
+  //     verifyToken();
+  //   } else {
+  //     setError('No reset token provided.');
+  //   }
+  // }, [router.query.token]);
 
   async function onSubmit(values: ChangePasswordSchemaType) {
     setIsProcessing(true);
     setError(null);
     setSuccessMessage(null);
 
-    // try {
-    //   const response = await apiFetch('/api/auth/change-password', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ token, newPassword: values.newPassword }),
-    //   });
+    try {
+      if (!token) {
+        customToast("Error", "Token not found", "error");
+        return;
+      }
+      console.log(values.email);
 
-    //   if (response.ok) {
-    //     setSuccessMessage('Password reset successful! Redirecting to login...');
-    //     setTimeout(() => router.push('/signin'), 3000);
-    //   } else {
-    //     const errorData = await response.json();
-    //     setError(errorData.message || 'Password reset failed.');
-    //   }
-    // } catch {
-    //   setError('An error occurred while resetting the password.');
-    // } finally {
-    //   setIsProcessing(false);
-    // }
+
+      const response = await resetPassword({ token: token as string, email: values.email, password: values.newPassword });
+      console.log(response);
+      if (response?.data?.status === false) {
+        customToast("Error", response?.data?.error, "error")
+        return
+      }
+      customToast("Success", "Password reset successful. Redirecting to login...", "success");
+      setTimeout(() => router.push('/signin'), 3000);
+    } catch (err: any) {
+      customToast("Error", err.response.data.message, "error")
+    } finally {
+      setIsProcessing(false);
+    }
   }
 
   return (
@@ -148,6 +152,21 @@ export default function Page() {
 
                 {/* {isValidToken && !successMessage && !verifyingToken && ( */}
                 <>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-[14px]/[22px] font-normal text-[#353535]">
+                          Email Address
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter email addresss" {...field} className="h-[48px]" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name="newPassword"

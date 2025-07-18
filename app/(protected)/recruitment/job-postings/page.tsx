@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 import {
     ColumnDef,
     getCoreRowModel,
@@ -8,6 +8,7 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     PaginationState,
+    Row,
     RowSelectionState,
     SortingState,
     useReactTable,
@@ -15,6 +16,7 @@ import {
 import {
     ArrowDown,
     ArrowRight,
+    Ban,
     BriefcaseBusiness,
     ChevronDown,
     Clock,
@@ -35,25 +37,19 @@ import {
     ShoppingBag,
     SquarePen,
     Star,
+    StopCircle,
+    Trash,
     Trash2,
+    Upload,
     Users,
     X,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { Badge, BadgeDot } from '@/components/ui/badge';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardFooter,
-    CardHeader,
-    CardHeading,
-    CardTable,
-    CardToolbar,
-} from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
+
 import { DataGrid, useDataGrid } from '@/components/ui/data-grid';
 import { DataGridColumnHeader } from '@/components/ui/data-grid-column-header';
-import { DataGridColumnVisibility } from '@/components/ui/data-grid-column-visibility';
 import { DataGridPagination } from '@/components/ui/data-grid-pagination';
 import {
     DataGridTable,
@@ -61,14 +57,7 @@ import {
     DataGridTableRowSelectAll,
 } from '@/components/ui/data-grid-table';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Switch } from '@/components/ui/switch';
 import {
     Tooltip,
     TooltipContent,
@@ -76,6 +65,11 @@ import {
     TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { FilterTool } from './components/filter';
+import { SelectedDialog } from './components/selectedDialog';
+import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
+import { RiCheckboxCircleFill } from '@remixicon/react';
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
+import CheckDialog from './components/checkDialog';
 
 interface IData {
     id: string;
@@ -110,9 +104,10 @@ export default function JobPostings() {
     const [sorting, setSorting] = useState<SortingState>([
         { id: 'lastSession', desc: true },
     ]);
-    const [rowSelection] = useState<RowSelectionState>({});
+    const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+    const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [view, setView] = useState<'list' | 'grid'>('list');
     const [showFliter, setShowFilter] = useState(false);
 
@@ -269,14 +264,10 @@ export default function JobPostings() {
             },
             {
                 id: 'actions',
-                header: () => '',
-                cell: () => (
-                    <button>
-                        <EllipsisVertical className='size-[20px] font-light' />
-                    </button>
-                ),
+                header: '',
+                cell: ({ row }) => <ActionsCell row={row} />,
                 enableSorting: false,
-                size: 80,
+                size: 60,
                 meta: {
                     headerClassName: '',
                 },
@@ -286,18 +277,9 @@ export default function JobPostings() {
     );
 
     useEffect(() => {
-        const selectedRowIds = Object.keys(rowSelection);
-
-        if (selectedRowIds.length > 0) {
-            toast(`Total ${selectedRowIds.length} are selected.`, {
-                description: `Selected row IDs: ${selectedRowIds}`,
-                action: {
-                    label: 'Undo',
-                    onClick: () => console.log('Undo'),
-                },
-            });
-        }
+        setSelectedRows(Object.keys(rowSelection));
     }, [rowSelection]);
+
 
     const table = useReactTable({
         columns: columns as ColumnDef<IData, any>[],
@@ -307,20 +289,75 @@ export default function JobPostings() {
         state: {
             pagination,
             sorting,
+            rowSelection,
         },
         onPaginationChange: setPagination,
         onSortingChange: setSorting,
+        onRowSelectionChange: setRowSelection,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
     });
 
-    const handleStatusChange = (checked: boolean, value: string) => {
-        setSelectedStatuses((prev = []) =>
-            checked ? [...prev, value] : prev.filter((v) => v !== value),
+    function ActionsCell({ row }: { row: Row<IData> }) {
+        const { copyToClipboard } = useCopyToClipboard();
+        const handleCopyId = () => {
+            copyToClipboard(String(row.original.id));
+            const message = `Session ID successfully copied: ${row.original.id}`;
+            toast.custom(
+                (t) => (
+                    <Alert
+                        variant="mono"
+                        icon="success"
+                        close={false}
+                        onClose={() => toast.dismiss(t)}
+                    >
+                        <AlertIcon>
+                            <RiCheckboxCircleFill />
+                        </AlertIcon>
+                        <AlertTitle>{message}</AlertTitle>
+                    </Alert>
+                ),
+                {
+                    position: 'top-center',
+                },
+            );
+        };
+
+        return (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button className="size-7" mode="icon" variant="ghost">
+                        <EllipsisVertical />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="bottom" align="end">
+
+                    {row.original.status === "Draft" &&
+                        <div className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]">
+                            Edit
+                        </div>
+                    }
+                    <div className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]">
+                        View Applicants
+                    </div>
+                    <div className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]">
+                        Duplicate
+                    </div>
+                    {row.original.status === "Open" && <CheckDialog action="close" trigger={<div className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]">
+                        Close Job
+                    </div>} />}
+                    {row.original.status === "Open" && <CheckDialog action="unpublish" trigger={<div className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]">
+                        Unpublish
+                    </div>} />
+                    }
+                    <CheckDialog action="delete" trigger={<div className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]">
+                        Delete
+                    </div>} />
+                </DropdownMenuContent>
+            </DropdownMenu>
         );
-    };
+    }
 
     const Toolbar = ({ view, setView }: { view: 'list' | 'grid'; setView: (view: 'list' | 'grid') => void }) => {
         return (
@@ -379,9 +416,10 @@ export default function JobPostings() {
                     <Toolbar view={view} setView={setView} />
                 </div>
                 {showFliter && <FilterTool />}
-                <div className='mt-[24px] w-full rounded-[12px] overflow-hidden'>
+                <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     {view === 'list' &&
                         <>
+                            {selectedRows.length > 0 && <SelectedDialog selectedRows={selectedRows} totalCount={filteredData?.length} />}
                             <ScrollArea className='w-full'>
                                 <DataGridTable />
                             </ScrollArea>

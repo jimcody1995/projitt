@@ -4,6 +4,9 @@ import { getPasswordSchema } from './password-schema';
 export const getChangePasswordSchema = () => {
   return z
     .object({
+      email: z.string().email({
+        message: 'Please enter a valid email address.',
+      }),
       newPassword: getPasswordSchema(),
       confirmPassword: z.string(),
     })
