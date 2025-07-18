@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/context/SessionContext';
-import { ScreenLoader } from '@/components/common/screen-loader';
 import { Layout } from '../components/layouts/layout';
 
 export default function ProtectedLayout({

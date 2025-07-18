@@ -52,9 +52,9 @@ function DataGridPagination(props: DataGridPaginationProps) {
   // Replace placeholders in paginationInfo
   const paginationInfo = mergedProps?.info
     ? mergedProps.info
-        .replace('{from}', from.toString())
-        .replace('{to}', to.toString())
-        .replace('{count}', recordCount.toString())
+      .replace('{from}', from.toString())
+      .replace('{to}', to.toString())
+      .replace('{count}', recordCount.toString())
     : `${from} - ${to} of ${recordCount}`;
 
   // Pagination limit logic
@@ -115,7 +115,7 @@ function DataGridPagination(props: DataGridPaginationProps) {
         <Button
           className={btnBaseClasses}
           variant="ghost"
-          size="sm"
+          size="lg"
           mode="icon"
           onClick={() => table.setPageIndex(currentGroupEnd)}
         >
