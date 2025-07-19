@@ -58,7 +58,7 @@ export default function Page() {
 
   useEffect(() => {
     if (session.authenticated) {
-      router.replace("/")
+      router.push("/")
     }
   }, [session.authenticated])
 

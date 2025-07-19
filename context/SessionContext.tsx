@@ -1,5 +1,6 @@
 'use client'
 import axios from "axios"
+import router from "next/router"
 import { createContext, useContext, useState, ReactNode, useEffect } from "react"
 
 type Session = {
@@ -17,11 +18,19 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined)
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
     const [session, setSessionState] = useState<Session>({ token: null, authenticated: false })
-
+    useEffect(() => {
+        const stored = localStorage.getItem("session")
+        if (stored) {
+            setSessionState({ token: stored, authenticated: true })
+            axios.defaults.headers.common["Authorization"] = `Bearer ${stored}`
+        }
+        if (!stored) {
+            router.push('/signin');
+        }
+    }, [])
     const setSession = (session: Session) => {
         setSessionState({ ...session })
         localStorage.setItem("session", JSON.stringify(session.token))
-        axios.defaults.headers.common["Authorization"] = `Bearer ${session.token}`
     }
 
     const clearSession = () => {
