@@ -1,6 +1,6 @@
 'use client'
 import axios from "axios"
-import router from "next/router"
+import { useRouter } from "next/navigation"
 import { createContext, useContext, useState, ReactNode, useEffect } from "react"
 
 type Session = {
@@ -18,6 +18,7 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined)
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
     const [session, setSessionState] = useState<Session>({ token: null, authenticated: false })
+    const router = useRouter();
     useEffect(() => {
         const stored = localStorage.getItem("session")
         if (stored) {

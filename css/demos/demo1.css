@@ -1,4 +1,5 @@
 @layer components {
+
   /* Variables */
   .demo1 {
     --sidebar-transition-duration: 0.3s;
@@ -120,12 +121,10 @@
   }
 
   .demo1.layout-initialized .wrapper {
-    transition: padding-inline-start var(--sidebar-transition-duration)
-      var(--sidebar-transition-timing);
+    transition: padding-inline-start var(--sidebar-transition-duration) var(--sidebar-transition-timing);
   }
 
   .demo1.layout-initialized .header {
-    transition: inset-inline-start var(--sidebar-transition-duration)
-      var(--sidebar-transition-timing);
+    transition: inset-inline-start var(--sidebar-transition-duration) var(--sidebar-transition-timing);
   }
 }

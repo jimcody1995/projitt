@@ -5,40 +5,51 @@ import { cn } from '@/lib/utils';
 import { useSettings } from '@/providers/settings-provider';
 import { SidebarHeader } from './sidebar-header';
 import { SidebarMenu } from './sidebar-menu';
-import { ChevronsUpDown } from 'lucide-react';
+import { ChevronsUpDown, LogOut } from 'lucide-react';
 import { logout } from '@/api/user';
+import { useSession } from '@/context/SessionContext';
+import { useRouter } from 'next/navigation';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export function Sidebar() {
   const { settings } = useSettings();
   const pathname = usePathname();
+  const { setSession } = useSession();
+  const router = useRouter();
   const handleLogout = async () => {
     const response = await logout()
-    console.log(response);
-
-    if (response.status === 200) {
-
+    if (response.data.status === true) {
+      setSession({ token: "", authenticated: false })
+      router.push('/signin')
     }
   }
   return (
     <div
       className={cn(
         'sidebar flex flex-col justify-between bg-background lg:shadow-[1px_0px_4px_0px_rgba(0,0,0,0.06)] lg:fixed lg:top-0 lg:bottom-0 lg:z-20 lg:flex  items-stretch shrink-0',
-        (settings.layouts.demo1.sidebarTheme === 'dark' ||
-          pathname.includes('dark-sidebar')) &&
-        'dark',
+
       )}
     >
       <div>
         <SidebarHeader />
         <div className="overflow-hidden">
-          <div className="w-(--sidebar-default-width)">
-            <SidebarMenu />
-          </div>
+          <SidebarMenu />
         </div>
       </div>
       {settings.layouts.demo1.sidebarCollapse ?
         <div className='w-full flex justify-center mb-[25px]'>
-          <img src="/images/photo.png" alt="" className='w-[32px] h-[32px] rounded-full' />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <img src="/images/photo.png" alt="" className='w-[32px] h-[32px] rounded-full' />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side="bottom" align="end">
+              <div className="cursor-pointer hover:bg-[#e9e9e9] text-[14px]/[20px] py-[7px] px-[12px] rounded-[8px] flex items-center gap-[12px]" onClick={handleLogout}>
+                <LogOut className='size-[20px]' />
+                Logout
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
         </div>
         : <div className='pl-[22px] pr-[19px] mb-[25px]'>
 
@@ -50,8 +61,20 @@ export function Sidebar() {
                 <p className='text-[#a5a5a5] text-[12px]/[15px]'>HR Management</p>
               </div>
             </div>
-            <button className='text-[#4b4b4b] text-[12px]/[16px] cursor-pointer' onClick={handleLogout}>
-              <ChevronsUpDown className='size-[20px]' /></button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="size-7 cursor-pointer">
+                  <ChevronsUpDown className='size-[20px]' />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="bottom" align="end">
+                <div className="cursor-pointer hover:bg-[#e9e9e9] text-[14px]/[20px] py-[7px] px-[12px] rounded-[8px] flex items-center gap-[12px]" onClick={handleLogout}>
+                  <LogOut className='size-[20px]' />
+                  Logout
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
           </div>
         </div>}
     </div>
