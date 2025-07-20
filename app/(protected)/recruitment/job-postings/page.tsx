@@ -70,6 +70,7 @@ import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
 import { RiCheckboxCircleFill } from '@remixicon/react';
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
 import CheckDialog from './components/checkDialog';
+import { NoData } from './components/noData';
 
 interface IData {
     id: string;
@@ -382,8 +383,8 @@ export default function JobPostings() {
         <div className='w-full'>
             <div className='flex items-center justify-between mb-[37px]'>
                 <p className='text-[24px]/[30px] font-semibold'>Job Postings</p>
-                <Button className='h-[42px]'>
-                    <Plus />
+                <Button className='h-[42px] font-semibold text-[14px]/[20px]'>
+                    <Plus className='size-[18px]' />
                     Create New Job
                 </Button>
             </div>
@@ -420,114 +421,116 @@ export default function JobPostings() {
                     {view === 'list' &&
                         <>
                             {selectedRows.length > 0 && <SelectedDialog selectedRows={selectedRows} totalCount={filteredData?.length} />}
-                            <ScrollArea className='w-full'>
+                            <div className='w-full overflow-x-auto h-[calc(100vh-300px)]'>
                                 <DataGridTable />
-                            </ScrollArea>
+                            </div>
                             <DataGridPagination />
                         </>
                     }
                     {view === 'grid' &&
-                        <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[20px]'>
-                            {filteredData.map((item) => (
-                                <div key={item.id} className={`w-full bg-white flex flex-col rounded-[4px] border-t-[3px] ${item.status === 'Open' ? 'border-[#0D978B]' : item.status === 'Closed' ? 'border-[#A5A5A5]' : 'border-white'} px-[20px] py-[24px]`}>
-                                    <div className='w-full flex justify-between'>
-                                        <span className='text-[12px]/[22px] px-[8px] text-[#4B4B4B] bg-[#f9f9f9] rounded-[29px] flex items-center gap-[4px]'>
-                                            {/* Icon based on department */}
-                                            {item.department === 'Data' && <PieChart className='text-[#00D47D] size-[16px]' />}
-                                            {item.department === 'Design' && <PenTool className='text-[#FFB547] size-[16px] rotate-[270deg]' />}
-                                            {item.department !== 'Data' && item.department !== 'Design' && <BriefcaseBusiness className='text-[#00D47D] size-[16px]' />}
-                                            {item.department}
-                                        </span>
-                                        <div className='flex gap-[14px]'>
-                                            <button className='cursor-pointer'>
-                                                <Share2 className='size-[20px] text-[#8f8f8f]' />
-                                            </button>
-                                            <button className='cursor-pointer'>
-                                                <EllipsisVertical className='size-[20px] text-[#8f8f8f]' />
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <p className='mt-[10px] text-[18px]/[30px] font-semibold'>
-                                        {item.title}
-                                    </p>
-                                    <div className='mt-[4px] flex gap-[8px]'>
-                                        <span className='text-[12px]/[18px] px-[8px] flex items-center gap-[2px] text-[#787878]'>
-                                            <BriefcaseBusiness className='size-[16px]' />
-                                            Fulltime
-                                        </span>
-                                        <span className='text-[12px]/[18px] px-[8px] flex items-center gap-[2px] text-[#787878]'>
-                                            <MapPin className='size-[16px]' />
-                                            {item.location}
-                                        </span>
-                                    </div>
-                                    {/* Show stats or draft message */}
-                                    {item.status !== 'Draft' ? (
-                                        <div className='mt-[14px] w-full flex rounded-[6px] border border-[#e9e9e9] pl-[14px] pr-[8px] py-[8px]'>
-                                            <div className='w-1/2 border-r border-[#e9e9e9]'>
-                                                <div className='flex gap-[4px]'>
-                                                    <Users className='size-[20px] text-[#4b4b4b]' />
-                                                    <span className='text-[16px]/[22px] font-semibold text-[#4b4b4b]'>{item.applicants}</span>
-                                                </div>
-                                                <p className='text-[12px]/[22px] text-[#8f8f8f]'>Candidates Applied</p>
-                                            </div>
-                                            <div className='w-1/2 pl-[14px]'>
-                                                <div className='flex gap-[4px]'>
-                                                    <Star className='size-[20px] text-[#4b4b4b]' />
-                                                    <span className='text-[16px]/[22px] font-semibold text-[#4b4b4b]'>10</span>
-                                                </div>
-                                                <p className='text-[12px]/[22px] text-[#8f8f8f]'>Shortlisted</p>
+                        <>
+                            {filteredData.length === 0 && <NoData />}
+                            {filteredData.length > 0 && <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[20px] h-[calc(100vh-300px)] overflow-y-auto'>
+                                {filteredData.map((item) => (
+                                    <div key={item.id} className={`w-full bg-white flex flex-col rounded-[4px] border-t-[3px] ${item.status === 'Open' ? 'border-[#0D978B]' : item.status === 'Closed' ? 'border-[#A5A5A5]' : 'border-white'} px-[20px] py-[24px]`}>
+                                        <div className='w-full flex justify-between'>
+                                            <span className='text-[12px]/[22px] px-[8px] text-[#4B4B4B] bg-[#f9f9f9] rounded-[29px] flex items-center gap-[4px]'>
+                                                {/* Icon based on department */}
+                                                {item.department === 'Data' && <PieChart className='text-[#00D47D] size-[16px]' />}
+                                                {item.department === 'Design' && <PenTool className='text-[#FFB547] size-[16px] rotate-[270deg]' />}
+                                                {item.department !== 'Data' && item.department !== 'Design' && <BriefcaseBusiness className='text-[#00D47D] size-[16px]' />}
+                                                {item.department}
+                                            </span>
+                                            <div className='flex gap-[14px]'>
+                                                <Button variant="ghost" className='cursor-pointer size-7'>
+                                                    <Share2 className=' text-[#8f8f8f]' />
+                                                </Button>
+                                                <ActionsCell row={table.getRow(item.id)} />
                                             </div>
                                         </div>
-                                    ) : (
-                                        <div className='mt-[24px] mb-[24px] text-[#bdbdbd] text-[16px] flex-1 flex items-center justify-center'>
-                                            Complete the job details to publish
+                                        <p className='mt-[10px] text-[18px]/[30px] font-semibold'>
+                                            {item.title}
+                                        </p>
+                                        <div className='mt-[4px] flex gap-[8px]'>
+                                            <span className='text-[12px]/[18px] px-[8px] flex items-center gap-[2px] text-[#787878]'>
+                                                <BriefcaseBusiness className='size-[16px]' />
+                                                Fulltime
+                                            </span>
+                                            <span className='text-[12px]/[18px] px-[8px] flex items-center gap-[2px] text-[#787878]'>
+                                                <MapPin className='size-[16px]' />
+                                                {item.location}
+                                            </span>
                                         </div>
-                                    )}
-                                    {/* Due or draft */}
-                                    {item.status !== 'Draft' && (
-                                        <div className='mt-[8px] flex gap-[4px]'>
-                                            <Clock className='size-[16px] text-[#8f8f8f]' />
-                                            <span className='text-[12px]/[18px] text-[#8f8f8f]'>{item.due} remaining</span>
-                                        </div>
-                                    )}
-                                    <div className='mt-[19px] flex justify-between w-full'>
-                                        {item.status === 'Open' && (
-                                            <Button className='h-[24px] rounded-full bg-[#0D978B] hover:bg-[#0D978B]'>
-                                                <span className='text-[12px]/[22px] text-white'>Open</span>
-                                                <ChevronDown className='size-[12px] text-white' />
-                                            </Button>
-                                        )}
-                                        {item.status === 'Closed' && (
-                                            <Button className='h-[24px] rounded-full bg-[#353535] text-white hover:bg-[#e9e9e9]'>
-                                                <span className='text-[12px]/[22px]'>Closed</span>
-                                                <ChevronDown className='size-[12px]' />
-                                            </Button>
-                                        )}
-                                        {item.status === 'Draft' && (
-                                            <Button className='h-[24px] rounded-full bg-[#e9e9e9] text-[#353535] hover:bg-[#e9e9e9]'>
-                                                <span className='text-[12px]/[22px]'>Draft</span>
-                                            </Button>
-                                        )}
+                                        {/* Show stats or draft message */}
                                         {item.status !== 'Draft' ? (
-                                            <button className='text-[#0d978b] flex items-center gap-[2px]'>
-                                                <span className='text-[14px]/[22px] font-medium'>View Details</span>
-                                                <ArrowRight className='size-[16px]' />
-                                            </button>
+                                            <div className='mt-[14px] w-full flex rounded-[6px] border border-[#e9e9e9] pl-[14px] pr-[8px] py-[8px]'>
+                                                <div className='w-1/2 border-r border-[#e9e9e9]'>
+                                                    <div className='flex gap-[4px]'>
+                                                        <Users className='size-[20px] text-[#4b4b4b]' />
+                                                        <span className='text-[16px]/[22px] font-semibold text-[#4b4b4b]'>{item.applicants}</span>
+                                                    </div>
+                                                    <p className='text-[12px]/[22px] text-[#8f8f8f]'>Candidates Applied</p>
+                                                </div>
+                                                <div className='w-1/2 pl-[14px]'>
+                                                    <div className='flex gap-[4px]'>
+                                                        <Star className='size-[20px] text-[#4b4b4b]' />
+                                                        <span className='text-[16px]/[22px] font-semibold text-[#4b4b4b]'>10</span>
+                                                    </div>
+                                                    <p className='text-[12px]/[22px] text-[#8f8f8f]'>Shortlisted</p>
+                                                </div>
+                                            </div>
                                         ) : (
-                                            <button className='text-[#0d978b] flex items-center gap-[2px]'>
-                                                <span className='text-[14px]/[22px] font-medium'>Continue Edit</span>
-                                                <ArrowRight className='size-[16px]' />
-                                            </button>
+                                            <div className='mt-[24px] mb-[24px] text-[#bdbdbd] text-[16px] flex-1 flex items-center justify-center'>
+                                                Complete the job details to publish
+                                            </div>
                                         )}
+                                        {/* Due or draft */}
+                                        {item.status !== 'Draft' && (
+                                            <div className='mt-[8px] flex gap-[4px]'>
+                                                <Clock className='size-[16px] text-[#8f8f8f]' />
+                                                <span className='text-[12px]/[18px] text-[#8f8f8f]'>{item.due} remaining</span>
+                                            </div>
+                                        )}
+                                        <div className='mt-[19px] flex justify-between w-full'>
+                                            {item.status === 'Open' && (
+                                                <Button className='h-[24px] rounded-full bg-[#0D978B] hover:bg-[#0D978B]'>
+                                                    <span className='text-[12px]/[22px] text-white'>Open</span>
+                                                    <ChevronDown className='size-[12px] text-white' />
+                                                </Button>
+                                            )}
+                                            {item.status === 'Closed' && (
+                                                <Button className='h-[24px] rounded-full bg-[#353535] text-white hover:bg-[#e9e9e9]'>
+                                                    <span className='text-[12px]/[22px]'>Closed</span>
+                                                    <ChevronDown className='size-[12px]' />
+                                                </Button>
+                                            )}
+                                            {item.status === 'Draft' && (
+                                                <Button className='h-[24px] rounded-full bg-[#e9e9e9] text-[#353535] hover:bg-[#e9e9e9]'>
+                                                    <span className='text-[12px]/[22px]'>Draft</span>
+                                                </Button>
+                                            )}
+                                            {item.status !== 'Draft' ? (
+                                                <button className='text-[#0d978b] flex items-center gap-[2px]'>
+                                                    <span className='text-[14px]/[22px] font-medium'>View Details</span>
+                                                    <ArrowRight className='size-[16px]' />
+                                                </button>
+                                            ) : (
+                                                <button className='text-[#0d978b] flex items-center gap-[2px]'>
+                                                    <span className='text-[14px]/[22px] font-medium'>Continue Edit</span>
+                                                    <ArrowRight className='size-[16px]' />
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ))
+                                }
+                            </div>}
+                        </>
                     }
                 </div>
             </DataGrid >
 
-        </div>
+        </div >
     );
 };
 

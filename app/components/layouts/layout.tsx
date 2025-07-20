@@ -53,10 +53,10 @@ export function Layout({ children }: { children: ReactNode }) {
     <>
       {!isMobile && <Sidebar />}
 
-      <div className="wrapper flex grow flex-col">
+      <div className="wrapper w-full flex grow flex-col">
         <Header />
 
-        <main className="grow py-[30px] sm:px-[40px] px-[20px] bg-gray-50" role="content">
+        <main className="grow w-full box-border py-[30px] sm:px-[40px] px-[20px] bg-gray-50" role="content">
           {children}
         </main>
       </div>

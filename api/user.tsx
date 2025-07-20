@@ -12,3 +12,7 @@ export const forgotPasssword = async ({ email }: { email: string }) => {
     return axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/user/forgot-password`, { email, type_id: 1 })
 
 }
+
+export const logout = async () => {
+    return axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/user/logout`)
+}

@@ -115,7 +115,7 @@ function DataGridPagination(props: DataGridPaginationProps) {
         <Button
           className={btnBaseClasses}
           variant="ghost"
-          size="lg"
+          size="sm"
           mode="icon"
           onClick={() => table.setPageIndex(currentGroupEnd)}
         >

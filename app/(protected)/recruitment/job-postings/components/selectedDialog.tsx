@@ -2,7 +2,7 @@ import { Ban, Trash, Upload } from "lucide-react";
 
 export const SelectedDialog = ({ selectedRows, totalCount }: { selectedRows: string[]; totalCount: number; }) => {
     return (
-        <div className='w-full justify-center flex items-center absolute bottom-[40px] z-[1000]'>
+        <div className='w-full flex justify-center items-center absolute bottom-[40px] z-[1000]'>
             <div className='bg-[#053834] px-[20px] py-[12px] w-[670px] rounded-[12px] flex justify-between'>
                 <div className='flex items-center'>
                     <div className='pr-[16px] border-r text-[15px]/[20px] border-[#626262] text-[#d2d2d2] py-[4px]'>
