@@ -20,10 +20,19 @@ A modern Next.js front-end project with enforced code style, linting, and a shar
    ```
 
 3. **Start the development server:**
+
    ```bash
    npm run dev
    ```
+
    Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+4. **Set up environment variables:**
+   Copy the example environment file and update it as needed:
+   ```bash
+   cp .env.example .env
+   ```
+   The `.env` file contains environment-specific variables (such as API keys or secrets) required for the app to run. Edit this file to match your local setup if necessary.
 
 ---
 
