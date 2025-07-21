@@ -421,35 +421,35 @@ export default function JobPostings() {
                     data-testid={`actions-menu-${row.original.id}`}
                 >
                     {row.original.status === "Draft" &&
-                        <DropdownMenuItem
+                        <div
                             className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                             data-testid={`edit-action-${row.original.id}`}
                         >
                             Edit
-                        </DropdownMenuItem>
+                        </div>
                     }
-                    <DropdownMenuItem
+                    <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`view-applicants-action-${row.original.id}`}
                     >
                         View Applicants
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
+                    </div>
+                    <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`duplicate-action-${row.original.id}`}
                     >
                         Duplicate
-                    </DropdownMenuItem>
+                    </div>
                     {row.original.status === "Open" &&
                         <CheckDialog
                             action="close"
                             trigger={
-                                <DropdownMenuItem
+                                <div
                                     className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                     data-testid={`close-job-action-${row.original.id}`}
                                 >
                                     Close Job
-                                </DropdownMenuItem>
+                                </div>
                             }
                         />
                     }
@@ -457,24 +457,24 @@ export default function JobPostings() {
                         <CheckDialog
                             action="unpublish"
                             trigger={
-                                <DropdownMenuItem
+                                <div
                                     className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                     data-testid={`unpublish-action-${row.original.id}`}
                                 >
                                     Unpublish
-                                </DropdownMenuItem>
+                                </div>
                             }
                         />
                     }
                     <CheckDialog
                         action="delete"
                         trigger={
-                            <DropdownMenuItem
+                            <div
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 data-testid={`delete-action-${row.original.id}`}
                             >
                                 Delete
-                            </DropdownMenuItem>
+                            </div>
                         }
                     />
                 </DropdownMenuContent>
