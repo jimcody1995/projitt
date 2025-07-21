@@ -1,6 +1,14 @@
 import { z } from 'zod';
 
-export const getCompanySchema = () => {
+/**
+ * Returns a Zod schema for company profile form validation.
+ * Validates logo file (optional, must be image and <2MB),
+ * company size, industry, phone number (with format and length),
+ * and website URL.
+ *
+ * @returns {z.ZodObject} The Zod validation schema for company profile
+ */
+export const getCompanySchema = (): z.ZodObject<any> => {
   return z.object({
     logo: z
       .any()
@@ -34,4 +42,5 @@ export const getCompanySchema = () => {
   });
 };
 
+/** Type representing the validated company profile form data */
 export type CompanySchemaType = z.infer<ReturnType<typeof getCompanySchema>>;

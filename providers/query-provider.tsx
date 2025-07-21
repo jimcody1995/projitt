@@ -6,13 +6,21 @@ import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-qu
 import { toast } from 'sonner';
 import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
 
-const QueryProvider = ({ children }: { children: ReactNode }) => {
+/**
+ * QueryProvider sets up React Query client with global error handling.
+ * On query errors, it shows a custom toast alert with the error message.
+ *
+ * @param {Object} props
+ * @param {ReactNode} props.children - Components wrapped by this provider
+ * @returns JSX.Element - QueryClientProvider wrapping children with configured client
+ */
+const QueryProvider = ({ children }: { children: ReactNode }): JSX.Element => {
   const [queryClient] = useState(
     () =>
       new QueryClient({
         queryCache: new QueryCache({
-          onError: (error) => {
-            const message = error.message || 'Something went wrong. Please try again.';
+          onError: (error: any) => {
+            const message = error?.message || 'Something went wrong. Please try again.';
 
             toast.custom(
               () => (
