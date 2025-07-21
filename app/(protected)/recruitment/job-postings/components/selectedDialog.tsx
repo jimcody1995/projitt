@@ -2,8 +2,8 @@ import { Ban, Trash, Upload } from "lucide-react";
 
 export const SelectedDialog = ({ selectedRows, totalCount }: { selectedRows: string[]; totalCount: number; }) => {
     return (
-        <div className='w-full flex justify-center items-center absolute bottom-[40px] z-[1000]'>
-            <div className='bg-[#053834] px-[20px] py-[12px] w-[670px] rounded-[12px] flex justify-between'>
+        <div className='w-full flex justify-center items-center absolute sm:bottom-[45px] bottom-[160px]  z-[1000] px-[40px]'>
+            <div className='bg-[#053834] px-[20px] py-[12px] sm:w-[670px] w-full rounded-[12px] flex sm:flex-row flex-col sm:justify-between items-center '>
                 <div className='flex items-center'>
                     <div className='pr-[16px] border-r text-[15px]/[20px] border-[#626262] text-[#d2d2d2] py-[4px]'>
                         {selectedRows.length} of <span className='text-[#fff] '>{totalCount}</span> selected

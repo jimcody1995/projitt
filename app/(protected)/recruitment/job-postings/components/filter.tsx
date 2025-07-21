@@ -56,7 +56,7 @@ export const FilterTool = () => {
         );
     };
     return (
-        <div className="flex gap-[11px] mt-[17px]">
+        <div className="flex flex-wrap gap-[11px] mt-[17px]">
             <Popover>
                 <PopoverTrigger asChild>
                     <div className="cursor-pointer flex gap-[8px] py-[6px] px-[14px] border border-[#d2d2d2] rounded-[8px]">
