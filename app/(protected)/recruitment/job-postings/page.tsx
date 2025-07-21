@@ -1,12 +1,11 @@
 'use client';
 
-import { use, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     ColumnDef,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
-    getSortedRowModel,
     PaginationState,
     Row,
     RowSelectionState,
@@ -14,33 +13,21 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import {
-    ArrowDown,
     ArrowRight,
-    Ban,
     BriefcaseBusiness,
     ChevronDown,
     Clock,
-    Dot,
     EllipsisVertical,
-    Filter,
-    Info,
     LayoutGrid,
     LayoutList,
     ListFilter,
-    Locate,
     MapPin,
     PenTool,
     PieChart,
     Plus,
     Search,
     Share2,
-    ShoppingBag,
-    SquarePen,
     Star,
-    StopCircle,
-    Trash,
-    Trash2,
-    Upload,
     Users,
     X,
 } from 'lucide-react';
@@ -57,13 +44,6 @@ import {
     DataGridTableRowSelectAll,
 } from '@/components/ui/data-grid-table';
 import { Input } from '@/components/ui/input';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { FilterTool } from './components/filter';
 import { SelectedDialog } from './components/selectedDialog';
 import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
@@ -71,6 +51,7 @@ import { RiCheckboxCircleFill } from '@remixicon/react';
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
 import CheckDialog from './components/checkDialog';
 import { NoData } from './components/noData';
+import { useRouter } from 'next/navigation';
 
 /**
  * Interface representing job posting data structure
@@ -122,7 +103,7 @@ export default function JobPostings() {
     const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [view, setView] = useState<'list' | 'grid'>('list');
     const [showFliter, setShowFilter] = useState(false);
-
+    const router = useRouter();
     /**
      * Filters job data based on search query and selected statuses
      * @returns {IData[]} Filtered job data
@@ -539,6 +520,7 @@ export default function JobPostings() {
                 <Button
                     className='h-[42px] font-semibold text-[14px]/[20px]'
                     data-testid="create-job-button"
+                    onClick={() => { router.push('/recruitment/job-postings/create-job') }}
                 >
                     <Plus className='size-[18px]' />
                     Create New Job

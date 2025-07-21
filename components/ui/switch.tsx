@@ -23,7 +23,7 @@ const switchVariants = cva(
   `
     relative peer inline-flex shrink-0 cursor-pointer items-center rounded-full transition-colors 
     focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background 
-    disabled:cursor-not-allowed disabled:opacity-50 data-[state=unchecked]:bg-input
+    disabled:cursor-not-allowed disabled:opacity-50 data-[state=unchecked]:bg-[#d2d2d2]
     aria-invalid:border aria-invalid:border-destructive/60 aria-invalid:ring-destructive/10 dark:aria-invalid:border-destructive dark:aria-invalid:ring-destructive/20
     [[data-invalid=true]_&]:border [[data-invalid=true]_&]:border-destructive/60 [[data-invalid=true]_&]:ring-destructive/10  dark:[[data-invalid=true]_&]:border-destructive dark:[[data-invalid=true]_&]:ring-destructive/20
   `,
@@ -40,8 +40,8 @@ const switchVariants = cva(
         xl: 'h-9 w-16',
       },
       permanent: {
-        true: 'bg-input',
-        false: 'data-[state=checked]:bg-primary',
+        true: 'bg-[#d2d2d2]',
+        false: 'data-[state=checked]:bg-[#0d978b]',
       },
     },
     defaultVariants: {
@@ -58,7 +58,7 @@ const switchThumbVariants = cva(
     variants: {
       shape: {
         pill: 'rounded-full',
-        square: 'rounded-md',
+        square: 'rounded-md bg-[#8f8f8f] data-[state=checked]:bg-white',
       },
       size: {
         xs: '',

@@ -1,0 +1,326 @@
+import React, { useState } from 'react';
+import { GripVertical, Plus, Copy, Trash2, X, FileText, BriefcaseBusiness, CircleQuestionMark } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+export interface Question {
+    id: string;
+    title: string;
+    type: 'short-answer' | 'paragraph' | 'multiple-choice' | 'checkbox' | 'file-upload';
+    required: boolean;
+    options?: string[];
+}
+
+interface Section {
+    id: string;
+    title: string;
+    questions: Question[];
+}
+export default function ApplicantQuestions() {
+    const [activeSection, setActiveSection] = useState<string | null>(null);
+    const [sections, setSections] = useState<Section[]>([
+        {
+            id: '1',
+            title: 'Applicant Question 1',
+            questions: [
+                {
+                    id: '2',
+                    title: 'Short Answer Question',
+                    type: 'short-answer',
+                    required: true,
+                },
+                {
+                    id: '3',
+                    title: 'Question',
+                    type: 'file-upload',
+                    required: false,
+                },
+                {
+                    id: '4',
+                    title: 'Question',
+                    type: 'paragraph',
+                    required: false,
+                },
+                {
+                    id: '5',
+                    title: 'Question',
+                    type: 'multiple-choice',
+                    required: true,
+                    options: ['Yes', 'Option 2'],
+                },
+                {
+                    id: '6',
+                    title: 'Question',
+                    type: 'checkbox',
+                    required: true,
+                    options: ['Yes', 'Option 2'],
+                },
+            ],
+        },
+    ]);
+
+    const questionTypes = [
+        { value: 'short-answer', label: 'Short answer' },
+        { value: 'paragraph', label: 'Paragraph' },
+        { value: 'multiple-choice', label: 'Multiple choice' },
+        { value: 'checkbox', label: 'Checkbox' },
+        { value: 'file-upload', label: 'File Upload' },
+    ];
+
+    const addSection = () => {
+        const newSection: Section = {
+            id: Date.now().toString(),
+            title: `Applicant Question ${sections.length + 1}`,
+            questions: [],
+        };
+        setSections([...sections, newSection]);
+    };
+
+    const addQuestion = (sectionId: string) => {
+        const newQuestion: Question = {
+            id: Date.now().toString(),
+            title: 'Question',
+            type: 'short-answer',
+            required: false,
+        };
+
+        setSections(sections.map(section =>
+            section.id === sectionId
+                ? { ...section, questions: [...section.questions, newQuestion] }
+                : section
+        ));
+    };
+
+    const updateQuestion = (sectionId: string, questionId: string, updates: Partial<Question>) => {
+        setSections(sections.map(section =>
+            section.id === sectionId
+                ? {
+                    ...section,
+                    questions: section.questions.map(question =>
+                        question.id === questionId
+                            ? { ...question, ...updates }
+                            : question
+                    )
+                }
+                : section
+        ));
+    };
+
+    const duplicateQuestion = (sectionId: string, questionId: string) => {
+        const section = sections.find(s => s.id === sectionId);
+        const question = section?.questions.find(q => q.id === questionId);
+
+        if (question) {
+            const duplicatedQuestion: Question = {
+                ...question,
+                id: Date.now().toString(),
+            };
+
+            setSections(sections.map(s =>
+                s.id === sectionId
+                    ? { ...s, questions: [...s.questions, duplicatedQuestion] }
+                    : s
+            ));
+        }
+    };
+
+    const deleteQuestion = (sectionId: string, questionId: string) => {
+        setSections(sections.map(section =>
+            section.id === sectionId
+                ? {
+                    ...section,
+                    questions: section.questions.filter(q => q.id !== questionId)
+                }
+                : section
+        ));
+    };
+
+    const addOption = (sectionId: string, questionId: string) => {
+        const section = sections.find(s => s.id === sectionId);
+        const question = section?.questions.find(q => q.id === questionId);
+
+        if (question) {
+            const newOption = `Option ${(question.options?.length || 0) + 1}`;
+            const updatedOptions = [...(question.options || []), newOption];
+            updateQuestion(sectionId, questionId, { options: updatedOptions });
+        }
+    };
+
+    const updateOption = (sectionId: string, questionId: string, optionIndex: number, value: string) => {
+        const section = sections.find(s => s.id === sectionId);
+        const question = section?.questions.find(q => q.id === questionId);
+
+        if (question?.options) {
+            const updatedOptions = [...question.options];
+            updatedOptions[optionIndex] = value;
+            updateQuestion(sectionId, questionId, { options: updatedOptions });
+        }
+    };
+
+    const removeOption = (sectionId: string, questionId: string, optionIndex: number) => {
+        const section = sections.find(s => s.id === sectionId);
+        const question = section?.questions.find(q => q.id === questionId);
+
+        if (question?.options) {
+            const updatedOptions = question.options.filter((_, index) => index !== optionIndex);
+            updateQuestion(sectionId, questionId, { options: updatedOptions });
+        }
+    };
+
+    const getTypeLabel = (type: string) => {
+        return questionTypes.find(t => t.value === type)?.label || 'Short answer';
+    };
+    return (
+        <div>
+            <div className="flex items-center justify-between gap-[8px] w-full">
+                <p className="text-[20px]/[30px] font-semibold text-[#353535]">Applicant Questions</p>
+                <div className="flex items-center gap-[9px] cursor-pointer">
+                    <input type="checkbox" className="accent-[#0d978b] size-[13px]" />
+                    <span className="text-[14px]/[16px] text-[#4b4b4b]">Set as Default</span>
+                </div>
+            </div>
+            <div className='mt-[33px]'>
+                <div className="min-h-screen bg-white border border-[#e9e9e9] rounded-[12px] ">
+                    <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  w-full overflow-x-auto'>
+                        <div className='py-[8.5px] px-[6px] cursor-pointer'>
+                            <FileText className='size-[20px] text-[#353535]' />
+                        </div>
+                        <div className='py-[8.5px] px-[6px] cursor-pointer'>
+                            <BriefcaseBusiness className='size-[20px] text-[#353535]' />
+                        </div>
+                        {sections.map((section) => (
+                            <div className={`py-[8.5px] px-[6px]  text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === section.id ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} key={section.id} onClick={() => setActiveSection(section.id)}>
+                                <CircleQuestionMark className='size-[20px] ' />
+                                <p>{section.title}</p>
+                            </div>
+                        ))}
+                        <div className='py-[8.5px] px-[6px] text-[#353535] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer' onClick={addSection}>
+                            <Plus className='size-[20px] text-[#353535]' />
+                            <p>Add Section</p>
+                        </div>
+                    </div>
+                    <div className="max-w-4xl mx-auto p-[20px]">
+                        {sections.filter((section) => section.id === activeSection).map((section) => (
+                            <div key={section.id} className="mb-8">
+                                <div className="space-y-4">
+                                    {section.questions.map((question) => (
+                                        <div key={question.id} className="bg-[#F5F5F5] rounded-lg shadow-sm border border-[#e9e9e9] group hover:shadow-md transition-shadow">
+                                            <div className="">
+                                                <div className="flex items-start gap-4 py-[20px] px-[16px]">
+                                                    <button className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing">
+                                                        <GripVertical className="w-5 h-5" />
+                                                    </button>
+                                                    <div className="flex-1">
+                                                        <Input
+                                                            type="text"
+                                                            value={question.title}
+                                                            onChange={(e) => updateQuestion(section.id, question.id, { title: e.target.value })}
+                                                            className="h-[48px]"
+                                                            placeholder="Question"
+                                                        />
+                                                    </div>
+                                                    <Select
+                                                        value={question.type}
+                                                        onValueChange={(e) => updateQuestion(section.id, question.id, {
+                                                            type: e as Question['type'],
+                                                            options: ['multiple-choice', 'checkbox'].includes(e) ? ['Option 1'] : undefined
+                                                        })}
+                                                    >
+                                                        <SelectTrigger className="h-[48px] w-[200px]">
+                                                            <SelectValue placeholder="Select a type" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            {questionTypes.map((type) => (
+                                                                <SelectItem key={type.value} value={type.value}>
+                                                                    {type.label}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+                                                <div className='bg-white px-[20px] py-[16px]'>
+                                                    {/* Question Options for Multiple Choice/Checkbox */}
+                                                    {(question.type === 'multiple-choice' || question.type === 'checkbox') && (
+                                                        <div className="ml-9 space-y-3 mb-4">
+                                                            {question.options?.map((option, index) => (
+                                                                <div key={index} className="flex items-center gap-3">
+                                                                    {question.type === 'multiple-choice' ? (
+                                                                        <div className="w-4 h-4 border-2 border-gray-300 rounded-full flex-shrink-0"></div>
+                                                                    ) : (
+                                                                        <div className="w-4 h-4 border-2 border-gray-300 rounded flex-shrink-0"></div>
+                                                                    )}
+                                                                    <input
+                                                                        type="text"
+                                                                        value={option}
+                                                                        onChange={(e) => updateOption(section.id, question.id, index, e.target.value)}
+                                                                        className="flex-1 bg-transparent border-b border-gray-200 py-1 focus:outline-none focus:border-teal-500"
+                                                                    />
+                                                                    {question.options && question.options.length > 1 && (
+                                                                        <button
+                                                                            onClick={() => removeOption(section.id, question.id, index)}
+                                                                            className="text-gray-400 hover:text-red-500 transition-colors"
+                                                                        >
+                                                                            <X className="w-4 h-4" />
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            ))}
+                                                            <button
+                                                                onClick={() => addOption(section.id, question.id)}
+                                                                className=" text-[#0D978B] hover:text-[#0D978B]/80 text-[12px]/[20px]  flex items-center gap-[6px] cursor-pointer"
+                                                            >
+                                                                <Plus className="w-4 h-4 border rounded-full" />
+                                                                Add options
+                                                            </button>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Question Footer */}
+                                                    <div className="flex items-center justify-between border-t border-[#d9d9d9] pt-[14px]">
+                                                        <div className="flex items-center gap-3">
+                                                            <label className="flex items-center gap-2 text-[12px]/[16px] text-[#4b4b4b]">
+                                                                <Switch shape="square" />
+                                                                Required
+                                                            </label>
+                                                        </div>
+
+                                                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            <button
+                                                                onClick={() => duplicateQuestion(section.id, question.id)}
+                                                                className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                            >
+                                                                <Copy className="w-4 h-4" />
+                                                                Duplicate
+                                                            </button>
+                                                            <button
+                                                                onClick={() => deleteQuestion(section.id, question.id)}
+                                                                className="flex items-center gap-1 px-3 py-1 text-[#c30606] hover:bg-[#c30606]/10 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                            >
+                                                                <Trash2 className="w-4 h-4" />
+                                                                Delete
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                    }
+
+                                    {/* Add New Question Button */}
+                                    <button
+                                        onClick={() => addQuestion(section.id)}
+                                        className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-teal-400 hover:text-teal-600 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                        Create New Question
+                                    </button>
+                                </div >
+                            </div >
+                        ))}
+                    </div >
+                </div >
+            </div >
+        </div >
+    );
+}
