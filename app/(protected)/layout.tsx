@@ -5,16 +5,17 @@ import { useRouter } from 'next/navigation';
 import { useSession } from '@/context/SessionContext';
 import { Layout } from '../components/layouts/layout';
 import axios from 'axios';
+import Loading from '@/components/common/loading';
 
 export default function ProtectedLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const { session, setSession } = useSession();
+    const { loading } = useSession();
     const router = useRouter();
 
 
 
-    return <Layout>{children}</Layout>;
+    return !loading ? <Layout>{children}</Layout> : <Loading />;
 }

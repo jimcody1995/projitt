@@ -58,6 +58,7 @@ import {
   CalendarClock,
   BanknoteArrowUp,
   UserCog,
+  PieChart,
 } from 'lucide-react';
 import { type MenuConfig } from './types';
 
@@ -67,10 +68,7 @@ export const MENU_SIDEBAR: MenuConfig = [
     icon: House,
     path: '/',
   },
-  {
-    title: 'Dashboard',
-    icon: LayoutGrid,
-  },
+
   {
     title: 'People',
     icon: Users,
@@ -80,11 +78,15 @@ export const MENU_SIDEBAR: MenuConfig = [
     icon: MessageSquareMore,
   },
   {
-    title: 'Settings',
+    title: 'Company',
     icon: Settings,
   },
   {
     heading: 'HR Management',
+  },
+  {
+    title: 'Dashboard',
+    icon: LayoutGrid,
   },
   {
     title: 'Recuruitment',
@@ -96,10 +98,6 @@ export const MENU_SIDEBAR: MenuConfig = [
       { title: 'Interview', path: '/recruitment/interview' },
       { title: 'Pending Hires', path: '/recruitment/pending-hires' },
     ],
-  },
-  {
-    title: 'Onboarding',
-    icon: UserRoundPlus
   },
   {
     title: 'Talent Management',
@@ -132,6 +130,10 @@ export const MENU_SIDEBAR: MenuConfig = [
   {
     title: 'HR Settings',
     icon: UserCog,
+  },
+  {
+    title: 'Report & Analytics',
+    icon: PieChart,
   },
 ];
 

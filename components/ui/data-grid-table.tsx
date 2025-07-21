@@ -410,10 +410,12 @@ function DataGridTableRowSelect<TData>({
       ></div>
       <input
         type="checkbox"
+
         checked={row.getIsSelected()}
         onChange={(e) => row.toggleSelected(!!e.target.checked)}
         aria-label="Select row"
-        className="align-[inherit] "
+        className="align-[inherit] accent-[#0D978B]"
+
       />
     </>
   );
@@ -431,7 +433,7 @@ function DataGridTableRowSelectAll({ size }: { size?: 'sm' | 'md' | 'lg' }) {
       disabled={isLoading || recordCount === 0}
       onChange={(e) => table.toggleAllPageRowsSelected(!!e.target.checked)}
       aria-label="Select all"
-      className="align-[inherit]"
+      className="align-[inherit] accent-[#0D978B]"
     />
   );
 }
