@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff } from 'lucide-react';
+import { EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,10 +20,13 @@ import { ChangePasswordSchemaType, getChangePasswordSchema } from '../forms/chan
 import { Label } from '@/components/ui/label';
 import FooterWithCompanyLogo from '../component/footerWithCompayLogo';
 
+/**
+ * Page component for changing/resetting user password after token verification.
+ */
 export default function Page() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams?.get('token') || null;
+  const token = searchParams?.get('token') ?? null;
 
   const [verifyingToken, setVerifyingToken] = useState(false);
   const [isValidToken, setIsValidToken] = useState(false);
@@ -42,26 +45,29 @@ export default function Page() {
   });
 
   useEffect(() => {
-    const verifyToken = async () => {
-      // try {
-      //   setVerifyingToken(true);
-      //   const response = await apiFetch('/api/auth/reset-password-verify', {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify({ token }),
-      //   });
-      //   if (response.ok) {
-      //     setIsValidToken(true);
-      //   } else {
-      //     const errorData = await response.json();
-      //     setError(errorData.message || 'Invalid or expired token.');
-      //   }
-      // } catch {
-      //   setError('Unable to verify the reset token.');
-      // } finally {
-      //   setVerifyingToken(false);
-      // }
-    };
+    async function verifyToken() {
+      // Uncomment and implement token verification API call here
+      /*
+      try {
+        setVerifyingToken(true);
+        const response = await fetch('/api/auth/reset-password-verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token }),
+        });
+        if (response.ok) {
+          setIsValidToken(true);
+        } else {
+          const data = await response.json();
+          setError(data.message || 'Invalid or expired token.');
+        }
+      } catch {
+        setError('Unable to verify the reset token.');
+      } finally {
+        setVerifyingToken(false);
+      }
+      */
+    }
 
     if (token) {
       verifyToken();
@@ -74,40 +80,44 @@ export default function Page() {
     setIsProcessing(true);
     setError(null);
     setSuccessMessage(null);
+
+    // For now, we simulate navigation immediately:
     router.push('/confirm-email');
 
-    // try {
-    //   const response = await apiFetch('/api/auth/change-password', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ token, newPassword: values.newPassword }),
-    //   });
+    /*
+    try {
+      const response = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, newPassword: values.newPassword }),
+      });
 
-    //   if (response.ok) {
-    //     setSuccessMessage('Password reset successful! Redirecting to login...');
-    //     setTimeout(() => router.push('/signin'), 3000);
-    //   } else {
-    //     const errorData = await response.json();
-    //     setError(errorData.message || 'Password reset failed.');
-    //   }
-    // } catch {
-    //   setError('An error occurred while resetting the password.');
-    // } finally {
-    //   setIsProcessing(false);
-    // }
+      if (response.ok) {
+        setSuccessMessage('Password reset successful! Redirecting to login...');
+        setTimeout(() => router.push('/signin'), 3000);
+      } else {
+        const data = await response.json();
+        setError(data.message || 'Password reset failed.');
+      }
+    } catch {
+      setError('An error occurred while resetting the password.');
+    } finally {
+      setIsProcessing(false);
+    }
+    */
   }
 
   return (
     <>
       <div className="w-full h-full flex flex-col justify-between gap-[30px]">
         <div className="pt-[60px] flex justify-center w-full">
-          <img src="/images/logo.png" alt="logo" className=" h-[48px]" />
+          <img src="/images/logo.png" alt="logo" className="h-[48px]" />
         </div>
         <div className="w-full flex-1 flex justify-center items-center pb-[10px]">
           <div className="w-[482px] border border-[#e9e9e9] rounded-[16px] bg-white py-[40px] px-[40px]">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="block w-full space-y-4">
-                <div className="">
+                <div>
                   <h1 className="text-[22px]/[30px] font-semibold tracking-tight text-[#353535]">
                     Set up your Account
                   </h1>
@@ -115,6 +125,7 @@ export default function Page() {
                     Create your login credentials to get started with Projitt.
                   </p>
                 </div>
+
                 <Label className="text-[14px]/[22px] font-normal text-[#353535]">
                   Email Address
                 </Label>
@@ -124,6 +135,7 @@ export default function Page() {
                   value="admin@zaidllc.com"
                   className="h-[48px] mt-[10px]"
                 />
+
                 <FormField
                   control={form.control}
                   name="newPassword"
@@ -139,6 +151,7 @@ export default function Page() {
                             placeholder="Enter new password"
                             {...field}
                             className="h-[48px]"
+                            autoComplete="new-password"
                           />
                         </FormControl>
                         <Button
@@ -176,6 +189,7 @@ export default function Page() {
                             placeholder="Confirm new password"
                             {...field}
                             className="h-[48px]"
+                            autoComplete="new-password"
                           />
                         </FormControl>
                         <Button

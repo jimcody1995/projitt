@@ -4,11 +4,20 @@ import { ReactNode } from 'react';
 import { useSession } from '@/context/SessionContext';
 import Loading from '@/components/common/loading';
 
-export default function Layout({ children }: { children: ReactNode }) {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
   const { loading } = useSession();
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
-    !loading ? <div className="w-[100vw] h-[100vh] bg-[#fafafa] relative overflow-y-auto overflow-x-hidden">
+    <div className="w-[100vw] h-[100vh] bg-[#fafafa] relative overflow-y-auto overflow-x-hidden">
       {children}
-    </div> : <Loading />
+    </div>
   );
 }

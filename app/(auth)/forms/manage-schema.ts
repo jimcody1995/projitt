@@ -1,6 +1,12 @@
 import { z } from 'zod';
 
-export const getManageSchema = () => {
+/**
+ * Returns a Zod schema for managing selected management areas.
+ * Validates that at least one management area is selected.
+ *
+ * @returns {z.ZodObject} The Zod validation schema for management areas
+ */
+export const getManageSchema = (): z.ZodObject<any> => {
   return z.object({
     managementAreas: z
       .array(z.string())
@@ -8,4 +14,5 @@ export const getManageSchema = () => {
   });
 };
 
+/** Type representing the validated management areas data */
 export type ManageSchemaType = z.infer<ReturnType<typeof getManageSchema>>;
