@@ -38,7 +38,7 @@ type JobDesciptionError = {
 
 export default function CreateJob() {
     const router = useRouter();
-    const [currentStep, setCurrentStep] = useState(1);
+    const [currentStep, setCurrentStep] = useState(3);
     const [jobData, setJobData] = useState<JobData>({
         jobTitle: '',
         department: '',
