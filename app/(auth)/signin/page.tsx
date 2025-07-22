@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -83,7 +83,7 @@ export default function Page(): JSX.Element {
     setIsProcessing(true);
     setError(null);
     try {
-      const response = await login(values);
+      const response = await login({ email: values.email, password: values.password });
       if (response?.data?.status === false) {
         customToast("Error", response?.data?.error, "error");
         return;

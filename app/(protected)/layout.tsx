@@ -3,6 +3,7 @@
 import { useSession } from '@/context/SessionContext';
 import { Layout } from '../components/layouts/layout';
 import Loading from '@/components/common/loading';
+import { JSX } from 'react';
 
 /**
  * ProtectedLayout component wraps its children with Layout if the user session is loaded.

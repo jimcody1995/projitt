@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useRouter, usePathname } from "next/navigation";
-import { createContext, useContext, useState, ReactNode, useLayoutEffect } from "react";
+import { createContext, useContext, useState, ReactNode, useLayoutEffect, JSX } from "react";
 
 /**
  * Session type representing authentication token and status.

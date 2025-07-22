@@ -4,7 +4,7 @@ import { ChevronDown, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { JSX, useState } from "react";
 
 /**
  * FilterTool component

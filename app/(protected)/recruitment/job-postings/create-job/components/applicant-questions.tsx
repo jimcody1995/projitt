@@ -210,7 +210,7 @@ export default function ApplicantQuestions() {
                                                     <button className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing">
                                                         <GripVertical className="w-5 h-5" />
                                                     </button>
-                                                    <div className="flex-1">
+                                                    <div className="lg:flex-1 w-full">
                                                         <Input
                                                             type="text"
                                                             value={question.title}
@@ -226,7 +226,7 @@ export default function ApplicantQuestions() {
                                                             options: ['multiple-choice', 'checkbox'].includes(e) ? ['Option 1'] : undefined
                                                         })}
                                                     >
-                                                        <SelectTrigger className="h-[48px] w-[200px]">
+                                                        <SelectTrigger className="h-[48px] lg:w-[200px] w-full">
                                                             <SelectValue placeholder="Select a type" />
                                                         </SelectTrigger>
                                                         <SelectContent>

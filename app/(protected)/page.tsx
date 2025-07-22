@@ -7,6 +7,7 @@ import {
     Star,
     UserRoundPlus,
 } from "lucide-react";
+import { JSX } from "react";
 
 /**
  * Dashboard component displays various modules with features,
@@ -225,8 +226,8 @@ export default function Dashboard(): JSX.Element {
                                             >
                                                 <p
                                                     className={`text-[12px]/[16px] font-[500] ${feature.status === "Not subscribed"
-                                                            ? "text-[#8F8F8F]"
-                                                            : "text-[#353535]"
+                                                        ? "text-[#8F8F8F]"
+                                                        : "text-[#353535]"
                                                         }`}
                                                     id={`feature-name-${index}-${i}`}
                                                     data-testid={`feature-name-${index}-${i}`}
@@ -251,8 +252,8 @@ export default function Dashboard(): JSX.Element {
                                                 </p>
                                                 <p
                                                     className={`text-[10px]/[16px] mt-[4px] font-semibold ${feature.status === "Not subscribed"
-                                                            ? "text-[#8F8F8F]"
-                                                            : "text-[#0D978B]"
+                                                        ? "text-[#8F8F8F]"
+                                                        : "text-[#0D978B]"
                                                         }`}
                                                     id={`feature-status-${index}-${i}`}
                                                     data-testid={`feature-status-${index}-${i}`}

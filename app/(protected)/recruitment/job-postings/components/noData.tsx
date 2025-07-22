@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { JSX } from "react";
 
 /**
  * NoData component displays a message and action when there are no jobs posted yet.

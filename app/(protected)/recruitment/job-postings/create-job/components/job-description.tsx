@@ -96,7 +96,7 @@ export default function JobDescription({ jobData, setJobData }: any) {
                         </div>
                     ))}
                 </div>
-                <div className='flex justify-between items-center mt-[20px]'>
+                <div className={`flex justify-between items-center ${files.length > 0 ? 'mt-[20px]' : 'mt-[70px]'}`}>
                     <button
                         type="button"
                         onClick={() => document.getElementById('fileInput')?.click()}

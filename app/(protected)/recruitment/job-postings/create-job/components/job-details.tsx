@@ -31,7 +31,7 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">AI Scoring</p>
                 </div>
             </div>
-            <div className="grid gap-[48px] grid-cols-2 mt-[33px]">
+            <div className="grid gap-[48px] xl:grid-cols-2 grid-cols-1 mt-[33px]">
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">Job Title *</p>
                     <Input className="h-[48px]" placeholder="e.g Sales Representative" value={jobData?.jobTitle} onChange={(e) => setJobData({ ...jobData, jobTitle: e.target.value })} />

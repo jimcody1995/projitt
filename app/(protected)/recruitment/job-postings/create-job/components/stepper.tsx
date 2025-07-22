@@ -26,7 +26,7 @@ export default function Stepper({ currentStep = 2 }: { currentStep?: number }) {
                             )}
 
                             {/* Circle */}
-                            <div className="relative z-10">
+                            <div className="relative z-1">
                                 {isCompleted ? (
                                     <div className="w-[36px] h-[36px] rounded-full bg-[#0D978B] text-white flex items-center justify-center">
                                         <Check size={16} strokeWidth={3} />

@@ -1,6 +1,6 @@
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ReactNode } from "react";
+import { JSX, ReactNode } from "react";
 import { Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 

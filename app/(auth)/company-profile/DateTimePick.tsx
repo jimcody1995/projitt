@@ -14,7 +14,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { getCompanySchema, CompanySchemaType } from '../forms/company-schema';
 import { Calendar } from '@/components/ui/calendar';
 import moment from 'moment';
@@ -136,7 +136,6 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps): JSX.
               <TimezoneSelect
                 defaultValue={timezone}
                 onChange={(value) => setTimezone(value)}
-                id="timezone-select"
                 data-testid="timezone-select"
               />
             </div>

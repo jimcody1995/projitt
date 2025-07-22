@@ -1,4 +1,5 @@
 import { Ban, Trash, Upload } from "lucide-react";
+import { JSX } from "react";
 
 /**
  * SelectedDialog component displays actions and selection info when rows are selected.

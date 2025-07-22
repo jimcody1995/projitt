@@ -1,3 +1,5 @@
+import { JSX } from "react";
+
 /**
  * FooterWithCompanyLogo component renders the footer section with company logo,
  * links to Terms of Service and Privacy Policy, and copyright information.
