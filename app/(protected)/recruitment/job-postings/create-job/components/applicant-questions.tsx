@@ -245,7 +245,7 @@ export default function ApplicantQuestions() {
                                                     {(question.type === 'multiple-choice' || question.type === 'checkbox') && (
                                                         <div className="sm:ml-9 ml-0 space-y-3 mb-4">
                                                             {question.options?.map((option, index) => (
-                                                                <div key={index} className="flex w-full items-center gap-3">
+                                                                <div key={index} className="flex w-full items-center justify-between gap-3">
                                                                     {question.type === 'multiple-choice' ? (
                                                                         <div className="w-4 h-4 border-2 border-gray-300 rounded-full flex-shrink-0"></div>
                                                                     ) : (
@@ -255,7 +255,7 @@ export default function ApplicantQuestions() {
                                                                         type="text"
                                                                         value={option}
                                                                         onChange={(e) => updateOption(section.id, question.id, index, e.target.value)}
-                                                                        className="flex-1 bg-transparent border-b border-gray-200 py-1 focus:outline-none focus:border-teal-500"
+                                                                        className="w-full bg-transparent border-b border-gray-200 py-1 focus:outline-none focus:border-teal-500"
                                                                     />
                                                                     {question.options && question.options.length > 1 && (
                                                                         <button

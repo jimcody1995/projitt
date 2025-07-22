@@ -57,13 +57,13 @@ export default function JobDescription({ jobData, setJobData, errors = {}, trigg
                             <p className="text-[14px]/[16px] text-[#0d978b]">Write with AI</p>
                         </DialogTrigger>
                         <DialogTitle></DialogTitle>
-                        <DialogContent className="w-[406px] pl-0 pr-0 pt-0">
+                        <DialogContent className="w-[90%] md:w-[406px]  pl-0 pr-0 pt-0">
                             <div className='flex items-center gap-[8px] border-b border-[#e9e9e9] pb-[16px] pl-[18px] pt-[20px]'>
                                 <img src="/images/icons/ai-line.png" alt="" className="w-[18px] h-[18px]" />
                                 <p className="text-[14px]/[16px] text-[#353535]">Generate</p>
                             </div>
                             <div className='px-[15px] py-[12px]'>
-                                <div className='flex gap-[8px] items-center'>
+                                <div className='flex gap-[8px] items-center flex-wrap'>
                                     <span className={`px-[12px] py-[4px] rounded-[21px] cursor-pointer text-[12px]/[16px] text-[#626262] ${selectedStyle === 'Formal' ? 'bg-[#0d978b] text-[#fff]' : 'bg-[#e9e9e9]'}`} onClick={() => setSelectedStyle('Formal')}>Formal</span>
                                     <span className={`px-[12px] py-[4px] rounded-[21px] cursor-pointer text-[12px]/[16px] text-[#626262] ${selectedStyle === 'Friendly' ? 'bg-[#0d978b] text-[#fff]' : 'bg-[#e9e9e9]'}`} onClick={() => setSelectedStyle('Friendly')}>Friendly</span>
                                     <span className={`px-[12px] py-[4px] rounded-[21px] cursor-pointer text-[12px]/[16px] text-[#626262] ${selectedStyle === 'Inspirational' ? 'bg-[#0d978b] text-[#fff]' : 'bg-[#e9e9e9]'}`} onClick={() => setSelectedStyle('Inspirational')}>Inspirational</span>
@@ -77,7 +77,7 @@ export default function JobDescription({ jobData, setJobData, errors = {}, trigg
             </div>
 
             <div className="mt-[12px]">
-                <div id="custom-toolbar" className='w-full flex justify-between'>
+                <div id="custom-toolbar" className='w-full flex justify-between flex-wrap'>
                     <div className='flex sm:gap-[14px] items-center'>
                         <button className="ql-bold" />
                         <button className="ql-italic" />
