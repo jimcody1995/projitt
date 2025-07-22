@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { getPasswordSchema } from './password-schema';
 
 /**
  * Returns a Zod schema for sign-in form validation.
@@ -14,10 +15,7 @@ export const getSigninSchema = (): z.ZodObject<any> => {
       .string()
       .min(1, { message: 'Email is required.' })
       .email({ message: 'Please enter a valid email address.' }),
-    password: z
-      .string()
-      .min(1, { message: 'Password is required.' })
-      .min(6, { message: 'Password must be at least 6 characters long.' }),
+    password: getPasswordSchema(),
     rememberMe: z.boolean().optional(),
   });
 };

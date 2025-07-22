@@ -1,14 +1,16 @@
 import 'react-quill-new/dist/quill.snow.css';
 import ReactQuill from 'react-quill-new';
-import { useState } from 'react';
-import { File, Link } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { File, Link, Redo, Undo } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
-export default function JobDescription({ jobData, setJobData }: any) {
+export default function JobDescription({ jobData, setJobData, errors = {}, triggerValidation = false }: any) {
     const [files, setFiles] = useState<File[]>([]);
     const [selectedStyle, setSelectedStyle] = useState<string>('Formal');
+    const quillRef = useRef<ReactQuill | null>(null);
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setFiles([...files, ...Array.from(e.target.files)]);
@@ -19,6 +21,27 @@ export default function JobDescription({ jobData, setJobData }: any) {
         const updated = [...files];
         updated.splice(index, 1);
         setFiles(updated);
+    };
+
+    const handleUndo = () => {
+        const editor = quillRef.current?.getEditor();
+        editor?.history.undo();
+    };
+
+    const handleRedo = () => {
+        const editor = quillRef.current?.getEditor();
+        editor?.history.redo();
+    };
+
+    const modules = {
+        toolbar: {
+            container: "#custom-toolbar"
+        },
+        history: {
+            delay: 1000,
+            maxStack: 100,
+            userOnly: true
+        }
     };
 
     return (
@@ -54,21 +77,34 @@ export default function JobDescription({ jobData, setJobData }: any) {
             </div>
 
             <div className="mt-[12px]">
-
+                <div id="custom-toolbar" className='w-full flex justify-between'>
+                    <div className='flex sm:gap-[14px] items-center'>
+                        <button className="ql-bold" />
+                        <button className="ql-italic" />
+                        <button className="ql-underline" />
+                        <button className="ql-align" value="" />
+                        <button className="ql-align" value="center" />
+                        <button className="ql-align" value="right" />
+                        <button className="ql-align" value="justify" />
+                        <button className="ql-link" />
+                    </div>
+                    <div className='flex sm:gap-[14px] items-center'>
+                        <button type="button" onClick={handleUndo}><Undo className='text-[#4b4b4b]' /></button>
+                        <button type="button" onClick={handleRedo}><Redo className='text-[#4b4b4b]' /></button>
+                    </div>
+                </div>
                 <ReactQuill
+                    ref={quillRef}
                     value={jobData.description || ''}
                     onChange={(value) => setJobData({ ...jobData, description: value })}
                     placeholder="Enter the job description..."
                     theme="snow"
-                    modules={{
-                        toolbar: [
-                            ['bold', 'italic', 'underline'],
-                            [{ 'align': [] }],
-                            ['link']
-                        ]
-                    }}
-                    className="w-full h-[400px]"
+                    modules={modules}
+                    className="w-full h-[400px] rounded-[12px]"
                 />
+                {triggerValidation && errors.description && (
+                    <span className="text-red-500 text-xs ">{errors.description}</span>
+                )}
 
                 <input
                     id="fileInput"
@@ -110,7 +146,6 @@ export default function JobDescription({ jobData, setJobData }: any) {
                         <p className='text-[14px]/[20px] text-[#4b4b4b]'>Set as default template</p>
                     </div>
                 </div>
-
             </div>
         </div >
     );

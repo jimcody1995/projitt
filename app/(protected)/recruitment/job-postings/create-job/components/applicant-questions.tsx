@@ -179,8 +179,8 @@ export default function ApplicantQuestions() {
                     <span className="text-[14px]/[16px] text-[#4b4b4b]">Set as Default</span>
                 </div>
             </div>
-            <div className='mt-[33px]'>
-                <div className="min-h-screen bg-white border border-[#e9e9e9] rounded-[12px] ">
+            <div className='mt-[33px] '>
+                <div className="min-h-screen w-full bg-white border border-[#e9e9e9] rounded-[12px] ">
                     <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  w-full overflow-x-auto'>
                         <div className='py-[8.5px] px-[6px] cursor-pointer'>
                             <FileText className='size-[20px] text-[#353535]' />
@@ -191,12 +191,12 @@ export default function ApplicantQuestions() {
                         {sections.map((section) => (
                             <div className={`py-[8.5px] px-[6px]  text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === section.id ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} key={section.id} onClick={() => setActiveSection(section.id)}>
                                 <CircleQuestionMark className='size-[20px] ' />
-                                <p>{section.title}</p>
+                                <p className='whitespace-nowrap'>{section.title}</p>
                             </div>
                         ))}
                         <div className='py-[8.5px] px-[6px] text-[#353535] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer' onClick={addSection}>
                             <Plus className='size-[20px] text-[#353535]' />
-                            <p>Add Section</p>
+                            <p className='whitespace-nowrap'>Add Section</p>
                         </div>
                     </div>
                     <div className="max-w-4xl mx-auto p-[20px]">
@@ -210,40 +210,42 @@ export default function ApplicantQuestions() {
                                                     <button className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing">
                                                         <GripVertical className="w-5 h-5" />
                                                     </button>
-                                                    <div className="lg:flex-1 w-full">
-                                                        <Input
-                                                            type="text"
-                                                            value={question.title}
-                                                            onChange={(e) => updateQuestion(section.id, question.id, { title: e.target.value })}
-                                                            className="h-[48px]"
-                                                            placeholder="Question"
-                                                        />
+                                                    <div className='flex items-start gap-4 sm:flex-row flex-col'>
+                                                        <div className="lg:flex-1 w-full">
+                                                            <Input
+                                                                type="text"
+                                                                value={question.title}
+                                                                onChange={(e) => updateQuestion(section.id, question.id, { title: e.target.value })}
+                                                                className="h-[48px]"
+                                                                placeholder="Question"
+                                                            />
+                                                        </div>
+                                                        <Select
+                                                            value={question.type}
+                                                            onValueChange={(e) => updateQuestion(section.id, question.id, {
+                                                                type: e as Question['type'],
+                                                                options: ['multiple-choice', 'checkbox'].includes(e) ? ['Option 1'] : undefined
+                                                            })}
+                                                        >
+                                                            <SelectTrigger className="h-[48px] lg:w-[200px] w-full">
+                                                                <SelectValue placeholder="Select a type" />
+                                                            </SelectTrigger>
+                                                            <SelectContent>
+                                                                {questionTypes.map((type) => (
+                                                                    <SelectItem key={type.value} value={type.value}>
+                                                                        {type.label}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
                                                     </div>
-                                                    <Select
-                                                        value={question.type}
-                                                        onValueChange={(e) => updateQuestion(section.id, question.id, {
-                                                            type: e as Question['type'],
-                                                            options: ['multiple-choice', 'checkbox'].includes(e) ? ['Option 1'] : undefined
-                                                        })}
-                                                    >
-                                                        <SelectTrigger className="h-[48px] lg:w-[200px] w-full">
-                                                            <SelectValue placeholder="Select a type" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            {questionTypes.map((type) => (
-                                                                <SelectItem key={type.value} value={type.value}>
-                                                                    {type.label}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
                                                 </div>
                                                 <div className='bg-white px-[20px] py-[16px]'>
                                                     {/* Question Options for Multiple Choice/Checkbox */}
                                                     {(question.type === 'multiple-choice' || question.type === 'checkbox') && (
-                                                        <div className="ml-9 space-y-3 mb-4">
+                                                        <div className="sm:ml-9 ml-0 space-y-3 mb-4">
                                                             {question.options?.map((option, index) => (
-                                                                <div key={index} className="flex items-center gap-3">
+                                                                <div key={index} className="flex w-full items-center gap-3">
                                                                     {question.type === 'multiple-choice' ? (
                                                                         <div className="w-4 h-4 border-2 border-gray-300 rounded-full flex-shrink-0"></div>
                                                                     ) : (

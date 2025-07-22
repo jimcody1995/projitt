@@ -16,11 +16,32 @@ import moment from "moment";
 import TagInput from "@/components/ui/tag-input";
 import { useRouter } from "next/navigation";
 
-export default function JobDetails({ jobData, setJobData }: { jobData: any; setJobData: any }) {
-    const [locationType, setLocationType] = useState('onsite');
+interface JobDetailsProps {
+    jobData: any;
+    setJobData: any;
+    errors?: {
+        jobTitle?: string;
+        department?: string;
+        employmentType?: string;
+        numberOfOpenings?: string;
+        skills?: string;
+        locationType?: string;
+        state?: string;
+        country?: string;
+    };
+    triggerValidation?: boolean;
+}
+
+export default function JobDetails({ jobData, setJobData, errors = {}, triggerValidation = false }: JobDetailsProps) {
+    const [locationType, setLocationType] = useState(jobData.locationType || 'onsite');
     const router = useRouter();
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [tags, setTags] = useState<string[]>(["UI/UX Prototyping", "Wireframi"]);
+
+    useEffect(() => {
+        setJobData({ ...jobData, locationType });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [locationType]);
 
     return (
         <div>
@@ -35,6 +56,7 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">Job Title *</p>
                     <Input className="h-[48px]" placeholder="e.g Sales Representative" value={jobData?.jobTitle} onChange={(e) => setJobData({ ...jobData, jobTitle: e.target.value })} />
+                    {triggerValidation && errors.jobTitle && <span className="text-red-500 text-xs ">{errors.jobTitle}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">Department *</p>
@@ -48,6 +70,7 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                             <SelectItem value="it">IT</SelectItem>
                         </SelectContent>
                     </Select>
+                    {triggerValidation && errors.department && <span className="text-red-500 text-xs ">{errors.department}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">Employment Type*</p>
@@ -61,6 +84,7 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                             <SelectItem value="contract">Contract</SelectItem>
                         </SelectContent>
                     </Select>
+                    {triggerValidation && errors.employmentType && <span className="text-red-500 text-xs ">{errors.employmentType}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">No. of Openings*</p>
@@ -74,6 +98,7 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                             <SelectItem value="3">3</SelectItem>
                         </SelectContent>
                     </Select>
+                    {triggerValidation && errors.numberOfOpenings && <span className="text-red-500 text-xs ">{errors.numberOfOpenings}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">
                     <div>
@@ -81,6 +106,7 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                         <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Add 3–6 skills to help AI match stronger applicants. </p>
                     </div>
                     <TagInput tags={jobData?.skills} setTags={(tags) => setJobData({ ...jobData, skills: tags })} />
+                    {triggerValidation && errors.skills && <span className="text-red-500 text-xs ">{errors.skills}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">
                     <div>
@@ -88,7 +114,7 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                         <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Choose based on where the role is performed not where the company is based.</p>
                     </div>
                     <div>
-                        <RadioGroup className="flex gap-[32px]" defaultValue="onsite" onValueChange={(e) => setLocationType(e as string)}>
+                        <RadioGroup className="flex gap-[32px]" defaultValue={locationType} onValueChange={(e) => setLocationType(e as string)}>
                             <div className="flex gap-[6px]">
                                 <RadioGroupItem value="onsite" id="onsite" />
                                 <Label htmlFor="onsite" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 'onsite' ? 'text-[#0d978b]' : '')}>
@@ -108,8 +134,9 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                                 </Label>
                             </div>
                         </RadioGroup>
+                        {triggerValidation && errors.locationType && <span className="text-red-500 text-xs ">{errors.locationType}</span>}
                         {(locationType === 'onsite' || locationType === 'hybrid') && <div className="flex flex-col gap-[10px] mt-[10px]">
-                            <Select>
+                            <Select value={jobData.state || ''} onValueChange={val => setJobData({ ...jobData, state: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder="Select State" />
                                 </SelectTrigger>
@@ -119,7 +146,8 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                                     <SelectItem value="state3">State 3</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <Select defaultValue="usa">
+                            {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
+                            <Select value={jobData.country || ''} onValueChange={val => setJobData({ ...jobData, country: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder="Select Country" />
                                 </SelectTrigger>
@@ -129,9 +157,10 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                                     <SelectItem value="canada">Canada</SelectItem>
                                 </SelectContent>
                             </Select>
+                            {triggerValidation && errors.country && <span className="text-red-500 text-xs ">{errors.country}</span>}
                         </div>}
                         {locationType === 'remote' && <div className="flex flex-col gap-[12px] mt-[10px]">
-                            <Select>
+                            <Select value={jobData.country || ''} onValueChange={val => setJobData({ ...jobData, country: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder="Select Country" />
                                 </SelectTrigger>
@@ -141,11 +170,11 @@ export default function JobDetails({ jobData, setJobData }: { jobData: any; setJ
                                     <SelectItem value="canada">Canada</SelectItem>
                                 </SelectContent>
                             </Select>
+                            {triggerValidation && errors.country && <span className="text-red-500 text-xs ">{errors.country}</span>}
                             <div className="flex items-center gap-[8px]">
                                 <input type="checkbox" placeholder="Remote (Global)" className="h-[14px] accent-[#0d978b]" />
                                 <p className="text-[14px]/[20px] text-[#4b4b4b]">Remote (Global)</p>
                             </div>
-
                         </div>}
                     </div>
                 </div>
