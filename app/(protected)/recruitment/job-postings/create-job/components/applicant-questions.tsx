@@ -1,8 +1,33 @@
+/**
+ * ApplicantQuestions.tsx
+ *
+ * This component allows the creation and editing of applicant question sections and questions.
+ * Each section can contain multiple questions of various types (e.g., short answer, paragraph, multiple-choice, etc.).
+ * Users can dynamically add/remove/edit questions and their options. Suitable for form builders.
+ */
+
 import React, { useState } from 'react';
-import { GripVertical, Plus, Copy, Trash2, X, FileText, BriefcaseBusiness, CircleQuestionMark } from 'lucide-react';
+import {
+    GripVertical,
+    Plus,
+    Copy,
+    Trash2,
+    X,
+    FileText,
+    BriefcaseBusiness,
+    CircleQuestionMark,
+} from 'lucide-react';
+
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+
 export interface Question {
     id: string;
     title: string;
@@ -16,7 +41,11 @@ interface Section {
     title: string;
     questions: Question[];
 }
-export default function ApplicantQuestions() {
+
+/**
+ * Main functional component that manages question sections and renders dynamic UI
+ */
+export default function ApplicantQuestions(): JSX.Element {
     const [activeSection, setActiveSection] = useState<string | null>(null);
     const [sections, setSections] = useState<Section[]>([
         {
@@ -67,7 +96,8 @@ export default function ApplicantQuestions() {
         { value: 'file-upload', label: 'File Upload' },
     ];
 
-    const addSection = () => {
+    /** Adds a new question section */
+    const addSection = (): void => {
         const newSection: Section = {
             id: Date.now().toString(),
             title: `Applicant Question ${sections.length + 1}`,
@@ -76,14 +106,14 @@ export default function ApplicantQuestions() {
         setSections([...sections, newSection]);
     };
 
-    const addQuestion = (sectionId: string) => {
+    /** Adds a new default question to a section */
+    const addQuestion = (sectionId: string): void => {
         const newQuestion: Question = {
             id: Date.now().toString(),
             title: 'Question',
             type: 'short-answer',
             required: false,
         };
-
         setSections(sections.map(section =>
             section.id === sectionId
                 ? { ...section, questions: [...section.questions, newQuestion] }
@@ -91,54 +121,57 @@ export default function ApplicantQuestions() {
         ));
     };
 
-    const updateQuestion = (sectionId: string, questionId: string, updates: Partial<Question>) => {
+    /** Updates a question�s properties */
+    const updateQuestion = (
+        sectionId: string,
+        questionId: string,
+        updates: Partial<Question>
+    ): void => {
         setSections(sections.map(section =>
             section.id === sectionId
                 ? {
                     ...section,
                     questions: section.questions.map(question =>
-                        question.id === questionId
-                            ? { ...question, ...updates }
-                            : question
-                    )
+                        question.id === questionId ? { ...question, ...updates } : question
+                    ),
                 }
                 : section
         ));
     };
 
-    const duplicateQuestion = (sectionId: string, questionId: string) => {
+    /** Duplicates a question */
+    const duplicateQuestion = (sectionId: string, questionId: string): void => {
         const section = sections.find(s => s.id === sectionId);
         const question = section?.questions.find(q => q.id === questionId);
-
         if (question) {
-            const duplicatedQuestion: Question = {
+            const duplicated: Question = {
                 ...question,
                 id: Date.now().toString(),
             };
-
             setSections(sections.map(s =>
                 s.id === sectionId
-                    ? { ...s, questions: [...s.questions, duplicatedQuestion] }
+                    ? { ...s, questions: [...s.questions, duplicated] }
                     : s
             ));
         }
     };
 
-    const deleteQuestion = (sectionId: string, questionId: string) => {
+    /** Deletes a question from a section */
+    const deleteQuestion = (sectionId: string, questionId: string): void => {
         setSections(sections.map(section =>
             section.id === sectionId
                 ? {
                     ...section,
-                    questions: section.questions.filter(q => q.id !== questionId)
+                    questions: section.questions.filter(q => q.id !== questionId),
                 }
                 : section
         ));
     };
 
-    const addOption = (sectionId: string, questionId: string) => {
+    /** Adds a new option to a multiple-choice or checkbox question */
+    const addOption = (sectionId: string, questionId: string): void => {
         const section = sections.find(s => s.id === sectionId);
         const question = section?.questions.find(q => q.id === questionId);
-
         if (question) {
             const newOption = `Option ${(question.options?.length || 0) + 1}`;
             const updatedOptions = [...(question.options || []), newOption];
@@ -146,10 +179,15 @@ export default function ApplicantQuestions() {
         }
     };
 
-    const updateOption = (sectionId: string, questionId: string, optionIndex: number, value: string) => {
+    /** Updates an existing option value */
+    const updateOption = (
+        sectionId: string,
+        questionId: string,
+        optionIndex: number,
+        value: string
+    ): void => {
         const section = sections.find(s => s.id === sectionId);
         const question = section?.questions.find(q => q.id === questionId);
-
         if (question?.options) {
             const updatedOptions = [...question.options];
             updatedOptions[optionIndex] = value;
@@ -157,21 +195,28 @@ export default function ApplicantQuestions() {
         }
     };
 
-    const removeOption = (sectionId: string, questionId: string, optionIndex: number) => {
+    /** Removes an option from a multiple-choice or checkbox question */
+    const removeOption = (
+        sectionId: string,
+        questionId: string,
+        optionIndex: number
+    ): void => {
         const section = sections.find(s => s.id === sectionId);
         const question = section?.questions.find(q => q.id === questionId);
-
         if (question?.options) {
-            const updatedOptions = question.options.filter((_, index) => index !== optionIndex);
+            const updatedOptions = question.options.filter((_, i) => i !== optionIndex);
             updateQuestion(sectionId, questionId, { options: updatedOptions });
         }
     };
 
-    const getTypeLabel = (type: string) => {
+    /** Returns human-readable label from question type */
+    const getTypeLabel = (type: string): string => {
         return questionTypes.find(t => t.value === type)?.label || 'Short answer';
     };
     return (
-        <div>
+        <div
+            id="applicant-question-builder"
+            data-testid="applicant-question-builder-root">
             <div className="flex items-center justify-between gap-[8px] w-full">
                 <p className="text-[20px]/[30px] font-semibold text-[#353535]">Applicant Questions</p>
                 <div className="flex items-center gap-[9px] cursor-pointer">

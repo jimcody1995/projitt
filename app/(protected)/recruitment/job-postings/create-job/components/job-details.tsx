@@ -1,12 +1,32 @@
 'use client';
+
+/**
+ * JobDetails component allows HR or recruiters to define role-specific information for a job post.
+ * Includes fields for title, department, type, skills, location, salary, and deadline.
+ * Features dynamic validation and adaptable UI for different location types.
+ */
+
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import {
+  RadioGroupItem,
+  RadioGroup
+} from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { DateInput } from "@/components/ui/datefield";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { CalendarDays } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -17,58 +37,93 @@ import TagInput from "@/components/ui/tag-input";
 import { useRouter } from "next/navigation";
 
 interface JobDetailsProps {
-    jobData: any;
-    setJobData: any;
-    errors?: {
-        jobTitle?: string;
-        department?: string;
-        employmentType?: string;
-        numberOfOpenings?: string;
-        skills?: string;
-        locationType?: string;
-        state?: string;
-        country?: string;
-    };
-    triggerValidation?: boolean;
+  jobData: any;
+  setJobData: any;
+  errors?: {
+    jobTitle?: string;
+    department?: string;
+    employmentType?: string;
+    numberOfOpenings?: string;
+    skills?: string;
+    locationType?: string;
+    state?: string;
+    country?: string;
+  };
+  triggerValidation?: boolean;
 }
 
-export default function JobDetails({ jobData, setJobData, errors = {}, triggerValidation = false }: JobDetailsProps) {
-    const [locationType, setLocationType] = useState(jobData.locationType || 'onsite');
-    const router = useRouter();
-    const [date, setDate] = useState<Date | undefined>(new Date());
-    const [tags, setTags] = useState<string[]>(["UI/UX Prototyping", "Wireframi"]);
+/**
+ * JobDetails component definition
+ * @param jobData - job post data object
+ * @param setJobData - setter function for job data
+ * @param errors - optional validation error object
+ * @param triggerValidation - optional flag to enable error messages
+ * @returns JSX.Element
+ */
+export default function JobDetails({ jobData, setJobData, errors = {}, triggerValidation = false }: JobDetailsProps): JSX.Element {
+  const [locationType, setLocationType] = useState(jobData.locationType || 'onsite');
+  const router = useRouter();
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [tags, setTags] = useState<string[]>(["UI/UX Prototyping", "Wireframi"]);
 
-    useEffect(() => {
-        setJobData({ ...jobData, locationType });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [locationType]);
+  useEffect(() => {
+    setJobData({ ...jobData, locationType });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locationType]);
 
-    return (
-        <div>
-            <div className="flex justify-between">
-                <h1 className="text-[20px]/[30px] font-semibold text-[#353535]">Job Details</h1>
-                <div className="flex items-center gap-[8px]">
-                    <Switch shape="square" size="md" />
-                    <p className="text-[14px]/[16px] text-[#1c1c1c]">AI Scoring</p>
-                </div>
-            </div>
-            <div className="grid gap-[48px] xl:grid-cols-2 grid-cols-1 mt-[33px]">
-                <div className="flex flex-col gap-[12px]">
-                    <p className="text-[14px]/[16px] text-[#1c1c1c]">Job Title *</p>
-                    <Input className="h-[48px]" placeholder="e.g Sales Representative" value={jobData?.jobTitle} onChange={(e) => setJobData({ ...jobData, jobTitle: e.target.value })} />
-                    {triggerValidation && errors.jobTitle && <span className="text-red-500 text-xs ">{errors.jobTitle}</span>}
-                </div>
-                <div className="flex flex-col gap-[12px]">
-                    <p className="text-[14px]/[16px] text-[#1c1c1c]">Department *</p>
-                    <Select defaultValue="sales" value={jobData?.department} onValueChange={(e) => setJobData({ ...jobData, department: e })}>
-                        <SelectTrigger className="h-[48px]">
-                            <SelectValue placeholder="Select a department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="sales">Sales</SelectItem>
-                            <SelectItem value="marketing">Marketing</SelectItem>
-                            <SelectItem value="it">IT</SelectItem>
-                        </SelectContent>
+  return (
+    <div>
+      <div className="flex justify-between">
+        <h1
+          className="text-[20px]/[30px] font-semibold text-[#353535]"
+          id="job-details-title"
+          data-testid="job-details-title"
+        >
+          Job Details
+        </h1>
+        <div className="flex items-center gap-[8px]">
+          <Switch shape="square" size="md" id="job-details-ai-toggle" data-testid="job-details-ai-toggle" />
+          <p className="text-[14px]/[16px] text-[#1c1c1c]">AI Scoring</p>
+        </div>
+      </div>
+      <div className="grid gap-[48px] xl:grid-cols-2 grid-cols-1 mt-[33px]">
+
+        {/* Each input section will be upgraded with ID + data-testid for automation */}
+
+        <div className="flex flex-col gap-[12px]">
+          <p className="text-[14px]/[16px] text-[#1c1c1c]">Job Title *</p>
+          <Input
+            id="job-details-title-input"
+            data-testid="job-details-title-input"
+            className="h-[48px]"
+            placeholder="e.g Sales Representative"
+            value={jobData?.jobTitle}
+            onChange={(e) => setJobData({ ...jobData, jobTitle: e.target.value })}
+          />
+          {triggerValidation && errors.jobTitle && (
+            <span className="text-red-500 text-xs">{errors.jobTitle}</span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-[12px]">
+          <p className="text-[14px]/[16px] text-[#1c1c1c]">Department *</p>
+          <Select
+            defaultValue="sales"
+            value={jobData?.department}
+            onValueChange={(e) => setJobData({ ...jobData, department: e })}
+          >
+            <SelectTrigger
+              className="h-[48px]"
+              id="job-details-department"
+              data-testid="job-details-department"
+            >
+              <SelectValue placeholder="Select a department" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="sales">Sales</SelectItem>
+              <SelectItem value="marketing">Marketing</SelectItem>
+              <SelectItem value="it">IT</SelectItem>
+            </SelectContent>
                     </Select>
                     {triggerValidation && errors.department && <span className="text-red-500 text-xs ">{errors.department}</span>}
                 </div>
