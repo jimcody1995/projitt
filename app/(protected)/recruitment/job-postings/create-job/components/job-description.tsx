@@ -1,75 +1,172 @@
+/**
+ * JobDescription.tsx
+ *
+ * This component provides a job description editor with rich text capabilities,
+ * AI-based content generation with selectable tone styles, and file attachments.
+ * It uses react-quill for text editing and supports validation, undo/redo, and file management.
+ */
+
 import 'react-quill-new/dist/quill.snow.css';
 import ReactQuill from 'react-quill-new';
 import { useState, useRef } from 'react';
 import { File, Link, Redo, Undo } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
-export default function JobDescription({ jobData, setJobData, errors = {}, triggerValidation = false }: any) {
+export default function JobDescription({
+    jobData,
+    setJobData,
+    errors = {},
+    triggerValidation = false,
+}: any): JSX.Element {
     const [files, setFiles] = useState<File[]>([]);
     const [selectedStyle, setSelectedStyle] = useState<string>('Formal');
     const quillRef = useRef<ReactQuill | null>(null);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    /**
+     * Handles file input changes
+     */
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (e.target.files) {
             setFiles([...files, ...Array.from(e.target.files)]);
         }
     };
 
-    const removeFile = (index: number) => {
+    /**
+     * Removes file at given index
+     */
+    const removeFile = (index: number): void => {
         const updated = [...files];
         updated.splice(index, 1);
         setFiles(updated);
     };
 
-    const handleUndo = () => {
+    /**
+     * Performs undo operation on Quill editor
+     */
+    const handleUndo = (): void => {
         const editor = quillRef.current?.getEditor();
         editor?.history.undo();
     };
 
-    const handleRedo = () => {
+    /**
+     * Performs redo operation on Quill editor
+     */
+    const handleRedo = (): void => {
         const editor = quillRef.current?.getEditor();
         editor?.history.redo();
     };
 
     const modules = {
         toolbar: {
-            container: "#custom-toolbar"
+            container: '#custom-toolbar',
         },
         history: {
             delay: 1000,
             maxStack: 100,
-            userOnly: true
-        }
+            userOnly: true,
+        },
     };
 
     return (
-        <div>
-            <h1 className="text-[20px]/[30px] font-semibold text-[#353535]">Job Description</h1>
+        <div
+            id="job-description-component"
+            data-testid="job-description-component"
+        >
+            <h1
+                className="text-[20px]/[30px] font-semibold text-[#353535]"
+                id="job-description-title"
+                data-testid="job-description-title"
+            >
+                Job Description
+            </h1>
 
             <div className="flex justify-between mt-[34px]">
-                <p className="text-[#1c1c1c] text-[14px]/[16px]">Job Description *</p>
-                <div className="flex gap-[8px] items-center cursor-pointer">
-                    <img src="/images/icons/ai-line.png" alt="" className="w-[20px] h-[20px]" />
+                <p
+                    className="text-[#1c1c1c] text-[14px]/[16px]"
+                    id="job-description-label"
+                    data-testid="job-description-label"
+                >
+                    Job Description *
+                </p>
+
+                <div
+                    className="flex gap-[8px] items-center cursor-pointer"
+                    id="write-with-ai-group"
+                    data-testid="write-with-ai-group"
+                >
+                    <img
+                        src="/images/icons/ai-line.png"
+                        alt=""
+                        className="w-[20px] h-[20px]"
+                        id="ai-icon"
+                        data-testid="ai-icon"
+                    />
                     <Dialog>
                         <DialogTrigger asChild>
-                            <p className="text-[14px]/[16px] text-[#0d978b]">Write with AI</p>
+                            <p
+                                className="text-[14px]/[16px] text-[#0d978b]"
+                                id="write-with-ai-trigger"
+                                data-testid="write-with-ai-trigger"
+                            >
+                                Write with AI
+                            </p>
                         </DialogTrigger>
-                        <DialogTitle></DialogTitle>
-                        <DialogContent className="w-[90%] md:w-[406px]  pl-0 pr-0 pt-0">
-                            <div className='flex items-center gap-[8px] border-b border-[#e9e9e9] pb-[16px] pl-[18px] pt-[20px]'>
-                                <img src="/images/icons/ai-line.png" alt="" className="w-[18px] h-[18px]" />
+                        <DialogTitle />
+                        <DialogContent
+                            className="w-[90%] md:w-[406px]  pl-0 pr-0 pt-0"
+                            id="ai-dialog"
+                            data-testid="ai-dialog"
+                        >
+                            <div className="flex items-center gap-[8px] border-b border-[#e9e9e9] pb-[16px] pl-[18px] pt-[20px]">
+                                <img
+                                    src="/images/icons/ai-line.png"
+                                    alt=""
+                                    className="w-[18px] h-[18px]"
+                                />
                                 <p className="text-[14px]/[16px] text-[#353535]">Generate</p>
                             </div>
-                            <div className='px-[15px] py-[12px]'>
-                                <div className='flex gap-[8px] items-center flex-wrap'>
-                                    <span className={`px-[12px] py-[4px] rounded-[21px] cursor-pointer text-[12px]/[16px] text-[#626262] ${selectedStyle === 'Formal' ? 'bg-[#0d978b] text-[#fff]' : 'bg-[#e9e9e9]'}`} onClick={() => setSelectedStyle('Formal')}>Formal</span>
-                                    <span className={`px-[12px] py-[4px] rounded-[21px] cursor-pointer text-[12px]/[16px] text-[#626262] ${selectedStyle === 'Friendly' ? 'bg-[#0d978b] text-[#fff]' : 'bg-[#e9e9e9]'}`} onClick={() => setSelectedStyle('Friendly')}>Friendly</span>
-                                    <span className={`px-[12px] py-[4px] rounded-[21px] cursor-pointer text-[12px]/[16px] text-[#626262] ${selectedStyle === 'Inspirational' ? 'bg-[#0d978b] text-[#fff]' : 'bg-[#e9e9e9]'}`} onClick={() => setSelectedStyle('Inspirational')}>Inspirational</span>
+                            <div className="px-[15px] py-[12px]">
+                                <div className="flex gap-[8px] items-center flex-wrap">
+                                    {['Formal', 'Friendly', 'Inspirational'].map(style => (
+                                        <span
+                                            key={style}
+                                            className={`px-[12px] py-[4px] rounded-[21px] cursor-pointer text-[12px]/[16px] text-[#626262] ${selectedStyle === style
+                                                ? 'bg-[#0d978b] text-[#fff]'
+                                                : 'bg-[#e9e9e9]'
+                                                }`}
+                                            onClick={() => setSelectedStyle(style)}
+                                            id={`ai-tone-${style.toLowerCase()}`}
+                                            data-testid={`ai-tone-${style.toLowerCase()}`}
+                                        >
+                                            {style}
+                                        </span>
+                                    ))}
                                 </div>
-                                <textarea className='w-full h-[200px] mt-[12px] focus:outline-none focus:ring-0 focus:border-none ' placeholder='Enter any additional context' />
-                                <Button className='mt-[12px] w-full h-[42px] font-semibold text-[14px]/[20px] ' >Generate</Button>
+                                <textarea
+                                    className="w-full h-[200px] mt-[12px] focus:outline-none focus:ring-0 focus:border-none"
+                                    placeholder="Enter any additional context"
+                                    id="ai-context-textarea"
+                                    data-testid="ai-context-textarea"
+                                />
+                                <Button
+                                    className="mt-[12px] w-full h-[42px] font-semibold text-[14px]/[20px]"
+                                    id="ai-generate-button"
+                                    data-testid="ai-generate-button"
+                                >
+                                    Generate
+                                </Button>
                             </div>
                         </DialogContent>
                     </Dialog>
@@ -77,8 +174,12 @@ export default function JobDescription({ jobData, setJobData, errors = {}, trigg
             </div>
 
             <div className="mt-[12px]">
-                <div id="custom-toolbar" className='w-full flex justify-between flex-wrap'>
-                    <div className='flex sm:gap-[14px] items-center'>
+                <div
+                    id="custom-toolbar"
+                    data-testid="custom-toolbar"
+                    className="w-full flex justify-between flex-wrap"
+                >
+                    <div className="flex sm:gap-[14px] items-center">
                         <button className="ql-bold" />
                         <button className="ql-italic" />
                         <button className="ql-underline" />
@@ -88,11 +189,16 @@ export default function JobDescription({ jobData, setJobData, errors = {}, trigg
                         <button className="ql-align" value="justify" />
                         <button className="ql-link" />
                     </div>
-                    <div className='flex sm:gap-[14px] items-center'>
-                        <button type="button" onClick={handleUndo}><Undo className='text-[#4b4b4b]' /></button>
-                        <button type="button" onClick={handleRedo}><Redo className='text-[#4b4b4b]' /></button>
+                    <div className="flex sm:gap-[14px] items-center">
+                        <button type="button" onClick={handleUndo} data-testid="undo-button">
+                            <Undo className="text-[#4b4b4b]" />
+                        </button>
+                        <button type="button" onClick={handleRedo} data-testid="redo-button">
+                            <Redo className="text-[#4b4b4b]" />
+                        </button>
                     </div>
                 </div>
+
                 <ReactQuill
                     ref={quillRef}
                     value={jobData.description || ''}
@@ -101,9 +207,18 @@ export default function JobDescription({ jobData, setJobData, errors = {}, trigg
                     theme="snow"
                     modules={modules}
                     className="w-full h-[400px] rounded-[12px]"
+                    id="job-description-editor"
+                    data-testid="job-description-editor"
                 />
+
                 {triggerValidation && errors.description && (
-                    <span className="text-red-500 text-xs ">{errors.description}</span>
+                    <span
+                        className="text-red-500 text-xs"
+                        id="job-description-error"
+                        data-testid="job-description-error"
+                    >
+                        {errors.description}
+                    </span>
                 )}
 
                 <input
@@ -112,41 +227,67 @@ export default function JobDescription({ jobData, setJobData, errors = {}, trigg
                     multiple
                     onChange={handleFileChange}
                     className="hidden"
+                    data-testid="job-description-file-input"
                 />
-                <div className="flex flex-wrap gap-2 ml-2 mt-[-15px] relative z-[10]">
+
+                <div
+                    className="flex flex-wrap gap-2 ml-2 mt-[-15px] relative z-[10]"
+                    id="file-list"
+                    data-testid="job-description-file-list"
+                >
                     {files.map((file, index) => (
                         <div
                             key={index}
                             className="flex items-center min-w-[210px] justify-between border-[#e9e9e9] bg-[#FAFAFA] px-[16px] py-[12px] border rounded-[6.52px]"
+                            id={`job-description-file-${index}`}
+                            data-testid={`job-description-file-${index}`}
                         >
-                            <div className='flex items-center'>
-                                <File className='size-[16px] text-[#0d978b]' />
-                                <span className="text-sm truncate max-w-[200px] ml-[5px]">{file.name}</span>
+                            <div className="flex items-center">
+                                <File className="size-[16px] text-[#0d978b]" />
+                                <span className="text-sm truncate max-w-[200px] ml-[5px]">
+                                    {file.name}
+                                </span>
                             </div>
                             <button
                                 onClick={() => removeFile(index)}
                                 className="ml-2 text-[#4b4b4b] cursor-pointer"
+                                id={`remove-file-${index}`}
+                                data-testid={`remove-file-${index}`}
                             >
                                 ×
                             </button>
                         </div>
                     ))}
                 </div>
-                <div className={`flex justify-between items-center ${files.length > 0 ? 'mt-[20px]' : 'mt-[70px]'}`}>
+
+                <div
+                    className={`flex justify-between items-center ${files.length > 0 ? 'mt-[20px]' : 'mt-[70px]'
+                        }`}
+                >
                     <button
                         type="button"
                         onClick={() => document.getElementById('fileInput')?.click()}
-                        className='flex items-center gap-[4px] text-[#4b4b4b] '
+                        className="flex items-center gap-[4px] text-[#4b4b4b]"
+                        id="attach-files-button"
+                        data-testid="attach-files-button"
                     >
-                        <Link className='size-[16px]' />
-                        <span className='text-[14px]/[20px]'>Attach Files</span>
+                        <Link className="size-[16px]" />
+                        <span className="text-[14px]/[20px]">Attach Files</span>
                     </button>
-                    <div className='gap-[4px] flex items-center'>
-                        <input type="checkbox" className='accent-[#0d978b] size-[13px]' />
-                        <p className='text-[14px]/[20px] text-[#4b4b4b]'>Set as default template</p>
+
+                    <div className="gap-[4px] flex items-center">
+                        <input
+                            type="checkbox"
+                            className="accent-[#0d978b] size-[13px]"
+                            id="default-template-checkbox"
+                            data-testid="default-template-checkbox"
+                        />
+                        <p className="text-[14px]/[20px] text-[#4b4b4b]">
+                            Set as default template
+                        </p>
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }
