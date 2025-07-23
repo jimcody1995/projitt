@@ -136,7 +136,6 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps): JSX.
               <TimezoneSelect
                 defaultValue={timezone}
                 onChange={(value) => setTimezone(value)}
-                id="timezone-select"
                 data-testid="timezone-select"
               />
             </div>
