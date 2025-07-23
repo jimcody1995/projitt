@@ -8,8 +8,8 @@
 
 import 'react-quill-new/dist/quill.snow.css';
 import ReactQuill from 'react-quill-new';
-import { useState, useRef } from 'react';
-import { File, Link, Redo, Undo } from 'lucide-react';
+import { useState, useRef, JSX } from 'react';
+import { CheckLine, File, Link, Redo, Undo } from 'lucide-react';
 import {
     Popover,
     PopoverContent,
@@ -125,7 +125,7 @@ export default function JobDescription({
                         </DialogTrigger>
                         <DialogTitle />
                         <DialogContent
-                            className="w-[90%] md:w-[406px]  pl-0 pr-0 pt-0"
+                            className="w-[90%] md:w-[406px]  pl-0 pr-0 pt-0 pb-0 !rounded-[16px]"
                             id="ai-dialog"
                             data-testid="ai-dialog"
                         >
@@ -139,7 +139,7 @@ export default function JobDescription({
                             </div>
                             <div className="px-[15px] py-[12px]">
                                 <div className="flex gap-[8px] items-center flex-wrap">
-                                    {['Formal', 'Friendly', 'Inspirational'].map(style => (
+                                    {['✍️ Formal', '😎 Friendly', '💪 Inspirational'].map(style => (
                                         <span
                                             key={style}
                                             className={`px-[12px] py-[4px] rounded-[21px] cursor-pointer text-[12px]/[16px] text-[#626262] ${selectedStyle === style
@@ -155,18 +155,33 @@ export default function JobDescription({
                                     ))}
                                 </div>
                                 <textarea
-                                    className="w-full h-[200px] mt-[12px] focus:outline-none focus:ring-0 focus:border-none"
+                                    className="w-full h-[140px] mt-[12px] focus:outline-none focus:ring-0 focus:border-none"
                                     placeholder="Enter any additional context"
                                     id="ai-context-textarea"
                                     data-testid="ai-context-textarea"
                                 />
-                                <Button
-                                    className="mt-[12px] w-full h-[42px] font-semibold text-[14px]/[20px]"
-                                    id="ai-generate-button"
-                                    data-testid="ai-generate-button"
-                                >
-                                    Generate
-                                </Button>
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            className="mt-[12px] w-full h-[42px] font-semibold text-[14px]/[20px]"
+                                            id="ai-generate-button"
+                                            data-testid="ai-generate-button"
+                                        >
+                                            Generate
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogTitle />
+                                    <DialogContent close={false} className="w-[90%] md:w-[406px] px-0 pt-[16px] pb-0 !rounded-[16px] ">
+                                        <div className='h-[300px] overflow-y-auto  px-[18px]'>
+                                            <p className='text-[12px]/[24px] font-bold text-[#353535]'>Senior Data Analyst Position Overview</p>
+                                            <p className='text-[12px]/[24px] text-[#353535]'>We are seeking an experienced Senior Data Analyst to join our growing analytics team. The ideal candidate will transform complex data into actionable insights that drive business decisions.</p>
+                                        </div>
+                                        <div className='py-[16.5px] px-[49.5px] grid grid-cols-2'>
+                                            <div className='text-[#0d978b] flex items-center gap-[8px] justify-center text-[14px]/[16px] border-r border-[#e9e9e9] cursor-pointer'><CheckLine className='size-[20px]' /> Accept & Insert</div>
+                                            <div className='text-[#4b4b4b] flex items-center gap-[8px] justify-center text-[14px]/[16px] cursor-pointer'><Redo className='size-[20px]' /> Try again</div>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
                             </div>
                         </DialogContent>
                     </Dialog>

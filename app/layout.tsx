@@ -1,4 +1,4 @@
-import { ReactNode, Suspense } from 'react';
+import { JSX, ReactNode, Suspense } from 'react';
 import { Geist } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { SettingsProvider } from '@/providers/settings-provider';

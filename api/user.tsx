@@ -78,6 +78,14 @@ export const forgotPasssword = async ({
     });
 };
 
+export const refreshToken = async (token: string): Promise<any> => {
+    return axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/user/refresh-token`, {}, {
+        headers: {
+            "refresh-token": token,
+        }
+    });
+};
+
 /**
  * Sends a GET request to log out the currently authenticated user.
  *

@@ -6,7 +6,7 @@ import JobDetails from "./components/job-details";
 import JobDescription from "./components/job-description";
 import ApplicantQuestions from "./components/applicant-questions";
 import HiringPipeline from "./components/hiring-pipeline";
-import { useState } from "react";
+import { JSX, useState } from "react";
 import { useRouter } from "next/navigation";
 
 /**
@@ -55,7 +55,7 @@ type JobDesciptionError = {
  */
 export default function CreateJob(): JSX.Element {
     const router = useRouter();
-    const [currentStep, setCurrentStep] = useState<number>(1);
+    const [currentStep, setCurrentStep] = useState<number>(2);
     const [jobData, setJobData] = useState<JobData>({
         jobTitle: '',
         department: '',

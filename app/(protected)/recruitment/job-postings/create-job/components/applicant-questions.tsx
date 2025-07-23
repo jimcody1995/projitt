@@ -6,7 +6,7 @@
  * Users can dynamically add/remove/edit questions and their options. Suitable for form builders.
  */
 
-import React, { useState } from 'react';
+import React, { JSX, useState } from 'react';
 import {
     GripVertical,
     Plus,

@@ -32,7 +32,7 @@ export default function HiringPipeline() {
         ])
     }
     return (
-        <div>
+        <div className="w-full">
             <div className="flex items-center justify-between gap-[8px] w-full">
                 <p className="text-[20px]/[30px] font-semibold text-[#353535]">Hiring Pipeline</p>
                 <div className="flex items-center gap-[9px] cursor-pointer">
@@ -40,20 +40,20 @@ export default function HiringPipeline() {
                     <span className="text-[14px]/[16px] text-[#4b4b4b]">Set as Template</span>
                 </div>
             </div>
-            <div className='mt-[33px] border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] min-h-[700px] h-auto flex items-stretch w-full'>
+            <div className='mt-[33px] border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] min-h-[700px] h-auto flex sm:flex-row flex-col items-stretch w-full'>
                 {state === 'main' && pipeline.length === 0 && <div className="flex w-full  flex-col items-center justify-center gap-[16px]">
                     <Button variant="outline" className="text-[#053834]" onClick={() => { setState('template') }}>Import Teamplate</Button>
                     <Button variant="outline" className="text-[#053834]" onClick={startFromScratch}>Start From Scratch</Button>
                 </div>}
                 {state === 'template' && pipeline.length === 0 && <>
-                    <div className="flex w-full  flex-col items-center justify-center gap-[16px]">
-                        <div>
+                    <div className="flex w-full  flex-col items-center justify-center gap-[16px] px-[20px]">
+                        <div className="sm:w-auto w-full">
                             <div className="flex items-center gap-[12px] mb-[26px]">
                                 <button className="w-[24px] h-[24px] rounded-full flex items-center justify-center cursor-pointer bg-white border border-[#e9e9e9]" onClick={() => setState('main')}><ArrowLeft className="size-[16px]" /></button>
                                 <p className="text-[14px]/[20px] text-[#053834] font-medium">Import Template</p>
                             </div>
                             <Select>
-                                <SelectTrigger className="h-[48px] w-[360px]">
+                                <SelectTrigger className="h-[48px] sm:w-[360px] w-full">
                                     <SelectValue placeholder="Select a template" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -65,7 +65,7 @@ export default function HiringPipeline() {
                     </div>
                 </>}
                 {pipeline.length > 0 && <>
-                    <div className="flex-1 p-[22px]">
+                    <div className="flex-1 p-[22px] sm:order-2 order-1">
                         <button className="cursor-pointer text-[#787878] text-[14px]/[20px]">Clear</button>
                         <div className="flex justify-center mt-[20px]">
                             <div>
@@ -73,7 +73,7 @@ export default function HiringPipeline() {
                                     <div>
                                         <div key={index} className="flex items-center justify-center gap-[12px]">
                                             <GripVertical className="size-[20px] text-[#1c1c1c] cursor-grab active:cursor-grabbing" onDragStart={(e) => e.preventDefault()} />
-                                            <div className={`bg-white border  rounded-[8px] p-[16px] flex justify-between items-center  w-[343px] cursor-pointer ${selectedStep === index ? 'border-[#0D978B]' : 'border-[#e9e9e9]'}`} onClick={() => setSelectedStep(index)}>
+                                            <div className={`bg-white border  rounded-[8px] p-[16px] flex justify-between items-center  sm:w-[343px] w-[170px] cursor-pointer ${selectedStep === index ? 'border-[#0D978B]' : 'border-[#e9e9e9]'}`} onClick={() => setSelectedStep(index)}>
                                                 <div className="flex flex-col gap-[3px]">
                                                     <p className="text-[14px]/[22px]  text-black">{item.title}</p>
                                                     <p className="text-[12px]/[18px] text-[#00d47d]">{item.type}</p>
@@ -97,7 +97,7 @@ export default function HiringPipeline() {
                             </div>
                         </div>
                     </div>
-                    {selectedStep !== null && <div className="w-[273px]  bg-white border-l border-[#e9e9e9] py-[27px] px-[20px]">
+                    {selectedStep !== null && <div className="sm:w-[273px] w-full sm:order-2 order-1  bg-white border-l border-[#e9e9e9] py-[27px] px-[20px]">
                         <p className="text-[14px]/[22px] text-black">Stage Details</p>
                         <div className="mt-[26px]">
                             <div>
