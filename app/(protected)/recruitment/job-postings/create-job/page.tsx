@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import JobDescription from "./components/job-description";
 import ApplicantQuestions from "./components/applicant-questions";
+import HiringPipeline from "./components/hiring-pipeline";
 
 type JobData = {
     jobTitle: string;
@@ -38,7 +39,7 @@ type JobDesciptionError = {
 
 export default function CreateJob() {
     const router = useRouter();
-    const [currentStep, setCurrentStep] = useState(1);
+    const [currentStep, setCurrentStep] = useState(3);
     const [jobData, setJobData] = useState<JobData>({
         jobTitle: '',
         department: '',
@@ -134,6 +135,7 @@ export default function CreateJob() {
                         />
                     )}
                     {currentStep === 3 && <ApplicantQuestions />}
+                    {currentStep === 4 && <HiringPipeline />}
                 </div>
             </div>
         </div>

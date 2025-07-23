@@ -3,6 +3,8 @@ import { GripVertical, Plus, Copy, Trash2, X, FileText, BriefcaseBusiness, Circl
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import WorkExperience from './work-experience';
+import Resume from './resume';
 export interface Question {
     id: string;
     title: string;
@@ -182,11 +184,13 @@ export default function ApplicantQuestions() {
             <div className='mt-[33px] '>
                 <div className="min-h-screen w-full bg-white border border-[#e9e9e9] rounded-[12px] ">
                     <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  w-full overflow-x-auto'>
-                        <div className='py-[8.5px] px-[6px] cursor-pointer'>
-                            <FileText className='size-[20px] text-[#353535]' />
+                        <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'resume' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('resume')}>
+                            <FileText className='size-[20px] ' />
+                            {activeSection === 'resume' && <p className='whitespace-nowrap'>Resume</p>}
                         </div>
-                        <div className='py-[8.5px] px-[6px] cursor-pointer'>
-                            <BriefcaseBusiness className='size-[20px] text-[#353535]' />
+                        <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'work' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('work')}>
+                            <BriefcaseBusiness className='size-[20px] ' />
+                            {activeSection === 'work' && <p className='whitespace-nowrap'>Work Experience</p>}
                         </div>
                         {sections.map((section) => (
                             <div className={`py-[8.5px] px-[6px]  text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === section.id ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} key={section.id} onClick={() => setActiveSection(section.id)}>
@@ -199,8 +203,18 @@ export default function ApplicantQuestions() {
                             <p className='whitespace-nowrap'>Add Section</p>
                         </div>
                     </div>
-                    <div className="max-w-4xl mx-auto p-[20px]">
-                        {sections.filter((section) => section.id === activeSection).map((section) => (
+                    <div className="max-w-4xl mx-auto py-[31px] px-[25px]">
+                        {activeSection === 'resume' && (
+                            <div>
+                                <Resume />
+                            </div>
+                        )}
+                        {activeSection === 'work' && (
+                            <div>
+                                <WorkExperience />
+                            </div>
+                        )}
+                        {(activeSection !== 'resume' && activeSection !== 'work') && sections.filter((section) => section.id === activeSection).map((section) => (
                             <div key={section.id} className="mb-8">
                                 <div className="space-y-4">
                                     {section.questions.map((question) => (
