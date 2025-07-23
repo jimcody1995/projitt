@@ -6,6 +6,7 @@
 
 import { Check } from "lucide-react"; // or use any checkmark SVG/icon
 
+import { JSX, useState } from 'react';
 const steps = [
   { title: "Job Details", subtitle: "Enter Job Details" },
   { title: "Job Description", subtitle: "Clarify responsibilities" },
@@ -39,9 +40,8 @@ export default function Stepper({ currentStep = 2 }: { currentStep?: number }): 
               {/* Vertical line */}
               {index !== steps.length - 1 && (
                 <div
-                  className={`absolute top-[40px] left-[18.5px] h-[46px] border-l border-dashed ${
-                    index < currentStep ? "border-[#0D978B]" : "border-[#626262]"
-                  } z-0`}
+                  className={`absolute top-[40px] left-[18.5px] h-[46px] border-l border-dashed ${index < currentStep ? "border-[#0D978B]" : "border-[#626262]"
+                    } z-0`}
                   id={`step-line-${stepNumber}`}
                   data-testid={`step-line-${stepNumber}`}
                 ></div>
@@ -75,9 +75,8 @@ export default function Stepper({ currentStep = 2 }: { currentStep?: number }): 
                 data-testid={`step-labels-${stepNumber}`}
               >
                 <div
-                  className={`text-[14px]/[18px] font-medium ${
-                    isCompleted || isActive ? "text-teal-600" : "text-[#626262]"
-                  }`}
+                  className={`text-[14px]/[18px] font-medium ${isCompleted || isActive ? "text-teal-600" : "text-[#626262]"
+                    }`}
                   id={`step-title-${stepNumber}`}
                   data-testid={`step-title-${stepNumber}`}
                 >
