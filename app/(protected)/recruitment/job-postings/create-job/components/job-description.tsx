@@ -23,6 +23,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { uploadMedia } from '@/api/media';
 
 export default function JobDescription({
     jobData,
@@ -37,9 +38,15 @@ export default function JobDescription({
     /**
      * Handles file input changes
      */
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        if (e.target.files) {
-            setFiles([...files, ...Array.from(e.target.files)]);
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+        const files = e.target.files;
+        if (!files) return;
+        const formData: any = new FormData();
+        formData.append('media', files[0]);
+        const response = await uploadMedia(formData);
+        console.log(response);
+        if (files) {
+            setFiles([...files, ...Array.from(files)]);
         }
     };
 
@@ -246,7 +253,7 @@ export default function JobDescription({
                 />
 
                 <div
-                    className="flex flex-wrap gap-2 ml-2 mt-[-15px] relative z-[10]"
+                    className="flex flex-wrap gap-2 ml-2 mt-[-55px] relative z-[10]"
                     id="file-list"
                     data-testid="job-description-file-list"
                 >

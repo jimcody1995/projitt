@@ -35,6 +35,7 @@ import { Calendar } from "@/components/ui/calendar";
 import moment from "moment";
 import TagInput from "@/components/ui/tag-input";
 import { useRouter } from "next/navigation";
+import { useBasic } from "@/context/BasicContext";
 
 interface JobDetailsProps {
     jobData: any;
@@ -62,9 +63,9 @@ interface JobDetailsProps {
  */
 export default function JobDetails({ jobData, setJobData, errors = {}, triggerValidation = false }: JobDetailsProps): JSX.Element {
     const [locationType, setLocationType] = useState(jobData.locationType || 'onsite');
-    const router = useRouter();
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [tags, setTags] = useState<string[]>(["UI/UX Prototyping", "Wireframi"]);
+    const { country } = useBasic();
 
     useEffect(() => {
         setJobData({ ...jobData, locationType });
@@ -207,9 +208,9 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                                     <SelectValue placeholder="Select Country" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="usa">United States of America</SelectItem>
-                                    <SelectItem value="uk">United Kingdom</SelectItem>
-                                    <SelectItem value="canada">Canada</SelectItem>
+                                    {(country || [])?.map((country: any) => (
+                                        <SelectItem key={country.id} value={country.id}>{country.name}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                             {triggerValidation && errors.country && <span className="text-red-500 text-xs ">{errors.country}</span>}

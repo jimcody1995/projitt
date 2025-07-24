@@ -47,7 +47,7 @@ interface Section {
  * Main functional component that manages question sections and renders dynamic UI
  */
 export default function ApplicantQuestions(): JSX.Element {
-    const [activeSection, setActiveSection] = useState<string | null>(null);
+    const [activeSection, setActiveSection] = useState<string | null>('1');
     const [sections, setSections] = useState<Section[]>([
         {
             id: '1',

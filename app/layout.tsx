@@ -10,6 +10,7 @@ import { Metadata } from 'next';
 import { QueryProvider } from '@/providers/query-provider';
 import { ThemeProvider } from '@/providers/theme-provider';
 import { SessionProvider } from '@/context/SessionContext';
+import { BasicContextProvider } from '@/context/BasicContext';
 
 const inter = Geist({ subsets: ['latin'] });
 
@@ -44,16 +45,18 @@ export default async function RootLayout({
         )}
       >
         <SessionProvider>
-          <QueryProvider>
-            <SettingsProvider>
-              <ThemeProvider>
-                <TooltipsProvider>
-                  <Suspense>{children}</Suspense>
-                  <Toaster />
-                </TooltipsProvider>
-              </ThemeProvider>
-            </SettingsProvider>
-          </QueryProvider>
+          <BasicContextProvider>
+            <QueryProvider>
+              <SettingsProvider>
+                <ThemeProvider>
+                  <TooltipsProvider>
+                    <Suspense>{children}</Suspense>
+                    <Toaster />
+                  </TooltipsProvider>
+                </ThemeProvider>
+              </SettingsProvider>
+            </QueryProvider>
+          </BasicContextProvider>
         </SessionProvider>
       </body>
     </html>

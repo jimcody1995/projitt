@@ -92,9 +92,9 @@ export default function CreateJob(): JSX.Element {
 
         if (data.locationType === 'onsite' || data.locationType === 'hybrid') {
             if (!data.state?.trim()) newErrors.state = 'State is required.';
-            if (!data.country?.trim()) newErrors.country = 'Country is required.';
+            if (!data.country) newErrors.country = 'Country is required.';
         } else if (data.locationType === 'remote') {
-            if (!data.country?.trim()) newErrors.country = 'Country is required.';
+            if (!data.country) newErrors.country = 'Country is required.';
         }
 
         return newErrors;

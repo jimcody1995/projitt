@@ -6,10 +6,13 @@ import { useSettings } from '@/providers/settings-provider';
 import { Footer } from './components/footer';
 import { Header } from './components/header';
 import { Sidebar } from './components/sidebar';
+import { useBasic } from '@/context/BasicContext';
+import { getCountry } from '@/api/basic';
 
 export function Layout({ children }: { children: ReactNode }) {
   const isMobile = useIsMobile();
   const { settings, setOption } = useSettings();
+  const { setCountry } = useBasic();
 
   useEffect(() => {
     const bodyClass = document.body.classList;
@@ -47,6 +50,15 @@ export function Layout({ children }: { children: ReactNode }) {
       bodyClass.remove('layout-initialized');
       clearTimeout(timer);
     };
+  }, []); // Runs only once on mount
+
+  useEffect(() => {
+    const loadCountry = async () => {
+      const response = await getCountry();
+      setCountry(response.data.data);
+    }
+    loadCountry();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Runs only once on mount
 
   return (
