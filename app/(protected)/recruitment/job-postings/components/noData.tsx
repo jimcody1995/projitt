@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { JSX } from "react";
+import { useRouter } from "next/navigation";
 
 /**
  * NoData component displays a message and action when there are no jobs posted yet.
@@ -9,6 +10,7 @@ import { JSX } from "react";
  * @returns JSX.Element - The UI for no data state in job listings.
  */
 export const NoData = (): JSX.Element => {
+    const router = useRouter();
     return (
         <div
             className="w-full mt-[170px] flex flex-col justify-center items-center"
@@ -40,6 +42,7 @@ export const NoData = (): JSX.Element => {
                 className="h-[42px] font-semibold text-[14px]/[20px] mt-[28px]"
                 id="create-new-job-button"
                 data-testid="create-new-job-button"
+                onClick={() => { router.push('/recruitment/job-postings/create-job') }}
             >
                 <Plus className="size-[18px]" />
                 Create New Job

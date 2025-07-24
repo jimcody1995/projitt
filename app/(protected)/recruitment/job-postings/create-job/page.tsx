@@ -8,6 +8,8 @@ import ApplicantQuestions from "./components/applicant-questions";
 import HiringPipeline from "./components/hiring-pipeline";
 import { JSX, useState } from "react";
 import { useRouter } from "next/navigation";
+import Publish from "./components/publish";
+import Completed from "./components/completed";
 
 /**
  * JobData type defines the structure of data related to a job posting.
@@ -55,7 +57,7 @@ type JobDesciptionError = {
  */
 export default function CreateJob(): JSX.Element {
     const router = useRouter();
-    const [currentStep, setCurrentStep] = useState<number>(2);
+    const [currentStep, setCurrentStep] = useState<number>(6);
     const [jobData, setJobData] = useState<JobData>({
         jobTitle: '',
         department: '',
@@ -143,79 +145,87 @@ export default function CreateJob(): JSX.Element {
     };
 
     return (
-        <div className="w-full" id="create-job-root" data-testid="create-job-root">
-            <div className="flex justify-between items-center">
-                <div>
-                    <p
-                        className="text-[12px]/[20px] text-[#a5a5a5]"
-                        id="breadcrumb-text"
-                        data-testid="breadcrumb-text"
-                    >
-                        Job Postings <span className="text-[#0d978b]">/ Create Job Post</span>
-                    </p>
-                    <h1
-                        className="text-[24px]/[30px] font-semibold text-[#1c1c1c] mt-[4px]"
-                        id="page-title"
-                        data-testid="page-title"
-                    >
-                        Create Job Post
-                    </h1>
-                </div>
-                <div className="flex sm:gap-[19px] sm:flex-row flex-col">
-                    <Button
-                        variant="foreground"
-                        className="h-[42px] order-2 sm:order-1 font-semibold text-[14px]/[20px] text-[#4b4b4b]"
-                        id="save-exit-button"
-                        data-testid="save-exit-button"
-                        onClick={handleSaveExit}
-                    >
-                        Save & Exit
-                    </Button>
-                    <Button
-                        className="h-[42px] order-1 sm:order-2 font-semibold text-[14px]/[20px]"
-                        id="save-continue-button"
-                        data-testid="save-continue-button"
-                        onClick={handleContinue}
-                    >
-                        Save & Continue
-                    </Button>
-                </div>
-            </div>
+        <>
+            {currentStep !== 6 && (
+                <div className="w-full" id="create-job-root" data-testid="create-job-root">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <p
+                                className="text-[12px]/[20px] text-[#a5a5a5]"
+                                id="breadcrumb-text"
+                                data-testid="breadcrumb-text"
+                            >
+                                Job Postings <span className="text-[#0d978b]">/ Create Job Post</span>
+                            </p>
+                            <h1
+                                className="text-[24px]/[30px] font-semibold text-[#1c1c1c] mt-[4px]"
+                                id="page-title"
+                                data-testid="page-title"
+                            >
+                                Create Job Post
+                            </h1>
+                        </div>
+                        <div className="flex sm:gap-[19px] sm:flex-row flex-col">
+                            <Button
+                                variant="foreground"
+                                className="h-[42px] order-2 sm:order-1 font-semibold text-[14px]/[20px] text-[#4b4b4b]"
+                                id="save-exit-button"
+                                data-testid="save-exit-button"
+                                onClick={handleSaveExit}
+                            >
+                                Save & Exit
+                            </Button>
+                            <Button
+                                className="h-[42px] order-1 min-w-[82px] sm:order-2 font-semibold text-[14px]/[20px]"
+                                id="save-continue-button"
+                                data-testid="save-continue-button"
+                                onClick={handleContinue}
+                            >
+                                {currentStep === 5 ? 'Publish' : 'Save & Continue'}
+                            </Button>
+                        </div>
+                    </div>
 
-            <div
-                className="mt-[24px] bg-white border border-[#e9e9e9] rounded-[12px] w-full flex justify-center"
-                id="create-job-container"
-                data-testid="create-job-container"
-            >
-                <div className="flex-1 border-r border-[#e9e9e9] pt-[42px] px-[48px] pb-[54px] sm:block hidden">
-                    <Stepper currentStep={currentStep} />
-                </div>
+                    <div
+                        className="mt-[24px] bg-white border border-[#e9e9e9] rounded-[12px] w-full flex justify-center"
+                        id="create-job-container"
+                        data-testid="create-job-container"
+                    >
+                        <div className="flex-1 border-r border-[#e9e9e9] pt-[42px] px-[48px] pb-[54px] sm:block hidden">
+                            <Stepper currentStep={currentStep} />
+                        </div>
 
-                <div
-                    className="xl:w-[55vw] lg:w-[45vw] sm:w-[60vw] w-[85vw] pt-[42px] pl-[20px] pr-[20px] md:pl-[48px] md:pr-[48px] sm:pl-[77px] sm:pr-[48px]"
-                    id="stepper-content"
-                    data-testid="stepper-content"
-                >
-                    {currentStep === 1 && (
-                        <JobDetails
-                            jobData={jobData}
-                            setJobData={setJobData}
-                            errors={errors}
-                            triggerValidation={triggerValidation}
-                        />
-                    )}
-                    {currentStep === 2 && (
-                        <JobDescription
-                            jobData={jobData}
-                            setJobData={setJobData}
-                            errors={descriptionError}
-                            triggerValidation={triggerValidation}
-                        />
-                    )}
-                    {currentStep === 3 && <ApplicantQuestions />}
-                    {currentStep === 4 && <HiringPipeline />}
+                        <div
+                            className="xl:w-[55vw] lg:w-[45vw] sm:w-[60vw] w-[85vw] pt-[42px] pl-[20px] pr-[20px] md:pl-[48px] md:pr-[48px] sm:pl-[77px] sm:pr-[48px]"
+                            id="stepper-content"
+                            data-testid="stepper-content"
+                        >
+                            {currentStep === 1 && (
+                                <JobDetails
+                                    jobData={jobData}
+                                    setJobData={setJobData}
+                                    errors={errors}
+                                    triggerValidation={triggerValidation}
+                                />
+                            )}
+                            {currentStep === 2 && (
+                                <JobDescription
+                                    jobData={jobData}
+                                    setJobData={setJobData}
+                                    errors={descriptionError}
+                                    triggerValidation={triggerValidation}
+                                />
+                            )}
+                            {currentStep === 3 && <ApplicantQuestions />}
+                            {currentStep === 4 && <HiringPipeline />}
+                            {currentStep === 5 && <Publish />}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    );
+            )}
+            {currentStep === 6 && (
+                <Completed />
+            )}
+        </>
+    )
 }
