@@ -56,7 +56,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <div className="wrapper w-full flex grow flex-col">
         <Header />
 
-        <main className="grow w-full box-border py-[30px] sm:px-[40px] px-[20px] bg-gray-50" role="content">
+        <main className="grow w-full box-border py-[30px] sm:px-[40px] px-[20px] bg-[#fafafa]" role="content">
           {children}
         </main>
       </div>
