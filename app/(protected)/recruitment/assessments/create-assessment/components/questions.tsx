@@ -16,6 +16,7 @@ import {
     FileText,
     BriefcaseBusiness,
     CircleQuestionMark,
+    CirclePlus,
 } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
@@ -27,14 +28,16 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import WorkExperience from './work-experience';
-import Resume from './resume';
+import { Textarea } from '@/components/ui/textarea';
+
 export interface Question {
     id: string;
     title: string;
-    type: 'short-answer' | 'paragraph' | 'multiple-choice' | 'checkbox' | 'file-upload';
+    type: 'likert-scaling' | 'multiple-choice' | 'checkbox' | undefined;
     required: boolean;
     options?: string[];
+    point?: string;
+    reverseScoring?: boolean;
 }
 
 interface Section {
@@ -43,58 +46,74 @@ interface Section {
     questions: Question[];
 }
 
-/**
- * Main functional component that manages question sections and renders dynamic UI
- */
-export default function ApplicantQuestions(): JSX.Element {
-    const [activeSection, setActiveSection] = useState<string | null>(null);
+interface CodingSection {
+    id: string;
+    title: string;
+    instructions: string;
+    language: string;
+    totalPoint: string;
+    limit: string;
+    autoGradeWithAI: boolean;
+}
+
+interface QuestionsProps {
+    assessmentData: any;
+    setAssessmentData: any;
+    errors?: {
+        name?: string;
+        description?: string;
+        type?: string;
+        duration?: string;
+    };
+    triggerValidation?: boolean;
+}
+
+export default function Questions({
+    assessmentData,
+    setAssessmentData,
+}: QuestionsProps) {
+    const [activeSection, setActiveSection] = useState<string | null>('1');
     const [sections, setSections] = useState<Section[]>([
         {
             id: '1',
-            title: 'Applicant Question 1',
+            title: 'Cognitive',
             questions: [
                 {
                     id: '2',
-                    title: 'Short Answer Question',
-                    type: 'short-answer',
+                    title: 'I enjoy collaborating with others.',
+                    type: 'likert-scaling',
                     required: true,
+                    point: '',
+                    reverseScoring: false,
                 },
                 {
                     id: '3',
                     title: 'Question',
-                    type: 'file-upload',
-                    required: false,
-                },
-                {
-                    id: '4',
-                    title: 'Question',
-                    type: 'paragraph',
-                    required: false,
-                },
-                {
-                    id: '5',
-                    title: 'Question',
                     type: 'multiple-choice',
-                    required: true,
-                    options: ['Yes', 'Option 2'],
-                },
-                {
-                    id: '6',
-                    title: 'Question',
-                    type: 'checkbox',
-                    required: true,
+                    required: false,
+                    point: '',
                     options: ['Yes', 'Option 2'],
                 },
             ],
         },
     ]);
 
+    const [codingData, setCodingData] = useState<CodingSection[]>([
+        {
+            id: '1',
+            title: '',
+            instructions: '',
+            language: '',
+            totalPoint: '',
+            limit: '',
+            autoGradeWithAI: false,
+        },
+    ]);
+
     const questionTypes = [
-        { value: 'short-answer', label: 'Short answer' },
-        { value: 'paragraph', label: 'Paragraph' },
+        { value: 'likert-scaling', label: 'Likert Scaling (1-5)' },
         { value: 'multiple-choice', label: 'Multiple choice' },
         { value: 'checkbox', label: 'Checkbox' },
-        { value: 'file-upload', label: 'File Upload' },
     ];
 
     /** Adds a new question section */
@@ -111,15 +130,28 @@ export default function ApplicantQuestions(): JSX.Element {
     const addQuestion = (sectionId: string): void => {
         const newQuestion: Question = {
             id: Date.now().toString(),
-            title: 'Question',
-            type: 'short-answer',
+            title: '',
+            type: undefined,
             required: false,
         };
         setSections(sections.map(section =>
             section.id === sectionId
-                ? { ...section, questions: [...section.questions, newQuestion] }
+                ? { ...section, questions: [newQuestion, ...section.questions] }
                 : section
         ));
+    };
+
+    const addQuestionForCoding = (): void => {
+        const newQuestion: CodingSection = {
+            id: Date.now().toString(),
+            title: '',
+            instructions: '',
+            language: '',
+            totalPoint: '',
+            limit: '',
+            autoGradeWithAI: false,
+        };
+        setCodingData([...codingData, newQuestion]);
     };
 
     /** Updates a question�s properties */
@@ -137,6 +169,12 @@ export default function ApplicantQuestions(): JSX.Element {
                     ),
                 }
                 : section
+        ));
+    };
+
+    const updateQuestionForCoding = (questionId: string, updates: Partial<CodingSection>): void => {
+        setCodingData(codingData.map(question =>
+            question.id === questionId ? { ...question, ...updates } : question
         ));
     };
 
@@ -167,6 +205,21 @@ export default function ApplicantQuestions(): JSX.Element {
                 }
                 : section
         ));
+    };
+
+    const duplicateQuestionForCoding = (questionId: string): void => {
+        const question = codingData.find(q => q.id === questionId);
+        if (question) {
+            const duplicated: CodingSection = {
+                ...question,
+                id: Date.now().toString(),
+            };
+            setCodingData([...codingData, duplicated]);
+        }
+    };
+
+    const deleteQuestionForCoding = (questionId: string): void => {
+        setCodingData(codingData.filter(q => q.id !== questionId));
     };
 
     /** Adds a new option to a multiple-choice or checkbox question */
@@ -209,33 +262,35 @@ export default function ApplicantQuestions(): JSX.Element {
             updateQuestion(sectionId, questionId, { options: updatedOptions });
         }
     };
-
-    /** Returns human-readable label from question type */
-    const getTypeLabel = (type: string): string => {
-        return questionTypes.find(t => t.value === type)?.label || 'Short answer';
-    };
     return (
-        <div
-            id="applicant-question-builder"
-            data-testid="applicant-question-builder-root">
-            <div className="flex items-center justify-between gap-[8px] w-full">
-                <p className="text-[20px]/[30px] font-semibold text-[#353535]">Applicant Questions</p>
-                <div className="flex items-center gap-[9px] cursor-pointer">
-                    <input type="checkbox" className="accent-[#0d978b] size-[13px]" />
-                    <span className="text-[14px]/[16px] text-[#4b4b4b]">Set as Default</span>
+        <div className='sm:w-[760px] w-full'>
+            <div className='flex justify-between  mb-[16px]'>
+                <p className='text-[16px]/[26px]  text-[#4b4b4b]'>Total Score: 80</p>
+                <div
+                    className="flex gap-[8px] items-center cursor-pointer"
+                    id="write-with-ai-group"
+                    data-testid="write-with-ai-group"
+                >
+                    <img
+                        src="/images/icons/ai-line.png"
+                        alt=""
+                        className="w-[20px] h-[20px]"
+                        id="ai-icon"
+                        data-testid="ai-icon"
+                    />
+
+                    <p
+                        className="text-[14px]/[16px] text-[#0d978b]"
+                        id="write-with-ai-trigger"
+                        data-testid="write-with-ai-trigger"
+                    >
+                        Generate Questions
+                    </p>
                 </div>
             </div>
-            <div className='mt-[33px] '>
-                <div className="min-h-screen w-full bg-white border border-[#e9e9e9] rounded-[12px] ">
+            <div className="min-h-screen w-full bg-white border border-[#e9e9e9] rounded-[12px]">
+                {assessmentData.type === 'psychometric' && <div>
                     <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  w-full overflow-x-auto'>
-                        <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'resume' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('resume')}>
-                            <FileText className='size-[20px] ' />
-                            {activeSection === 'resume' && <p className='whitespace-nowrap'>Resume</p>}
-                        </div>
-                        <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'work' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('work')}>
-                            <BriefcaseBusiness className='size-[20px] ' />
-                            {activeSection === 'work' && <p className='whitespace-nowrap'>Work Experience</p>}
-                        </div>
                         {sections.map((section) => (
                             <div className={`py-[8.5px] px-[6px]  text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === section.id ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} key={section.id} onClick={() => setActiveSection(section.id)}>
                                 <CircleQuestionMark className='size-[20px] ' />
@@ -247,20 +302,17 @@ export default function ApplicantQuestions(): JSX.Element {
                             <p className='whitespace-nowrap'>Add Section</p>
                         </div>
                     </div>
-                    <div className="max-w-4xl mx-auto py-[31px] px-[25px]">
-                        {activeSection === 'resume' && (
-                            <div>
-                                <Resume />
-                            </div>
-                        )}
-                        {activeSection === 'work' && (
-                            <div>
-                                <WorkExperience />
-                            </div>
-                        )}
-                        {(activeSection !== 'resume' && activeSection !== 'work') && sections.filter((section) => section.id === activeSection).map((section) => (
+                    <div className=" w-full mx-auto py-[31px] px-[25px]">
+                        {sections.filter((section) => section.id === activeSection).map((section) => (
                             <div key={section.id} className="mb-8">
                                 <div className="space-y-4">
+                                    <button
+                                        onClick={() => addQuestion(section.id)}
+                                        className="w-full py-3 border  border-[#053834] rounded-[12px] text-[15px] font-medium text-[#053834] hover:border-teal-400 hover:text-teal-600 transition-colors flex items-center justify-center gap-2"
+                                    >
+                                        <CirclePlus className="w-5 h-5" />
+                                        Add New Question
+                                    </button>
                                     {section.questions.map((question) => (
                                         <div key={question.id} className="bg-[#F5F5F5] rounded-lg shadow-sm border border-[#e9e9e9] group hover:shadow-md transition-shadow">
                                             <div className="">
@@ -268,7 +320,7 @@ export default function ApplicantQuestions(): JSX.Element {
                                                     <button className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing">
                                                         <GripVertical className="w-5 h-5" />
                                                     </button>
-                                                    <div className='flex w-full items-start gap-4 sm:flex-row flex-col'>
+                                                    <div className='flex items-start gap-4 sm:flex-row flex-col w-full'>
                                                         <div className="lg:flex-1 w-full">
                                                             <Input
                                                                 type="text"
@@ -302,6 +354,15 @@ export default function ApplicantQuestions(): JSX.Element {
                                                     {/* Question Options for Multiple Choice/Checkbox */}
                                                     {(question.type === 'multiple-choice' || question.type === 'checkbox') && (
                                                         <div className="sm:ml-9 ml-0 space-y-3 mb-4">
+                                                            <div>
+                                                                <p className='text-[12px]/[18px] text-[#1c1c1c]'>Mark as point</p>
+                                                                <Input
+                                                                    value={question.point}
+                                                                    onChange={(e) => updateQuestion(section.id, question.id, { point: e.target.value })}
+                                                                    className="h-[28px] w-[165px] mt-[4px]"
+                                                                    placeholder="Point"
+                                                                />
+                                                            </div>
                                                             {question.options?.map((option, index) => (
                                                                 <div key={index} className="flex w-full items-center justify-between gap-3">
                                                                     {question.type === 'multiple-choice' ? (
@@ -336,13 +397,13 @@ export default function ApplicantQuestions(): JSX.Element {
                                                     )}
 
                                                     {/* Question Footer */}
-                                                    <div className="flex items-center justify-between border-t border-[#d9d9d9] pt-[14px]">
-                                                        <div className="flex items-center gap-3">
+                                                    <div className="flex items-center sm:flex-row flex-col gap-[10px] justify-between border-t border-[#d9d9d9] pt-[14px]">
+                                                        {question.type === 'likert-scaling' ? <div className="flex items-center gap-3">
                                                             <label className="flex items-center gap-2 text-[12px]/[16px] text-[#4b4b4b]">
-                                                                <Switch shape="square" />
-                                                                Required
+                                                                <Switch shape="square" checked={question.reverseScoring} onCheckedChange={(checked) => updateQuestion(section.id, question.id, { reverseScoring: checked })} />
+                                                                Reverse Scoring
                                                             </label>
-                                                        </div>
+                                                        </div> : <div></div>}
 
                                                         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                             <button
@@ -368,19 +429,117 @@ export default function ApplicantQuestions(): JSX.Element {
                                     }
 
                                     {/* Add New Question Button */}
-                                    <button
-                                        onClick={() => addQuestion(section.id)}
-                                        className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-teal-400 hover:text-teal-600 transition-colors flex items-center justify-center gap-2"
-                                    >
-                                        <Plus className="w-5 h-5" />
-                                        Create New Question
-                                    </button>
+
                                 </div >
                             </div >
                         ))}
                     </div >
-                </div >
+                </div>}
+                {assessmentData.type === 'coding' &&
+                    <div className="space-y-4 p-[20px]">
+                        <button
+                            onClick={() => addQuestionForCoding()}
+                            className="w-full py-3 border  border-[#053834] rounded-[12px] text-[15px] font-medium text-[#053834] hover:border-teal-400 hover:text-teal-600 transition-colors flex items-center justify-center gap-2"
+                        >
+                            <CirclePlus className="w-5 h-5" />
+                            Add New Question
+                        </button>
+                        {codingData.map((question) => (
+                            <div key={question.id} className="bg-[#F5F5F5] rounded-lg shadow-sm border border-[#e9e9e9] group hover:shadow-md transition-shadow">
+                                <div className="">
+                                    <div className="flex items-center gap-4 py-[20px] px-[16px]">
+                                        <button className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing">
+                                            <GripVertical className="w-5 h-5" />
+                                        </button>
+                                        <div className='flex flex-col gap-[20px] w-full'>
+                                            <Input
+                                                type="text"
+                                                placeholder="Problem Title"
+                                                className="h-[40px]"
+                                                value={question.title}
+                                                onChange={(e) => updateQuestionForCoding(question.id, { title: e.target.value })}
+                                            />
+                                            <Textarea
+                                                placeholder="Instructions"
+                                                className="h-[135px]"
+                                                value={question.instructions}
+                                                onChange={(e) => updateQuestionForCoding(question.id, { instructions: e.target.value })}
+                                            />
+                                            <div className='flex gap-[10px] sm:flex-row flex-col'>
+                                                <Select
+                                                    value={question.language}
+                                                    onValueChange={(value) => updateQuestionForCoding(question.id, { language: value })}
+                                                >
+                                                    <SelectTrigger className="h-[40px]">
+                                                        <SelectValue placeholder="Language Allowed" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="python">Python</SelectItem>
+                                                        <SelectItem value="javascript">JavaScript</SelectItem>
+                                                        <SelectItem value="java">Java</SelectItem>
+                                                        <SelectItem value="c">C</SelectItem>
+                                                        <SelectItem value="c++">C++</SelectItem>
+                                                        <SelectItem value="c#">C#</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <Input
+                                                    type="text"
+                                                    placeholder="Total Point"
+                                                    className="h-[40px]"
+                                                    value={question.totalPoint}
+                                                    onChange={(e) => updateQuestionForCoding(question.id, { totalPoint: e.target.value })}
+                                                />
+                                                <div className='relative w-full'>
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Limit"
+                                                        className="h-[40px]"
+                                                        value={question.limit}
+                                                        onChange={(e) => updateQuestionForCoding(question.id, { limit: e.target.value })}
+                                                    />
+                                                    <span className="absolute text-[12px]/[18px] right-[16px] top-1/2 transform -translate-y-1/2 text-[#a5a5a5]">sec</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='bg-white px-[20px] py-[16px]'>
+                                        {/* Question Options for Multiple Choice/Checkbox */}
+                                        {/* Question Footer */}
+                                        <div className="flex items-center justify-between border-t border-[#d9d9d9] pt-[14px] sm:flex-row flex-col gap-[10px]">
+                                            <div className="flex items-center gap-3">
+                                                <label className="flex items-center gap-2 text-[12px]/[16px] text-[#4b4b4b]">
+                                                    <Switch shape="square" checked={question.autoGradeWithAI} onCheckedChange={(checked) => setCodingData(codingData.map((q) => q.id === question.id ? { ...q, autoGradeWithAI: checked } : q))} />
+                                                    Auto-grade with AI
+                                                </label>
+                                            </div>
+
+                                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button
+                                                    onClick={() => duplicateQuestionForCoding(question.id)}
+                                                    className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                >
+                                                    <Copy className="w-4 h-4" />
+                                                    Duplicate
+                                                </button>
+                                                <button
+                                                    onClick={() => deleteQuestionForCoding(question.id)}
+                                                    className="flex items-center gap-1 px-3 py-1 text-[#c30606] hover:bg-[#c30606]/10 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                        }
+
+                        {/* Add New Question Button */}
+
+                    </div >}
             </div >
-        </div >
+        </div>
     );
 }

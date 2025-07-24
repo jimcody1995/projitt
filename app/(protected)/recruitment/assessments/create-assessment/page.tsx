@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AssessmentDetail from "./components/assessment-detail";
-// import Questions from "./components/questions";
+import Questions from "./components/questions";
 
 type AssessmentData = {
     name: string;
@@ -118,7 +118,7 @@ export default function CreateAssessment() {
             </div>
             <div className="mt-[40px]">
                 {currentStep === 1 && <AssessmentDetail errors={errors} triggerValidation={triggerValidation} assessmentData={assessmentData} setAssessmentData={setAssessmentData} />}
-                {/* {currentStep === 2 && <Questions assessmentData={assessmentData} setAssessmentData={setAssessmentData} />} */}
+                {currentStep === 2 && <Questions assessmentData={assessmentData} setAssessmentData={setAssessmentData} />}
             </div>
         </div>
     );
