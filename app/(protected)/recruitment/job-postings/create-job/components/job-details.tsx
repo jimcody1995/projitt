@@ -34,6 +34,7 @@ import { date } from "zod";
 import { Calendar } from "@/components/ui/calendar";
 import moment from "moment";
 import TagInput from "@/components/ui/tag-input";
+import SuggestionInput from "@/components/ui/suggestion-input";
 import { useRouter } from "next/navigation";
 import { useBasic } from "@/context/BasicContext";
 
@@ -66,6 +67,10 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [tags, setTags] = useState<string[]>(["UI/UX Prototyping", "Wireframi"]);
     const { country } = useBasic();
+    const { department } = useBasic();
+    const { employmentType } = useBasic();
+    const { skills } = useBasic();
+    const { designation } = useBasic();
 
     useEffect(() => {
         setJobData({ ...jobData, locationType });
@@ -93,13 +98,14 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
 
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">Job Title *</p>
-                    <Input
+                    <SuggestionInput
                         id="job-details-title-input"
                         data-testid="job-details-title-input"
                         className="h-[48px]"
                         placeholder="e.g Sales Representative"
-                        value={jobData?.jobTitle}
-                        onChange={(e) => setJobData({ ...jobData, jobTitle: e.target.value })}
+                        value={jobData?.jobTitle || ""}
+                        onChange={val => setJobData({ ...jobData, jobTitle: val })}
+                        suggestions={designation}
                     />
                     {triggerValidation && errors.jobTitle && (
                         <span className="text-red-500 text-xs">{errors.jobTitle}</span>
@@ -121,9 +127,9 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             <SelectValue placeholder="Select a department" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="sales">Sales</SelectItem>
-                            <SelectItem value="marketing">Marketing</SelectItem>
-                            <SelectItem value="it">IT</SelectItem>
+                            {(department || [])?.map((department: any) => (
+                                <SelectItem key={department.id} value={department.id}>{department.name}</SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                     {triggerValidation && errors.department && <span className="text-red-500 text-xs ">{errors.department}</span>}
@@ -135,9 +141,9 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             <SelectValue placeholder="Select a department" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="full-time">Full-time</SelectItem>
-                            <SelectItem value="part-time">Part-time</SelectItem>
-                            <SelectItem value="contract">Contract</SelectItem>
+                            {(employmentType || [])?.map((employmentType: any) => (
+                                <SelectItem key={employmentType.id} value={employmentType.id}>{employmentType.name}</SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                     {triggerValidation && errors.employmentType && <span className="text-red-500 text-xs ">{errors.employmentType}</span>}
@@ -161,7 +167,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                         <p className="text-[14px]/[16px] text-[#1c1c1c]">Skills*</p>
                         <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Add 3–6 skills to help AI match stronger applicants. </p>
                     </div>
-                    <TagInput tags={jobData?.skills} setTags={(tags) => setJobData({ ...jobData, skills: tags })} />
+                    <TagInput tags={jobData?.skills} setTags={(tags) => setJobData({ ...jobData, skills: tags })} suggestions={skills} />
                     {triggerValidation && errors.skills && <span className="text-red-500 text-xs ">{errors.skills}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">
@@ -192,16 +198,12 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                         </RadioGroup>
                         {triggerValidation && errors.locationType && <span className="text-red-500 text-xs ">{errors.locationType}</span>}
                         {(locationType === 'onsite' || locationType === 'hybrid') && <div className="flex flex-col gap-[10px] mt-[10px]">
-                            <Select value={jobData.state || ''} onValueChange={val => setJobData({ ...jobData, state: val })}>
-                                <SelectTrigger className="h-[48px]">
-                                    <SelectValue placeholder="Select State" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="state1">State 1</SelectItem>
-                                    <SelectItem value="state2">State 2</SelectItem>
-                                    <SelectItem value="state3">State 3</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <Input
+                                className="h-[48px]"
+                                placeholder="Input State"
+                                value={jobData.state || ''}
+                                onChange={e => setJobData({ ...jobData, state: e.target.value })}
+                            />
                             {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
                             <Select value={jobData.country || ''} onValueChange={val => setJobData({ ...jobData, country: val })}>
                                 <SelectTrigger className="h-[48px]">

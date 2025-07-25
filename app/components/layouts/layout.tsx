@@ -8,11 +8,19 @@ import { Header } from './components/header';
 import { Sidebar } from './components/sidebar';
 import { useBasic } from '@/context/BasicContext';
 import { getCountry } from '@/api/basic';
+import { getDepartment } from '@/api/basic';
+import { getDesignation } from '@/api/basic';
+import { getEmploymentType } from '@/api/basic';
+import { getSkills } from '@/api/basic';
 
 export function Layout({ children }: { children: ReactNode }) {
   const isMobile = useIsMobile();
   const { settings, setOption } = useSettings();
   const { setCountry } = useBasic();
+  const { setDepartment } = useBasic();
+  const { setDesignation } = useBasic();
+  const { setEmploymentType } = useBasic();
+  const { setSkills } = useBasic();
 
   useEffect(() => {
     const bodyClass = document.body.classList;
@@ -60,6 +68,43 @@ export function Layout({ children }: { children: ReactNode }) {
     loadCountry();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Runs only once on mount
+
+  useEffect(() => {
+    const loadDepartment = async () => {
+      const response = await getDepartment();
+      setDepartment(response.data.data);
+    }
+    loadDepartment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Runs only once on mount
+
+  useEffect(() => {
+    const loadDesignation = async () => {
+      const response = await getDesignation();
+      setDesignation(response.data.data);
+    }
+    loadDesignation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Runs only once on mount
+  
+  useEffect(() => {
+    const loadEmploymentType = async () => {
+      const response = await getEmploymentType();
+      setEmploymentType(response.data.data);
+    }
+    loadEmploymentType();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Runs only once on mount
+
+  useEffect(() => {
+    const loadSkills = async () => {
+      const response = await getSkills();
+      setSkills(response.data.data);
+    }
+    loadSkills();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Runs only once on mount
+
 
   return (
     <>

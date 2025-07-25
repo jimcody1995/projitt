@@ -84,8 +84,8 @@ export default function CreateJob(): JSX.Element {
         const newErrors: JobDetailsErrors = {};
 
         if (!data.jobTitle?.trim()) newErrors.jobTitle = 'Job Title is required.';
-        if (!data.department?.trim()) newErrors.department = 'Department is required.';
-        if (!data.employmentType?.trim()) newErrors.employmentType = 'Employment Type is required.';
+        if (!data.department) newErrors.department = 'Department is required.';
+        if (!data.employmentType) newErrors.employmentType = 'Employment Type is required.';
         if (!data.numberOfOpenings?.trim()) newErrors.numberOfOpenings = 'No. of Openings is required.';
         if (!data.skills || !Array.isArray(data.skills) || data.skills.length < 1) newErrors.skills = 'At least one skill is required.';
         if (!data.locationType?.trim()) newErrors.locationType = 'Location Type is required.';

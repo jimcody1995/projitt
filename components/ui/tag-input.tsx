@@ -1,20 +1,25 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 /**
  * TagInput component allows users to input and manage a dynamic list of tags.
  * 
  * @param tags - An array of current tags
  * @param setTags - A callback function to update the tags array
+ * @param suggestions - (optional) An array of suggestion strings for dropdown
  * @returns JSX.Element
  */
 export default function TagInput({
     tags,
     setTags,
+    suggestions = [],
 }: {
     tags: string[];
     setTags: (tags: string[]) => void;
+    suggestions?: object[];
 }): JSX.Element {
     const [inputValue, setInputValue] = useState("");
+    const [showDropdown, setShowDropdown] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     /**
      * Handles keyboard input events for the tag input field.
@@ -42,11 +47,24 @@ export default function TagInput({
         setTags(tags.filter((_, i) => i !== index));
     };
 
+    // Filter suggestions to exclude already selected tags and match input
+    const filteredSuggestions = (suggestions || []).filter(
+        (s: any) => !tags.includes(s?.name) && s?.name?.toLowerCase().includes(inputValue.toLowerCase())
+    );
+
+    // Handle suggestion click
+    const handleAddTag = (tag: string) => {
+        setTags([...tags, tag]);
+        setInputValue("");
+        setShowDropdown(false);
+        inputRef.current?.focus();
+    };
+
     return (
         <div
             id="tag-input-wrapper"
             data-testid="tag-input-wrapper"
-            className="p-[16px] border border-[#bcbcbc] rounded-[10px] w-full flex flex-wrap gap-[10px]"
+            className="p-[16px] border border-[#bcbcbc] rounded-[10px] w-full flex flex-wrap gap-[10px] relative"
         >
             {/* Render each tag with a remove button */}
             {tags.map((tag, index) => (
@@ -78,11 +96,28 @@ export default function TagInput({
                 className="flex-grow min-w-[100px] outline-none text-gray-700"
                 type="text"
                 value={inputValue}
+                ref={inputRef}
+                onFocus={() => setShowDropdown(true)}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Add a skill..."
                 aria-label="Add a skill"
             />
+            {/* Suggestions dropdown */}
+            {showDropdown && filteredSuggestions.length > 0 && (
+                <ul className="absolute left-0 top-full mt-1 z-10 bg-white border border-gray-200 w-full rounded shadow max-h-48 overflow-y-auto">
+                    {filteredSuggestions.map((s: Suggestion) => (
+                        <li
+                            key={s.id}
+                            onMouseDown={() => handleAddTag(s.name)}
+                            className="px-3 py-2 cursor-pointer hover:bg-gray-100"
+                        >
+                            {s.name}
+                        </li>
+                    ))}
+                </ul>            
+            )}
         </div>
     );
 }
