@@ -198,12 +198,16 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                         </RadioGroup>
                         {triggerValidation && errors.locationType && <span className="text-red-500 text-xs ">{errors.locationType}</span>}
                         {(locationType === 'onsite' || locationType === 'hybrid') && <div className="flex flex-col gap-[10px] mt-[10px]">
-                            <Input
-                                className="h-[48px]"
-                                placeholder="Input State"
-                                value={jobData.state || ''}
-                                onChange={e => setJobData({ ...jobData, state: e.target.value })}
-                            />
+                            <Select value={jobData.state || ''} onValueChange={val => setJobData({ ...jobData, state: val })}>
+                                <SelectTrigger className="h-[48px]">
+                                    <SelectValue placeholder="Select State" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="state1">State 1</SelectItem>
+                                    <SelectItem value="state2">State 2</SelectItem>
+                                    <SelectItem value="state3">State 3</SelectItem>
+                                </SelectContent>
+                            </Select>
                             {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
                             <Select value={jobData.country || ''} onValueChange={val => setJobData({ ...jobData, country: val })}>
                                 <SelectTrigger className="h-[48px]">
