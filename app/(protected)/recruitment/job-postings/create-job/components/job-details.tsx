@@ -198,17 +198,6 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                         </RadioGroup>
                         {triggerValidation && errors.locationType && <span className="text-red-500 text-xs ">{errors.locationType}</span>}
                         {(locationType === 'onsite' || locationType === 'hybrid') && <div className="flex flex-col gap-[10px] mt-[10px]">
-                            <Select value={jobData.state || ''} onValueChange={val => setJobData({ ...jobData, state: val })}>
-                                <SelectTrigger className="h-[48px]">
-                                    <SelectValue placeholder="Select State" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="state1">State 1</SelectItem>
-                                    <SelectItem value="state2">State 2</SelectItem>
-                                    <SelectItem value="state3">State 3</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
                             <Select value={jobData.country || ''} onValueChange={val => setJobData({ ...jobData, country: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder="Select Country" />
@@ -220,6 +209,17 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                                 </SelectContent>
                             </Select>
                             {triggerValidation && errors.country && <span className="text-red-500 text-xs ">{errors.country}</span>}
+                            <Select value={jobData.state || ''} onValueChange={val => setJobData({ ...jobData, state: val })}>
+                                <SelectTrigger className="h-[48px]">
+                                    <SelectValue placeholder="Select State" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="state1">State 1</SelectItem>
+                                    <SelectItem value="state2">State 2</SelectItem>
+                                    <SelectItem value="state3">State 3</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
                         </div>}
                         {locationType === 'remote' && <div className="flex flex-col gap-[12px] mt-[10px]">
                             <Select value={jobData.country || ''} onValueChange={val => setJobData({ ...jobData, country: val })}>
