@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { JSX, useEffect, useState } from "react";
-import { DateInput } from "@/components/ui/datefield";
 import {
     Popover,
     PopoverContent,
@@ -30,12 +29,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { CalendarDays } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { date } from "zod";
 import { Calendar } from "@/components/ui/calendar";
 import moment from "moment";
 import TagInput from "@/components/ui/tag-input";
 import SuggestionInput from "@/components/ui/suggestion-input";
-import { useRouter } from "next/navigation";
 import { useBasic } from "@/context/BasicContext";
 
 interface JobDetailsProps {
@@ -65,17 +62,59 @@ interface JobDetailsProps {
 export default function JobDetails({ jobData, setJobData, errors = {}, triggerValidation = false }: JobDetailsProps): JSX.Element {
     const [locationType, setLocationType] = useState(jobData.locationType || 'onsite');
     const [date, setDate] = useState<Date | undefined>(new Date());
-    const [tags, setTags] = useState<string[]>(["UI/UX Prototyping", "Wireframi"]);
+    const [selectedCountryName, setSelectedCountryName] = useState<string>('');
+    const [countryStates, setCountryStates] = useState<string[]>([]);
+    const [isLoadingStates, setIsLoadingStates] = useState(false);
     const { country } = useBasic();
     const { department } = useBasic();
     const { employmentType } = useBasic();
     const { skills } = useBasic();
     const { designation } = useBasic();
 
+    // Helper function to get country name from country ID
+    const getCountryNameById = (countryId: string): string => {
+        const foundCountry = (country as any[] || []).find((c: any) => c.id === countryId);
+        return foundCountry ? foundCountry.name : '';
+    };
+
     useEffect(() => {
         setJobData({ ...jobData, locationType });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [locationType]);
+
+    // Update selected country name and fetch states when country changes
+    useEffect(() => {
+        if (jobData.country) {
+            const countryName = getCountryNameById(jobData.country);
+            setSelectedCountryName(countryName);
+
+            // Reset state selection when country changes
+            setJobData({ ...jobData, state: '' });
+
+            // Fetch states for the selected country
+            if (countryName) {
+                setIsLoadingStates(true);
+                fetch('https://countriesnow.space/api/v0.1/countries/states', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ country: countryName })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data?.data?.states) {
+                            setCountryStates(data.data.states);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching states:', error);
+                        setCountryStates([]);
+                    })
+                    .finally(() => {
+                        setIsLoadingStates(false);
+                    });
+            }
+        }
+    }, [jobData.country, country]);
 
     return (
         <div>
@@ -211,12 +250,18 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             {triggerValidation && errors.country && <span className="text-red-500 text-xs ">{errors.country}</span>}
                             <Select value={jobData.state || ''} onValueChange={val => setJobData({ ...jobData, state: val })}>
                                 <SelectTrigger className="h-[48px]">
-                                    <SelectValue placeholder="Select State" />
+                                    <SelectValue placeholder={isLoadingStates ? "Loading states..." : "Select State"} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="state1">State 1</SelectItem>
-                                    <SelectItem value="state2">State 2</SelectItem>
-                                    <SelectItem value="state3">State 3</SelectItem>
+                                    {isLoadingStates ? (
+                                        <SelectItem value=" " disabled>Loading states...</SelectItem>
+                                    ) : countryStates.length > 0 ? (
+                                        countryStates.map((state) => (
+                                            <SelectItem key={state?.name} value={state?.name}>{state?.name}</SelectItem>
+                                        ))
+                                    ) : (
+                                        <SelectItem value=" " disabled>No states available</SelectItem>
+                                    )}
                                 </SelectContent>
                             </Select>
                             {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
