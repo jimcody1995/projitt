@@ -257,7 +257,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                                         <SelectItem value=" " disabled>Loading states...</SelectItem>
                                     ) : countryStates.length > 0 ? (
                                         countryStates.map((state) => (
-                                            <SelectItem key={state?.name} value={state?.name}>{state?.name}</SelectItem>
+                                            <SelectItem key={state?.name} value={state?.name}>{state?.name}</SelectItem> // state?.state_code: IL, TX, ...
                                         ))
                                     ) : (
                                         <SelectItem value=" " disabled>No states available</SelectItem>
