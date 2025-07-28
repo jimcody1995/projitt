@@ -129,6 +129,7 @@ export default function TagInput({
                 type="text"
                 value={inputValue}
                 ref={inputRef}
+                autoComplete="off"
                 onFocus={() => setShowDropdown(true)}
                 onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
                 onChange={handleInputChange}
