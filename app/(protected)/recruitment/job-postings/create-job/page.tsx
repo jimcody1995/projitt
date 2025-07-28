@@ -11,7 +11,9 @@ import { useRouter } from "next/navigation";
 import Publish from "./components/publish";
 import Completed from "./components/completed";
 import { addNewDetailJob } from "@/api/job-posting";
+import { addNewJobTitle, getDesignation } from "@/api/basic"
 import { useBasic } from "@/context/BasicContext";
+import { customToast } from "@/components/common/toastr";
 
 /**
  * JobData type defines the structure of data related to a job posting.
@@ -76,7 +78,7 @@ export default function CreateJob(): JSX.Element {
     const [errors, setErrors] = useState<JobDetailsErrors>({});
     const [descriptionError, setDescriptionError] = useState<JobDesciptionError>({});
     const [triggerValidation, setTriggerValidation] = useState<boolean>(false);
-    const { skills } = useBasic();
+    const { skills, designation, setDesignation } = useBasic();
 
     /**
      * Validates the job details step.
@@ -154,6 +156,45 @@ export default function CreateJob(): JSX.Element {
                 skill_ids: jobData.skill_ids.map(skillName =>
                     skills.findIndex(skill => skill.name === skillName) + 1
                 ),
+            }
+
+            // Check if job title exists in designation
+            console.log(designation);
+            if (!designation.some(designation => designation.name === jobData?.title)) {
+                // Add new job title to master data
+                try {
+                    await addNewJobTitle(jobData.title);
+
+                    // Refresh designation data after successful addition
+                    const designationResponse = await getDesignation();
+                    setDesignation(designationResponse.data.data);
+                } catch (error: unknown) {
+                    let errorMessage = "Failed to add job title";
+
+                    // Check if error has response data with error messages
+                    if (error && typeof error === 'object' && 'response' in error) {
+                        const errorResponse = (error as { response?: { data?: unknown } }).response?.data;
+
+                        if (errorResponse && typeof errorResponse === 'object' && 'errors' in errorResponse) {
+                            const errors = (errorResponse as { errors: Record<string, unknown[]> }).errors;
+                            const errorMessages = Object.values(errors)
+                                .flat()
+                                .filter((msg: unknown) => typeof msg === 'string')
+                                .join(", ");
+
+                            if (errorMessages) {
+                                errorMessage = errorMessages;
+                            }
+                        } else if (errorResponse && typeof errorResponse === 'object' && 'message' in errorResponse) {
+                            errorMessage = (errorResponse as { message: string }).message;
+                        }
+                    } else if (error instanceof Error) {
+                        errorMessage = error.message;
+                    }
+
+                    customToast("Job Title Error", errorMessage, "error");
+                    return;
+                }
             }
 
             const response = await addNewDetailJob(payload);

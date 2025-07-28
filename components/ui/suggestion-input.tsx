@@ -41,8 +41,7 @@ export default function SuggestionInput({
       (s) =>
         s.name.toLowerCase().includes(inputValue.toLowerCase()) &&
         s.name !== inputValue
-    )
-    .slice(0, 5);
+    );
 
   /**
    * Handles selection from dropdown:
