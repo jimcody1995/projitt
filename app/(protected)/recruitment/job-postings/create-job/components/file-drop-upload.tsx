@@ -31,7 +31,7 @@ export default function FileDropUpload({
         <div>
             <div className="mt-[19px]">
                 <Label
-                    className="text-[14px]/[22px] font-medium text-[#353535]"
+                    className="text-[14px]/[22px] font-medium text-[#a5a5a5]"
                     data-test-id="file-upload-label"
                 >
                     {label}

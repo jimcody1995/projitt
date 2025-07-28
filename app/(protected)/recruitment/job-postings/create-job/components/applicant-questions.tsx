@@ -16,6 +16,7 @@ import {
     FileText,
     BriefcaseBusiness,
     CircleQuestionMark,
+    BookOpenText,
 } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
@@ -29,6 +30,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import WorkExperience from './work-experience';
 import Resume from './resume';
+import Education from './education';
 export interface Question {
     id: string;
     title: string;
@@ -236,6 +238,10 @@ export default function ApplicantQuestions(): JSX.Element {
                             <BriefcaseBusiness className='size-[20px] ' />
                             {activeSection === 'work' && <p className='whitespace-nowrap'>Work Experience</p>}
                         </div>
+                        <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'education' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('education')}>
+                            <BookOpenText className='size-[20px] ' />
+                            {activeSection === 'education' && <p className='whitespace-nowrap'>Education</p>}
+                        </div>
                         {sections.map((section) => (
                             <div className={`py-[8.5px] px-[6px]  text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === section.id ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} key={section.id} onClick={() => setActiveSection(section.id)}>
                                 <CircleQuestionMark className='size-[20px] ' />
@@ -258,7 +264,12 @@ export default function ApplicantQuestions(): JSX.Element {
                                 <WorkExperience />
                             </div>
                         )}
-                        {(activeSection !== 'resume' && activeSection !== 'work') && sections.filter((section) => section.id === activeSection).map((section) => (
+                        {activeSection === 'education' && (
+                            <div>
+                                <Education />
+                            </div>
+                        )}
+                        {(activeSection !== 'resume' && activeSection !== 'work' && activeSection !== 'education') && sections.filter((section) => section.id === activeSection).map((section) => (
                             <div key={section.id} className="mb-8">
                                 <div className="space-y-4">
                                     {section.questions.map((question) => (

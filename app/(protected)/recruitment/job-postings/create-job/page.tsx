@@ -10,19 +10,21 @@ import { JSX, useState } from "react";
 import { useRouter } from "next/navigation";
 import Publish from "./components/publish";
 import Completed from "./components/completed";
+import { addNewDetailJob } from "@/api/job-posting";
+import { useBasic } from "@/context/BasicContext";
 
 /**
  * JobData type defines the structure of data related to a job posting.
  */
 type JobData = {
-    jobTitle: string;
-    department: string;
-    employmentType: string;
-    numberOfOpenings: string;
-    skills: string[];
-    locationType: string;
-    state?: string;
-    country?: string;
+    title: string;
+    department_id: string;
+    employment_type_id: string;
+    no_of_job_opening: string;
+    skill_ids: string[];
+    location_type_id: number;
+    state: string;
+    country_id?: string;
     salary: string;
     deadline: Date;
     description: string;
@@ -33,14 +35,14 @@ type JobData = {
  * for the job details step.
  */
 type JobDetailsErrors = {
-    jobTitle?: string;
-    department?: string;
-    employmentType?: string;
-    numberOfOpenings?: string;
-    skills?: string;
-    locationType?: string;
+    title?: string;
+    department_id?: string;
+    employment_type_id?: string;
+    no_of_job_opening?: string;
+    skill_ids?: string;
+    location_type_id?: number;
     state?: string;
-    country?: string;
+    country_id?: string;
 };
 
 /**
@@ -59,14 +61,14 @@ export default function CreateJob(): JSX.Element {
     const router = useRouter();
     const [currentStep, setCurrentStep] = useState<number>(1);
     const [jobData, setJobData] = useState<JobData>({
-        jobTitle: '',
-        department: '',
-        employmentType: '',
-        numberOfOpenings: '',
-        skills: [],
-        locationType: '',
+        title: '',
+        department_id: '',
+        employment_type_id: '',
+        no_of_job_opening: '',
+        skill_ids: [],
+        location_type_id: 1,
         state: '',
-        country: '',
+        country_id: '',
         salary: '',
         deadline: new Date(),
         description: ''
@@ -74,6 +76,7 @@ export default function CreateJob(): JSX.Element {
     const [errors, setErrors] = useState<JobDetailsErrors>({});
     const [descriptionError, setDescriptionError] = useState<JobDesciptionError>({});
     const [triggerValidation, setTriggerValidation] = useState<boolean>(false);
+    const { skills } = useBasic();
 
     /**
      * Validates the job details step.
@@ -83,18 +86,16 @@ export default function CreateJob(): JSX.Element {
     function validateJobDetails(data: JobData): JobDetailsErrors {
         const newErrors: JobDetailsErrors = {};
 
-        if (!data.jobTitle?.trim()) newErrors.jobTitle = 'Job Title is required.';
-        if (!data.department) newErrors.department = 'Department is required.';
-        if (!data.employmentType) newErrors.employmentType = 'Employment Type is required.';
-        if (!data.numberOfOpenings?.trim()) newErrors.numberOfOpenings = 'No. of Openings is required.';
-        if (!data.skills || !Array.isArray(data.skills) || data.skills.length < 1) newErrors.skills = 'At least one skill is required.';
-        if (!data.locationType?.trim()) newErrors.locationType = 'Location Type is required.';
-
-        if (data.locationType === 'onsite' || data.locationType === 'hybrid') {
-            if (!data.state?.trim()) newErrors.state = 'State is required.';
-            if (!data.country) newErrors.country = 'Country is required.';
-        } else if (data.locationType === 'remote') {
-            if (!data.country) newErrors.country = 'Country is required.';
+        if (!data.title?.trim()) newErrors.title = 'Job Title is required.';
+        if (!data.department_id) newErrors.department_id = 'Department is required.';
+        if (!data.employment_type_id) newErrors.employment_type_id = 'Employment Type is required.';
+        if (!data.no_of_job_opening) newErrors.no_of_job_opening = 'No. of Openings is required.';
+        if (!data.skill_ids || !Array.isArray(data.skill_ids) || data.skill_ids.length < 1) newErrors.skill_ids = 'At least one skill is required.';
+        if (data.location_type_id === 1 || data.location_type_id === 2) {
+            if (!data.state) newErrors.state = 'State is required.';
+            if (!data.country_id) newErrors.country_id = 'Country is required.';
+        } else if (data.location_type_id === 3) {
+            if (!data.country_id) newErrors.country_id = 'Country is required.';
         }
 
         return newErrors;
@@ -118,12 +119,47 @@ export default function CreateJob(): JSX.Element {
      * Handles transition to the next step with validation.
      * @returns void
      */
-    const handleContinue = (): void => {
+    const handleContinue = async (): Promise<void> => {
         if (currentStep === 1) {
             const validationErrors = validateJobDetails(jobData);
             setErrors(validationErrors);
             setTriggerValidation(true);
             if (Object.keys(validationErrors).length > 0) return;
+            console.log(skills);
+            console.log(skills.findIndex(skill => skill.name === 'PHP'));
+
+
+            // Parse salary with validation for different delimiters
+            const salaryParts = jobData.salary.split(/[-~]/);
+            let salary_from, salary_to;
+
+            if (salaryParts.length === 1) {
+                // Single value - use same for both from and to
+                salary_from = salaryParts[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
+                salary_to = salary_from;
+            } else if (salaryParts.length === 2) {
+                // Range value
+                salary_from = salaryParts[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
+                salary_to = salaryParts[1].split(' ')[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
+            } else {
+                // Invalid format - use fallback
+                salary_from = jobData.salary.slice(1).replace(/[, ]/g, '');
+                salary_to = salary_from;
+            }
+
+            const payload = {
+                ...jobData,
+                salary_from,
+                salary_to,
+                skill_ids: jobData.skill_ids.map(skillName =>
+                    skills.findIndex(skill => skill.name === skillName) + 1
+                ),
+            }
+
+            const response = await addNewDetailJob(payload);
+            if (response.status === 200) {
+                setCurrentStep(currentStep + 1);
+            }
         }
 
         if (currentStep === 2) {
@@ -196,7 +232,7 @@ export default function CreateJob(): JSX.Element {
                         </div>
 
                         <div
-                            className="xl:w-[55vw] lg:w-[45vw] sm:w-[60vw] w-[85vw] pt-[42px] pl-[20px] pr-[20px] md:pl-[48px] md:pr-[48px] sm:pl-[77px] sm:pr-[48px]"
+                            className="xl:w-[55vw] lg:w-[45vw] sm:w-[60vw] w-[85vw] pt-[42px] pb-[54px] pl-[20px] pr-[20px] md:pl-[48px] md:pr-[48px] sm:pl-[77px] sm:pr-[48px]"
                             id="stepper-content"
                             data-testid="stepper-content"
                         >

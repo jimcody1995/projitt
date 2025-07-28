@@ -39,14 +39,14 @@ interface JobDetailsProps {
     jobData: any;
     setJobData: any;
     errors?: {
-        jobTitle?: string;
-        department?: string;
-        employmentType?: string;
-        numberOfOpenings?: string;
-        skills?: string;
-        locationType?: string;
+        title?: string;
+        department_id?: string;
+        employment_type_id?: string;
+        no_of_job_opening?: string;
+        skill_ids?: string;
+        location_type_id?: number;
         state?: string;
-        country?: string;
+        country_id?: string;
     };
     triggerValidation?: boolean;
 }
@@ -60,7 +60,7 @@ interface JobDetailsProps {
  * @returns JSX.Element
  */
 export default function JobDetails({ jobData, setJobData, errors = {}, triggerValidation = false }: JobDetailsProps): JSX.Element {
-    const [locationType, setLocationType] = useState(jobData.locationType || 'onsite');
+    const [locationType, setLocationType] = useState(jobData.location_type_id || 1);
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [selectedCountryName, setSelectedCountryName] = useState<string>('');
     const [countryStates, setCountryStates] = useState<string[]>([]);
@@ -78,14 +78,16 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
     };
 
     useEffect(() => {
-        setJobData({ ...jobData, locationType });
+        console.log(locationType);
+
+        setJobData({ ...jobData, location_type_id: locationType });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [locationType]);
 
     // Update selected country name and fetch states when country changes
     useEffect(() => {
-        if (jobData.country) {
-            const countryName = getCountryNameById(jobData.country);
+        if (jobData.country_id) {
+            const countryName = getCountryNameById(jobData.country_id);
             setSelectedCountryName(countryName);
 
             // Reset state selection when country changes
@@ -101,6 +103,8 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                 })
                     .then(res => res.json())
                     .then(data => {
+                        console.log(data);
+
                         if (data?.data?.states) {
                             setCountryStates(data.data.states);
                         }
@@ -114,7 +118,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                     });
             }
         }
-    }, [jobData.country, country]);
+    }, [jobData.country_id, country]);
 
     return (
         <div>
@@ -138,16 +142,13 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">Job Title *</p>
                     <SuggestionInput
-                        id="job-details-title-input"
-                        data-testid="job-details-title-input"
-                        className="h-[48px]"
                         placeholder="e.g Sales Representative"
-                        value={jobData?.jobTitle || ""}
-                        onChange={val => setJobData({ ...jobData, jobTitle: val })}
+                        value={jobData?.title || ""}
+                        onChange={val => setJobData({ ...jobData, title: val })}
                         suggestions={designation}
                     />
-                    {triggerValidation && errors.jobTitle && (
-                        <span className="text-red-500 text-xs">{errors.jobTitle}</span>
+                    {triggerValidation && errors.title && (
+                        <span className="text-red-500 text-xs">{errors.title}</span>
                     )}
                 </div>
 
@@ -155,8 +156,8 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">Department *</p>
                     <Select
                         defaultValue="sales"
-                        value={jobData?.department}
-                        onValueChange={(e) => setJobData({ ...jobData, department: e })}
+                        value={jobData?.department_id}
+                        onValueChange={(e) => setJobData({ ...jobData, department_id: e })}
                     >
                         <SelectTrigger
                             className="h-[48px]"
@@ -171,11 +172,11 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             ))}
                         </SelectContent>
                     </Select>
-                    {triggerValidation && errors.department && <span className="text-red-500 text-xs ">{errors.department}</span>}
+                    {triggerValidation && errors.department_id && <span className="text-red-500 text-xs ">{errors.department_id}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">Employment Type*</p>
-                    <Select defaultValue="full-time" value={jobData?.employmentType} onValueChange={(e) => setJobData({ ...jobData, employmentType: e })}>
+                    <Select defaultValue="full-time" value={jobData?.employment_type_id} onValueChange={(e) => setJobData({ ...jobData, employment_type_id: e })}>
                         <SelectTrigger className="h-[48px]">
                             <SelectValue placeholder="Select a department" />
                         </SelectTrigger>
@@ -185,11 +186,11 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             ))}
                         </SelectContent>
                     </Select>
-                    {triggerValidation && errors.employmentType && <span className="text-red-500 text-xs ">{errors.employmentType}</span>}
+                    {triggerValidation && errors.employment_type_id && <span className="text-red-500 text-xs ">{errors.employment_type_id}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">No. of Openings*</p>
-                    <Select defaultValue="1" value={jobData?.numberOfOpenings} onValueChange={(e) => setJobData({ ...jobData, numberOfOpenings: e })}>
+                    <Select defaultValue="1" value={jobData?.no_of_job_opening} onValueChange={(e) => setJobData({ ...jobData, no_of_job_opening: e })}>
                         <SelectTrigger className="h-[48px]">
                             <SelectValue placeholder="Select a department" />
                         </SelectTrigger>
@@ -199,15 +200,15 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             <SelectItem value="3">3</SelectItem>
                         </SelectContent>
                     </Select>
-                    {triggerValidation && errors.numberOfOpenings && <span className="text-red-500 text-xs ">{errors.numberOfOpenings}</span>}
+                    {triggerValidation && errors.no_of_job_opening && <span className="text-red-500 text-xs ">{errors.no_of_job_opening}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">
                     <div>
                         <p className="text-[14px]/[16px] text-[#1c1c1c]">Skills*</p>
                         <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Add 3–6 skills to help AI match stronger applicants. </p>
                     </div>
-                    <TagInput tags={jobData?.skills} setTags={(tags) => setJobData({ ...jobData, skills: tags })} suggestions={skills} />
-                    {triggerValidation && errors.skills && <span className="text-red-500 text-xs ">{errors.skills}</span>}
+                    <TagInput tags={jobData?.skill_ids} setTags={(tags) => setJobData({ ...jobData, skill_ids: tags })} suggestions={skills} restrictToSuggestions={true} />
+                    {triggerValidation && errors.skill_ids && <span className="text-red-500 text-xs ">{errors.skill_ids}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">
                     <div>
@@ -215,29 +216,29 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                         <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Choose based on where the role is performed not where the company is based.</p>
                     </div>
                     <div>
-                        <RadioGroup className="flex gap-[32px]" defaultValue={locationType} onValueChange={(e) => setLocationType(e as string)}>
+                        <RadioGroup className="flex gap-[32px]" defaultValue={locationType} onValueChange={(e) => setLocationType(Number(e))}>
                             <div className="flex gap-[6px]">
-                                <RadioGroupItem value="onsite" id="onsite" />
-                                <Label htmlFor="onsite" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 'onsite' ? 'text-[#0d978b]' : '')}>
+                                <RadioGroupItem value={1} id="onsite" />
+                                <Label htmlFor="onsite" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 1 ? 'text-[#0d978b]' : '')}>
                                     Onsite
                                 </Label>
                             </div>
                             <div className="flex gap-[6px]">
-                                <RadioGroupItem value="hybrid" id="hybrid" />
-                                <Label htmlFor="hybrid" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 'hybrid' ? 'text-[#0d978b]' : '')}>
+                                <RadioGroupItem value={2} id="hybrid" />
+                                <Label htmlFor="hybrid" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 2 ? 'text-[#0d978b]' : '')}>
                                     Hybrid
                                 </Label>
                             </div>
                             <div className="flex gap-[6px]">
-                                <RadioGroupItem value="remote" id="remote" />
-                                <Label htmlFor="remote" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 'remote' ? 'text-[#0d978b]' : '')}>
+                                <RadioGroupItem value={3} id="remote" />
+                                <Label htmlFor="remote" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 3 ? 'text-[#0d978b]' : '')}>
                                     Remote
                                 </Label>
                             </div>
                         </RadioGroup>
-                        {triggerValidation && errors.locationType && <span className="text-red-500 text-xs ">{errors.locationType}</span>}
-                        {(locationType === 'onsite' || locationType === 'hybrid') && <div className="flex flex-col gap-[10px] mt-[10px]">
-                            <Select value={jobData.country || ''} onValueChange={val => setJobData({ ...jobData, country: val })}>
+                        {triggerValidation && errors.location_type_id && <span className="text-red-500 text-xs ">{errors.location_type_id}</span>}
+                        {(locationType === 0 || locationType === 1) && <div className="flex flex-col gap-[10px] mt-[10px]">
+                            <Select value={jobData.country_id || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder="Select Country" />
                                 </SelectTrigger>
@@ -247,7 +248,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                                     ))}
                                 </SelectContent>
                             </Select>
-                            {triggerValidation && errors.country && <span className="text-red-500 text-xs ">{errors.country}</span>}
+                            {triggerValidation && errors.country_id && <span className="text-red-500 text-xs ">{errors.country_id}</span>}
                             <Select value={jobData.state || ''} onValueChange={val => setJobData({ ...jobData, state: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder={isLoadingStates ? "Loading states..." : "Select State"} />
@@ -256,8 +257,8 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                                     {isLoadingStates ? (
                                         <SelectItem value=" " disabled>Loading states...</SelectItem>
                                     ) : countryStates.length > 0 ? (
-                                        countryStates.map((state) => (
-                                            <SelectItem key={state?.name} value={state?.name}>{state?.name}</SelectItem> // state?.state_code: IL, TX, ...
+                                        countryStates.map((state: any, index: number) => (
+                                            <SelectItem key={index} value={state.state_code}>{state.name}</SelectItem>
                                         ))
                                     ) : (
                                         <SelectItem value=" " disabled>No states available</SelectItem>
@@ -266,18 +267,18 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             </Select>
                             {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
                         </div>}
-                        {locationType === 'remote' && <div className="flex flex-col gap-[12px] mt-[10px]">
-                            <Select value={jobData.country || ''} onValueChange={val => setJobData({ ...jobData, country: val })}>
+                        {locationType === 2 && <div className="flex flex-col gap-[12px] mt-[10px]">
+                            <Select value={jobData.country_id || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder="Select Country" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="usa">United States of America</SelectItem>
-                                    <SelectItem value="uk">United Kingdom</SelectItem>
-                                    <SelectItem value="canada">Canada</SelectItem>
+                                    {(country || [])?.map((country: any) => (
+                                        <SelectItem key={country.id} value={country.id}>{country.name}</SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
-                            {triggerValidation && errors.country && <span className="text-red-500 text-xs ">{errors.country}</span>}
+                            {triggerValidation && errors.country_id && <span className="text-red-500 text-xs ">{errors.country_id}</span>}
                             <div className="flex items-center gap-[8px]">
                                 <input type="checkbox" placeholder="Remote (Global)" className="h-[14px] accent-[#0d978b]" />
                                 <p className="text-[14px]/[20px] text-[#4b4b4b]">Remote (Global)</p>

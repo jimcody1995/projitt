@@ -94,14 +94,6 @@ export default function Stepper({ currentStep = 2 }: { currentStep?: number }): 
           );
         })}
       </div>
-
-      <div
-        className="w-full px-[24px] py-[21px] bg-[#ededed] rounded-[8px] text-[13px]/[21px] text-[#626262] mt-[213px]"
-        id="stepper-help-box"
-        data-testid="stepper-help-box"
-      >
-        Tell candidates what the role really involves and who thrives in it. Include key responsibilities, and what success looks like in this position.
-      </div>
     </div>
   );
 }
