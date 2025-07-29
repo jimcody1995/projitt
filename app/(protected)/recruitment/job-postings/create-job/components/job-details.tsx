@@ -237,7 +237,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             </div>
                         </RadioGroup>
                         {triggerValidation && errors.location_type_id && <span className="text-red-500 text-xs ">{errors.location_type_id}</span>}
-                        {(locationType === 0 || locationType === 1) && <div className="flex flex-col gap-[10px] mt-[10px]">
+                        {(locationType === 1 || locationType === 2) && <div className="flex flex-col gap-[10px] mt-[10px]">
                             <Select value={jobData.country_id || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder="Select Country" />
@@ -267,7 +267,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             </Select>
                             {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
                         </div>}
-                        {locationType === 2 && <div className="flex flex-col gap-[12px] mt-[10px]">
+                        {locationType === 3 && <div className="flex flex-col gap-[12px] mt-[10px]">
                             <Select value={jobData.country_id || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder="Select Country" />
