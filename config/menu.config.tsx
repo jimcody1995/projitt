@@ -87,6 +87,7 @@ export const MENU_SIDEBAR: MenuConfig = [
   {
     title: 'Dashboard',
     icon: LayoutGrid,
+    path: '/dashboard',
   },
   {
     title: 'Recuruitment',
