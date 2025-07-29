@@ -10,8 +10,8 @@ import { JSX, useState } from "react";
 import { useRouter } from "next/navigation";
 import Publish from "./components/publish";
 import Completed from "./components/completed";
-import { addNewDetailJob } from "@/api/job-posting";
 import { addNewJobTitle, getDesignation } from "@/api/basic"
+import { addNewDetailJob, editJobDescription } from "@/api/job-posting";
 import { useBasic } from "@/context/BasicContext";
 import { customToast } from "@/components/common/toastr";
 
@@ -198,7 +198,14 @@ export default function CreateJob(): JSX.Element {
             }
 
             const response = await addNewDetailJob(payload);
-            if (response.status === 200) {
+            console.log(response);
+
+            if (response.status === true) {
+                const job_id = response.data.id;
+                router.push({
+                    pathname: '/recruitment/job-postings/create-job',
+                    query: { id: job_id },
+                });
                 setCurrentStep(currentStep + 1);
             }
         }
@@ -208,9 +215,19 @@ export default function CreateJob(): JSX.Element {
             setDescriptionError(validationErrors);
             setTriggerValidation(true);
             if (Object.keys(validationErrors).length > 0) return;
+            const payload = {
+                description: jobData.description.replace(/<[^>]+>/g, '').trim(),
+                id: router.query.id,
+            }
+
+            const response = await editJobDescription(payload);
+            console.log(response);
+
+            if (response.status === true) {
+                setCurrentStep(currentStep + 1);
+            }
         }
 
-        setCurrentStep(currentStep + 1);
     };
 
     /**
