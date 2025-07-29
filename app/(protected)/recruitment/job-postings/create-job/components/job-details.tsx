@@ -207,7 +207,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                         <p className="text-[14px]/[16px] text-[#1c1c1c]">Skills*</p>
                         <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Add 3–6 skills to help AI match stronger applicants. </p>
                     </div>
-                    <TagInput tags={jobData?.skill_ids} setTags={(tags) => setJobData({ ...jobData, skill_ids: tags })} suggestions={skills} />
+                    <TagInput tags={jobData?.skill_ids} setTags={(tags) => setJobData({ ...jobData, skill_ids: tags })} suggestions={skills} restrictToSuggestions={true} />
                     {triggerValidation && errors.skill_ids && <span className="text-red-500 text-xs ">{errors.skill_ids}</span>}
                 </div>
                 <div className="flex flex-col gap-[12px]">

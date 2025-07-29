@@ -11,7 +11,9 @@ import { useRouter } from "next/navigation";
 import Publish from "./components/publish";
 import Completed from "./components/completed";
 import { addNewDetailJob } from "@/api/job-posting";
+import { addNewJobTitle, getDesignation } from "@/api/basic"
 import { useBasic } from "@/context/BasicContext";
+import { customToast } from "@/components/common/toastr";
 
 /**
  * JobData type defines the structure of data related to a job posting.
@@ -76,7 +78,7 @@ export default function CreateJob(): JSX.Element {
     const [errors, setErrors] = useState<JobDetailsErrors>({});
     const [descriptionError, setDescriptionError] = useState<JobDesciptionError>({});
     const [triggerValidation, setTriggerValidation] = useState<boolean>(false);
-    const { skills } = useBasic();
+    const { skills, designation, setDesignation } = useBasic();
 
     /**
      * Validates the job details step.
@@ -129,13 +131,70 @@ export default function CreateJob(): JSX.Element {
             console.log(skills.findIndex(skill => skill.name === 'PHP'));
 
 
+            // Parse salary with validation for different delimiters
+            const salaryParts = jobData.salary.split(/[-~]/);
+            let salary_from, salary_to;
+
+            if (salaryParts.length === 1) {
+                // Single value - use same for both from and to
+                salary_from = salaryParts[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
+                salary_to = salary_from;
+            } else if (salaryParts.length === 2) {
+                // Range value
+                salary_from = salaryParts[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
+                salary_to = salaryParts[1].split(' ')[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
+            } else {
+                // Invalid format - use fallback
+                salary_from = jobData.salary.slice(1).replace(/[, ]/g, '');
+                salary_to = salary_from;
+            }
+
             const payload = {
                 ...jobData,
-                salary_from: jobData.salary.split('-')[0].slice(1),
-                salary_to: jobData.salary.split('-')[1].split(' ')[0].slice(1),
+                salary_from,
+                salary_to,
                 skill_ids: jobData.skill_ids.map(skillName =>
                     skills.findIndex(skill => skill.name === skillName) + 1
                 ),
+            }
+
+            // Check if job title exists in designation
+            console.log(designation);
+            if (!designation.some(designation => designation.name === jobData?.title)) {
+                // Add new job title to master data
+                try {
+                    await addNewJobTitle(jobData.title);
+
+                    // Refresh designation data after successful addition
+                    const designationResponse = await getDesignation();
+                    setDesignation(designationResponse.data.data);
+                } catch (error: unknown) {
+                    let errorMessage = "Failed to add job title";
+
+                    // Check if error has response data with error messages
+                    if (error && typeof error === 'object' && 'response' in error) {
+                        const errorResponse = (error as { response?: { data?: unknown } }).response?.data;
+
+                        if (errorResponse && typeof errorResponse === 'object' && 'errors' in errorResponse) {
+                            const errors = (errorResponse as { errors: Record<string, unknown[]> }).errors;
+                            const errorMessages = Object.values(errors)
+                                .flat()
+                                .filter((msg: unknown) => typeof msg === 'string')
+                                .join(", ");
+
+                            if (errorMessages) {
+                                errorMessage = errorMessages;
+                            }
+                        } else if (errorResponse && typeof errorResponse === 'object' && 'message' in errorResponse) {
+                            errorMessage = (errorResponse as { message: string }).message;
+                        }
+                    } else if (error instanceof Error) {
+                        errorMessage = error.message;
+                    }
+
+                    customToast("Job Title Error", errorMessage, "error");
+                    return;
+                }
             }
 
             const response = await addNewDetailJob(payload);
@@ -214,7 +273,7 @@ export default function CreateJob(): JSX.Element {
                         </div>
 
                         <div
-                            className="xl:w-[55vw] lg:w-[45vw] sm:w-[60vw] w-[85vw] pt-[42px] pl-[20px] pr-[20px] md:pl-[48px] md:pr-[48px] sm:pl-[77px] sm:pr-[48px]"
+                            className="xl:w-[55vw] lg:w-[45vw] sm:w-[60vw] w-[85vw] pt-[42px] pb-[54px] pl-[20px] pr-[20px] md:pl-[48px] md:pr-[48px] sm:pl-[77px] sm:pr-[48px]"
                             id="stepper-content"
                             data-testid="stepper-content"
                         >

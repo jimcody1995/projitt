@@ -41,8 +41,7 @@ export default function SuggestionInput({
       (s) =>
         s.name.toLowerCase().includes(inputValue.toLowerCase()) &&
         s.name !== inputValue
-    )
-    .slice(0, 5);
+    );
 
   /**
    * Handles selection from dropdown:
@@ -64,6 +63,7 @@ export default function SuggestionInput({
         className="h-[48px] w-full border border-[#bcbcbc] rounded-[10px] px-3 outline-none text-gray-700"
         value={inputValue}
         placeholder={placeholder}
+        autoComplete="off"
         onFocus={() => setShowDropdown(true)}
         onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
         onChange={e => {
