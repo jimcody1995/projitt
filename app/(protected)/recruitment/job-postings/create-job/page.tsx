@@ -121,6 +121,14 @@ export default function CreateJob(): JSX.Element {
                     const response = await getJobDetails(jobId);
                     if (response.status === true) {
                         const jobData = response.data;
+
+                        // Check if job data is null (job doesn't exist)
+                        if (!jobData) {
+                            // Redirect to create job page without ID parameter
+                            router.push('/recruitment/job-postings/create-job');
+                            return;
+                        }
+
                         console.log(jobData);
                         // Format salary for display and clean it
                         const cleanSalaryFrom = jobData.salary_from?.toString().replace(/[^$,\-~.\d]/g, '') || '';
