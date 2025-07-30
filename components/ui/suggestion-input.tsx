@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Input } from '@/components/ui/input';
 
 /**
@@ -31,6 +31,13 @@ export default function SuggestionInput({
   const [inputValue, setInputValue] = useState(value || "");
   const [showDropdown, setShowDropdown] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  /**
+   * Sync internal state with external value prop
+   */
+  useEffect(() => {
+    setInputValue(value || "");
+  }, [value]);
 
   /**
    * Filters the list of suggestions based on input value (case insensitive),

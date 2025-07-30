@@ -6,14 +6,15 @@ import JobDetails from "./components/job-details";
 import JobDescription from "./components/job-description";
 import ApplicantQuestions from "./components/applicant-questions";
 import HiringPipeline from "./components/hiring-pipeline";
-import { JSX, useState } from "react";
-import { useRouter } from "next/navigation";
+import { JSX, useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Publish from "./components/publish";
 import Completed from "./components/completed";
 import { addNewJobTitle, getDesignation } from "@/api/basic"
-import { addNewDetailJob, editJobDescription } from "@/api/job-posting";
+import { addNewDetailJob, editJobDescription, editDetailJob, getJobDetails } from "@/api/job-posting";
 import { useBasic } from "@/context/BasicContext";
-import { customToast } from "@/components/common/toastr";
+import { errorHandlers } from "@/utils/error-handler";
+import { error } from "console";
 
 /**
  * JobData type defines the structure of data related to a job posting.
@@ -30,6 +31,35 @@ type JobData = {
     salary: string;
     deadline: Date;
     description: string;
+};
+
+/**
+ * Skill type defines the structure of a skill object.
+ */
+type Skill = {
+    id: number;
+    name: string;
+};
+
+/**
+ * Designation type defines the structure of a designation object.
+ */
+type Designation = {
+    id: number;
+    name: string;
+};
+
+/**
+ * JobSkill type defines the structure of a skill object from job details API.
+ */
+type JobSkill = {
+    id: number;
+    name: string;
+    slug: string;
+    description: string;
+    type_id: number;
+    created_by: number | null;
+    created_at: string;
 };
 
 /**
@@ -61,6 +91,7 @@ type JobDesciptionError = {
  */
 export default function CreateJob(): JSX.Element {
     const router = useRouter();
+
     const [currentStep, setCurrentStep] = useState<number>(1);
     const [jobData, setJobData] = useState<JobData>({
         title: '',
@@ -79,6 +110,50 @@ export default function CreateJob(): JSX.Element {
     const [descriptionError, setDescriptionError] = useState<JobDesciptionError>({});
     const [triggerValidation, setTriggerValidation] = useState<boolean>(false);
     const { skills, designation, setDesignation } = useBasic();
+    const searchParams = useSearchParams();
+
+    /**
+     * Load job details when editing an existing job
+     */
+    useEffect(() => {
+        const loadJobDetails = async () => {
+            const jobId = searchParams.get('id');
+            if (jobId && currentStep === 1) {
+                try {
+                    const response = await getJobDetails(jobId);
+                    if (response.status === true) {
+                        const jobData = response.data;
+                        console.log(jobData);
+                        // Format salary for display and clean it
+                        const cleanSalaryFrom = jobData.salary_from?.toString().replace(/[^$,\-~.\d]/g, '') || '';
+                        const cleanSalaryTo = jobData.salary_to?.toString().replace(/[^$,\-~.\d]/g, '') || '';
+                        const salary = `$${cleanSalaryFrom} - $${cleanSalaryTo}`;
+
+                        // Extract skill names from skills array
+                        const skillNames = jobData.skills.map((skill: JobSkill) => skill.name);
+
+                        setJobData({
+                            title: jobData.title || '',
+                            department_id: jobData.department_id?.toString() || '',
+                            employment_type_id: jobData.employment_type_id?.toString() || '',
+                            no_of_job_opening: jobData.no_of_job_opening?.toString() || '',
+                            skill_ids: skillNames,
+                            location_type_id: jobData.location_type_id || 1,
+                            state: jobData.state || '',
+                            country_id: jobData.country_id?.toString() || '',
+                            salary: salary,
+                            deadline: new Date(jobData.deadline),
+                            description: jobData.description || ''
+                        });
+                    }
+                } catch (error) {
+                    errorHandlers.jobPosting(error);
+                }
+            }
+        };
+
+        loadJobDetails();
+    }, [searchParams, currentStep, setJobData]);
 
     /**
      * Validates the job details step.
@@ -128,11 +203,12 @@ export default function CreateJob(): JSX.Element {
             setTriggerValidation(true);
             if (Object.keys(validationErrors).length > 0) return;
             console.log(skills);
-            console.log(skills.findIndex(skill => skill.name === 'PHP'));
+            console.log((skills as Skill[]).findIndex(skill => skill.name === 'PHP'));
 
 
             // Parse salary with validation for different delimiters
-            const salaryParts = jobData.salary.split(/[-~]/);
+            const cleanSalary = jobData.salary.replace(/[^$,\-~.\d]/g, '');
+            const salaryParts = cleanSalary.split(/[-~]/);
             let salary_from, salary_to;
 
             if (salaryParts.length === 1) {
@@ -145,7 +221,7 @@ export default function CreateJob(): JSX.Element {
                 salary_to = salaryParts[1].split(' ')[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
             } else {
                 // Invalid format - use fallback
-                salary_from = jobData.salary.slice(1).replace(/[, ]/g, '');
+                salary_from = cleanSalary.slice(1).replace(/[, ]/g, '');
                 salary_to = salary_from;
             }
 
@@ -154,13 +230,13 @@ export default function CreateJob(): JSX.Element {
                 salary_from,
                 salary_to,
                 skill_ids: jobData.skill_ids.map(skillName =>
-                    skills.findIndex(skill => skill.name === skillName) + 1
+                    (skills as Skill[]).findIndex(skill => skill.name === skillName) + 1
                 ),
             }
 
             // Check if job title exists in designation
             console.log(designation);
-            if (!designation.some(designation => designation.name === jobData?.title)) {
+            if (!(designation as Designation[]).some(designation => designation.name === jobData?.title)) {
                 // Add new job title to master data
                 try {
                     await addNewJobTitle(jobData.title);
@@ -168,45 +244,39 @@ export default function CreateJob(): JSX.Element {
                     // Refresh designation data after successful addition
                     const designationResponse = await getDesignation();
                     setDesignation(designationResponse.data.data);
-                } catch (error: unknown) {
-                    let errorMessage = "Failed to add job title";
-
-                    // Check if error has response data with error messages
-                    if (error && typeof error === 'object' && 'response' in error) {
-                        const errorResponse = (error as { response?: { data?: unknown } }).response?.data;
-
-                        if (errorResponse && typeof errorResponse === 'object' && 'errors' in errorResponse) {
-                            const errors = (errorResponse as { errors: Record<string, unknown[]> }).errors;
-                            const errorMessages = Object.values(errors)
-                                .flat()
-                                .filter((msg: unknown) => typeof msg === 'string')
-                                .join(", ");
-
-                            if (errorMessages) {
-                                errorMessage = errorMessages;
-                            }
-                        } else if (errorResponse && typeof errorResponse === 'object' && 'message' in errorResponse) {
-                            errorMessage = (errorResponse as { message: string }).message;
-                        }
-                    } else if (error instanceof Error) {
-                        errorMessage = error.message;
-                    }
-
-                    customToast("Job Title Error", errorMessage, "error");
+                } catch (error) {
+                    errorHandlers.jobTitle(error);
                     return;
                 }
             }
 
-            const response = await addNewDetailJob(payload);
-            console.log(response);
+            try {
+                const jobId = searchParams.get('id');
+                let response;
 
-            if (response.status === true) {
-                const job_id = response.data.id;
-                router.push({
-                    pathname: '/recruitment/job-postings/create-job',
-                    query: { id: job_id },
-                });
-                setCurrentStep(currentStep + 1);
+                if (jobId) {
+                    // Editing existing job
+                    response = await editDetailJob({ ...payload, id: jobId });
+                } else {
+                    // Creating new job
+                    response = await addNewDetailJob(payload);
+                }
+
+                console.log(response);
+
+                if (response.status === true) {
+                    try {
+                        const job_id = jobId || response.data.id;
+                        router.push(`/recruitment/job-postings/create-job?id=${job_id}`);
+                        setCurrentStep(currentStep + 1);
+                    } catch (error) {
+                        errorHandlers.jobPosting(error);
+                        return;
+                    }
+                }
+            } catch (error) {
+                errorHandlers.jobPosting(error);
+                return;
             }
         }
 
@@ -215,17 +285,32 @@ export default function CreateJob(): JSX.Element {
             setDescriptionError(validationErrors);
             setTriggerValidation(true);
             if (Object.keys(validationErrors).length > 0) return;
-            const payload = {
-                description: jobData.description.replace(/<[^>]+>/g, '').trim(),
-                id: router.query.id,
-            }
+            try {
+                const payload = {
+                    description: jobData.description,
+                    id: searchParams.get('id'),
+                }
 
-            const response = await editJobDescription(payload);
-            console.log(response);
+                const response = await editJobDescription(payload);
+                console.log(response);
 
-            if (response.status === true) {
-                setCurrentStep(currentStep + 1);
+                if (response.status === true) {
+                    setCurrentStep(currentStep + 1);
+                }
+            } catch (error) {
+                errorHandlers.jobDescription(error);
+                return;
             }
+        }
+
+        if (currentStep === 3) {
+            setCurrentStep(currentStep + 1);
+        }
+        if (currentStep === 4) {
+            setCurrentStep(currentStep + 1);
+        }
+        if (currentStep === 5) {
+            setCurrentStep(currentStep + 1);
         }
 
     };

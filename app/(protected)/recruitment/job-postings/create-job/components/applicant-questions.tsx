@@ -124,7 +124,7 @@ export default function ApplicantQuestions(): JSX.Element {
         ));
     };
 
-    /** Updates a question�s properties */
+    /** Updates a question's properties */
     const updateQuestion = (
         sectionId: string,
         questionId: string,

@@ -73,7 +73,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
 
     // Helper function to get country name from country ID
     const getCountryNameById = (countryId: string): string => {
-        const foundCountry = (country as any[] || []).find((c: any) => c.id === countryId);
+        const foundCountry = (country as any[] || []).find((c: any) => c.id.toString() === countryId);
         return foundCountry ? foundCountry.name : '';
     };
 
@@ -87,11 +87,12 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
     // Update selected country name and fetch states when country changes
     useEffect(() => {
         if (jobData.country_id) {
-            const countryName = getCountryNameById(jobData.country_id);
+            const countryName = getCountryNameById(jobData?.country_id?.toString() || '');
+            console.log(countryName);
             setSelectedCountryName(countryName);
 
             // Reset state selection when country changes
-            setJobData({ ...jobData, state: '' });
+            // setJobData({ ...jobData, state: '' });
 
             // Fetch states for the selected country
             if (countryName) {
@@ -107,6 +108,18 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
 
                         if (data?.data?.states) {
                             setCountryStates(data.data.states);
+
+                            // Check if current jobData.state exists in the fetched states
+                            if (jobData.state) {
+                                const stateExists = data.data.states.some((state: any) =>
+                                    state.name === jobData.state || state.state_code === jobData.state
+                                );
+
+                                if (!stateExists) {
+                                    // If state doesn't exist in the list, clear it
+                                    setJobData({ ...jobData, state: '' });
+                                }
+                            }
                         }
                     })
                     .catch(error => {
@@ -155,8 +168,9 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">Department *</p>
                     <Select
+                        key={`department-${jobData?.department_id}`}
                         defaultValue="sales"
-                        value={jobData?.department_id}
+                        value={jobData?.department_id?.toString() || ""}
                         onValueChange={(e) => setJobData({ ...jobData, department_id: e })}
                     >
                         <SelectTrigger
@@ -168,7 +182,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                         </SelectTrigger>
                         <SelectContent>
                             {(department || [])?.map((department: any) => (
-                                <SelectItem key={department.id} value={department.id}>{department.name}</SelectItem>
+                                <SelectItem key={department.id} value={department.id.toString()}>{department.name}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -176,13 +190,13 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                 </div>
                 <div className="flex flex-col gap-[12px]">
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">Employment Type*</p>
-                    <Select defaultValue="full-time" value={jobData?.employment_type_id} onValueChange={(e) => setJobData({ ...jobData, employment_type_id: e })}>
+                    <Select key={`employment-${jobData?.employment_type_id}`} defaultValue="full-time" value={jobData?.employment_type_id?.toString() || ""} onValueChange={(e) => setJobData({ ...jobData, employment_type_id: e })}>
                         <SelectTrigger className="h-[48px]">
                             <SelectValue placeholder="Select a department" />
                         </SelectTrigger>
                         <SelectContent>
                             {(employmentType || [])?.map((employmentType: any) => (
-                                <SelectItem key={employmentType.id} value={employmentType.id}>{employmentType.name}</SelectItem>
+                                <SelectItem key={employmentType.id} value={employmentType.id.toString()}>{employmentType.name}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
@@ -238,13 +252,13 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                         </RadioGroup>
                         {triggerValidation && errors.location_type_id && <span className="text-red-500 text-xs ">{errors.location_type_id}</span>}
                         {(locationType === 1 || locationType === 2) && <div className="flex flex-col gap-[10px] mt-[10px]">
-                            <Select value={jobData.country_id || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })}>
+                            <Select value={jobData.country_id?.toString() || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder="Select Country" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {(country || [])?.map((country: any) => (
-                                        <SelectItem key={country.id} value={country.id}>{country.name}</SelectItem>
+                                        <SelectItem key={country.id} value={country.id.toString()}>{country.name}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
@@ -258,7 +272,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                                         <SelectItem value=" " disabled>Loading states...</SelectItem>
                                     ) : countryStates.length > 0 ? (
                                         countryStates.map((state: any, index: number) => (
-                                            <SelectItem key={index} value={state.state_code}>{state.name}</SelectItem>
+                                            <SelectItem key={index} value={state.name}>{state.name}</SelectItem> // state_code: GA, NA, IL
                                         ))
                                     ) : (
                                         <SelectItem value=" " disabled>No states available</SelectItem>
@@ -268,13 +282,13 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
                         </div>}
                         {locationType === 3 && <div className="flex flex-col gap-[12px] mt-[10px]">
-                            <Select value={jobData.country_id || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })}>
+                            <Select value={jobData.country_id?.toString() || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })}>
                                 <SelectTrigger className="h-[48px]">
                                     <SelectValue placeholder="Select Country" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {(country || [])?.map((country: any) => (
-                                        <SelectItem key={country.id} value={country.id}>{country.name}</SelectItem>
+                                        <SelectItem key={country.id} value={country.id.toString()}>{country.name}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
@@ -326,6 +340,6 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                     </Popover>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

@@ -11,6 +11,18 @@ export const getJobPostings = async (data: any) => {
 }
 
 export const editJobDescription = async (data: any) => {
-    const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/edit-description`, data);
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/edit-description`, data);
     return response.data;
 }
+
+export const editDetailJob = async (data: any) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/edit`, data);
+    return response.data;
+}
+
+export const getJobDetails = async (id: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/single/${id}`);
+    return response.data;
+}
+
+
