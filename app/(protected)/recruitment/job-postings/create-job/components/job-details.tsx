@@ -34,6 +34,7 @@ import moment from "moment";
 import TagInput from "@/components/ui/tag-input";
 import SuggestionInput from "@/components/ui/suggestion-input";
 import { useBasic } from "@/context/BasicContext";
+import { errorHandlers } from "@/utils/error-handler";
 
 interface JobDetailsProps {
     jobData: any;
@@ -123,7 +124,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                         }
                     })
                     .catch(error => {
-                        console.error('Error fetching states:', error);
+                        errorHandlers.custom(error, 'Error fetching states');
                         setCountryStates([]);
                     })
                     .finally(() => {

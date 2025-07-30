@@ -6,7 +6,7 @@
  * Users can dynamically add/remove/edit questions and their options. Suitable for form builders.
  */
 
-import React, { JSX, useState } from 'react';
+import React, { JSX, useState, useEffect } from 'react';
 import {
     GripVertical,
     Plus,
@@ -31,10 +31,12 @@ import { Switch } from '@/components/ui/switch';
 import WorkExperience from './work-experience';
 import Resume from './resume';
 import Education from './education';
+import { getJobDetails } from '@/api/job-posting';
+import { errorHandlers } from '@/utils/error-handler';
 export interface Question {
     id: string;
     title: string;
-    type: 'short-answer' | 'paragraph' | 'multiple-choice' | 'checkbox' | 'file-upload';
+    type: 'short-answer' | 'paragraph' | 'dropdown' | 'checkbox' | 'file-upload';
     required: boolean;
     options?: string[];
 }
@@ -45,59 +47,90 @@ interface Section {
     questions: Question[];
 }
 
+interface ApplicantQuestionsProps {
+    jobId?: string;
+}
+
 /**
  * Main functional component that manages question sections and renders dynamic UI
  */
-export default function ApplicantQuestions(): JSX.Element {
+export default function ApplicantQuestions({ jobId }: ApplicantQuestionsProps): JSX.Element {
     const [activeSection, setActiveSection] = useState<string | null>('1');
     const [sections, setSections] = useState<Section[]>([
         {
             id: '1',
-            title: 'Applicant Question 1',
-            questions: [
-                {
-                    id: '2',
-                    title: 'Short Answer Question',
-                    type: 'short-answer',
-                    required: true,
-                },
-                {
-                    id: '3',
-                    title: 'Question',
-                    type: 'file-upload',
-                    required: false,
-                },
-                {
-                    id: '4',
-                    title: 'Question',
-                    type: 'paragraph',
-                    required: false,
-                },
-                {
-                    id: '5',
-                    title: 'Question',
-                    type: 'multiple-choice',
-                    required: true,
-                    options: ['Yes', 'Option 2'],
-                },
-                {
-                    id: '6',
-                    title: 'Question',
-                    type: 'checkbox',
-                    required: true,
-                    options: ['Yes', 'Option 2'],
-                },
-            ],
+            title: 'Applicant Questions',
+            questions: [],
         },
     ]);
 
     const questionTypes = [
         { value: 'short-answer', label: 'Short answer' },
         { value: 'paragraph', label: 'Paragraph' },
-        { value: 'multiple-choice', label: 'Multiple choice' },
+        { value: 'dropdown', label: 'Multiple choice' },
         { value: 'checkbox', label: 'Checkbox' },
         { value: 'file-upload', label: 'File Upload' },
     ];
+
+    // Map API answer_type to component type
+    const mapAnswerTypeToComponentType = (answerType: string): Question['type'] => {
+        switch (answerType) {
+            case 'short':
+                return 'short-answer';
+            case 'long_detail':
+                return 'paragraph';
+            case 'dropdown':
+                return 'dropdown';
+            case 'checkbox':
+                return 'checkbox';
+            case 'file_upload':
+                return 'file-upload';
+            default:
+                return 'short-answer';
+        }
+    };
+
+    // Load existing questions when jobId is provided
+    useEffect(() => {
+        const loadExistingQuestions = async () => {
+            if (!jobId) return;
+
+            try {
+                const response = await getJobDetails(jobId);
+                if (response.status === true && response.data.questions) {
+                    const apiQuestions = response.data.questions;
+
+                    // Transform API questions to component format
+                    const transformedQuestions: Question[] = apiQuestions.map((apiQuestion: {
+                        id: number;
+                        question_name: string;
+                        answer_type: string;
+                        is_required: boolean;
+                        options?: string[] | null;
+                    }) => ({
+                        id: apiQuestion.id.toString(),
+                        title: apiQuestion.question_name,
+                        type: mapAnswerTypeToComponentType(apiQuestion.answer_type),
+                        required: apiQuestion.is_required,
+                        options: apiQuestion.options || undefined,
+                    }));
+
+                    // Update sections with loaded questions
+                    setSections([
+                        {
+                            id: '1',
+                            title: 'Applicant Questions',
+                            questions: transformedQuestions,
+                        },
+                    ]);
+                }
+            } catch (error) {
+                errorHandlers.custom(error, 'Error loading existing questions');
+            }
+        };
+
+        loadExistingQuestions();
+    }, [jobId]);
 
     /** Adds a new question section */
     const addSection = (): void => {
@@ -124,7 +157,7 @@ export default function ApplicantQuestions(): JSX.Element {
         ));
     };
 
-    /** Updates a question's properties */
+    /** Updates a question�s properties */
     const updateQuestion = (
         sectionId: string,
         questionId: string,
@@ -212,10 +245,7 @@ export default function ApplicantQuestions(): JSX.Element {
         }
     };
 
-    /** Returns human-readable label from question type */
-    const getTypeLabel = (type: string): string => {
-        return questionTypes.find(t => t.value === type)?.label || 'Short answer';
-    };
+
     return (
         <div
             id="applicant-question-builder"
@@ -293,7 +323,7 @@ export default function ApplicantQuestions(): JSX.Element {
                                                             value={question.type}
                                                             onValueChange={(e) => updateQuestion(section.id, question.id, {
                                                                 type: e as Question['type'],
-                                                                options: ['multiple-choice', 'checkbox'].includes(e) ? ['Option 1'] : undefined
+                                                                options: ['dropdown', 'checkbox'].includes(e) ? ['Option 1'] : undefined
                                                             })}
                                                         >
                                                             <SelectTrigger className="h-[48px] lg:w-[200px] w-full">
@@ -310,12 +340,12 @@ export default function ApplicantQuestions(): JSX.Element {
                                                     </div>
                                                 </div>
                                                 <div className='bg-white px-[20px] py-[16px]'>
-                                                    {/* Question Options for Multiple Choice/Checkbox */}
-                                                    {(question.type === 'multiple-choice' || question.type === 'checkbox') && (
+                                                    {/* Question Options for Dropdown/Checkbox */}
+                                                    {(question.type === 'dropdown' || question.type === 'checkbox') && (
                                                         <div className="sm:ml-9 ml-0 space-y-3 mb-4">
                                                             {question.options?.map((option, index) => (
                                                                 <div key={index} className="flex w-full items-center justify-between gap-3">
-                                                                    {question.type === 'multiple-choice' ? (
+                                                                    {question.type === 'dropdown' ? (
                                                                         <div className="w-4 h-4 border-2 border-gray-300 rounded-full flex-shrink-0"></div>
                                                                     ) : (
                                                                         <div className="w-4 h-4 border-2 border-gray-300 rounded flex-shrink-0"></div>
@@ -350,7 +380,11 @@ export default function ApplicantQuestions(): JSX.Element {
                                                     <div className="flex items-center justify-between border-t border-[#d9d9d9] pt-[14px]">
                                                         <div className="flex items-center gap-3">
                                                             <label className="flex items-center gap-2 text-[12px]/[16px] text-[#4b4b4b]">
-                                                                <Switch shape="square" />
+                                                                <Switch
+                                                                    checked={question.required}
+                                                                    onCheckedChange={(checked) => updateQuestion(section.id, question.id, { required: checked })}
+                                                                    shape="square"
+                                                                />
                                                                 Required
                                                             </label>
                                                         </div>

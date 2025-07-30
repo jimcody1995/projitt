@@ -14,7 +14,6 @@ import { addNewJobTitle, getDesignation } from "@/api/basic"
 import { addNewDetailJob, editJobDescription, editDetailJob, getJobDetails } from "@/api/job-posting";
 import { useBasic } from "@/context/BasicContext";
 import { errorHandlers } from "@/utils/error-handler";
-import { error } from "console";
 
 /**
  * JobData type defines the structure of data related to a job posting.
@@ -91,7 +90,6 @@ type JobDesciptionError = {
  */
 export default function CreateJob(): JSX.Element {
     const router = useRouter();
-
     const [currentStep, setCurrentStep] = useState<number>(1);
     const [jobData, setJobData] = useState<JobData>({
         title: '',
@@ -395,7 +393,7 @@ export default function CreateJob(): JSX.Element {
                                     triggerValidation={triggerValidation}
                                 />
                             )}
-                            {currentStep === 3 && <ApplicantQuestions />}
+                            {currentStep === 3 && <ApplicantQuestions jobId={searchParams.get('id') || undefined} />}
                             {currentStep === 4 && <HiringPipeline />}
                             {currentStep === 5 && <Publish />}
                         </div>
