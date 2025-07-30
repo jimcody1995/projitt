@@ -37,7 +37,7 @@ export default function Page(): JSX.Element {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { setSession, session } = useSession();
+  const { setSession } = useSession();
 
   // Initialize react-hook-form with validation schema and default values
   const form = useForm<SigninSchemaType>({

@@ -127,9 +127,6 @@ export default function CreateJob(): JSX.Element {
             setErrors(validationErrors);
             setTriggerValidation(true);
             if (Object.keys(validationErrors).length > 0) return;
-            console.log(skills);
-            console.log(skills.findIndex(skill => skill.name === 'PHP'));
-
 
             // Parse salary with validation for different delimiters
             const salaryParts = jobData.salary.split(/[-~]/);
@@ -159,7 +156,6 @@ export default function CreateJob(): JSX.Element {
             }
 
             // Check if job title exists in designation
-            console.log(designation);
             if (!designation.some(designation => designation.name === jobData?.title)) {
                 // Add new job title to master data
                 try {
@@ -202,10 +198,7 @@ export default function CreateJob(): JSX.Element {
 
             if (response.status === true) {
                 const job_id = response.data.id;
-                router.push({
-                    pathname: '/recruitment/job-postings/create-job',
-                    query: { id: job_id },
-                });
+                router.push(`/recruitment/job-postings/create-job/${job_id}`);
                 setCurrentStep(currentStep + 1);
             }
         }
