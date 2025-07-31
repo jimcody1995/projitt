@@ -25,4 +25,67 @@ export const getJobDetails = async (id: string) => {
     return response.data;
 }
 
+// Question management APIs
+export const addQuestionItem = async (data: {
+    question_name: string;
+    answer_type: string;
+    options?: string[] | null;
+    is_required: boolean;
+    tags: string[];
+}): Promise<{
+    status: boolean;
+    message: string;
+    data: {
+        id: number;
+        question_name: string;
+        answer_type: string;
+        options: string[] | null;
+        is_required: boolean;
+        correct_answer: string | null;
+        tags: string[];
+        created_at: string;
+        updated_at: string;
+    };
+}> => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/question/add`, data);
+    return response.data;
+}
+
+export const editQuestionItem = async (data: {
+    id: number;
+    question_name: string;
+    answer_type: string;
+    options?: string[] | null;
+    is_required: boolean;
+    tags: string[];
+}): Promise<{
+    status: boolean;
+    message: string;
+    data: {
+        id: number;
+        question_name: string;
+        answer_type: string;
+        options: string[] | null;
+        is_required: boolean;
+        correct_answer: string | null;
+        tags: string[];
+        created_at: string;
+        updated_at: string;
+    };
+}> => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/question/edit`, data);
+    return response.data;
+}
+
+export const editJobQuestions = async (data: {
+    id: number;
+    question_ids: number[];
+}): Promise<{
+    status: boolean;
+    message: string;
+    data: unknown;
+}> => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/edit-questions`, data);
+    return response.data;
+}
 
