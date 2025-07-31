@@ -572,6 +572,9 @@ export default function JobPostings() {
                                     <SelectedDialog
                                         selectedRows={selectedRows}
                                         totalCount={filteredData?.length}
+                                        allData={filteredData}
+                                        setSelectedRows={setSelectedRows}
+                                        setRowSelection={setRowSelection}
                                         data-testid="selected-dialog"
                                     />
                                 }
@@ -608,10 +611,10 @@ export default function JobPostings() {
                                                     className='text-[12px]/[22px] px-[8px] text-[#4B4B4B] bg-[#f9f9f9] rounded-[29px] flex items-center gap-[4px]'
                                                     data-testid={`department-badge-${item.id}`}
                                                 >
-                                                    {item.department === 'Data' && <PieChart className='text-[#00D47D] size-[16px]' />}
-                                                    {item.department === 'Design' && <PenTool className='text-[#FFB547] size-[16px] rotate-[270deg]' />}
-                                                    {item.department !== 'Data' && item.department !== 'Design' && <BriefcaseBusiness className='text-[#00D47D] size-[16px]' />}
-                                                    {item.department}
+                                                    {item.department.name === 'Data' && <PieChart className='text-[#00D47D] size-[16px]' />}
+                                                    {item.department.name === 'Design' && <PenTool className='text-[#FFB547] size-[16px] rotate-[270deg]' />}
+                                                    {item.department.name !== 'Data' && item.department.name !== 'Design' && <BriefcaseBusiness className='text-[#00D47D] size-[16px]' />}
+                                                    {item.department.name}
                                                 </span>
                                                 <div className='flex gap-[14px]'>
                                                     <Button
@@ -643,7 +646,7 @@ export default function JobPostings() {
                                                     data-testid={`job-location-${item.id}`}
                                                 >
                                                     <MapPin className='size-[16px]' />
-                                                    {item.location}
+                                                    {item.location_type.name}
                                                 </span>
                                             </div>
                                             {item.status !== 'Draft' ? (

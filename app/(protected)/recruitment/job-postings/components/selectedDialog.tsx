@@ -13,9 +13,15 @@ import { JSX } from "react";
 export const SelectedDialog = ({
     selectedRows,
     totalCount,
+    setSelectedRows,
+    allData,
+    setRowSelection,
 }: {
     selectedRows: string[];
     totalCount: number;
+    setSelectedRows: (rows: string[]) => void;
+    allData: any[];
+    setRowSelection: (selection: any) => void;
 }): JSX.Element => {
     return (
         <div
@@ -37,10 +43,21 @@ export const SelectedDialog = ({
                         {selectedRows.length} of <span className="text-[#fff]" id="total-count" data-testid="total-count">{totalCount}</span> selected
                     </div>
                     <button
-                        className="text-[15px]/[20px] pl-[16px] text-white"
+                        className="text-[15px]/[20px] pl-[16px] text-white cursor-pointer"
                         id="select-all-button"
                         data-testid="select-all-button"
                         type="button"
+                        onClick={() => {
+                            // Create a row selection object where all rows are selected
+                            const allSelected = allData.reduce((acc, item) => {
+                                acc[item.id] = true;
+                                return acc;
+                            }, {} as Record<string, boolean>);
+
+                            // Update both the table's row selection and the selected rows
+                            setRowSelection(allSelected);
+                            setSelectedRows(allData.map((item: any) => item.id));
+                        }}
                     >
                         Select all
                     </button>
