@@ -404,10 +404,11 @@ export default function JobPostings() {
                     align="end"
                     data-testid={`actions-menu-${row.original.id}`}
                 >
-                    {row.original.status === "Draft" &&
+                    {row.original.status === "draft" &&
                         <div
                             className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                             data-testid={`edit-action-${row.original.id}`}
+                            onClick={() => router.push(`/recruitment/job-postings/create-job?id=${row.original.id}`)}
                         >
                             Edit
                         </div>
@@ -424,7 +425,7 @@ export default function JobPostings() {
                     >
                         Duplicate
                     </div>
-                    {row.original.status === "Open" &&
+                    {row.original.status === "open" &&
                         <CheckDialog
                             action="close"
                             trigger={
@@ -437,7 +438,7 @@ export default function JobPostings() {
                             }
                         />
                     }
-                    {row.original.status === "Open" &&
+                    {row.original.status === "open" &&
                         <CheckDialog
                             action="unpublish"
                             trigger={
@@ -597,7 +598,7 @@ export default function JobPostings() {
                             }
                             {filteredData.length > 0 &&
                                 <div
-                                    className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[20px] h-[calc(100vh-300px)] overflow-y-auto'
+                                    className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-start gap-[20px] h-[calc(100vh-300px)] overflow-y-auto'
                                     data-testid="grid-view-container"
                                 >
                                     {filteredData.map((item) => (
