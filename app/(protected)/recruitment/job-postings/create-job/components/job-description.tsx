@@ -9,7 +9,7 @@
 import 'react-quill-new/dist/quill.snow.css';
 import ReactQuill from 'react-quill-new';
 import { useState, useRef, JSX } from 'react';
-import { CheckLine, File, Link, Redo, Undo } from 'lucide-react';
+import { CheckLine, Cloud, File, HardDrive, Link, Redo, Undo } from 'lucide-react';
 import {
     Popover,
     PopoverContent,
@@ -286,16 +286,35 @@ export default function JobDescription({
                     className={`flex justify-between items-center ${files.length > 0 ? 'mt-[20px]' : 'mt-[70px]'
                         }`}
                 >
-                    <button
-                        type="button"
-                        onClick={() => document.getElementById('fileInput')?.click()}
-                        className="flex items-center gap-[4px] text-[#4b4b4b]"
-                        id="attach-files-button"
-                        data-testid="attach-files-button"
-                    >
-                        <Link className="size-[16px]" />
-                        <span className="text-[14px]/[20px]">Attach Files</span>
-                    </button>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <button
+                                type="button"
+                                className="flex items-center gap-[4px] text-[#4b4b4b]"
+                                id="attach-files-button"
+                                data-testid="attach-files-button"
+                            >
+                                <Link className="size-[16px]" />
+                                <span className="text-[14px]/[20px]">Attach Files</span>
+                            </button>
+                        </DialogTrigger>
+                        <DialogTitle />
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Attach Files</DialogTitle>
+                            </DialogHeader>
+                            <div className='flex gap-[10px] w-full mt-[10px]'>
+                                <button className='flex flex-col w-full items-center gap-[10px] border-[#717171] border-dashed border rounded-[6.52px] py-[10px] hover:border-[#0d978b] hover:bg-[#dcfffc] cursor-pointer' onClick={() => { document.getElementById('fileInput')?.click() }}>
+                                    <HardDrive className="size-[25px] text-[#0d978b]" />
+                                    <span className="text-[14px]/[20px] text-[#4b4b4b]">From Local</span>
+                                </button>
+                                <button className='flex flex-col w-full items-center gap-[10px] border-[#717171] border-dashed border rounded-[6.52px] py-[10px] hover:border-[#0d978b] hover:bg-[#dcfffc] cursor-pointer' onClick={() => { }}>
+                                    <Cloud className="size-[25px] text-[#0d978b]" />
+                                    <span className="text-[14px]/[20px] text-[#4b4b4b]">From Server</span>
+                                </button>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
 
                     <div className="gap-[4px] flex items-center">
                         <input
@@ -310,6 +329,6 @@ export default function JobDescription({
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

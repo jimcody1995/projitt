@@ -149,7 +149,7 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
             </h1>
 
             {/* Job Details Section */}
-            <div className="md:w-[650px] w-full flex flex-col gap-[36px] mt-[50px]">
+            <div className="xl:w-[650px] w-full flex flex-col gap-[36px] mt-[50px]">
                 <div
                     className="border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] p-[20px]"
                     id="job-details-section"
@@ -166,7 +166,7 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
                             <Edit className="size-[16px]" />
                         </button>
                     </div>
-                    <div className="grid grid-cols-3 mt-[12px] gap-[42px]" id="job-details-fields" data-testid="job-details-fields">
+                    <div className="grid md:grid-cols-3 sm:grid-cols-2 mt-[12px] gap-[42px]" id="job-details-fields" data-testid="job-details-fields">
                         <div className="flex flex-col" id="field-job-title" data-testid="field-job-title">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Job Title</p>
                             <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.title || "N/A"}</p>

@@ -62,6 +62,7 @@ export interface ApplicantQuestionsRef {
 const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsProps>(({ jobId, onSave }, ref) => {
     ApplicantQuestions.displayName = 'ApplicantQuestions';
     const [activeSection, setActiveSection] = useState<string | null>('1');
+    const [editSectionTitle, setEditSectionTitle] = useState<string>('');
     const [sections, setSections] = useState<Section[]>([
         {
             id: '1',
@@ -415,7 +416,23 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
                         {sections.map((section) => (
                             <div className={`py-[8.5px] px-[6px]  text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === section.id ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} key={section.id} onClick={() => setActiveSection(section.id)}>
                                 <CircleQuestionMark className='size-[20px] ' />
-                                <p className='whitespace-nowrap'>{section.title}</p>
+
+                                {editSectionTitle === section.id ? (
+                                    <input
+                                        type="text"
+                                        value={section.title}
+                                        onChange={(e) => {
+                                            const updatedSections = sections.map((s) =>
+                                                s.id === section.id ? { ...s, title: e.target.value } : s
+                                            );
+                                            setSections(updatedSections);
+                                        }}
+                                        onBlur={() => setEditSectionTitle('')}
+                                        className="ml-2 w-[100px]"
+                                    />
+                                ) : (
+                                    <p className='whitespace-nowrap' onDoubleClick={() => { setEditSectionTitle(section.id) }}>{section.title}</p>
+                                )}
                             </div>
                         ))}
 

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { JSX, useState } from "react";
+import { useBasic } from "@/context/BasicContext";
 
 /**
  * FilterTool component
@@ -17,21 +18,8 @@ import { JSX, useState } from "react";
  * Returns:
  *  JSX.Element - The rendered filter tool component.
  */
-export const FilterTool = (): JSX.Element => {
-    const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-    const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
-    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-    const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
-
-    const locations = [
-        "United States",
-        "Canada",
-        "United Kingdom",
-        "Australia",
-        "New Zealand",
-    ];
-    const departments = ["Sales", "Design", "Administrative", "Data"];
-    const types = ["Full-time", "Part-time", "Contract", "Internship"];
+export const FilterTool = ({ selectedLocations, selectedDepartments, selectedTypes, selectedStatuses, setSelectedLocations, setSelectedDepartments, setSelectedTypes, setSelectedStatuses }: { selectedLocations: number[], selectedDepartments: number[], selectedTypes: number[], selectedStatuses: string[], setSelectedLocations: (value: number[]) => void, setSelectedDepartments: (value: number[]) => void, setSelectedTypes: (value: number[]) => void, setSelectedStatuses: (value: string[]) => void }): JSX.Element => {
+    const { department, employmentType, country } = useBasic();
     const statuses = ["Open", "Closed", "Draft"];
 
     /**
@@ -39,10 +27,8 @@ export const FilterTool = (): JSX.Element => {
      * @param checked - boolean whether the checkbox is checked
      * @param value - department name
      */
-    const handleDepartmentChange = (checked: boolean, value: string): void => {
-        setSelectedDepartments((prev = []) =>
-            checked ? [...prev, value] : prev.filter((v) => v !== value)
-        );
+    const handleDepartmentChange = (checked: boolean, value: number): void => {
+        setSelectedDepartments(checked ? [...selectedDepartments, value] : selectedDepartments.filter((v) => v !== value))
     };
 
     /**
@@ -50,10 +36,8 @@ export const FilterTool = (): JSX.Element => {
      * @param checked - boolean whether the checkbox is checked
      * @param value - location name
      */
-    const handleLocationChange = (checked: boolean, value: string): void => {
-        setSelectedLocations((prev = []) =>
-            checked ? [...prev, value] : prev.filter((v) => v !== value)
-        );
+    const handleLocationChange = (checked: boolean, value: number): void => {
+        setSelectedLocations(checked ? [...selectedLocations, value] : selectedLocations.filter((v) => v !== value))
     };
 
     /**
@@ -61,10 +45,8 @@ export const FilterTool = (): JSX.Element => {
      * @param checked - boolean whether the checkbox is checked
      * @param value - type name
      */
-    const handleTypeChange = (checked: boolean, value: string): void => {
-        setSelectedTypes((prev = []) =>
-            checked ? [...prev, value] : prev.filter((v) => v !== value)
-        );
+    const handleTypeChange = (checked: boolean, value: number): void => {
+        setSelectedTypes(checked ? [...selectedTypes, value] : selectedTypes.filter((v) => v !== value))
     };
 
     /**
@@ -73,9 +55,7 @@ export const FilterTool = (): JSX.Element => {
      * @param value - status name
      */
     const handleStatusChange = (checked: boolean, value: string): void => {
-        setSelectedStatuses((prev = []) =>
-            checked ? [...prev, value] : prev.filter((v) => v !== value)
-        );
+        setSelectedStatuses(checked ? [...selectedStatuses, value] : selectedStatuses.filter((v) => v !== value))
     };
 
     return (
@@ -107,7 +87,7 @@ export const FilterTool = (): JSX.Element => {
                     data-testid="filter-locations-content"
                 >
                     <div className="space-y-3">
-                        {locations.map((location, index) => (
+                        {country.map((location: any, index: number) => (
                             <div
                                 key={index}
                                 className="flex items-center gap-2.5"
@@ -116,9 +96,9 @@ export const FilterTool = (): JSX.Element => {
                             >
                                 <Checkbox
                                     id={`filter-location-checkbox-${index}`}
-                                    checked={selectedLocations.includes(location)}
+                                    checked={selectedLocations.includes(location.id)}
                                     onCheckedChange={(checked) =>
-                                        handleLocationChange(checked === true, location)
+                                        handleLocationChange(checked === true, location.id)
                                     }
                                     data-testid={`filter-location-checkbox-${index}`}
                                 />
@@ -126,7 +106,7 @@ export const FilterTool = (): JSX.Element => {
                                     htmlFor={`filter-location-checkbox-${index}`}
                                     className="grow flex items-center justify-between font-normal gap-1.5"
                                 >
-                                    {location}
+                                    {location.name}
                                 </Label>
                             </div>
                         ))}
@@ -161,7 +141,7 @@ export const FilterTool = (): JSX.Element => {
                     data-testid="filter-departments-content"
                 >
                     <div className="space-y-3">
-                        {departments.map((department, index) => (
+                        {department.map((department: any, index: number) => (
                             <div
                                 key={index}
                                 className="flex items-center gap-2.5"
@@ -170,9 +150,9 @@ export const FilterTool = (): JSX.Element => {
                             >
                                 <Checkbox
                                     id={`filter-department-checkbox-${index}`}
-                                    checked={selectedDepartments.includes(department)}
+                                    checked={selectedDepartments.includes(department.id)}
                                     onCheckedChange={(checked) =>
-                                        handleDepartmentChange(checked === true, department)
+                                        handleDepartmentChange(checked === true, department.id)
                                     }
                                     data-testid={`filter-department-checkbox-${index}`}
                                 />
@@ -180,7 +160,7 @@ export const FilterTool = (): JSX.Element => {
                                     htmlFor={`filter-department-checkbox-${index}`}
                                     className="grow flex items-center justify-between font-normal gap-1.5"
                                 >
-                                    {department}
+                                    {department.name}
                                 </Label>
                             </div>
                         ))}
@@ -215,7 +195,7 @@ export const FilterTool = (): JSX.Element => {
                     data-testid="filter-types-content"
                 >
                     <div className="space-y-3">
-                        {types.map((type, index) => (
+                        {employmentType.map((type: any, index: number) => (
                             <div
                                 key={index}
                                 className="flex items-center gap-2.5"
@@ -224,9 +204,9 @@ export const FilterTool = (): JSX.Element => {
                             >
                                 <Checkbox
                                     id={`filter-type-checkbox-${index}`}
-                                    checked={selectedTypes.includes(type)}
+                                    checked={selectedTypes.includes(type.id)}
                                     onCheckedChange={(checked) =>
-                                        handleTypeChange(checked === true, type)
+                                        handleTypeChange(checked === true, type.id)
                                     }
                                     data-testid={`filter-type-checkbox-${index}`}
                                 />
@@ -234,7 +214,7 @@ export const FilterTool = (): JSX.Element => {
                                     htmlFor={`filter-type-checkbox-${index}`}
                                     className="grow flex items-center justify-between font-normal gap-1.5"
                                 >
-                                    {type}
+                                    {type.name}
                                 </Label>
                             </div>
                         ))}

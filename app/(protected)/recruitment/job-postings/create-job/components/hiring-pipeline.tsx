@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { EditableSelect } from "@/components/ui/editable-select";
 import { ArrowLeft, GripVertical, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 
@@ -57,7 +58,7 @@ export default function HiringPipeline() {
                     <span className="text-[14px]/[16px] text-[#4b4b4b]">Set as Template</span>
                 </div>
             </div>
-            <div className='mt-[33px] border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] min-h-[700px] h-auto flex sm:flex-row flex-col items-stretch w-full'>
+            <div className='mt-[33px] border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] min-h-[700px] h-auto flex xl:flex-row flex-col items-stretch w-full'>
                 {state === 'main' && pipeline.length === 0 && (
                     <div className="flex w-full flex-col items-center justify-center gap-[16px]" data-test-id="empty-state-buttons">
                         <Button variant="outline" className="text-[#053834]" onClick={() => { setState('template') }} data-test-id="import-template-btn">Import Teamplate</Button>
@@ -87,7 +88,7 @@ export default function HiringPipeline() {
                 )}
                 {pipeline.length > 0 && (
                     <>
-                        <div className="flex-1 p-[22px] sm:order-2 order-1" data-test-id="pipeline-stages-list">
+                        <div className="flex-1 p-[22px] lg:order-2 order-1" data-test-id="pipeline-stages-list">
                             <button className="cursor-pointer text-[#787878] text-[14px]/[20px]" data-test-id="clear-pipeline-btn">Clear</button>
                             <div className="flex justify-center mt-[20px]">
                                 <div>
@@ -128,21 +129,34 @@ export default function HiringPipeline() {
                             </div>
                         </div>
                         {selectedStep !== null && (
-                            <div className="sm:w-[273px] w-full sm:order-2 order-1 bg-white border-l border-[#e9e9e9] py-[27px] px-[20px]" data-test-id="stage-details-panel">
+                            <div className="xl:w-[273px] w-full lg:order-2 order-1 bg-white border-l border-[#e9e9e9] py-[27px] px-[20px]" data-test-id="stage-details-panel">
                                 <p className="text-[14px]/[22px] text-black">Stage Details</p>
                                 <div className="mt-[26px]">
                                     <div>
                                         <p className="text-[12px]/[16px] text-[#1c1c1c]">Stage Name</p>
-                                        <Input
-                                            className="mt-[6px]"
+                                        <EditableSelect
                                             value={pipeline[selectedStep].title}
-                                            onChange={(e) => {
+                                            onValueChange={(value) => {
                                                 const newPipeline = [...pipeline];
-                                                newPipeline[selectedStep].title = e.target.value;
+                                                newPipeline[selectedStep].title = value;
                                                 setPipeLine(newPipeline);
                                             }}
-                                            data-test-id="stage-name-input"
+                                            options={[
+                                                { value: "Application Review", label: "Application Review" },
+                                                { value: "Phone Screening", label: "Phone Screening" },
+                                                { value: "Technical Interview", label: "Technical Interview" },
+                                                { value: "Final Interview", label: "Final Interview" },
+                                                { value: "Reference Check", label: "Reference Check" },
+                                                { value: "Offer", label: "Offer" },
+                                                { value: "Hired", label: "Hired" },
+                                            ]}
+                                            placeholder="Enter stage name"
+                                            searchPlaceholder="Search stage names..."
+                                            allowCustom={true}
+                                            customPlaceholder="Enter custom stage name..."
+                                            dataTestId="stage-name-editable-select"
                                         />
+
                                         <p className="text-[12px]/[16px] text-[#1c1c1c] mt-[18px]">Type</p>
                                         <Select
                                             value={pipeline[selectedStep].type}

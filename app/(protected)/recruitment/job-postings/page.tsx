@@ -52,37 +52,15 @@ import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownM
 import CheckDialog from './components/checkDialog';
 import { NoData } from './components/noData';
 import { useRouter } from 'next/navigation';
+import { getJobPostings } from '@/api/job-posting';
+import moment from 'moment';
 
 /**
  * Interface representing job posting data structure
  */
-interface IData {
-    id: string;
-    title: string;
-    department: string;
-    location: string;
-    applicants: number;
-    status: string;
-    due: string;
-}
-
 /**
  * Mock job data for the component
  */
-const jobData: IData[] = [
-    { id: '1', title: 'Senior Data Analyst', department: 'Data', location: 'United States', applicants: 25, status: 'Open', due: '5 days' },
-    { id: '2', title: 'UX Designer', department: 'Design', location: 'United States', applicants: 38, status: 'Closed', due: '5 days' },
-    { id: '3', title: 'Nursing Assistant', department: 'Operations', location: 'United States', applicants: 44, status: 'Draft', due: '5 days' },
-    { id: '4', title: 'Web Designer', department: 'HSEQ', location: 'United States', applicants: 41, status: 'Closed', due: '5 days' },
-    { id: '5', title: 'Account Executive', department: 'IT', location: 'United States', applicants: 39, status: 'Open', due: '5 days' },
-    { id: '6', title: 'Account Executive', department: 'Human Resources', location: 'United States', applicants: 42, status: 'Draft', due: '5 days' },
-    { id: '7', title: 'President of Sales', department: 'Manning', location: 'United States', applicants: 35, status: 'Open', due: '5 days' },
-    { id: '8', title: 'Project Manager', department: 'IT', location: 'United States', applicants: 38, status: 'Open', due: '5 days' },
-    { id: '9', title: 'Web Designer', department: 'Engineering', location: 'United States', applicants: 34, status: 'Open', due: '5 days' },
-    { id: '10', title: 'Dog Trainer', department: 'Maintenance', location: 'United States', applicants: 45, status: 'Open', due: '5 days' },
-    { id: '11', title: 'Column Item', department: 'Maintenance', location: 'Column Item', applicants: 16, status: 'Open', due: '5 days' },
-];
-
 /**
  * JobPostings Component
  * 
@@ -99,16 +77,20 @@ export default function JobPostings() {
     ]);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [view, setView] = useState<'list' | 'grid'>('list');
     const [showFliter, setShowFilter] = useState(false);
+    const [jobData, setJobData] = useState<any[]>([]);
+    const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
+    const [selectedDepartments, setSelectedDepartments] = useState<number[]>([]);
+    const [selectedTypes, setSelectedTypes] = useState<number[]>([]);
+    const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const router = useRouter();
     /**
      * Filters job data based on search query and selected statuses
      * @returns {IData[]} Filtered job data
      */
-    const filteredData = useMemo<IData[]>(() => {
+    const filteredData = useMemo<any[]>(() => {
         return jobData.filter((item) => {
             const matchesStatus =
                 !selectedStatuses?.length ||
@@ -117,16 +99,37 @@ export default function JobPostings() {
                     item.status.replace('bg-', '').slice(1),
                 );
 
-            const searchLower = searchQuery.toLowerCase();
+            const searchLower = (searchQuery || "").toLowerCase();
             const matchesSearch =
                 !searchQuery ||
                 item.title.toLowerCase().includes(searchLower) ||
-                item.department.toLowerCase().includes(searchLower) ||
-                item.location.toLowerCase().includes(searchLower);
+                (item.description || "").toLowerCase().includes(searchLower);
 
-            return matchesStatus && matchesSearch;
+            return matchesSearch && matchesStatus;
         });
-    }, [searchQuery, selectedStatuses]);
+    }, [searchQuery, selectedStatuses, jobData]);
+
+    const getData = async () => {
+        try {
+            const response = await getJobPostings({
+                country_ids: selectedLocations,
+                department_ids: selectedDepartments,
+                employment_type_ids: selectedTypes,
+                // status: selectedStatuses,
+                page: pagination.pageIndex,
+                per_page: pagination.pageSize,
+            });
+            console.log(response.data);
+
+            setJobData(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getData();
+    }, [selectedLocations, selectedDepartments, selectedTypes, selectedStatuses]);
 
     /**
      * Counts job postings by status
@@ -199,7 +202,7 @@ export default function JobPostings() {
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`department-${row.original.id}`}
                     >
-                        {row.original.department}
+                        {row.original.department.name}
                     </span>
                 ),
                 enableSorting: true,
@@ -223,7 +226,7 @@ export default function JobPostings() {
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`location-${row.original.id}`}
                     >
-                        {row.original.location}
+                        {row.original.location_type.name}
                     </span>
                 ),
                 enableSorting: true,
@@ -268,15 +271,15 @@ export default function JobPostings() {
                 ),
                 cell: ({ row }) => {
                     let badgeClass = "bg-muted text-foreground";
-                    if (row.original.status === "Open") badgeClass = "bg-[#d6eeec] text-[#0D978B]";
-                    else if (row.original.status === "Closed") badgeClass = "bg-[#0D978B] text-white";
-                    else if (row.original.status === "Draft") badgeClass = "bg-[#e9e9e9] text-[#353535]";
+                    if (row.original.status === "open") badgeClass = "bg-[#d6eeec] text-[#0D978B]";
+                    else if (row.original.status === "closed") badgeClass = "bg-[#0D978B] text-white";
+                    else if (row.original.status === "draft") badgeClass = "bg-[#e9e9e9] text-[#353535]";
                     return (
                         <span
                             className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}`}
                             data-testid={`status-badge-${row.original.id}`}
                         >
-                            {row.original.status}
+                            {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
                         </span>
                     );
                 },
@@ -301,7 +304,7 @@ export default function JobPostings() {
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`due-${row.original.id}`}
                     >
-                        {row.original.due}
+                        {new Date(row.original.deadline) > new Date() ? moment(row.original.deadline).fromNow() : 'Expired'}
                     </span>
                 ),
                 enableSorting: true,
@@ -329,10 +332,10 @@ export default function JobPostings() {
     }, [rowSelection]);
 
     const table = useReactTable({
-        columns: columns as ColumnDef<IData, any>[],
-        data: jobData,
+        columns: columns as ColumnDef<any, any>[],
+        data: filteredData,
         pageCount: Math.ceil((filteredData?.length || 0) / pagination.pageSize),
-        getRowId: (row: IData) => row.id,
+        getRowId: (row: any) => row.id,
         state: {
             pagination,
             sorting,
@@ -354,7 +357,7 @@ export default function JobPostings() {
      * @param {Row<IData>} props.row - Table row data
      * @returns {JSX.Element} Actions dropdown menu
      */
-    function ActionsCell({ row }: { row: Row<IData> }): JSX.Element {
+    function ActionsCell({ row }: { row: Row<any> }): JSX.Element {
         const { copyToClipboard } = useCopyToClipboard();
 
         /**
@@ -560,24 +563,28 @@ export default function JobPostings() {
 
                     <Toolbar view={view} setView={setView} />
                 </div>
-                {showFliter && <FilterTool />}
+                {showFliter && <FilterTool selectedLocations={selectedLocations} selectedDepartments={selectedDepartments} selectedTypes={selectedTypes} selectedStatuses={selectedStatuses} setSelectedLocations={setSelectedLocations} setSelectedDepartments={setSelectedDepartments} setSelectedTypes={setSelectedTypes} setSelectedStatuses={setSelectedStatuses} />}
                 <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     {view === 'list' &&
-                        <>
-                            {selectedRows.length > 0 &&
-                                <SelectedDialog
-                                    selectedRows={selectedRows}
-                                    totalCount={filteredData?.length}
-                                    data-testid="selected-dialog"
-                                />
-                            }
-                            <div
-                                className='w-full overflow-x-auto h-[calc(100vh-300px)]'
-                                data-testid="list-view-container"
-                            >
-                                <DataGridTable />
-                            </div>
-                            <DataGridPagination data-testid="pagination-controls" />
+                        <> {filteredData.length === 0 ?
+                            <NoData data-testid="no-data-message" /> : <>
+                                {selectedRows.length > 0 &&
+                                    <SelectedDialog
+                                        selectedRows={selectedRows}
+                                        totalCount={filteredData?.length}
+                                        data-testid="selected-dialog"
+                                    />
+                                }
+                                <div
+                                    className='w-full overflow-x-auto h-[calc(100vh-300px)]'
+                                    data-testid="list-view-container"
+                                >
+                                    <DataGridTable />
+                                </div>
+                                <DataGridPagination data-testid="pagination-controls" />
+                            </>
+                        }
+
                         </>
                     }
                     {view === 'grid' &&
