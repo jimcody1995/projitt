@@ -11,6 +11,60 @@ import Review from './components/review';
 
 export default function Apply() {
   const [currentStep, setCurrentStep] = React.useState(1);
+  const [stepData, setStepData] = React.useState({
+    contactInfo: null,
+    resume: null,
+    qualifications: null,
+    questions: null,
+  });
+
+  // Refs for each step component
+  const contactInfoRef = React.useRef<{ validate: () => boolean }>(null);
+  const resumeRef = React.useRef<{ validate: () => boolean }>(null);
+  const qualificationsRef = React.useRef<{ validate: () => boolean }>(null);
+  const questionsRef = React.useRef<{ validate: () => boolean }>(null);
+
+  // Handle validation for current step
+  const handleNextStep = () => {
+    let isValid = true;
+
+    // Validate current step based on step number
+    switch (currentStep) {
+      case 1:
+        if (contactInfoRef.current) {
+          isValid = contactInfoRef.current.validate();
+        }
+        break;
+      case 2:
+        if (resumeRef.current) {
+          isValid = resumeRef.current.validate();
+        }
+        break;
+      case 3:
+        if (qualificationsRef.current) {
+          isValid = qualificationsRef.current.validate();
+        }
+        break;
+      case 4:
+        if (questionsRef.current) {
+          isValid = questionsRef.current.validate();
+        }
+        break;
+      default:
+        isValid = true;
+    }
+
+    // Only proceed if validation passes
+    if (isValid) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  // Handle data changes from step components
+  const handleStepDataChange = (step: string, data: any) => {
+    setStepData(prev => ({ ...prev, [step]: data }));
+  };
+
   return (
     <div className="flex flex-col h-full">
       <div className="pb-[30px] flex justify-between pl-[84px] pr-[100px] border-b border-[#e9e9e9] sm:flex-row flex-col items-center gap-[10px]">
@@ -41,10 +95,15 @@ export default function Apply() {
               </p>
             </div>
             <div className="pt-[33px] px-[40px] pb-[19px]">
-              {currentStep === 1 && <ContactInfo />}
-              {currentStep === 2 && <Resume />}
-              {currentStep === 3 && <Qualifications />}
-              {currentStep === 4 && <Questions />}
+              {currentStep === 1 && (
+                <ContactInfo
+                  ref={contactInfoRef}
+                  onValidationChange={(isValid, data) => handleStepDataChange('contactInfo', data)}
+                />
+              )}
+              {currentStep === 2 && <Resume ref={resumeRef} />}
+              {currentStep === 3 && <Qualifications ref={qualificationsRef} />}
+              {currentStep === 4 && <Questions ref={questionsRef} />}
               {currentStep === 5 && <Review />}
             </div>
             <div className="px-[40px] pt-[28px] pb-[32px] border-t border-[#e9e9e9] flex gap-[16px] sm:flex-row flex-col">
@@ -58,7 +117,7 @@ export default function Apply() {
                 </Button>
               )}
               {currentStep !== 5 && (
-                <Button className="h-[48px] w-full sm:order-2 order-1" onClick={() => setCurrentStep(currentStep + 1)}>
+                <Button className="h-[48px] w-full sm:order-2 order-1" onClick={handleNextStep}>
                   Save & Continue{' '}
                 </Button>
               )}
@@ -106,7 +165,7 @@ export default function Apply() {
                 data-testid="reset-success-subtext1"
               >
                 Thanks for trusting us with your time and application. Our team is reviewing all
-                candidates carefully, and if you’re a strong fit, you’ll hear from us soon.
+                candidates carefully, and if you're a strong fit, you'll hear from us soon.
               </p>
               <div className="flex justify-center">
                 <Button
