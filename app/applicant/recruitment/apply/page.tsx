@@ -13,7 +13,7 @@ export default function Apply() {
   const [currentStep, setCurrentStep] = React.useState(1);
   return (
     <div className="flex flex-col h-full">
-      <div className="pb-[30px] flex justify-between pl-[84px] pr-[100px] border-b border-[#e9e9e9]">
+      <div className="pb-[30px] flex justify-between pl-[84px] pr-[100px] border-b border-[#e9e9e9] sm:flex-row flex-col items-center gap-[10px]">
         <img src="/images/zaidLLC.png" alt="logo" className="h-[32px]" />
         <button className="flex gap-[10px] text-[#0D978B] cursor-pointer text-[14px]/[20px]">
           <p>Go to Dashboard</p>
@@ -21,9 +21,9 @@ export default function Apply() {
         </button>
       </div>
       {currentStep !== 6 && (
-        <div className="w-[865px] flex bg-white mx-auto mt-[44px]">
-          <div className="w-[321px] border-r border-[#e9e9e9]">
-            <div className="pl-[40px] pt-[36px] pb-[21px] border-b border-[#e9e9e9]">
+        <div className="lg:w-[865px] w-full flex bg-white mx-auto mt-[44px]">
+          <div className="w-[321px] border-r border-[#e9e9e9] md:block hidden">
+            <div className="pl-[40px] pt-[36px] pb-[21px] border-b border-[#e9e9e9] ">
               <p className="text-[18px]/[30px] text-[#353535]">Senior Data Analyst</p>
               <p className="text-[14px]/[22px] text-[#8f8f8f]">
                 Big and Small Enterprise Ltd ~ USA
@@ -34,6 +34,12 @@ export default function Apply() {
             </div>
           </div>
           <div className="flex-1 ">
+            <div className="pl-[40px] pt-[36px] pb-[21px] border-b border-[#e9e9e9] md:hidden block">
+              <p className="text-[18px]/[30px] text-[#353535]">Senior Data Analyst</p>
+              <p className="text-[14px]/[22px] text-[#8f8f8f]">
+                Big and Small Enterprise Ltd ~ USA
+              </p>
+            </div>
             <div className="pt-[33px] px-[40px] pb-[19px]">
               {currentStep === 1 && <ContactInfo />}
               {currentStep === 2 && <Resume />}
@@ -41,23 +47,23 @@ export default function Apply() {
               {currentStep === 4 && <Questions />}
               {currentStep === 5 && <Review />}
             </div>
-            <div className="px-[40px] pt-[28px] pb-[32px] border-t border-[#e9e9e9] flex gap-[16px]">
+            <div className="px-[40px] pt-[28px] pb-[32px] border-t border-[#e9e9e9] flex gap-[16px] sm:flex-row flex-col">
               {currentStep !== 1 && (
                 <Button
                   variant="outline"
-                  className="h-[48px] w-full"
+                  className="h-[48px] w-full  sm:order-1 order-2"
                   onClick={() => setCurrentStep(currentStep - 1)}
                 >
                   Back
                 </Button>
               )}
               {currentStep !== 5 && (
-                <Button className="h-[48px] w-full" onClick={() => setCurrentStep(currentStep + 1)}>
+                <Button className="h-[48px] w-full sm:order-2 order-1" onClick={() => setCurrentStep(currentStep + 1)}>
                   Save & Continue{' '}
                 </Button>
               )}
               {currentStep === 5 && (
-                <Button className="h-[48px] w-full" onClick={() => setCurrentStep(currentStep + 1)}>
+                <Button className="h-[48px] w-full sm:order-2 order-1" onClick={() => setCurrentStep(currentStep + 1)}>
                   Submit Application
                 </Button>
               )}
@@ -99,7 +105,8 @@ export default function Apply() {
                 id="reset-success-subtext1"
                 data-testid="reset-success-subtext1"
               >
-                Thanks for trusting us with your time and application. Our team is reviewing all candidates carefully, and if you’re a strong fit, you’ll hear from us soon.
+                Thanks for trusting us with your time and application. Our team is reviewing all
+                candidates carefully, and if you’re a strong fit, you’ll hear from us soon.
               </p>
               <div className="flex justify-center">
                 <Button

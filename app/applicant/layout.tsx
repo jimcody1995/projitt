@@ -27,7 +27,7 @@ export default function ApplicantLayout({ children }: { children: React.ReactNod
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Runs only once on mount
   return (
-    <main className="grow w-full box-border py-[30px]  bg-[#fafafa] overflow-y-auto" role="content">
+    <main className="grow w-full box-border py-[30px] bg-[#fafafa] overflow-y-auto" role="content">
       {children}
     </main>
   );

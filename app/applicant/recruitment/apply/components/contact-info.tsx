@@ -22,7 +22,7 @@ export default function ContactInfo() {
     <div>
       <p className="font-medium text-[22px]/[30px]">Contact Info</p>
       <p className="mt-[8px] text-[14px]/[13px] text-[#787878]">Add your contact information</p>
-      <div className="flex gap-[20px] mt-[40px]">
+      <div className="flex sm:flex-row flex-col gap-[20px] mt-[40px]">
         <div className="w-full">
           <p className="font-medium text-[14px]/[22px] text-[#353535]">First Name *</p>
           <Input className="mt-[12px] h-[48px]" />
@@ -40,7 +40,7 @@ export default function ContactInfo() {
         <p className="font-medium text-[14px]/[22px] text-[#353535]">Address Line 1</p>
         <Input className="mt-[12px] h-[48px]" />
       </div>
-      <div className="flex gap-[20px] mt-[40px]">
+      <div className="flex sm:flex-row flex-col gap-[20px] mt-[40px]">
         <div className="w-full">
           <p className="font-medium text-[14px]/[22px] text-[#353535]">City</p>
           <Input className="mt-[12px] h-[48px]" />
@@ -50,7 +50,7 @@ export default function ContactInfo() {
           <Input className="mt-[12px] h-[48px]" />
         </div>
       </div>
-      <div className="flex gap-[20px] mt-[40px]">
+      <div className="flex sm:flex-row flex-col gap-[20px] mt-[40px]">
         <div className="w-full">
           <p className="font-medium text-[14px]/[22px] text-[#353535]">Zip Code</p>
           <Input className="mt-[12px] h-[48px]" />
@@ -76,8 +76,8 @@ export default function ContactInfo() {
       </div>
       <div className="w-full mt-[40px]">
         <p className="font-medium text-[14px]/[22px] text-[#353535]">Phone Number</p>
-        <div className="flex flex-col sm:flex-row gap-[16px] w-full mt-[12px]">
-          <div className="w-[113px]">
+        <div className="flex sm:flex-row flex-col gap-[16px] w-full mt-[12px]">
+          <div className="sm:w-[113px] w-full">
             <Select
               defaultValue="US"
               indicatorVisibility={false}

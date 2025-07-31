@@ -24,42 +24,44 @@ export default function SignIn() {
 
       {/* Login Form Container */}
       <div className="w-full flex-1 flex justify-center items-center pb-[10px]">
-        {!sentStatus && <div
-          className="w-[560px] border border-[#e9e9e9] rounded-[12px] bg-white p-[48px]"
-          id="login-form-container"
-          data-testid="login-form-container"
-        >
-          {/* Form Title */}
-          <h1
-            className="text-[22px]/[30px] font-semibold tracking-tight text-[#353535]"
-            id="login-form-title"
-            data-testid="login-form-title"
+        {!sentStatus && (
+          <div
+            className="w-[560px] border border-[#e9e9e9] rounded-[12px] bg-white p-[48px]"
+            id="login-form-container"
+            data-testid="login-form-container"
           >
-            Ready to take the next step?
-          </h1>
-          <p className="text-[14px]/[20px] text-[#626262] mt-[4px]">
-            Create an account or sign in to continue your application
-          </p>
-          <div className="mt-[29px]">
-            <Label className="text-[14px]/[22px] text-[#353535]" htmlFor="email-input">
-              Email Address
-            </Label>
-            <Input
-              id="email-input"
-              data-testid="email-input"
-              placeholder="Enter email address"
-              className="h-[48px] mt-[12px]"
-              type="email"
-              autoComplete="email"
-            />
+            {/* Form Title */}
+            <h1
+              className="text-[22px]/[30px] font-semibold tracking-tight text-[#353535]"
+              id="login-form-title"
+              data-testid="login-form-title"
+            >
+              Ready to take the next step?
+            </h1>
+            <p className="text-[14px]/[20px] text-[#626262] mt-[4px]">
+              Create an account or sign in to continue your application
+            </p>
+            <div className="mt-[29px]">
+              <Label className="text-[14px]/[22px] text-[#353535]" htmlFor="email-input">
+                Email Address
+              </Label>
+              <Input
+                id="email-input"
+                data-testid="email-input"
+                placeholder="Enter email address"
+                className="h-[48px] mt-[12px]"
+                type="email"
+                autoComplete="email"
+              />
+            </div>
+            <Button className="w-full h-[48px] mt-[24px]" onClick={() => setSentStatus(true)}>
+              Continue with email
+            </Button>
+            <p className="text-[14px]/[20px] text-[#787878] mt-[25px]">
+              By clicking continue I agree with Projitt Terms of Service and Privacy Policy
+            </p>
           </div>
-          <Button className="w-full h-[48px] mt-[24px]" onClick={() => setSentStatus(true)}>
-            Continue with email
-          </Button>
-          <p className="text-[14px]/[20px] text-[#787878] mt-[25px]">
-            By clicking continue I agree with Projitt Terms of Service and Privacy Policy
-          </p>
-        </div>}
+        )}
         {sentStatus && (
           <div
             className="w-[560px] border border-[#e9e9e9] rounded-[12px] bg-white p-[48px]"
@@ -90,7 +92,12 @@ export default function SignIn() {
               Didn’t receive your code?{' '}
               <span className="text-[#0D978B] cursor-pointer">Resend Code</span>
             </p>
-            <Button className="w-full h-[48px] mt-[42px] text-[14px]/[20px]" onClick={() => router.push('/applicant/recruitment/apply')}>
+            <Button
+              className="w-full h-[48px] mt-[42px] text-[14px]/[20px]"
+              onClick={() => {
+                router.push('/applicant/recruitment/apply');
+              }}
+            >
               Continue with email
             </Button>
             <Button

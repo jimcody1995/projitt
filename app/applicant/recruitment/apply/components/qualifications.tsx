@@ -41,12 +41,12 @@ export default function Qualifications() {
           <>
             <div className="mt-[10px]">
               <p className="text-[14px]/[20px] text-[#8f8f8f]">Work Experience {index + 1}</p>
-              <div className="mt-[12px] flex gap-[16px]">
+              <div className="mt-[12px] flex gap-[16px] sm:flex-row flex-col">
                 <Input placeholder="Job Title" className="h-[48px]" />
                 <Input placeholder="Company" className="h-[48px]" />
               </div>
               <Input className="w-full h-[48px] mt-[16px]" placeholder="Location (optional)" />
-              <div className="grid xl:grid-cols-2 grid-cols-1 gap-[16px] mt-[16px]">
+              <div className="grid sm:grid-cols-2 grid-cols-1 gap-[16px] mt-[16px]">
                 <div>
                   <Label>From</Label>
                   <Popover>
@@ -177,7 +177,7 @@ export default function Qualifications() {
             <div className="mt-[10px]">
               <Input className="w-full h-[48px] mt-[16px]" placeholder="Certification" />
               <Input className="w-full h-[48px] mt-[16px]" placeholder="Certification Number" />
-              <div className="grid xl:grid-cols-2 grid-cols-1 gap-[16px] mt-[16px]">
+              <div className="grid sm:grid-cols-2 grid-cols-1 gap-[16px] mt-[16px]">
                 <div>
                   <Label>Issue Date</Label>
                   <Popover>
@@ -296,18 +296,18 @@ export default function Qualifications() {
       <div className="mt-[32px]">
         <p className="font-medium text-[14px]/[22px] text-[#353535]">Other Links</p>
         {otherLinks.map((link, index) => (
-          <div key={index} className="flex gap-[16px] mt-[16px]">
+          <div key={index} className="flex gap-[16px] mt-[16px] sm:flex-row flex-col">
             <Input
               placeholder="Title"
               value={link.title}
               onChange={(e) => setOtherLinks({ ...otherLinks, title: e.target.value })}
-              className="h-[48px] w-[30%]"
+              className="h-[48px] sm:w-[30%] w-full"
             />
             <Input
               placeholder="Link"
               value={link.link}
               onChange={(e) => setOtherLinks({ ...otherLinks, link: e.target.value })}
-              className="h-[48px] w-[70%]"
+              className="h-[48px] sm:w-[70%] w-full"
             />
           </div>
         ))}
