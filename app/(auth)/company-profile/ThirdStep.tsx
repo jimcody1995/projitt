@@ -6,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import Select from 'react-select';
 import { Button } from '@/components/ui/button';
-
+import { JSX } from 'react';
 type OptionType = { value: string; label: string };
 
 /**

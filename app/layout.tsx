@@ -1,5 +1,5 @@
 import { JSX, ReactNode, Suspense } from 'react';
-import { Geist } from 'next/font/google';
+import localFont from 'next/font/local';
 import { cn } from '@/lib/utils';
 import { SettingsProvider } from '@/providers/settings-provider';
 import { TooltipsProvider } from '@/providers/tooltips-provider';
@@ -12,7 +12,21 @@ import { ThemeProvider } from '@/providers/theme-provider';
 import { SessionProvider } from '@/context/SessionContext';
 import { BasicContextProvider } from '@/context/BasicContext';
 
-const inter = Geist({ subsets: ['latin'] });
+const Inter = localFont({
+  src: [
+    {
+      path: './fonts/Inter-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/Inter-Bold.ttf',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+  display: 'swap',
+});
 
 /**
  * Metadata for the root layout.
@@ -41,7 +55,7 @@ export default async function RootLayout({
       <body
         className={cn(
           'antialiased flex h-full text-base text-foreground bg-background',
-          inter.className
+          Inter.className
         )}
       >
         <SessionProvider>

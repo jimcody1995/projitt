@@ -8,18 +8,16 @@ import { getPasswordSchema } from './password-schema';
  *
  * @returns {z.ZodObject} The Zod validation schema for change password form
  */
-export const getChangePasswordSchema = (): z.ZodObject<any> => {
+export const getChangePasswordSchema = () => {
   return z
     .object({
-      email: z.string().email({
-        message: 'Please enter a valid email address.',
-      }),
-      newPassword: getPasswordSchema(),
+      email: z.string().email({ message: "Invalid email" }),
+      newPassword: z.string(),
       confirmPassword: z.string(),
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
-      message: 'Passwords do not match.',
-      path: ['confirmPassword'],
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
     });
 };
 
@@ -32,10 +30,10 @@ export type ChangePasswordSchemaType = z.infer<ReturnType<typeof getChangePasswo
  *
  * @returns {z.ZodObject} The Zod validation schema for change password API
  */
-export const getChangePasswordApiSchema = (): z.ZodObject<any> => {
+export const getChangePasswordApiSchema = () => {
   return z.object({
     token: z.string().nonempty({
-      message: 'A valid token is required to change the password.',
+      message: "A valid token is required to change the password.",
     }),
     newPassword: getPasswordSchema(),
   });

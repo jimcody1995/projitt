@@ -3,21 +3,9 @@
 import { JSX, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { LoaderCircleIcon } from 'lucide-react';
+
 import { ChangePasswordSchemaType, getChangePasswordSchema } from '../forms/change-password-schema';
-import { Label } from '@/components/ui/label';
 import FooterWithCompanyLogo from '../component/footerWithCompayLogo';
 
 /**

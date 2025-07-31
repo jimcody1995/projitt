@@ -9,21 +9,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
-import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { ChangePasswordSchemaType, getChangePasswordSchema } from '../forms/change-password-schema';
-import { Label } from '@/components/ui/label';
 
 export default function Page() {
   const router = useRouter();
@@ -35,16 +21,6 @@ export default function Page() {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [passwordConfirmationVisible, setPasswordConfirmationVisible] = useState(false);
-
-  const form = useForm<ChangePasswordSchemaType>({
-    resolver: zodResolver(getChangePasswordSchema()),
-    defaultValues: {
-      newPassword: '',
-      confirmPassword: '',
-    },
-  });
 
   /**
    * Effect to verify reset token from URL query.
@@ -79,37 +55,7 @@ export default function Page() {
     }
   }, [token]);
 
-  /**
-   * Handles password reset form submission.
-   *
-   * @param values - The validated password fields.
-   * @returns Promise<void>
-   */
-  async function onSubmit(values: ChangePasswordSchemaType): Promise<void> {
-    setIsProcessing(true);
-    setError(null);
-    setSuccessMessage(null);
 
-    // try {
-    //   const response = await apiFetch('/api/auth/change-password', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ token, newPassword: values.newPassword }),
-    //   });
-
-    //   if (response.ok) {
-    //     setSuccessMessage('Password reset successful! Redirecting to login...');
-    //     setTimeout(() => router.push('/signin'), 3000);
-    //   } else {
-    //     const errorData = await response.json();
-    //     setError(errorData.message || 'Password reset failed.');
-    //   }
-    // } catch {
-    //   setError('An error occurred while resetting the password.');
-    // } finally {
-    //   setIsProcessing(false);
-    // }
-  }
 
   return (
     <div className="w-full h-full flex flex-col justify-between overflow-y-auto gap-[56px]">

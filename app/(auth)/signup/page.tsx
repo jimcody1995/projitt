@@ -20,7 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import phoneNumber from '@/constants/phoneNumber.json';
 import PinField from 'react-pin-field';
-
+import { JSX } from 'react';
 import {
   Select,
   SelectContent,

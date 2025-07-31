@@ -8,6 +8,7 @@ import { Form, FormField } from '@/components/ui/form';
 import { getManageSchema } from '../forms/manage-schema';
 import { ManageSchemaType } from '../forms/manage-schema';
 import { Button } from '@/components/ui/button';
+import { JSX } from 'react';
 
 interface SecondStepProps {
   step: string;

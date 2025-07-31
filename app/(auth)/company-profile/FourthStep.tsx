@@ -5,7 +5,7 @@ import { ManageSchemaType } from '../forms/manage-schema';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-
+import { JSX } from 'react';
 interface FourthStepProps {
   step: string;
   setStep: React.Dispatch<React.SetStateAction<string>>;

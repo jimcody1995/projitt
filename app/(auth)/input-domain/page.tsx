@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
 import { getDomainSchema, DomainSchemaType } from '@/app/(auth)/forms/domain-schema';
 import { useRouter } from 'next/navigation';
+import { JSX } from 'react';
 
 /**
  * InputDomain component renders a form for entering a company domain
