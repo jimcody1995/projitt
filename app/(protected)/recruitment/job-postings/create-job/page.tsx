@@ -108,6 +108,7 @@ export default function CreateJob(): JSX.Element {
     const [errors, setErrors] = useState<JobDetailsErrors>({});
     const [descriptionError, setDescriptionError] = useState<JobDesciptionError>({});
     const [triggerValidation, setTriggerValidation] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { skills, designation, setDesignation } = useBasic();
     const searchParams = useSearchParams();
     const applicantQuestionsRef = useRef<ApplicantQuestionsRef>(null);
@@ -211,7 +212,7 @@ export default function CreateJob(): JSX.Element {
      * Validates the job description step.
      * @param data - job data from state
      * @returns object containing error message if description is empty
-     */
+ */
     function validateJobDescription(data: JobData): JobDesciptionError {
         const newErrors: JobDesciptionError = {};
         const plainText = data.description?.replace(/<[^>]+>/g, '').trim();
@@ -222,137 +223,184 @@ export default function CreateJob(): JSX.Element {
     }
 
     /**
-     * Handles transition to the next step with validation.
-     * @returns void
+     * Handles the current step operations (validation, saving, etc.)
+     * @param shouldContinue - whether to continue to next step or exit
+     * @returns Promise<void>
      */
-    const handleContinue = async (): Promise<void> => {
-        if (currentStep === 1) {
-            const validationErrors = validateJobDetails(jobData);
-            setErrors(validationErrors);
-            setTriggerValidation(true);
-            if (Object.keys(validationErrors).length > 0) return;
+    const handleStepOperation = async (shouldContinue: boolean): Promise<void> => {
+        setIsLoading(true);
 
-            // Parse salary with validation for different delimiters
-            const cleanSalary = jobData.salary.replace(/[^$,\-~.\d]/g, '');
-            const salaryParts = cleanSalary.split(/[-~]/);
-            let salary_from, salary_to;
+        try {
+            if (currentStep === 1) {
+                const validationErrors = validateJobDetails(jobData);
+                setErrors(validationErrors);
+                setTriggerValidation(true);
+                if (Object.keys(validationErrors).length > 0) {
+                    setIsLoading(false);
+                    return;
+                }
 
-            if (salaryParts.length === 1) {
-                // Single value - use same for both from and to
-                salary_from = salaryParts[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
-                salary_to = salary_from;
-            } else if (salaryParts.length === 2) {
-                // Range value
-                salary_from = salaryParts[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
-                salary_to = salaryParts[1].split(' ')[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
-            } else {
-                // Invalid format - use fallback
-                salary_from = cleanSalary.slice(1).replace(/[, ]/g, '');
-                salary_to = salary_from;
-            }
+                // Parse salary with validation for different delimiters
+                const cleanSalary = jobData.salary.replace(/[^$,\-~.\d]/g, '');
+                const salaryParts = cleanSalary.split(/[-~]/);
+                let salary_from, salary_to;
 
-            const payload = {
-                ...jobData,
-                salary_from,
-                salary_to,
-                skill_ids: jobData.skill_ids.map(skillName => {
-                    const skill = (skills as Skill[]).find(skill => skill.name === skillName);
-                    return skill ? skill.id : null;
-                }).filter(id => id !== null),
-            }
+                if (salaryParts.length === 1) {
+                    // Single value - use same for both from and to
+                    salary_from = salaryParts[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
+                    salary_to = salary_from;
+                } else if (salaryParts.length === 2) {
+                    // Range value
+                    salary_from = salaryParts[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
+                    salary_to = salaryParts[1].split(' ')[0].slice(1).replace(/[, ]/g, ''); // Remove first character and clean
+                } else {
+                    // Invalid format - use fallback
+                    salary_from = cleanSalary.slice(1).replace(/[, ]/g, '');
+                    salary_to = salary_from;
+                }
 
-            // Check if job title exists in designation
-            if (!(designation as Designation[]).some(designation => designation.name === jobData?.title)) {
-                // Add new job title to master data
+                const payload = {
+                    ...jobData,
+                    salary_from,
+                    salary_to,
+                    skill_ids: jobData.skill_ids.map(skillName => {
+                        const skill = (skills as Skill[]).find(skill => skill.name === skillName);
+                        return skill ? skill.id : null;
+                    }).filter(id => id !== null),
+                }
+
+                // Check if job title exists in designation
+                if (!(designation as Designation[]).some(designation => designation.name === jobData?.title)) {
+                    // Add new job title to master data
+                    try {
+                        await addNewJobTitle(jobData.title);
+
+                        // Refresh designation data after successful addition
+                        const designationResponse = await getDesignation();
+                        setDesignation(designationResponse.data.data);
+                    } catch (error) {
+                        errorHandlers.jobTitle(error);
+                        setIsLoading(false);
+                        return;
+                    }
+                }
+
                 try {
-                    await addNewJobTitle(jobData.title);
+                    const jobId = searchParams.get('id');
+                    let response;
 
-                    // Refresh designation data after successful addition
-                    const designationResponse = await getDesignation();
-                    setDesignation(designationResponse.data.data);
+                    if (jobId) {
+                        // Editing existing job
+                        response = await editDetailJob({ ...payload, id: jobId });
+                    } else {
+                        // Creating new job
+                        response = await addNewDetailJob(payload);
+                    }
+
+                    console.log(response);
+
+                    if (response.status === true) {
+                        if (shouldContinue) {
+                            try {
+                                const job_id = jobId || response.data.id;
+                                router.push(`/recruitment/job-postings/create-job?id=${job_id}`);
+                                setCurrentStep(currentStep + 1);
+                            } catch (error) {
+                                errorHandlers.jobPosting(error);
+                                setIsLoading(false);
+                                return;
+                            }
+                        } else {
+                            router.push('/recruitment/job-postings');
+                        }
+                    }
                 } catch (error) {
-                    errorHandlers.jobTitle(error);
+                    errorHandlers.jobPosting(error);
+                    setIsLoading(false);
                     return;
                 }
             }
 
-            try {
-                const jobId = searchParams.get('id');
-                let response;
-
-                if (jobId) {
-                    // Editing existing job
-                    response = await editDetailJob({ ...payload, id: jobId });
-                } else {
-                    // Creating new job
-                    response = await addNewDetailJob(payload);
+            if (currentStep === 2) {
+                const validationErrors = validateJobDescription(jobData);
+                setDescriptionError(validationErrors);
+                setTriggerValidation(true);
+                if (Object.keys(validationErrors).length > 0) {
+                    setIsLoading(false);
+                    return;
                 }
-
-                console.log(response);
-
-                if (response.status === true) {
-                    try {
-                        const job_id = jobId || response.data.id;
-                        router.push(`/recruitment/job-postings/create-job?id=${job_id}`);
-                        setCurrentStep(currentStep + 1);
-                    } catch (error) {
-                        errorHandlers.jobPosting(error);
-                        return;
+                try {
+                    const payload = {
+                        description: jobData.description,
+                        id: searchParams.get('id'),
                     }
+
+                    const response = await editJobDescription(payload);
+                    console.log(response);
+
+                    if (response.status === true) {
+                        if (shouldContinue) {
+                            setCurrentStep(currentStep + 1);
+                        } else {
+                            router.push('/recruitment/job-postings');
+                        }
+                    }
+                } catch (error) {
+                    errorHandlers.jobDescription(error);
+                    setIsLoading(false);
+                    return;
                 }
-            } catch (error) {
-                errorHandlers.jobPosting(error);
-                return;
             }
-        }
 
-        if (currentStep === 2) {
-            const validationErrors = validateJobDescription(jobData);
-            setDescriptionError(validationErrors);
-            setTriggerValidation(true);
-            if (Object.keys(validationErrors).length > 0) return;
-            try {
-                const payload = {
-                    description: jobData.description,
-                    id: searchParams.get('id'),
+            if (currentStep === 3) {
+                try {
+                    await applicantQuestionsRef.current?.saveQuestions();
+                    if (shouldContinue) {
+                        setCurrentStep(currentStep + 1);
+                    } else {
+                        router.push('/recruitment/job-postings');
+                    }
+                } catch (error) {
+                    errorHandlers.custom(error, 'Error saving questions');
+                    setIsLoading(false);
+                    return;
                 }
+            }
 
-                const response = await editJobDescription(payload);
-                console.log(response);
-
-                if (response.status === true) {
+            if (currentStep === 4) {
+                if (shouldContinue) {
                     setCurrentStep(currentStep + 1);
+                } else {
+                    router.push('/recruitment/job-postings');
                 }
-            } catch (error) {
-                errorHandlers.jobDescription(error);
-                return;
             }
-        }
 
-        if (currentStep === 3) {
-            try {
-                await applicantQuestionsRef.current?.saveQuestions();
-                setCurrentStep(currentStep + 1);
-            } catch (error) {
-                errorHandlers.custom(error, 'Error saving questions');
-                return;
+            if (currentStep === 5) {
+                if (shouldContinue) {
+                    setCurrentStep(currentStep + 1);
+                } else {
+                    router.push('/recruitment/job-postings');
+                }
             }
+        } finally {
+            setIsLoading(false);
         }
-        if (currentStep === 4) {
-            setCurrentStep(currentStep + 1);
-        }
-        if (currentStep === 5) {
-            setCurrentStep(currentStep + 1);
-        }
-
     };
 
     /**
-     * Redirects user to job postings page on exit.
+     * Handles transition to the next step with validation.
      * @returns void
      */
-    const handleSaveExit = (): void => {
-        router.push('/recruitment/job-postings');
+    const handleContinue = async (): Promise<void> => {
+        await handleStepOperation(true);
+    };
+
+    /**
+     * Saves current step data and redirects user to job postings page.
+     * @returns void
+     */
+    const handleSaveExit = async (): Promise<void> => {
+        await handleStepOperation(false);
     };
 
     return (
@@ -383,16 +431,32 @@ export default function CreateJob(): JSX.Element {
                                 id="save-exit-button"
                                 data-testid="save-exit-button"
                                 onClick={handleSaveExit}
+                                disabled={isLoading}
                             >
-                                Save & Exit
+                                {isLoading ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
+                                        Saving...
+                                    </div>
+                                ) : (
+                                    'Save & Exit'
+                                )}
                             </Button>
                             <Button
                                 className="h-[42px] order-1 min-w-[82px] sm:order-2 font-semibold text-[14px]/[20px]"
                                 id="save-continue-button"
                                 data-testid="save-continue-button"
                                 onClick={handleContinue}
+                                disabled={isLoading}
                             >
-                                {currentStep === 5 ? 'Publish' : 'Save & Continue'}
+                                {isLoading ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        {currentStep === 5 ? 'Publishing...' : 'Saving...'}
+                                    </div>
+                                ) : (
+                                    currentStep === 5 ? 'Publish' : 'Save & Continue'
+                                )}
                             </Button>
                         </div>
                     </div>
