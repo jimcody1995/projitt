@@ -9,10 +9,132 @@
 
 import { Edit } from "lucide-react";
 
+interface PublishProps {
+    jobData?: Record<string, unknown>;
+}
+
 /**
  * Renders the Publish component for reviewing job post details.
  */
-export default function Publish() {
+export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
+    // Default data if no jobData is provided
+    const defaultData = jobData || {
+        title: "Software Engineer",
+        department: { name: "Sales" },
+        employment_type: { name: "Full-time" },
+        no_of_job_opening: 3,
+        skills: [
+            { name: "Data Analysis" },
+            { name: "UI/UX" },
+            { name: "Prototyping" },
+            { name: "Wireframing" }
+        ],
+        location_type: { name: "Onsite" },
+        country: { name: "United States" },
+        state: "California",
+        salary_from: "5000",
+        salary_to: "6000",
+        deadline: "2025-06-10T00:00:00.000000Z",
+        description: "Senior Data Analyst Position Overview<br />We are seeking an experienced Senior Data Analyst to join our growing analytics team. The ideal candidate will transform complex data into actionable insights that drive business decisions.<br />Key Responsibilities:<br />Lead complex data analysis projects and develop comprehensive reporting solutions<br />Build and maintain advanced statistical models and data visualization dashboards<br />Collaborate with stakeholders to identify business needs and translate them into analytical solutions<br />Mentor junior analysts and promote best practices in data analysis<br />Design and implement data quality processes and validation procedures<br />Required Qualifications:<br />Bachelor&apos;s degree in Statistics, Mathematics, Computer Science, or related field<br />5+ years of experience in data analysis and visualization<br />Expert proficiency in SQL, Python, or R<br />Strong experience with BI tools (Tableau, Power BI, or similar)<br />Proven track record of delivering data-driven solutions",
+        questions: [
+            {
+                question_name: "Why are you interested in this role?",
+                answer_type: "short"
+            },
+            {
+                question_name: "Describe a recent challenge you solved at work.",
+                answer_type: "long_detail"
+            },
+            {
+                question_name: "What's your expected salary range for this role?",
+                answer_type: "long_detail"
+            },
+            {
+                question_name: "How soon can you start if hired?",
+                answer_type: "dropdown",
+                options: ["Immediately", "1–2 weeks", "1 month", "Other"]
+            },
+            {
+                question_name: "Have you worked in a team setting before?",
+                answer_type: "checkbox",
+                options: ["Yes", "No"]
+            }
+        ]
+    };
+    const data = jobData || {
+        title: "",
+        department: { name: "" },
+        employment_type: { name: "" },
+        no_of_job_opening: 1,
+        skills: [],
+        location_type: { name: "" },
+        country: { name: "" },
+        state: "",
+        salary_from: "",
+        salary_to: "",
+        deadline: "",
+        description: "",
+        questions: []
+    };
+
+    // Helper function to format date
+    const formatDate = (dateString?: string) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    };
+
+    // Navigation handlers
+    const handleEditJobDetails = () => {
+        if (onNavigateToStep) {
+            onNavigateToStep(1);
+        }
+    };
+
+    const handleEditJobDescription = () => {
+        if (onNavigateToStep) {
+            onNavigateToStep(2);
+        }
+    };
+
+    const handleEditApplicantQuestions = () => {
+        if (onNavigateToStep) {
+            onNavigateToStep(3);
+        }
+    };
+
+    // Helper function to get answer type display text
+    const getAnswerTypeDisplay = (answerType: string) => {
+        switch (answerType) {
+            case "short":
+                return "Short Answer";
+            case "long_detail":
+                return "Long Paragraph";
+            case "dropdown":
+                return "Multiple choice";
+            case "checkbox":
+                return "Multiple choice";
+            case "file_upload":
+                return "File Upload";
+            default:
+                return answerType;
+        }
+    };
+
+    // Helper function to render options for dropdown/checkbox
+    const renderOptions = (question: Record<string, unknown>) => {
+        if (question.answer_type === "dropdown" || question.answer_type === "checkbox") {
+            if (question.options && Array.isArray(question.options)) {
+                return question.options.join(", ");
+            }
+        }
+        return "";
+    };
+
     return (
         <div
             id="job-description-component"
@@ -39,6 +161,7 @@ export default function Publish() {
                             className="font-medium bg-[#0d978b] text-white rounded-[7px] w-[28px] h-[28px] flex items-center justify-center"
                             id="edit-job-details"
                             data-testid="edit-job-details"
+                            onClick={handleEditJobDetails}
                         >
                             <Edit className="size-[16px]" />
                         </button>
@@ -46,39 +169,53 @@ export default function Publish() {
                     <div className="grid grid-cols-3 mt-[12px] gap-[42px]" id="job-details-fields" data-testid="job-details-fields">
                         <div className="flex flex-col" id="field-job-title" data-testid="field-job-title">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Job Title</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">Software Engineer</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.title || "N/A"}</p>
                         </div>
                         <div className="flex flex-col" id="field-department" data-testid="field-department">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Department</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">Sales</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.department?.name || "N/A"}</p>
                         </div>
                         <div className="flex flex-col" id="field-employment-type" data-testid="field-employment-type">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Employment Type</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">Full-time</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.employment_type?.name || "N/A"}</p>
                         </div>
                         <div className="flex flex-col" id="field-openings" data-testid="field-openings">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">No. of Openings</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">3</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.no_of_job_opening || "N/A"}</p>
                         </div>
                         <div className="flex flex-col" id="field-skills" data-testid="field-skills">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Skills</p>
                             <div>
-                                <p className="text-[14px]/[22px] font-medium text-[#353535]">Data Analysis, UI/UX</p>
-                                <p className="text-[14px]/[22px] font-medium text-[#353535]">Prototyping</p>
-                                <p className="text-[14px]/[22px] font-medium text-[#353535]">Wireframing</p>
+                                {data.skills && Array.isArray(data.skills) ? (
+                                    data.skills.map((skill: any, index: number) => (
+                                        <p key={index} className="text-[14px]/[22px] font-medium text-[#353535]">
+                                            {skill.name}
+                                        </p>
+                                    ))
+                                ) : (
+                                    <p className="text-[14px]/[22px] font-medium text-[#353535]">N/A</p>
+                                )}
                             </div>
                         </div>
                         <div className="flex flex-col" id="field-location" data-testid="field-location">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Location Type</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">Onsite (California, United States)</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">
+                                {data.location_type?.name || "N/A"}
+                                {data.state && data.country?.name ? ` (${data.state}, ${data.country.name})` : ""}
+                            </p>
                         </div>
                         <div className="flex flex-col" id="field-salary" data-testid="field-salary">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Salary</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">$5000 - $6000</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">
+                                {data.salary_from && data.salary_to ?
+                                    `$${parseInt(data.salary_from).toLocaleString()} - $${parseInt(data.salary_to).toLocaleString()}` :
+                                    "N/A"
+                                }
+                            </p>
                         </div>
                         <div className="flex flex-col" id="field-deadline" data-testid="field-deadline">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Deadline</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">10 June 2025</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{formatDate(data.deadline)}</p>
                         </div>
                     </div>
                 </div>
@@ -97,28 +234,17 @@ export default function Publish() {
                             className="font-medium bg-[#0d978b] text-white rounded-[7px] w-[28px] h-[28px] flex items-center justify-center"
                             id="edit-job-description"
                             data-testid="edit-job-description"
+                            onClick={handleEditJobDescription}
                         >
                             <Edit className="size-[16px]" />
                         </button>
                     </div>
                     <div className="flex flex-col mt-[16px]" id="job-description-text" data-testid="job-description-text">
                         <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Job Description</p>
-                        <p className="text-[14px]/[22px] font-medium text-[#353535]">
-                            Senior Data Analyst Position Overview<br />
-                            We are seeking an experienced Senior Data Analyst to join our growing analytics team. The ideal candidate will transform complex data into actionable insights that drive business decisions.<br />
-                            Key Responsibilities:<br />
-                            Lead complex data analysis projects and develop comprehensive reporting solutions<br />
-                            Build and maintain advanced statistical models and data visualization dashboards<br />
-                            Collaborate with stakeholders to identify business needs and translate them into analytical solutions<br />
-                            Mentor junior analysts and promote best practices in data analysis<br />
-                            Design and implement data quality processes and validation procedures<br />
-                            Required Qualifications:<br />
-                            Bachelor's degree in Statistics, Mathematics, Computer Science, or related field<br />
-                            5+ years of experience in data analysis and visualization<br />
-                            Expert proficiency in SQL, Python, or R<br />
-                            Strong experience with BI tools (Tableau, Power BI, or similar)<br />
-                            Proven track record of delivering data-driven solutions
-                        </p>
+                        <div
+                            className="text-[14px]/[22px] font-medium text-[#353535]"
+                            dangerouslySetInnerHTML={{ __html: data.description || "No description available" }}
+                        />
                     </div>
                 </div>
             </div>
@@ -136,31 +262,29 @@ export default function Publish() {
                             className="font-medium bg-[#0d978b] text-white rounded-[7px] w-[28px] h-[28px] flex items-center justify-center"
                             id="edit-applicant-questions"
                             data-testid="edit-applicant-questions"
+                            onClick={handleEditApplicantQuestions}
                         >
                             <Edit className="size-[16px]" />
                         </button>
                     </div>
                     <div className="flex flex-col mt-[16px] gap-[14px]" id="applicant-questions" data-testid="applicant-questions">
-                        <div className="text-[14px]/[22px] font-medium text-[#353535]" data-testid="question-1">
-                            <p>Why are you interested in this role?</p>
-                            <p className="text-[#a5a5a5]">Short Answer</p>
-                        </div>
-                        <div className="text-[14px]/[22px] font-medium text-[#353535]" data-testid="question-2">
-                            <p>Describe a recent challenge you solved at work.</p>
-                            <p className="text-[#a5a5a5]">Long Paragraph</p>
-                        </div>
-                        <div className="text-[14px]/[22px] font-medium text-[#353535]" data-testid="question-3">
-                            <p>What’s your expected salary range for this role?</p>
-                            <p className="text-[#a5a5a5]">Long Paragraph</p>
-                        </div>
-                        <div className="text-[14px]/[22px] font-medium text-[#353535]" data-testid="question-4">
-                            <p>How soon can you start if hired?</p>
-                            <p className="text-[#a5a5a5]">Multiple choice: Immediately, 1–2 weeks, 1 month, Other</p>
-                        </div>
-                        <div className="text-[14px]/[22px] font-medium text-[#353535]" data-testid="question-5">
-                            <p>Have you worked in a team setting before?</p>
-                            <p className="text-[#a5a5a5]">Multiple choice: Yes/No</p>
-                        </div>
+                        {data.questions && Array.isArray(data.questions) ? (
+                            data.questions.map((question: any, index: number) => (
+                                <div
+                                    key={index}
+                                    className="text-[14px]/[22px] font-medium text-[#353535]"
+                                    data-testid={`question-${index + 1}`}
+                                >
+                                    <p>{question.question_name}</p>
+                                    <p className="text-[#a5a5a5]">
+                                        {getAnswerTypeDisplay(question.answer_type)}
+                                        {renderOptions(question) && `: ${renderOptions(question)}`}
+                                    </p>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">No questions available</p>
+                        )}
                     </div>
                 </div>
             </div>

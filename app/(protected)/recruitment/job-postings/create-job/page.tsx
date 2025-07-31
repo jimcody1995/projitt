@@ -104,6 +104,7 @@ export default function CreateJob(): JSX.Element {
         deadline: new Date(),
         description: ''
     });
+    const [publishJobData, setPublishJobData] = useState<any>(null);
     const [errors, setErrors] = useState<JobDetailsErrors>({});
     const [descriptionError, setDescriptionError] = useState<JobDesciptionError>({});
     const [triggerValidation, setTriggerValidation] = useState<boolean>(false);
@@ -161,6 +162,27 @@ export default function CreateJob(): JSX.Element {
 
         loadJobDetails();
     }, [searchParams, currentStep, setJobData]);
+
+    /**
+     * Load job data for publish step
+     */
+    useEffect(() => {
+        const loadPublishJobData = async () => {
+            const jobId = searchParams.get('id');
+            if (jobId && currentStep === 5) {
+                try {
+                    const response = await getJobDetails(jobId);
+                    if (response.status === true) {
+                        setPublishJobData(response.data);
+                    }
+                } catch (error) {
+                    errorHandlers.jobPosting(error);
+                }
+            }
+        };
+
+        loadPublishJobData();
+    }, [searchParams, currentStep]);
 
     /**
      * Validates the job details step.
@@ -407,7 +429,7 @@ export default function CreateJob(): JSX.Element {
                             )}
                             {currentStep === 3 && <ApplicantQuestions ref={applicantQuestionsRef} jobId={searchParams.get('id') || undefined} />}
                             {currentStep === 4 && <HiringPipeline />}
-                            {currentStep === 5 && <Publish />}
+                            {currentStep === 5 && <Publish jobData={publishJobData} onNavigateToStep={setCurrentStep} />}
                         </div>
                     </div>
                 </div>
