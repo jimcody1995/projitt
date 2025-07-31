@@ -6,7 +6,7 @@
  * Users can dynamically add/remove/edit questions and their options. Suitable for form builders.
  */
 
-import React, { JSX, useState, useEffect } from 'react';
+import React, { JSX, useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import {
     GripVertical,
     Plus,
@@ -31,9 +31,8 @@ import { Switch } from '@/components/ui/switch';
 import WorkExperience from './work-experience';
 import Resume from './resume';
 import Education from './education';
-import { getJobDetails } from '@/api/job-posting';
+import { getJobDetails, addQuestionItem, editQuestionItem, editJobQuestions } from '@/api/job-posting';
 import { errorHandlers } from '@/utils/error-handler';
-import { fa } from 'zod/v4/locales';
 export interface Question {
     id: string;
     title: string;
@@ -50,12 +49,18 @@ interface Section {
 
 interface ApplicantQuestionsProps {
     jobId?: string;
+    onSave?: (questions: Question[]) => void;
 }
 
 /**
  * Main functional component that manages question sections and renders dynamic UI
  */
-export default function ApplicantQuestions({ jobId }: ApplicantQuestionsProps): JSX.Element {
+export interface ApplicantQuestionsRef {
+    saveQuestions: () => Promise<void>;
+}
+
+const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsProps>(({ jobId, onSave }, ref) => {
+    ApplicantQuestions.displayName = 'ApplicantQuestions';
     const [activeSection, setActiveSection] = useState<string | null>('1');
     const [sections, setSections] = useState<Section[]>([
         {
@@ -64,6 +69,7 @@ export default function ApplicantQuestions({ jobId }: ApplicantQuestionsProps): 
             questions: [],
         },
     ]);
+    const [originalQuestions, setOriginalQuestions] = useState<Question[]>([]);
 
     const questionTypes = [
         { value: 'short-answer', label: 'Short answer' },
@@ -124,6 +130,9 @@ export default function ApplicantQuestions({ jobId }: ApplicantQuestionsProps): 
                             questions: transformedQuestions,
                         },
                     ]);
+
+                    // Store original questions for comparison
+                    setOriginalQuestions(transformedQuestions);
                 }
             } catch (error) {
                 errorHandlers.custom(error, 'Error loading existing questions');
@@ -246,6 +255,136 @@ export default function ApplicantQuestions({ jobId }: ApplicantQuestionsProps): 
         }
     };
 
+    /** Saves questions to the API */
+    const saveQuestions = async (): Promise<void> => {
+        if (!jobId) return;
+
+        try {
+            const currentQuestions = sections[0]?.questions || [];
+            const newQuestions: Question[] = [];
+            const editedQuestions: Question[] = [];
+            const questionIds: number[] = [];
+
+            // Separate new and edited questions
+            currentQuestions.forEach(question => {
+                const originalQuestion = originalQuestions.find(q => q.id === question.id);
+                if (originalQuestion) {
+                    // Check if question was modified
+                    if (
+                        originalQuestion.title !== question.title ||
+                        originalQuestion.type !== question.type ||
+                        originalQuestion.required !== question.required ||
+                        JSON.stringify(originalQuestion.options) !== JSON.stringify(question.options)
+                    ) {
+                        editedQuestions.push(question);
+                    }
+                    questionIds.push(parseInt(question.id));
+                } else {
+                    // New question
+                    newQuestions.push(question);
+                }
+            });
+
+            // Add new questions
+            for (const question of newQuestions) {
+                const payload: {
+                    question_name: string;
+                    answer_type: string;
+                    is_required: boolean;
+                    tags: string[];
+                    options?: string[] | null;
+                } = {
+                    question_name: question.title,
+                    answer_type: mapComponentTypeToAnswerType(question.type),
+                    is_required: question.required,
+                    tags: ["HR", "Business_development", "IT", "Accounts"]
+                };
+
+                // Only include options for dropdown and checkbox questions
+                if (question.type === 'dropdown' || question.type === 'checkbox') {
+                    payload.options = question.options || null;
+                }
+
+                const response = await addQuestionItem(payload);
+                if (response.status === true) {
+                    questionIds.push(response.data.id);
+                }
+            }
+
+            // Edit existing questions
+            for (const question of editedQuestions) {
+                const payload: {
+                    id: number;
+                    question_name: string;
+                    answer_type: string;
+                    is_required: boolean;
+                    tags: string[];
+                    options?: string[] | null;
+                } = {
+                    id: parseInt(question.id),
+                    question_name: question.title,
+                    answer_type: mapComponentTypeToAnswerType(question.type),
+                    is_required: question.required,
+                    tags: ["HR", "Business_development", "IT", "Accounts"]
+                };
+
+                // Only include options for dropdown and checkbox questions
+                if (question.type === 'dropdown' || question.type === 'checkbox') {
+                    payload.options = question.options || null;
+                }
+
+                await editQuestionItem(payload);
+                questionIds.push(parseInt(question.id));
+            }
+
+            // Update job questions
+            if (questionIds.length > 0) {
+                await editJobQuestions({
+                    id: parseInt(jobId),
+                    question_ids: questionIds
+                });
+            }
+
+            // Update original questions for future comparisons
+            const updatedQuestions = currentQuestions.map(q => {
+                const newQuestion = newQuestions.find(nq => nq.title === q.title && nq.type === q.type);
+                if (newQuestion) {
+                    return { ...q, id: newQuestion.id };
+                }
+                return q;
+            });
+            setOriginalQuestions(updatedQuestions);
+
+            if (onSave) {
+                onSave(currentQuestions);
+            }
+        } catch (error) {
+            errorHandlers.custom(error, 'Error saving questions');
+        }
+    };
+
+    /** Maps component type to API answer type */
+    const mapComponentTypeToAnswerType = (type: Question['type']): string => {
+        switch (type) {
+            case 'short-answer':
+                return 'short';
+            case 'paragraph':
+                return 'long_detail';
+            case 'dropdown':
+                return 'dropdown';
+            case 'checkbox':
+                return 'checkbox';
+            case 'file-upload':
+                return 'file_upload';
+            default:
+                return 'short';
+        }
+    };
+
+    // Expose save function to parent component
+    useImperativeHandle(ref, () => ({
+        saveQuestions
+    }));
 
     return (
         <div
@@ -432,4 +571,6 @@ export default function ApplicantQuestions({ jobId }: ApplicantQuestionsProps): 
             </div >
         </div >
     );
-}
+});
+
+export default ApplicantQuestions;

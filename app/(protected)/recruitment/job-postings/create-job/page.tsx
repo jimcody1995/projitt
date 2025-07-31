@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import Stepper from "./components/stepper";
 import JobDetails from "./components/job-details";
 import JobDescription from "./components/job-description";
-import ApplicantQuestions from "./components/applicant-questions";
+import ApplicantQuestions, { ApplicantQuestionsRef } from "./components/applicant-questions";
 import HiringPipeline from "./components/hiring-pipeline";
-import { JSX, useState, useEffect } from "react";
+import { JSX, useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Publish from "./components/publish";
 import Completed from "./components/completed";
@@ -109,6 +109,7 @@ export default function CreateJob(): JSX.Element {
     const [triggerValidation, setTriggerValidation] = useState<boolean>(false);
     const { skills, designation, setDesignation } = useBasic();
     const searchParams = useSearchParams();
+    const applicantQuestionsRef = useRef<ApplicantQuestionsRef>(null);
 
     /**
      * Load job details when editing an existing job
@@ -307,7 +308,13 @@ export default function CreateJob(): JSX.Element {
         }
 
         if (currentStep === 3) {
-            setCurrentStep(currentStep + 1);
+            try {
+                await applicantQuestionsRef.current?.saveQuestions();
+                setCurrentStep(currentStep + 1);
+            } catch (error) {
+                errorHandlers.custom(error, 'Error saving questions');
+                return;
+            }
         }
         if (currentStep === 4) {
             setCurrentStep(currentStep + 1);
@@ -398,7 +405,7 @@ export default function CreateJob(): JSX.Element {
                                     triggerValidation={triggerValidation}
                                 />
                             )}
-                            {currentStep === 3 && <ApplicantQuestions jobId={searchParams.get('id') || undefined} />}
+                            {currentStep === 3 && <ApplicantQuestions ref={applicantQuestionsRef} jobId={searchParams.get('id') || undefined} />}
                             {currentStep === 4 && <HiringPipeline />}
                             {currentStep === 5 && <Publish />}
                         </div>
