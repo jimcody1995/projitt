@@ -33,6 +33,7 @@ import Resume from './resume';
 import Education from './education';
 import { getJobDetails } from '@/api/job-posting';
 import { errorHandlers } from '@/utils/error-handler';
+import { fa } from 'zod/v4/locales';
 export interface Question {
     id: string;
     title: string;
@@ -252,10 +253,10 @@ export default function ApplicantQuestions({ jobId }: ApplicantQuestionsProps): 
             data-testid="applicant-question-builder-root">
             <div className="flex items-center justify-between gap-[8px] w-full">
                 <p className="text-[20px]/[30px] font-semibold text-[#353535]">Applicant Questions</p>
-                <div className="flex items-center gap-[9px] cursor-pointer">
+                {/* <div className="flex items-center gap-[9px] cursor-pointer">
                     <input type="checkbox" className="accent-[#0d978b] size-[13px]" />
                     <span className="text-[14px]/[16px] text-[#4b4b4b]">Set as Default</span>
-                </div>
+                </div> */}
             </div>
             <div className='mt-[33px] '>
                 <div className="min-h-screen w-full bg-white border border-[#e9e9e9] rounded-[12px] ">
@@ -278,10 +279,13 @@ export default function ApplicantQuestions({ jobId }: ApplicantQuestionsProps): 
                                 <p className='whitespace-nowrap'>{section.title}</p>
                             </div>
                         ))}
-                        <div className='py-[8.5px] px-[6px] text-[#353535] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer' onClick={addSection}>
+
+                        {/* Tempary Remove the Add Section Button */}
+                        {/* <div className='py-[8.5px] px-[6px] text-[#353535] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer' onClick={addSection}>
                             <Plus className='size-[20px] text-[#353535]' />
                             <p className='whitespace-nowrap'>Add Section</p>
-                        </div>
+                        </div> */}
+
                     </div>
                     <div className="max-w-4xl mx-auto py-[31px] px-[25px]">
                         {activeSection === 'resume' && (

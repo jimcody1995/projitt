@@ -232,9 +232,10 @@ export default function CreateJob(): JSX.Element {
                 ...jobData,
                 salary_from,
                 salary_to,
-                skill_ids: jobData.skill_ids.map(skillName =>
-                    (skills as Skill[]).findIndex(skill => skill.name === skillName) + 1
-                ),
+                skill_ids: jobData.skill_ids.map(skillName => {
+                    const skill = (skills as Skill[]).find(skill => skill.name === skillName);
+                    return skill ? skill.id : null;
+                }).filter(id => id !== null),
             }
 
             // Check if job title exists in designation
