@@ -1,5 +1,13 @@
 'use client';
 
+/**
+ * ContactInfo Component
+ * ---------------------
+ * A React form component to collect and validate user's contact information.
+ * Supports dynamic country selection, real-time validation, and phone formatting.
+ * Accepts a `ref` to expose a `validate()` method and a callback to return validation state/data.
+ */
+
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -18,6 +26,9 @@ interface ContactInfoProps {
 
 const ContactInfo = React.forwardRef<{ validate: () => boolean }, ContactInfoProps>(
   ({ onValidationChange }, ref) => {
+    /**
+     * State and hooks
+     */
     const { country } = useBasic();
     const [code, setCode] = React.useState('US');
     const [formData, setFormData] = React.useState({
@@ -44,66 +55,63 @@ const ContactInfo = React.forwardRef<{ validate: () => boolean }, ContactInfoPro
       phoneNumber: '',
     });
 
-    // Validation functions
+    /**
+     * Validates individual form fields.
+     */
     const validateField = (name: string, value: string) => {
       switch (name) {
         case 'firstName':
           if (!value.trim()) return 'First name is required';
           if (value.trim().length < 2) return 'First name must be at least 2 characters';
           return '';
-
         case 'lastName':
           if (!value.trim()) return 'Last name is required';
           if (value.trim().length < 2) return 'Last name must be at least 2 characters';
           return '';
-
         case 'email':
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!value.trim()) return 'Email is required';
           if (!emailRegex.test(value)) return 'Please enter a valid email address';
           return '';
-
         case 'addressLine1':
           if (!value.trim()) return 'Address is required';
           if (value.trim().length < 5) return 'Address must be at least 5 characters';
           return '';
-
         case 'city':
           if (!value.trim()) return 'City is required';
           if (value.trim().length < 2) return 'City must be at least 2 characters';
           return '';
-
         case 'state':
           if (!value.trim()) return 'State is required';
           if (value.trim().length < 2) return 'State must be at least 2 characters';
           return '';
-
         case 'zipCode':
           if (!value.trim()) return 'Zip code is required';
           const zipRegex = /^\d{5}(-\d{4})?$/;
           if (!zipRegex.test(value)) return 'Please enter a valid zip code';
           return '';
-
         case 'country_id':
           if (!value) return 'Country is required';
           return '';
-
         case 'phoneNumber':
           if (!value.trim()) return 'Phone number is required';
           return '';
-
         default:
           return '';
       }
     };
 
-    // Handle input changes
+    /**
+     * Handles input changes and clears field-level error on edit.
+     */
     const handleInputChange = (name: string, value: string) => {
       setFormData(prev => ({ ...prev, [name]: value }));
       setErrors(prev => ({ ...prev, [name]: '' }));
     };
 
-    // Validate all fields
+    /**
+     * Validates the entire form and passes results to parent via `onValidationChange`.
+     */
     const validateForm = () => {
       const newErrors = {
         firstName: validateField('firstName', formData.firstName),
@@ -128,125 +136,120 @@ const ContactInfo = React.forwardRef<{ validate: () => boolean }, ContactInfoPro
       return isValid;
     };
 
-    // Expose validation function to parent
+    /**
+     * Expose validateForm to parent via ref
+     */
     React.useImperativeHandle(ref, () => ({
       validate: validateForm
     }));
 
     return (
-      <div>
-        <p className="font-medium text-[22px]/[30px]">Contact Info</p>
-        <p className="mt-[8px] text-[14px]/[13px] text-[#787878]">Add your contact information</p>
+      <div data-testid="contact-info-form">
+        <p className="font-medium text-[22px]/[30px]" id="contact-info-title" data-testid="contact-info-title">
+          Contact Info
+        </p>
+        <p className="mt-[8px] text-[14px]/[13px] text-[#787878]" id="contact-info-subtitle" data-testid="contact-info-subtitle">
+          Add your contact information
+        </p>
+
+        {/* First + Last Name */}
         <div className="flex sm:flex-row flex-col gap-[20px] mt-[40px]">
           <div className="w-full">
             <p className="font-medium text-[14px]/[22px] text-[#353535]">First Name *</p>
             <Input
+              id="contact-first-name"
+              data-testid="contact-first-name"
               className={`mt-[12px] h-[48px] ${errors.firstName ? 'border-red-500' : ''}`}
               value={formData.firstName}
               onChange={(e) => handleInputChange('firstName', e.target.value)}
-              onBlur={() => {
-                const error = validateField('firstName', formData.firstName);
-                setErrors(prev => ({ ...prev, firstName: error }));
-              }}
+              onBlur={() => setErrors(prev => ({ ...prev, firstName: validateField('firstName', formData.firstName) }))}
             />
-            {errors.firstName && (
-              <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
-            )}
+            {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
           </div>
           <div className="w-full">
             <p className="font-medium text-[14px]/[22px] text-[#353535]">Last Name *</p>
             <Input
+              id="contact-last-name"
+              data-testid="contact-last-name"
               className={`mt-[12px] h-[48px] ${errors.lastName ? 'border-red-500' : ''}`}
               value={formData.lastName}
               onChange={(e) => handleInputChange('lastName', e.target.value)}
-              onBlur={() => {
-                const error = validateField('lastName', formData.lastName);
-                setErrors(prev => ({ ...prev, lastName: error }));
-              }}
+              onBlur={() => setErrors(prev => ({ ...prev, lastName: validateField('lastName', formData.lastName) }))}
             />
-            {errors.lastName && (
-              <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
-            )}
+            {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
           </div>
         </div>
+
+        {/* Email */}
         <div className="w-full mt-[20px]">
           <p className="font-medium text-[14px]/[22px] text-[#353535]">Email Address *</p>
           <Input
+            id="contact-email"
+            data-testid="contact-email"
             className={`mt-[12px] h-[48px] ${errors.email ? 'border-red-500' : ''}`}
             value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
-            onBlur={() => {
-              const error = validateField('email', formData.email);
-              setErrors(prev => ({ ...prev, email: error }));
-            }}
+            onBlur={() => setErrors(prev => ({ ...prev, email: validateField('email', formData.email) }))}
           />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-          )}
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
         </div>
+
+        {/* Address Line 1 */}
         <div className="w-full mt-[20px]">
           <p className="font-medium text-[14px]/[22px] text-[#353535]">Address Line 1 *</p>
           <Input
+            id="contact-address-line1"
+            data-testid="contact-address-line1"
             className={`mt-[12px] h-[48px] ${errors.addressLine1 ? 'border-red-500' : ''}`}
             value={formData.addressLine1}
             onChange={(e) => handleInputChange('addressLine1', e.target.value)}
-            onBlur={() => {
-              const error = validateField('addressLine1', formData.addressLine1);
-              setErrors(prev => ({ ...prev, addressLine1: error }));
-            }}
+            onBlur={() => setErrors(prev => ({ ...prev, addressLine1: validateField('addressLine1', formData.addressLine1) }))}
           />
-          {errors.addressLine1 && (
-            <p className="text-red-500 text-sm mt-1">{errors.addressLine1}</p>
-          )}
+          {errors.addressLine1 && <p className="text-red-500 text-sm mt-1">{errors.addressLine1}</p>}
         </div>
+
+        {/* City + State */}
         <div className="flex sm:flex-row flex-col gap-[20px] mt-[40px]">
           <div className="w-full">
             <p className="font-medium text-[14px]/[22px] text-[#353535]">City *</p>
             <Input
+              id="contact-city"
+              data-testid="contact-city"
               className={`mt-[12px] h-[48px] ${errors.city ? 'border-red-500' : ''}`}
               value={formData.city}
               onChange={(e) => handleInputChange('city', e.target.value)}
-              onBlur={() => {
-                const error = validateField('city', formData.city);
-                setErrors(prev => ({ ...prev, city: error }));
-              }}
+              onBlur={() => setErrors(prev => ({ ...prev, city: validateField('city', formData.city) }))}
             />
-            {errors.city && (
-              <p className="text-red-500 text-sm mt-1">{errors.city}</p>
-            )}
+            {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
           </div>
           <div className="w-full">
             <p className="font-medium text-[14px]/[22px] text-[#353535]">State *</p>
             <Input
+              id="contact-state"
+              data-testid="contact-state"
               className={`mt-[12px] h-[48px] ${errors.state ? 'border-red-500' : ''}`}
               value={formData.state}
               onChange={(e) => handleInputChange('state', e.target.value)}
-              onBlur={() => {
-                const error = validateField('state', formData.state);
-                setErrors(prev => ({ ...prev, state: error }));
-              }}
+              onBlur={() => setErrors(prev => ({ ...prev, state: validateField('state', formData.state) }))}
             />
-            {errors.state && (
-              <p className="text-red-500 text-sm mt-1">{errors.state}</p>
-            )}
+            {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
           </div>
         </div>
+
+        {/* Zip Code + Country */}
         <div className="flex sm:flex-row flex-col gap-[20px] mt-[40px]">
           <div className="w-full">
             <p className="font-medium text-[14px]/[22px] text-[#353535]">Zip Code *</p>
             <Input
+              id="contact-zip"
+              data-testid="contact-zip"
               className={`mt-[12px] h-[48px] ${errors.zipCode ? 'border-red-500' : ''}`}
               value={formData.zipCode}
-              onChange={(e) => handleInputChange('zipCode', e.target.value)}
-              onBlur={() => {
-                const error = validateField('zipCode', formData.zipCode);
-                setErrors(prev => ({ ...prev, zipCode: error }));
-              }}
               placeholder="12345 or 12345-6789"
+              onChange={(e) => handleInputChange('zipCode', e.target.value)}
+              onBlur={() => setErrors(prev => ({ ...prev, zipCode: validateField('zipCode', formData.zipCode) }))}
             />
-            {errors.zipCode && (
-              <p className="text-red-500 text-sm mt-1">{errors.zipCode}</p>
-            )}
+            {errors.zipCode && <p className="text-red-500 text-sm mt-1">{errors.zipCode}</p>}
           </div>
           <div className="w-full">
             <p className="font-medium text-[14px]/[22px] text-[#353535]">Country *</p>
@@ -257,29 +260,37 @@ const ContactInfo = React.forwardRef<{ validate: () => boolean }, ContactInfoPro
                 setErrors(prev => ({ ...prev, country_id: '' }));
               }}
             >
-              <SelectTrigger className={`h-[48px] mt-[12px] ${errors.country_id ? 'border-red-500' : ''}`}>
+              <SelectTrigger
+                id="contact-country"
+                data-testid="contact-country"
+                className={`h-[48px] mt-[12px] ${errors.country_id ? 'border-red-500' : ''}`}
+              >
                 <SelectValue placeholder="Select Country" />
               </SelectTrigger>
               <SelectContent>
-                {(country || [])?.map((country: any) => (
-                  <SelectItem key={country.id} value={country.id}>
-                    {country.name}
+                {(country || []).map((c: any) => (
+                  <SelectItem
+                    key={c.id}
+                    value={c.id}
+                    id={`contact-country-${c.id}`}
+                    data-testid={`contact-country-${c.id}`}
+                  >
+                    {c.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            {errors.country_id && (
-              <p className="text-red-500 text-sm mt-1">{errors.country_id}</p>
-            )}
+            {errors.country_id && <p className="text-red-500 text-sm mt-1">{errors.country_id}</p>}
           </div>
         </div>
+
+        {/* Phone Number */}
         <div className="w-full mt-[40px]">
           <p className="font-medium text-[14px]/[22px] text-[#353535]">Phone Number *</p>
           <div className="flex sm:flex-row flex-col gap-[16px] w-full mt-[12px]">
             <div className="sm:w-[113px] w-full">
               <Select
                 defaultValue="US"
-                indicatorVisibility={false}
                 onValueChange={(value) => {
                   setCode(phoneNumber.find((item) => item.key === value)?.code || '');
                 }}
@@ -328,13 +339,12 @@ const ContactInfo = React.forwardRef<{ validate: () => boolean }, ContactInfoPro
               />
             </div>
           </div>
-          {errors.phoneNumber && (
-            <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>
-          )}
+          {errors.phoneNumber && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>}
         </div>
       </div>
     );
-  });
+  }
+);
 
 ContactInfo.displayName = 'ContactInfo';
 

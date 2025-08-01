@@ -4,21 +4,20 @@
  * and upcoming steps in outlined style.
  */
 
-import { Briefcase, Check, CloudCheck, Contact, FileText } from "lucide-react"; // or use any checkmark SVG/icon
 import React from "react";
+import { Briefcase, Check, CloudCheck, Contact, FileText } from "lucide-react";
 
-import { JSX } from 'react';
 const steps = [
-  { title: "Contact Info", icon : <Contact className="size-[12px]"/>},
-  { title: "Resume & Cover Letter", icon : <FileText className="size-[12px]"/>},
-  { title: "Qualifications", icon : <Briefcase className="size-[12px]"/>},
-  { title: "Applicant Questions", icon : <i className="text-[12px] font-medium ">?</i>},
-  { title: "Review", icon : <CloudCheck className="size-[12px]"/>},
+  { title: "Contact Info", icon: <Contact className="w-3 h-3" /> }, // 12px = 3 * 4px
+  { title: "Resume & Cover Letter", icon: <FileText className="w-3 h-3" /> },
+  { title: "Qualifications", icon: <Briefcase className="w-3 h-3" /> },
+  { title: "Applicant Questions", icon: <i className="text-[12px] font-medium">?</i> },
+  { title: "Review", icon: <CloudCheck className="w-3 h-3" /> },
 ];
 
 /**
  * Renders the stepper UI with vertical line indicators and labeled steps.
- * 
+ *
  * @param currentStep - The current active step (1-indexed)
  * @returns JSX.Element
  */
@@ -33,24 +32,25 @@ export default function Stepper({ currentStep = 2 }: { currentStep?: number }): 
 
           return (
             <div
-              key={index}
+              key={stepNumber}
               className="flex items-start gap-[12px] relative"
               id={`step-${stepNumber}`}
               data-testid={`step-${stepNumber}`}
             >
-              {/* Vertical line */}
+              {/* Vertical line connecting steps (except last) */}
               {index !== steps.length - 1 && (
                 <div
-                  className={`absolute top-[30px] left-[13px] h-[33px] border-l border-dashed ${index < currentStep ? "border-[#0D978B]" : "border-[#626262]"
-                    } z-0`}
+                  className={`absolute top-[30px] left-[13px] h-[33px] border-l border-dashed ${
+                    isCompleted ? "border-[#0D978B]" : "border-[#626262]"
+                  } z-0`}
                   id={`step-line-${stepNumber}`}
                   data-testid={`step-line-${stepNumber}`}
-                ></div>
+                />
               )}
 
-              {/* Circle */}
+              {/* Step circle */}
               <div
-                className="relative z-1"
+                className="relative z-10"
                 id={`step-circle-${stepNumber}`}
                 data-testid={`step-circle-${stepNumber}`}
               >
@@ -63,21 +63,22 @@ export default function Stepper({ currentStep = 2 }: { currentStep?: number }): 
                     {step.icon}
                   </div>
                 ) : (
-                  <div className="w-[26px] h-[26px] rounded-full border-[1px] border-[#626262] text-[#626262] flex items-center justify-center text-[12px] font-medium">
+                  <div className="w-[26px] h-[26px] rounded-full border border-[#626262] text-[#626262] flex items-center justify-center text-[12px] font-medium">
                     {step.icon}
                   </div>
                 )}
               </div>
 
-              {/* Labels */}
+              {/* Step title */}
               <div
                 className="step-labels"
                 id={`step-labels-${stepNumber}`}
                 data-testid={`step-labels-${stepNumber}`}
               >
                 <div
-                  className={`text-[14px]/[18px] font-medium ${isCompleted || isActive ? "text-[#0D978B]" : "text-[#626262]"
-                    }`}
+                  className={`text-[14px]/[18px] font-medium ${
+                    isCompleted || isActive ? "text-[#0D978B]" : "text-[#626262]"
+                  }`}
                   id={`step-title-${stepNumber}`}
                   data-testid={`step-title-${stepNumber}`}
                 >
