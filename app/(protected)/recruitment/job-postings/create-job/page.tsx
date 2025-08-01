@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Publish from "./components/publish";
 import Completed from "./components/completed";
 import { addNewJobTitle, getDesignation } from "@/api/basic"
-import { addNewDetailJob, editJobDescription, editDetailJob, getJobDetails } from "@/api/job-posting";
+import { addNewDetailJob, editJobDescription, editDetailJob, getJobDetails, publishJob } from "@/api/job-posting";
 import { useBasic } from "@/context/BasicContext";
 import { errorHandlers } from "@/utils/error-handler";
 
@@ -376,10 +376,24 @@ export default function CreateJob(): JSX.Element {
             }
 
             if (currentStep === 5) {
-                if (shouldContinue) {
-                    setCurrentStep(currentStep + 1);
-                } else {
-                    router.push('/recruitment/job-postings');
+                try {
+                    const response = await publishJob(searchParams.get('id') || '');
+                    if (response.data.status) {
+                        if (shouldContinue) {
+                            setCurrentStep(currentStep + 1);
+                        } else {
+                            router.push('/recruitment/job-postings');
+                        }
+                    }
+                    else {
+                        errorHandlers.jobPosting(response.data.message);
+                        setIsLoading(false);
+                        return;
+                    }
+                } catch (error) {
+                    errorHandlers.jobPosting(error);
+                    setIsLoading(false);
+                    return;
                 }
             }
         } finally {

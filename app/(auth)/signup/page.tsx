@@ -249,10 +249,9 @@ export default function Page(): JSX.Element {
                                 value={field.value}
                                 onValueChange={field.onChange}
                                 indicatorVisibility={false}
-                                id="signup-company-size-select"
                                 data-testid="signup-company-size-select"
                               >
-                                <SelectTrigger className="h-[48px]" id="signup-company-size-trigger" data-testid="signup-company-size-trigger">
+                                <SelectTrigger className="h-[48px]" id="signup-company-size-select" data-testid="signup-company-size-trigger">
                                   <SelectValue placeholder="Select a size" id="signup-company-size-value" data-testid="signup-company-size-value" />
                                 </SelectTrigger>
                                 <SelectContent id="signup-company-size-content" data-testid="signup-company-size-content">
@@ -329,10 +328,9 @@ export default function Page(): JSX.Element {
                             value={field.value}
                             onValueChange={field.onChange}
                             indicatorVisibility={false}
-                            id="signup-country-select"
                             data-testid="signup-country-select"
                           >
-                            <SelectTrigger className="h-[48px]" id="signup-country-trigger" data-testid="signup-country-trigger">
+                            <SelectTrigger className="h-[48px]" id="signup-country-select" data-testid="signup-country-trigger">
                               <SelectValue placeholder="Select country" id="signup-country-value" data-testid="signup-country-value" />
                             </SelectTrigger>
                             <SelectContent id="signup-country-content" data-testid="signup-country-content">
@@ -354,10 +352,9 @@ export default function Page(): JSX.Element {
                         onValueChange={(value) => {
                           setCode(phoneNumber.find((item) => item.key === value)?.code || '');
                         }}
-                        id="signup-phone-country-select"
                         data-testid="signup-phone-country-select"
                       >
-                        <SelectTrigger className="h-[48px]" id="signup-phone-country-trigger" data-testid="signup-phone-country-trigger">
+                        <SelectTrigger className="h-[48px]" id="signup-phone-country-select" data-testid="signup-phone-country-trigger">
                           <SelectValue placeholder="Select a country" id="signup-phone-country-value" data-testid="signup-phone-country-value" />
                         </SelectTrigger>
                         <SelectContent id="signup-phone-country-content" data-testid="signup-phone-country-content">
@@ -402,10 +399,9 @@ export default function Page(): JSX.Element {
                             value={field.value}
                             onValueChange={field.onChange}
                             indicatorVisibility={false}
-                            id="signup-industry-select"
                             data-testid="signup-industry-select"
                           >
-                            <SelectTrigger className="h-[48px]" id="signup-industry-trigger" data-testid="signup-industry-trigger">
+                            <SelectTrigger className="h-[48px]" id="signup-industry-select" data-testid="signup-industry-trigger">
                               <SelectValue placeholder="Select industry" id="signup-industry-value" data-testid="signup-industry-value" />
                             </SelectTrigger>
                             <SelectContent id="signup-industry-content" data-testid="signup-industry-content">

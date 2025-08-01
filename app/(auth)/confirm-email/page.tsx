@@ -41,7 +41,25 @@ export default function Page(): JSX.Element {
      * Sets token validity state accordingly.
      */
     const verifyToken = async (): Promise<void> => {
-
+      // Uncomment and implement API call as needed
+      // try {
+      //   setVerifyingToken(true);
+      //   const response = await apiFetch('/api/auth/reset-password-verify', {
+      //     method: 'POST',
+      //     headers: { 'Content-Type': 'application/json' },
+      //     body: JSON.stringify({ token }),
+      //   });
+      //   if (response.ok) {
+      //     setIsValidToken(true);
+      //   } else {
+      //     const errorData = await response.json();
+      //     setError(errorData.message || 'Invalid or expired token.');
+      //   }
+      // } catch {
+      //   setError('Unable to verify the reset token.');
+      // } finally {
+      //   setVerifyingToken(false);
+      // }
     };
 
     if (token) {
@@ -60,6 +78,27 @@ export default function Page(): JSX.Element {
     setIsProcessing(true);
     setError(null);
     setSuccessMessage(null);
+
+    // Uncomment and implement API call as needed
+    // try {
+    //   const response = await apiFetch('/api/auth/change-password', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ token, newPassword: values.newPassword }),
+    //   });
+
+    //   if (response.ok) {
+    //     setSuccessMessage('Password reset successful! Redirecting to login...');
+    //     setTimeout(() => router.push('/signin'), 3000);
+    //   } else {
+    //     const errorData = await response.json();
+    //     setError(errorData.message || 'Password reset failed.');
+    //   }
+    // } catch {
+    //   setError('An error occurred while resetting the password.');
+    // } finally {
+    //   setIsProcessing(false);
+    // }
   }
 
   return (

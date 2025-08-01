@@ -11,6 +11,7 @@ import { Edit } from "lucide-react";
 
 interface PublishProps {
     jobData?: Record<string, unknown>;
+    onNavigateToStep?: (step: number) => void;
 }
 
 /**
@@ -169,15 +170,15 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
                     <div className="grid md:grid-cols-3 sm:grid-cols-2 mt-[12px] gap-[42px]" id="job-details-fields" data-testid="job-details-fields">
                         <div className="flex flex-col" id="field-job-title" data-testid="field-job-title">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Job Title</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.title || "N/A"}</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{String(data.title || "N/A")}</p>
                         </div>
                         <div className="flex flex-col" id="field-department" data-testid="field-department">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Department</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.department?.name || "N/A"}</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.department && typeof data.department === 'object' && 'name' in data.department ? data.department.name : "N/A"}</p>
                         </div>
                         <div className="flex flex-col" id="field-employment-type" data-testid="field-employment-type">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Employment Type</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.employment_type?.name || "N/A"}</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.employment_type && typeof data.employment_type === 'object' && 'name' in data.employment_type ? data.employment_type.name : "N/A"}</p>
                         </div>
                         <div className="flex flex-col" id="field-openings" data-testid="field-openings">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">No. of Openings</p>
@@ -200,8 +201,8 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
                         <div className="flex flex-col" id="field-location" data-testid="field-location">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Location Type</p>
                             <p className="text-[14px]/[22px] font-medium text-[#353535]">
-                                {data.location_type?.name || "N/A"}
-                                {data.state && data.country?.name ? ` (${data.state}, ${data.country.name})` : ""}
+                                {data.location_type && typeof data.location_type === 'object' && 'name' in data.location_type ? data.location_type.name : "N/A"}
+                                {data.state && data.country && typeof data.country === 'object' && 'name' in data.country ? ` (${data.state}, ${data.country.name})` : ""}
                             </p>
                         </div>
                         <div className="flex flex-col" id="field-salary" data-testid="field-salary">

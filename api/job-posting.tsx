@@ -25,6 +25,16 @@ export const getJobDetails = async (id: string) => {
     return response.data;
 }
 
+export const deleteJob = async (id: string) => {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/delete/${id}`);
+    return response.data;
+}
+
+export const publishJob = async (id: string) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/publish`, { id });
+    return response.data;
+}
+
 // Question management APIs
 export const addQuestionItem = async (data: {
     question_name: string;

@@ -46,7 +46,27 @@ export default function Page() {
 
   useEffect(() => {
     async function verifyToken() {
-
+      // Uncomment and implement token verification API call here
+      /*
+      try {
+        setVerifyingToken(true);
+        const response = await fetch('/api/auth/reset-password-verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token }),
+        });
+        if (response.ok) {
+          setIsValidToken(true);
+        } else {
+          const data = await response.json();
+          setError(data.message || 'Invalid or expired token.');
+        }
+      } catch {
+        setError('Unable to verify the reset token.');
+      } finally {
+        setVerifyingToken(false);
+      }
+      */
     }
 
     if (token) {

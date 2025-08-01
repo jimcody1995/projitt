@@ -231,21 +231,21 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                         <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Choose based on where the role is performed not where the company is based.</p>
                     </div>
                     <div>
-                        <RadioGroup className="flex gap-[32px]" defaultValue={locationType} onValueChange={(e) => setLocationType(Number(e))}>
+                        <RadioGroup className="flex gap-[32px]" defaultValue={locationType.toString()} onValueChange={(e) => setLocationType(Number(e))}>
                             <div className="flex gap-[6px]">
-                                <RadioGroupItem value={1} id="onsite" />
+                                <RadioGroupItem value="1" id="onsite" />
                                 <Label htmlFor="onsite" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 1 ? 'text-[#0d978b]' : '')}>
                                     Onsite
                                 </Label>
                             </div>
                             <div className="flex gap-[6px]">
-                                <RadioGroupItem value={2} id="hybrid" />
+                                <RadioGroupItem value="2" id="hybrid" />
                                 <Label htmlFor="hybrid" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 2 ? 'text-[#0d978b]' : '')}>
                                     Hybrid
                                 </Label>
                             </div>
                             <div className="flex gap-[6px]">
-                                <RadioGroupItem value={3} id="remote" />
+                                <RadioGroupItem value="3" id="remote" />
                                 <Label htmlFor="remote" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 3 ? 'text-[#0d978b]' : '')}>
                                     Remote
                                 </Label>
