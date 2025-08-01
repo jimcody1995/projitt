@@ -15,31 +15,7 @@ export default function Page() {
 
   const verify = useCallback(
     async (token: string) => {
-      // Uncomment and implement your API call here
-      /*
-      try {
-        const res = await apiFetch('/api/auth/verify-email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token }),
-        });
-        const data = await res.json();
 
-        if (res.status === 200) {
-          setError(null);
-          setMessage('Your email has been successfully verified!');
-          setTimeout(() => {
-            router.push('/signin'); // Redirect after success
-          }, 2000);
-        } else {
-          setMessage(null);
-          setError(data.message || 'Verification failed.');
-        }
-      } catch {
-        setMessage(null);
-        setError('An error occurred during verification.');
-      }
-      */
     },
     [router]
   );
