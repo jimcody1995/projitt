@@ -131,19 +131,6 @@ export default function JobPostings() {
         getData();
     }, [selectedLocations, selectedDepartments, selectedTypes, selectedStatuses]);
 
-    /**
-     * Counts job postings by status
-     * @returns {Record<string, number>} Object with status counts
-     */
-    const statusCounts = useMemo<Record<string, number>>(() => {
-        return jobData.reduce(
-            (acc, item) => {
-                acc[item.status] = (acc[item.status] || 0) + 1;
-                return acc;
-            },
-            {} as Record<string, number>,
-        );
-    }, []);
 
     /**
      * Defines columns for the data grid
@@ -358,34 +345,6 @@ export default function JobPostings() {
      * @returns {JSX.Element} Actions dropdown menu
      */
     function ActionsCell({ row }: { row: Row<any> }): JSX.Element {
-        const { copyToClipboard } = useCopyToClipboard();
-
-        /**
-         * Copies job ID to clipboard and shows toast notification
-         * @returns {void}
-         */
-        const handleCopyId = (): void => {
-            copyToClipboard(String(row.original.id));
-            const message = `Session ID successfully copied: ${row.original.id}`;
-            toast.custom(
-                (t) => (
-                    <Alert
-                        variant="mono"
-                        icon="success"
-                        close={false}
-                        onClose={() => toast.dismiss(t)}
-                    >
-                        <AlertIcon>
-                            <RiCheckboxCircleFill />
-                        </AlertIcon>
-                        <AlertTitle>{message}</AlertTitle>
-                    </Alert>
-                ),
-                {
-                    position: 'top-center',
-                },
-            );
-        };
 
         return (
             <DropdownMenu>
