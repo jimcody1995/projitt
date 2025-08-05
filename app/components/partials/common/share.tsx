@@ -8,7 +8,7 @@ import { useState } from "react";
 
 interface ShareProps {
     url: string;
-    className: string
+    className?: string
 }
 export default function Share({ url, className }: ShareProps) {
     const [open, setOpen] = useState(false);

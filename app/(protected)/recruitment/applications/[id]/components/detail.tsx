@@ -1,12 +1,23 @@
 'use client'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, Star, X } from "lucide-react";
 import ApplicationSummary from "./application-summary";
+import Resume from "./resume";
+import ApplicantQuestions from "./applicant-questions";
+import Stages from "./stages";
+import ScheduleInterview from "./schedule-interview";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import DialogContent, { Dialog, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-export default function Detail({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
-    const [activeSection, setActiveSection] = useState<'stages' | 'application-summary' | 'resume' | 'applicant-question'>('stages');
+interface DetailProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}
+
+export default function Detail({ open, onOpenChange }: DetailProps) {
+    const [activeSection, setActiveSection] = useState<'stages' | 'application-summary' | 'resume' | 'applicant-question' | 'schedule-interview'>('stages');
     return (
         <div>
             <Sheet open={open} onOpenChange={onOpenChange}>
@@ -52,14 +63,61 @@ export default function Detail({ open, onOpenChange }: { open: boolean, onOpenCh
                                     </div>
                                 </div>
                             </div>
-                            <Button className="h-[42px]">
-                                <span className="text-[14px]/[20px] font-semibold">Actions</span>
-                                <ChevronDown className="size-[18px] text-white" />
-                            </Button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button className="h-[42px]">
+                                        <span className="text-[14px]/[20px] font-semibold">Actions</span>
+                                        <ChevronDown className="size-[18px] text-white" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                    side="bottom"
+                                    align="end"
+                                >
+                                    <div
+                                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                        onClick={() => setActiveSection('schedule-interview')}
+                                    >
+                                        Schedule Interview
+                                    </div>
+                                    <div
+                                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                    >
+                                        Hire & Send for Approval
+                                    </div>
+                                    <div
+                                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                    >
+                                        Send Message
+                                    </div>
+                                    <Dialog>
+                                        <DialogTrigger asChild>
+                                            <div
+                                                className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                            >
+                                                Reject
+                                            </div>
+                                        </DialogTrigger>
+                                        <DialogContent close={false}>
+                                            <DialogHeader>
+                                                <DialogTitle></DialogTitle>
+                                                <DialogDescription className="flex flex-col items-center">
+
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                        </DialogContent>
+                                    </Dialog>
+                                    <div
+                                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                    >
+                                        Reject
+                                    </div>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </div>
                     <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
-                        <div className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'stages' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('stages')}>
+                        <div className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${(activeSection === 'stages' || activeSection === 'schedule-interview') ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('stages')}>
                             <p className='whitespace-nowrap'>Stages</p>
                         </div>
                         <div className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'application-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('application-summary')}>
@@ -72,12 +130,17 @@ export default function Detail({ open, onOpenChange }: { open: boolean, onOpenCh
                             <p className='whitespace-nowrap'>Applicant Question</p>
                         </div>
                     </div>
-                    <div className="px-[32px] py-[24px]">
-                        {/* {activeSection === 'stages' && <Stages />} */}
-                        {activeSection === 'application-summary' && <ApplicationSummary />}
-                        {/* {activeSection === 'resume' && <Resume />} */}
-                        {/* {activeSection === 'applicant-question' && <ApplicantQuestion />} */}
-                    </div>
+                    {activeSection === 'schedule-interview' ?
+                        <ScheduleInterview setActive={setActiveSection} onOpenChange={onOpenChange} />
+                        :
+                        <div className="px-[32px] py-[24px] overflow-y-auto">
+                            {activeSection === 'stages' && <Stages />}
+                            {activeSection === 'application-summary' && <ApplicationSummary />}
+                            {activeSection === 'resume' && <Resume />}
+                            {activeSection === 'applicant-question' && <ApplicantQuestions />}
+                        </div>
+                    }
+
                 </SheetContent >
             </Sheet >
         </div >

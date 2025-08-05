@@ -297,6 +297,8 @@ export default function JobPostings() {
     };
 
     const handleOpenChange = (open: boolean) => {
+        console.log("Asdfasdf");
+
         setSelectedApplication(null);
     };
 
