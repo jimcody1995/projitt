@@ -10,6 +10,7 @@ import Stages from "./stages";
 import ScheduleInterview from "./schedule-interview";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import DialogContent, { Dialog, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface DetailProps {
     open: boolean;
@@ -101,17 +102,28 @@ export default function Detail({ open, onOpenChange }: DetailProps) {
                                         <DialogContent close={false}>
                                             <DialogHeader>
                                                 <DialogTitle></DialogTitle>
-                                                <DialogDescription className="flex flex-col items-center">
-
+                                                <DialogDescription className="flex flex-col">
+                                                    <img src="/images/applicant/cancel.png" alt="" className="w-[95px] h-[95px] mx-auto" />
+                                                    <span className="text-[28px]/[36px] font-semibold mt-[28px] text-[#353535] text-center">Reject Applicant</span>
+                                                    <span className="text-[14px]/[24px] text-[#626262] mt-[8px] text-center">You're about to reject this applicant. They’ll be notified and and be removed from the hiring pipeline for this role.</span>
+                                                    <span className="mt-[28px] text-[14px]/[24px] text-[#8f8f8f]">Select an email template</span>
+                                                    <Select value="1">
+                                                        <SelectTrigger className="w-full h-[42px]">
+                                                            <SelectValue placeholder="Select an email template" />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectItem value="1">Offer Rejection Template</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <button className="text-[14px]/[24px] text-[#0d978b] underline mt-[6px] text-start">Preview/Edit Email</button>
+                                                    <div className="flex items-center gap-[12px] mt-[28px] w-full">
+                                                        <Button variant="outline" className="w-full h-[42px]">Cancel</Button>
+                                                        <Button className="bg-[#C30606] hover:bg-[#C30606] w-full h-[42px]">Reject Applicant</Button>
+                                                    </div>
                                                 </DialogDescription>
                                             </DialogHeader>
                                         </DialogContent>
                                     </Dialog>
-                                    <div
-                                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                                    >
-                                        Reject
-                                    </div>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>

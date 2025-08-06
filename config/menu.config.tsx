@@ -96,7 +96,7 @@ export const MENU_SIDEBAR: MenuConfig = [
       { title: 'Job Postings', path: '/recruitment/job-postings' },
       { title: 'Applications', path: '/recruitment/applications' },
       { title: 'Assessments', path: '/recruitment/assessments' },
-      { title: 'Interview', path: '/recruitment/interview' },
+      { title: 'Interview', path: '/recruitment/interviews' },
       { title: 'Pending Hires', path: '/recruitment/pending-hires' },
     ],
   },

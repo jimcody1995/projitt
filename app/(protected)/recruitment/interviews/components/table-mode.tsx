@@ -1,46 +1,33 @@
-'use client';
-
-import { JSX, useEffect, useMemo, useState } from 'react';
+'use client'
+import { useState } from "react";
 import {
     ColumnDef,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     PaginationState,
-    Row,
-    RowSelectionState,
     SortingState,
+    Row,
     useReactTable,
 } from '@tanstack/react-table';
-import {
-
-    Download,
-    EllipsisVertical,
-    ListFilter,
-    Search,
-    X,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-
-import { DataGrid } from '@/components/ui/data-grid';
-import { DataGridColumnHeader } from '@/components/ui/data-grid-column-header';
-import { DataGridPagination } from '@/components/ui/data-grid-pagination';
-import {
-    DataGridTable,
-    DataGridTableRowSelect,
-    DataGridTableRowSelectAll,
-} from '@/components/ui/data-grid-table';
-import { Input } from '@/components/ui/input';
-import { FilterTool } from './filter';
-import { SelectedDialog } from './selectedDialog';
-import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
-import CheckDialog from './checkDialog';
-import { NoData } from './noData';
-import { useRouter } from 'next/navigation';
 import moment from 'moment';
-import Detail from './detail';
+import Detail from '../../applications/[id]/components/detail';
+import { useMemo } from 'react';
+import { DataGridTable } from "@/components/ui/data-grid-table";
+import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
+import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Download, EllipsisVertical, ListFilter, Search, X } from "lucide-react";
+import CheckDialog from "../../job-postings/components/checkDialog";
+import { DataGrid } from "@/components/ui/data-grid";
+import { Input } from "@/components/ui/input";
+import { FilterTool } from "./filter";
+import { NoData } from "../../assessments/components/noData";
+import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 
-export default function JobPostings() {
+
+export default function TableMode({ setSelectedApplication }: { setSelectedApplication: (id: string) => void }) {
+    const [activeSection, setActiveSection] = useState<'upcoming' | 'pending' | 'past'>('upcoming');
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -48,49 +35,28 @@ export default function JobPostings() {
     const [sorting, setSorting] = useState<SortingState>([
         { id: 'lastSession', desc: true },
     ]);
-    const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [showFliter, setShowFilter] = useState(false);
-    const [selectedApplication, setSelectedApplication] = useState<any>(null);
     const [applicantsData, setApplicantsData] = useState<any[]>([
         {
-            id: '1',
-            application_id: '#E0001',
-            name: 'Alice Fernadez',
-            ai_score: 85,
-            date: '2023-06-01',
-            status: 'interview',
+            name: 'John Doe',
+            job_title: 'Software Engineer',
+            job_location: 'USA',
+            state: 'Interview',
+            date: '2023-06-01 10:00 AM',
+            mode: 'Online',
         },
         {
-            id: '2',
-            application_id: '#E0002',
-            name: 'Bob Johnson',
-            ai_score: 72,
-            date: '2024-06-02',
-            status: 'new',
-        },
-        {
-            id: '3',
-            application_id: '#E0003',
-            name: 'Charlie Davis',
-            ai_score: 68,
-            date: '2024-06-03',
-            status: 'hired',
-        },
-        {
-            id: '4',
-            application_id: '#E0004',
-            name: 'David Wilson',
-            ai_score: 40,
-            date: '2025-06-04',
-            status: 'rejected',
+            name: 'John David',
+            job_title: 'Software Engineer',
+            job_location: 'USA',
+            state: 'Interview',
+            date: '2023-06-01 10:00 AM',
+            mode: 'Online',
         },
     ]);
-    const [selectedAIScoring, setSelectedAIScoring] = useState<number[]>([]);
-    const [selectedShortListed, setSelectedShortListed] = useState<string>("");
+    const [selectedMode, setSelectedMode] = useState<number[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
-    const router = useRouter();
     const filteredData = useMemo<any[]>(() => {
         return applicantsData.filter((item) => {
             const matchesStatus =
@@ -136,42 +102,6 @@ export default function JobPostings() {
     const columns = useMemo<ColumnDef<any>[]>(
         () => [
             {
-                id: 'select',
-                header: () => <DataGridTableRowSelectAll />,
-                cell: ({ row }) => <DataGridTableRowSelect row={row} />,
-                enableSorting: false,
-                enableHiding: false,
-                enableResizing: false,
-                size: 46,
-                meta: {
-                    cellClassName: '',
-                },
-            },
-            {
-                accessorKey: 'application-id',
-                header: ({ column }) => (
-                    <DataGridColumnHeader
-                        className='text-[14px] font-medium'
-                        title="Application ID"
-                        column={column}
-                        data-testid="application-id-header"
-                    />
-                ),
-                cell: ({ row }) => (
-                    <span
-                        className="text-[14px] text-[#4b4b4b] "
-                        data-testid={`application-id-${row.original.id}`}
-                    >
-                        {row.original.application_id}
-                    </span>
-                ),
-                enableSorting: true,
-                size: 80,
-                meta: {
-                    headerClassName: '',
-                },
-            },
-            {
                 accessorKey: 'name',
                 header: ({ column }) => (
                     <DataGridColumnHeader
@@ -190,52 +120,34 @@ export default function JobPostings() {
                     </span>
                 ),
                 enableSorting: true,
-                size: 140,
+                size: 120,
                 meta: {
                     headerClassName: '',
                 },
             },
             {
-                accessorKey: 'ai-score',
+                accessorKey: 'job-detail',
                 header: ({ column }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
-                        title="AI Score"
+                        title="Job Details"
                         column={column}
-                        data-testid="ai-score-header"
+                        data-testid="job-detail-header"
                     />
                 ),
                 cell: ({ row }) => (
-                    <span
-                        className={`text-[14px] ${row.original.ai_score >= 80 ? 'text-[#0D978B]' : row.original.ai_score >= 80 ? 'text-[#FFC107]' : row.original.ai_score >= 50 ? 'text-[#BE5E00]' : 'text-[#C30606]'}`}
-                        data-testid={`ai-score-${row.original.id}`}
-                    >
-                        {row.original.ai_score}%
-                    </span>
-                ),
-                enableSorting: true,
-                size: 90,
-                meta: {
-                    headerClassName: '',
-                },
-            },
-            {
-                accessorKey: 'date',
-                header: ({ column }) => (
-                    <DataGridColumnHeader
-                        className='text-[14px] font-medium'
-                        title="Application Date"
-                        column={column}
-                        data-testid="applicants-header"
-                    />
-                ),
-                cell: ({ row }) => (
-                    <span
-                        className="text-[14px] text-[#4b4b4b]"
-                        data-testid={`applicants-${row.original.id}`}
-                    >
-                        {moment(row.original.date).format('DD MMM, YYYY')}
-                    </span>
+                    <div data-testid={`job-detail-${row.original.id}`}>
+                        <p
+                            className="text-[14px]/[22px] text-[#4b4b4b]"
+                        >
+                            {row.original.job_title}
+                        </p>
+                        <p
+                            className="text-[11px]/[14px] text-[#8f8f8f]"
+                        >
+                            {row.original.job_location}
+                        </p>
+                    </div>
                 ),
                 enableSorting: true,
                 size: 120,
@@ -244,32 +156,81 @@ export default function JobPostings() {
                 },
             },
             {
-                accessorKey: 'status',
+                accessorKey: 'state',
                 header: ({ column }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
-                        title="Job Status"
+                        title="State"
                         column={column}
-                        data-testid="status-header"
+                        data-testid="state-header"
                     />
                 ),
-                cell: ({ row }) => {
-                    let badgeClass = "bg-muted text-foreground";
-                    if (row.original.status === "interview") badgeClass = "bg-[#ffdfc0] text-[#BE5E00]";
-                    else if (row.original.status === "new") badgeClass = "bg-[#d6eeec] text-[#0D978B]";
-                    else if (row.original.status === "hired") badgeClass = "bg-[#0d978b] text-white";
-                    else if (row.original.status === "rejected") badgeClass = "bg-[#C3060626] text-[#C30606]";
-                    return (
-                        <span
-                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}`}
-                            data-testid={`status-badge-${row.original.id}`}
-                        >
-                            {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
-                        </span>
-                    );
-                },
+                cell: ({ row }) => (
+                    <span
+                        className="text-[14px] text-[#4b4b4b]"
+                        data-testid={`stage-${row.original.id}`}
+                    >
+                        {row.original.state.charAt(0).toUpperCase() + row.original.state.slice(1)}
+                    </span>
+                ),
                 enableSorting: true,
-                size: 140,
+                size: 90,
+                meta: {
+                    headerClassName: '',
+                },
+            },
+            ...(activeSection === "upcoming"
+                ? [{
+                    accessorKey: 'date',
+                    header: ({ column }: { column: any }) => (
+                        <DataGridColumnHeader
+                            className='text-[14px] font-medium'
+                            title="Application Date"
+                            column={column}
+                            data-testid="applicants-header"
+                        />
+                    ),
+                    cell: ({ row }: { row: any }) => (
+                        <div data-testid={`job-detail-${row.original.id}`}>
+                            <p
+                                className="text-[14px]/[22px] text-[#4b4b4b]"
+                            >
+                                {moment(row.original.date).format('DD MMM, YYYY')}
+                            </p>
+                            <p
+                                className="text-[11px]/[14px] text-[#8f8f8f]"
+                            >
+                                {moment(row.original.date).format('HH:MM A')}
+                            </p>
+                        </div>
+                    ),
+                    enableSorting: true,
+                    size: 90,
+                    meta: {
+                        headerClassName: '',
+                    },
+                }]
+                : []),
+            {
+                accessorKey: 'mode',
+                header: ({ column }) => (
+                    <DataGridColumnHeader
+                        className='text-[14px] font-medium'
+                        title="Mode"
+                        column={column}
+                        data-testid="mode-header"
+                    />
+                ),
+                cell: ({ row }) => (
+                    <span
+                        className="text-[14px] text-[#4b4b4b]"
+                        data-testid={`mode-${row.original.id}`}
+                    >
+                        {row.original.mode.charAt(0).toUpperCase() + row.original.mode.slice(1)}
+                    </span>
+                ),
+                enableSorting: true,
+                size: 90,
                 meta: {
                     headerClassName: '',
                 },
@@ -284,19 +245,11 @@ export default function JobPostings() {
                     headerClassName: '',
                 },
             },
-        ],
-        [],
+        ].filter(Boolean),
+        [activeSection]
     );
 
-    useEffect(() => {
-        setSelectedRows(Object.keys(rowSelection));
-    }, [rowSelection]);
-
-
-
     const handleOpenChange = (open: boolean) => {
-        console.log("Asdfasdf");
-
         setSelectedApplication(null);
     };
 
@@ -308,11 +261,9 @@ export default function JobPostings() {
         state: {
             pagination,
             sorting,
-            rowSelection,
         },
         onPaginationChange: setPagination,
         onSortingChange: setSorting,
-        onRowSelectionChange: setRowSelection,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -351,33 +302,38 @@ export default function JobPostings() {
                         data-testid={`view-applicants-action-${row.original.id}`}
                         onClick={() => setSelectedApplication(row.original.id)}
                     >
-                        View Applicants
+                        Reschedule
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`duplicate-action-${row.original.id}`}
                     >
-                        Duplicate
+                        Cancel Interview
                     </div>
-
-                    <CheckDialog
-                        action="delete"
-                        trigger={
-                            <div
-                                className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                                data-testid={`delete-action-${row.original.id}`}
-                            >
-                                Delete
-                            </div>
-                        }
-                    />
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        data-testid={`duplicate-action-${row.original.id}`}
+                    >
+                        Mark as No-show
+                    </div>
                 </DropdownMenuContent>
             </DropdownMenu>
         );
     }
-
-
-    return (
+    return <div>
+        <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
+            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('upcoming')}>
+                <p className='whitespace-nowrap'>Upcoming</p>
+                <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
+            </div>
+            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('interviews')}>
+                <p className='whitespace-nowrap'>Pending</p>
+                <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
+            </div>
+            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('job-summary')}>
+                <p className='whitespace-nowrap'>Past</p>
+            </div>
+        </div>
         <div className='w-full mt-[22px]'>
             <DataGrid
                 className='w-full'
@@ -430,20 +386,10 @@ export default function JobPostings() {
                         </Button>
                     </div>
                 </div>
-                {showFliter && <FilterTool selectedAIScoring={selectedAIScoring} selectedShortListed={selectedShortListed} selectedStatuses={selectedStatuses} setSelectedAIScoring={setSelectedAIScoring} setSelectedShortListed={setSelectedShortListed} setSelectedStatuses={setSelectedStatuses} />}
+                {showFliter && <FilterTool selectedMode={selectedMode} selectedStatuses={selectedStatuses} setSelectedMode={setSelectedMode} setSelectedStatuses={setSelectedStatuses} />}
                 <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     <> {filteredData.length === 0 ?
                         <NoData data-testid="no-data-message" /> : <>
-                            {selectedRows.length > 0 &&
-                                <SelectedDialog
-                                    selectedRows={selectedRows}
-                                    totalCount={filteredData?.length}
-                                    allData={filteredData}
-                                    setSelectedRows={setSelectedRows}
-                                    setRowSelection={setRowSelection}
-                                    data-testid="selected-dialog"
-                                />
-                            }
                             <div
                                 className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFliter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
                                 data-testid="list-view-container"
@@ -457,11 +403,7 @@ export default function JobPostings() {
                     </>
                 </div>
             </DataGrid>
-            <Detail
-                open={selectedApplication !== null}
-                onOpenChange={handleOpenChange}
-            />
-        </div>
 
-    );
-};
+        </div>
+    </div>;
+}
