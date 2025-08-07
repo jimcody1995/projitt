@@ -1,4 +1,4 @@
-import { Dialog, DialogClose, DialogContent, div, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { JSX, ReactNode } from "react";
 import { Info } from "lucide-react";
