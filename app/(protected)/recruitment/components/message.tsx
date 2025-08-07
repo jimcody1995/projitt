@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, div, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -37,7 +37,7 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent close={false} className="!w-[830px] max-w-[830px]">
                     <DialogTitle></DialogTitle>
-                    <DialogDescription >
+                    <div>
                         <div className="flex justify-center">
                             <p className="text-[14px]/[22px]">Communications/<span className="text-[#0d978b]">Offer Rejection Template</span></p>
                         </div>
@@ -97,7 +97,7 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                             </div>
                             <Button className="w-[158px] h-[42px]" onClick={() => onOpenChange(false)}>Send Message</Button>
                         </div>
-                    </DialogDescription>
+                    </div>
                 </DialogContent>
             </Dialog>
         </>

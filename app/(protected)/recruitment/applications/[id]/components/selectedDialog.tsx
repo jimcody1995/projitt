@@ -1,5 +1,7 @@
+'use client'
 import { Ban, MessageSquare, Star, Trash, Upload } from "lucide-react";
-import { JSX } from "react";
+import { JSX, useState } from "react";
+import Message from "../../../components/message";
 
 /**
  * SelectedDialog component displays actions and selection info when rows are selected.
@@ -16,16 +18,18 @@ export const SelectedDialog = ({
     setSelectedRows,
     allData,
     setRowSelection,
+    setIsMessage,
 }: {
     selectedRows: string[];
     totalCount: number;
     setSelectedRows: (rows: string[]) => void;
     allData: any[];
     setRowSelection: (selection: any) => void;
+    setIsMessage: (value: boolean) => void;
 }): JSX.Element => {
     return (
         <div
-            className="w-full flex justify-center items-center absolute sm:bottom-[45px] bottom-[160px] z-[1000] px-[40px]"
+            className="w-full flex justify-center items-center absolute sm:bottom-[45px] bottom-[160px] z-[40] px-[40px]"
             id="selected-dialog-container"
             data-testid="selected-dialog-container"
         >
@@ -77,6 +81,7 @@ export const SelectedDialog = ({
                         id="close-button"
                         data-testid="close-button"
                         type="button"
+                        onClick={() => setIsMessage(true)}
                     >
                         <MessageSquare className="size-[16px]" />
                         Send Message
@@ -101,6 +106,7 @@ export const SelectedDialog = ({
                     </button>
                 </div>
             </div>
+
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, MoreVertical, X } from "lucide-react";
+import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, CirclePlus, MoreVertical, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import moment from "moment";
 import { Calendar } from "@/components/ui/calendar";
@@ -10,8 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
-import { DialogContent, DialogDescription, DialogTitle, DialogTrigger, Dialog } from "@/components/ui/dialog";
+import { DialogContent, div, DialogTitle, DialogTrigger, Dialog } from "@/components/ui/dialog";
 import Message from "../../components/message";
+import FileDropUpload from "./file-drop-upload";
 interface DetailLetterProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -25,6 +26,9 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
     const [total, setTotal] = useState<number>(0);
     const [preview, setPreview] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [selectedOfferMethod, setSelectedOfferMethod] = useState<string>('system-generated');
+    const [file, setFile] = useState<File | null>(null);
+    const [id, setID] = useState<string | null>(null);
     const handleLeavesChange = (checked: boolean, id: string) => {
         if (checked) {
             setSelectedLeaves((prev) => [...prev, id]);
@@ -109,17 +113,23 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                 </DialogTrigger>
                                 <DialogContent close={false}>
                                     <DialogTitle></DialogTitle>
-                                    <DialogDescription className="flex flex-col">
+                                    <div className="flex flex-col">
                                         <img src="/images/applicant/check.png" alt="" className="w-[95px] h-[95px] mx-auto" />
                                         <span className="text-[28px]/[36px] font-semibold mt-[28px] text-[#353535] text-center">Hire Applicant</span>
                                         <span className="text-[14px]/[24px] text-[#626262] mt-[8px] text-center">You're about to send an offer to this applicant they will be moved to onboarding once accepted</span>
                                         <span className="mt-[28px] text-[14px]/[24px] text-[#8f8f8f]">Select an email template</span>
-                                        <Select value="1">
+                                        <Select >
                                             <SelectTrigger className="w-full h-[42px]">
-                                                <SelectValue placeholder="Select an email template" />
+                                                <SelectValue placeholder="Offer Letter Template" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="1">Offer Letter Template</SelectItem>
+                                                <button className="flex w-full items-center  gap-[5px] cursor-pointer h-[42px] text-[#0d978b] hover:text-[#3c8b85] ml-[20px]">
+                                                    <CirclePlus className="size-[20px] " />
+                                                    <span className="text-[14px]/[24px]">Add Template</span>
+                                                </button>
+                                                <SelectItem value="1">Reject Letter</SelectItem>
+                                                <SelectItem value="2">Accept Letter</SelectItem>
+                                                <SelectItem value="3">Appointment Letter</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <button className="text-[14px]/[24px] text-[#0d978b] underline mt-[6px] text-start cursor-pointer" onClick={() => setPreview(true)}>Preview/Edit Email</button>
@@ -127,7 +137,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                             <Button variant="outline" className="w-full h-[42px]">Cancel</Button>
                                             <Button className="bg-[#0D978B] hover:bg-[#0D978B] w-full h-[42px]">Send Offer</Button>
                                         </div>
-                                    </DialogDescription>
+                                    </div>
                                 </DialogContent>
                             </Dialog>
                         </div>
@@ -201,19 +211,19 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                             </div>
                         </div>
                         <div>
-                            <p className="text-[14px]/[16px]  text-[#1C1C1C]">Offer Expiry Date</p>
-                            <RadioGroup className="mt-[12px] flex items-center gap-[12px]">
+                            <p className="text-[14px]/[16px]  text-[#1C1C1C]">Generate Offer Letter</p>
+                            <RadioGroup value={selectedOfferMethod} onValueChange={setSelectedOfferMethod} className="mt-[12px] flex items-center gap-[12px]">
                                 <div className="flex items-center gap-[5px]">
-                                    <RadioGroupItem value="option1" />
+                                    <RadioGroupItem value="system-generated" />
                                     <p className="text-[13px]/[17px] text-[#787878]">System Generated</p>
                                 </div>
                                 <div className="flex items-center gap-[5px]">
-                                    <RadioGroupItem value="option2" />
+                                    <RadioGroupItem value="upload-manually" />
                                     <p className="text-[13px]/[17px] text-[#787878]">Upload Manually</p>
                                 </div>
                             </RadioGroup>
                         </div>
-                        <div>
+                        {selectedOfferMethod === 'system-generated' && <div>
                             <p className="text-[14px]/[16px]  text-[#1C1C1C]">Offer Letter Template</p>
                             <Select value="offer-letter">
                                 <SelectTrigger className="w-full h-[48px] mt-[12px]">
@@ -225,7 +235,11 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                     <SelectItem value="template3">Template 3</SelectItem>
                                 </SelectContent>
                             </Select>
-                        </div>
+                        </div>}
+                        {selectedOfferMethod === 'upload-manually' && <div>
+                            <p className="text-[14px]/[16px]  text-[#1C1C1C]">Upload Offer Letter</p>
+                            <FileDropUpload file={file} setFile={setFile} setID={setID} />
+                        </div>}
                         <div>
                             <p className="text-[14px]/[16px]  text-[#1C1C1C]">Work Location</p>
                             <Select >
@@ -401,7 +415,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
             <Dialog open={preview} onOpenChange={setPreview}>
                 <DialogContent close={false} className="!w-[830px] max-w-[830px]">
                     <DialogTitle></DialogTitle>
-                    <DialogDescription >
+                    <div>
                         <div className="flex justify-between">
                             <p className="text-[22px]/[30px] font-medium text-[#1c1c1c]"> Offer Letter Template</p>
                             <div className="flex flex-col gap-[4px] items-end">
@@ -427,13 +441,13 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                             <Button variant="outline" className="h-[42px]" onClick={() => setPreview(false)}>Go Back</Button>
                             <Button className="h-[42px]" onClick={() => setIsEdit(true)}>Edit Message</Button>
                         </div>
-                    </DialogDescription>
+                    </div>
                 </DialogContent>
             </Dialog>
             <Message
                 open={isEdit}
                 onOpenChange={setIsEdit}
             />
-        </div>
+        </div >
     );
 }

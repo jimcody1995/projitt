@@ -1,4 +1,4 @@
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, div, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { JSX, ReactNode } from "react";
 import { Info } from "lucide-react";
@@ -28,24 +28,13 @@ export default function CheckDialog({
         <Dialog>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
 
-            <DialogTitle
-                id={`check-dialog-title-${action}`}
-                data-testid={`check-dialog-title-${action}`}
-                className="sr-only"
-            >
-                {/* Title visually hidden since content below serves as dialog content */}
-                {action === "unpublish"
-                    ? "Unpublish Confirmation"
-                    : action === "close"
-                        ? "Close Confirmation"
-                        : "Delete Confirmation"}
-            </DialogTitle>
-
             <DialogContent
                 className="w-[414px]"
                 id={`check-dialog-content-${action}`}
                 data-testid={`check-dialog-content-${action}`}
             >
+                <DialogTitle>
+                </DialogTitle>
                 <div className="w-full flex flex-col items-center">
                     <div
                         className={`w-[40px] h-[40px] rounded-full ${action === "delete" ? "bg-[#C3060633]" : "bg-[#D6EEEC]"
@@ -71,7 +60,7 @@ export default function CheckDialog({
                         ? "Unpublish this Job?"
                         : action === "close"
                             ? "Close this Job Posting?"
-                            : "Permanently Delete This Job?"}
+                            : "Permanently Delete This Application?"}
                 </p>
 
                 <p
@@ -83,7 +72,7 @@ export default function CheckDialog({
                         ? "Applicants will no longer be able to apply, but the job remains open internally and can be re-published from drafts anytime."
                         : action === "close"
                             ? "Applicants will no longer be able to apply, and the job will be marked as closed in your system."
-                            : "This action will remove this job posting and all associated data. It cannot be undone! You can unpublish or close this job instead to remove temporarily."}
+                            : "This action will remove this application and all associated data. It cannot be undone! You can unpublish or close this job instead to remove temporarily."}
                 </p>
 
                 {action === "delete" && (
@@ -118,7 +107,7 @@ export default function CheckDialog({
                                 id="check-dialog-delete-button"
                                 data-testid="check-dialog-delete-button"
                             >
-                                Delete Job
+                                Delete Application
                             </Button>
                         </DialogClose>
                     ) : (

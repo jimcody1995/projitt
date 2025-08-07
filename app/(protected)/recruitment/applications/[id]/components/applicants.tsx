@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, useEffect, useMemo, useState } from 'react';
+import { JSX, useEffect, useMemo, useRef, useState } from 'react';
 import {
     ColumnDef,
     getCoreRowModel,
@@ -39,7 +39,10 @@ import { NoData } from './noData';
 import { useRouter } from 'next/navigation';
 import moment from 'moment';
 import Detail from './detail';
-
+import DialogContent, { Dialog, div, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import "react-circular-progressbar/dist/styles.css";
+import Message from '../../../components/message';
 export default function JobPostings() {
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -53,6 +56,7 @@ export default function JobPostings() {
     const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [showFliter, setShowFilter] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState<any>(null);
+    const [progress, setProgress] = useState(0);
     const [applicantsData, setApplicantsData] = useState<any[]>([
         {
             id: '1',
@@ -90,7 +94,7 @@ export default function JobPostings() {
     const [selectedAIScoring, setSelectedAIScoring] = useState<number[]>([]);
     const [selectedShortListed, setSelectedShortListed] = useState<string>("");
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
-    const router = useRouter();
+    const [isMessage, setIsMessage] = useState(false);
     const filteredData = useMemo<any[]>(() => {
         return applicantsData.filter((item) => {
             const matchesStatus =
@@ -132,7 +136,20 @@ export default function JobPostings() {
     //     getData();
     // }, [selectedLocations, selectedDepartments, selectedTypes, selectedStatuses]);
 
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+    const handleExport = () => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        intervalRef.current = setInterval(() => {
+            setProgress((prevProgress) => {
+                if (prevProgress >= 100) {
+                    if (intervalRef.current) clearInterval(intervalRef.current);
+                    return 100;
+                }
+                return prevProgress + 1;
+            });
+        }, 100);
+    }
     const columns = useMemo<ColumnDef<any>[]>(
         () => [
             {
@@ -424,10 +441,13 @@ export default function JobPostings() {
                             variant="outline"
                             className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
                             data-testid="filter-button"
+                            onClick={() => handleExport()}
                         >
                             <Download className='size-[20px]' />
                             Export
                         </Button>
+
+
                     </div>
                 </div>
                 {showFliter && <FilterTool selectedAIScoring={selectedAIScoring} selectedShortListed={selectedShortListed} selectedStatuses={selectedStatuses} setSelectedAIScoring={setSelectedAIScoring} setSelectedShortListed={setSelectedShortListed} setSelectedStatuses={setSelectedStatuses} />}
@@ -441,6 +461,7 @@ export default function JobPostings() {
                                     allData={filteredData}
                                     setSelectedRows={setSelectedRows}
                                     setRowSelection={setRowSelection}
+                                    setIsMessage={setIsMessage}
                                     data-testid="selected-dialog"
                                 />
                             }
@@ -460,6 +481,32 @@ export default function JobPostings() {
             <Detail
                 open={selectedApplication !== null}
                 onOpenChange={handleOpenChange}
+            />
+            <Dialog open={progress > 0 && progress < 100}>
+                <DialogContent className='max-w-[313px]' close={false}>
+                    <DialogTitle />
+                    <div className='flex flex-col items-center justify-center'>
+                        <div className='w-[120px] h-[120px] mt-[28px]'>
+                            <CircularProgressbar
+                                value={progress}
+                                text={`${progress}%`}
+                                strokeWidth={12}
+                                styles={buildStyles({
+                                    textColor: "#159A94",
+                                    pathColor: "#159A94",
+                                    trailColor: "#e6f3f2",
+                                    strokeLinecap: "round",
+                                })}
+                            />
+                        </div>
+                        <p className='text-[16px]/[20px] mt-[20px] font-medium text-[#353535]'>[Data Type] Export in Progress</p>
+                        <Button variant="outline" className='mt-[20px] w-[90px] h-[32px]' onClick={() => { if (intervalRef.current) clearInterval(intervalRef.current); setProgress(0); }}>Cancel</Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
+            <Message
+                open={isMessage}
+                onOpenChange={setIsMessage}
             />
         </div>
 

@@ -10,7 +10,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import DialogContent, { Dialog, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import DialogContent, { Dialog, div, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface ScheduleInterviewProps {
     setActive: (section: string) => void;
@@ -19,12 +19,12 @@ interface ScheduleInterviewProps {
 export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleInterviewProps) {
     const [schedulingType, setSchedulingType] = useState<'propose-time' | 'request-availability'>('propose-time');
     const [mode, setMode] = useState<'google' | 'zoom' | 'projitt' | 'teams'>('google');
-    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+    const [range, setRange] = useState<{ from?: Date; to?: Date }>({})
     const [selectedHour, setSelectedHour] = useState<string | null>(moment().format("hh"));
     const [selectedMinute, setSelectedMinute] = useState<string | null>(moment().format("mm"));
     const [selectedAmPm, setSelectedAmPm] = useState<string | null>(moment().format("A"));
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [availableDate, setAvailableDate] = useState<Array<Date>>([]);
+    const [availableDate, setAvailableDate] = useState<Array<{ from: Date; to: Date; hour: string; minute: string; amPm: string }>>([]);
     const [interviewers, setInterviewers] = useState<Array<{ id: string, name: string }>>([
         {
             id: '1',
@@ -45,7 +45,7 @@ export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleI
     };
     const [isSent, setIsSent] = useState<boolean>(false);
     return (
-        <div className="bg-white w-full px-[164px] py-[28px] overflow-y-auto">
+        <div className="bg-white w-full px-[164px] py-[28px] overflow-y-auto flex-1">
             <div >
                 <button className="flex gap-[10px]" onClick={() => { setActive('stages') }}><ArrowLeft className="size-[20px] text-[#4b4b4b]" /> <span className="text-[#353535] text-[14px]/[22px]">Go Back</span></button>
                 <div className="flex gap-[24px] flex-col mt-[28px]">
@@ -110,14 +110,15 @@ export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleI
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0" align="start">
                                 <Calendar
+
                                     initialFocus
-                                    mode="single"
+                                    mode="range"
                                     defaultMonth={new Date()}
-                                    selected={selectedDate}
-                                    onSelect={(e) => { setSelectedDate(e as Date) }}
+                                    selected={range}
+                                    onSelect={setRange}
                                     numberOfMonths={1}
                                     classNames={{
-                                        day_button: 'cursor-pointer relative flex w-full mx-auto  size-6 items-center justify-center whitespace-nowrap rounded-md p-0 transition-200 group-[[data-selected]:not(.range-middle)]:[transition-property:color,background-color,border-radius,box-shadow] group-[[data-selected]:not(.range-middle)]:duration-150 group-data-disabled:pointer-events-none focus-visible:z-10 hover:not-in-data-selected:bg-[#D6EEEC] group-data-selected:bg-[#D6EEEC] hover:not-in-data-selected:text-foreground group-data-selected:text-[#0D978B] group-data-disabled:text-foreground/30 group-data-disabled:line-through group-data-outside:text-foreground/30 group-data-selected:group-data-outside:text-primary-foreground outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px] group-[.range-start:not(.range-end)]:rounded-e-none group-[.range-end:not(.range-start)]:rounded-s-none group-[.range-middle]:rounded-none group-[.range-middle]:group-data-selected:bg-accent group-[.range-middle]:group-data-selected:text-foreground'
+                                        day_button: 'cursor-pointer relative flex w-full mx-auto  size-6 items-center justify-center whitespace-nowrap rounded-md p-0 transition-200 group-[[data-selected]:not(.range-middle)]:[transition-property:color,background-color,border-radius,box-shadow] group-[[data-selected]:not(.range-middle)]:duration-150 group-data-disabled:pointer-events-none focus-visible:z-10 hover:not-in-data-selected:bg-[#D6EEEC] group-data-selected:bg-[#0D978B] hover:not-in-data-selected:text-foreground group-data-selected:text-[#fff] group-data-disabled:text-foreground/30 group-data-disabled:line-through group-data-outside:text-foreground/30 group-data-selected:group-data-outside:text-primary-foreground outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px] group-[.range-start:not(.range-end)]:rounded-e-none group-[.range-end:not(.range-start)]:rounded-s-none group-[.range-middle]:rounded-none group-[.range-middle]:group-data-selected:bg-[#D6EEEC] group-[.range-middle]:group-data-selected:text-[#787878]'
                                     }}
                                 />
                                 <div className="flex gap-2 p-4 justify-center">
@@ -173,8 +174,8 @@ export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleI
                                         Close
                                     </Button>
                                     <Button className="w-full" onClick={() => {
-                                        if (selectedDate && selectedHour && selectedMinute && selectedAmPm) {
-                                            setAvailableDate([...availableDate, new Date(`${selectedDate.toLocaleDateString()} ${selectedHour}:${selectedMinute} ${selectedAmPm}`)]);
+                                        if (range.from && range.to && selectedHour && selectedMinute && selectedAmPm) {
+                                            setAvailableDate([...availableDate, { from: range.from, to: range.to, hour: selectedHour, minute: selectedMinute, amPm: selectedAmPm }]);
                                         }
                                     }}>
                                         Select
@@ -185,7 +186,10 @@ export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleI
                         <div className="flex flex-col gap-[11px] mt-[11px] items-start">
                             {availableDate.map((date, index) => (
                                 <div key={index} className="flex gap-[8px] py-[6px] px-[10px] text-[#0d978b] rounded-[8px] bg-[#d6eeec]">
-                                    <span className="text-[14px]/[20px]">{moment(date).format('DD MMM, hh:mm A')}</span>
+                                    <span className="text-[14px]/[20px]">{
+                                        `${moment(date.from).format('DD MMM')} - ${moment(date.to).format('DD MMM')}` + ' ' +
+                                        `${date.hour}:${date.minute} ${date.amPm}`
+                                    }</span>
                                     <button onClick={() => {
                                         setAvailableDate(availableDate.filter((_, i) => i !== index));
                                     }}><X className="size-[16px]" /></button>
@@ -265,20 +269,20 @@ export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleI
                         {schedulingType === 'request-availability' && <Button className="w-full mt-[12px] h-[48px]" onClick={() => setIsSent(true)}>Send Request</Button>}
                     </div>
                 </div>
-            </div>
+            </div >
             <Dialog open={isSent} onOpenChange={setIsSent}>
                 <DialogContent close={false}>
                     <DialogHeader>
                         <DialogTitle></DialogTitle>
-                        <DialogDescription className="flex flex-col items-center">
+                        <div className="flex flex-col items-center">
                             <img src="/images/applicant/success.png" alt="" className="w-[120px] h-[120px]" />
                             <span className="text-[28px]/[36px] font-semibold mt-[28px] text-[#353535]">{schedulingType === 'propose-time' ? 'Interview Invite Sent' : 'Availability Request Sent'}</span>
                             <span className="text-[14px]/[24px] text-[#626262] mt-[8px] text-center">{schedulingType === 'propose-time' ? 'Your interview request has been sent to Alice Fernadez. They’ve been invited to confirm the proposed time.' : 'We’ve asked Alice Fernadez to share their availability. You’ll be notified once they submit their preferred time slots.'}</span>
                             <Button className="mt-[24px] w-[300px] h-[42px]" onClick={() => { setIsSent(false); onOpenChange(false); }}>Return to Applicants List</Button>
-                        </DialogDescription>
+                        </div>
                     </DialogHeader>
                 </DialogContent>
             </Dialog>
-        </div>
+        </div >
     );
 }

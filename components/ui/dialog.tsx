@@ -120,7 +120,7 @@ const DialogBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement
   <div data-slot="dialog-body" className={cn('grow', className)} {...props} />
 );
 
-function DialogDescription({
+function div({
   className,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Description>) {
@@ -138,7 +138,7 @@ export {
   DialogBody,
   DialogClose,
   DialogContent,
-  DialogDescription,
+  div,
   DialogFooter,
   DialogHeader,
   DialogOverlay,

@@ -3,7 +3,7 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  div,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -28,7 +28,7 @@ export function ShareProfileDialog({
       <DialogContent className="p-0 space-y-0 max-w-[500px]">
         <DialogHeader className="p-5 m-0">
           <DialogTitle>Share Profile</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <div></div>
         </DialogHeader>
         <div className="grid gap-5 px-0 pt-1 pb-5">
           <ShareProfileViaLink />

@@ -20,7 +20,7 @@ import {
   Dialog,
   DialogBody,
   DialogContent,
-  DialogDescription,
+  div,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -247,7 +247,7 @@ export function SearchDialog({ trigger }: { trigger: ReactNode }) {
       <DialogContent className="lg:max-w-[600px] lg:top-[15%] lg:translate-y-0 p-0 [&_[data-slot=dialog-close]]:top-5.5 [&_[data-slot=dialog-close]]:end-5.5">
         <DialogHeader className="px-4 py-1 mb-1">
           <DialogTitle></DialogTitle>
-          <DialogDescription></DialogDescription>
+          <div></div>
           <div className="relative">
             <Search className="absolute top-1/2 -translate-y-1/2 size-4" />
             <Input

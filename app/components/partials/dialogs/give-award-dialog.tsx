@@ -9,7 +9,7 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  div,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -26,7 +26,7 @@ export function GiveAwardDialog({
       <DialogContent className="p-0 space-y-0 max-w-[600px]">
         <DialogHeader className="pt-5 pb-0 m-0 px-5">
           <DialogTitle>Give Award</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <div></div>
         </DialogHeader>
         <div className="grid gap-5 px-0 py-5">
           <ShareProfileViaLink />

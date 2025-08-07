@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  div,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -141,7 +141,7 @@ export function ReportUserDialog({
       <DialogContent className="p-0 space-y-0 max-w-[600px]">
         <DialogHeader className="py-5 m-0 px-5">
           <DialogTitle>Report User</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <div></div>
         </DialogHeader>
         <div className="grid gap-5 px-0 pt-1 pb-5">
           {buildNotice()}

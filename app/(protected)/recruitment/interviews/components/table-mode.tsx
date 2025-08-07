@@ -24,6 +24,8 @@ import { Input } from "@/components/ui/input";
 import { FilterTool } from "./filter";
 import { NoData } from "../../assessments/components/noData";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
+import Reschedule from "./reschedule";
+import CancelInterview from "./cancel-interview";
 
 
 export default function TableMode({ setSelectedApplication }: { setSelectedApplication: (id: string) => void }) {
@@ -37,6 +39,8 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
     ]);
     const [searchQuery, setSearchQuery] = useState('');
     const [showFliter, setShowFilter] = useState(false);
+    const [rescheduleOpen, setRescheduleOpen] = useState(false);
+    const [cancelOpen, setCancelOpen] = useState(false);
     const [applicantsData, setApplicantsData] = useState<any[]>([
         {
             name: 'John Doe',
@@ -287,6 +291,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         mode="icon"
                         variant="ghost"
                         data-testid={`actions-button-${row.original.id}`}
+                        onClick={e => e.stopPropagation()}
                     >
                         <EllipsisVertical />
                     </Button>
@@ -300,24 +305,27 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`view-applicants-action-${row.original.id}`}
-                        onClick={() => setSelectedApplication(row.original.id)}
+                        onClick={e => { e.stopPropagation(); setRescheduleOpen(true); }}
+
                     >
                         Reschedule
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`duplicate-action-${row.original.id}`}
+                        onClick={e => { e.stopPropagation(); setCancelOpen(true); }}
                     >
                         Cancel Interview
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`duplicate-action-${row.original.id}`}
+                        onClick={e => e.stopPropagation()}
                     >
                         Mark as No-show
                     </div>
                 </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu >
         );
     }
     return <div>
@@ -339,6 +347,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                 className='w-full'
                 table={table}
                 recordCount={filteredData?.length || 0}
+                onRowClick={(row) => setSelectedApplication(row)}
                 data-testid="job-postings-grid"
             >
                 <div className="flex items-center justify-between">
@@ -403,7 +412,8 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                     </>
                 </div>
             </DataGrid>
-
+            <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
+            <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
         </div>
     </div>;
 }

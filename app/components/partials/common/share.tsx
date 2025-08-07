@@ -12,7 +12,7 @@ interface ShareProps {
 }
 export default function Share({ url, className }: ShareProps) {
     const [open, setOpen] = useState(false);
-
+    const [shareMethod, setShareMethod] = useState<'telegram' | 'twitter' | 'linkedin'>('telegram');
     /**
      * Copies the job share URL to the clipboard and shows tooltip feedback.
      */
@@ -48,19 +48,19 @@ export default function Share({ url, className }: ShareProps) {
                     <div className="flex w-full justify-between mt-[36px] px-[18px]">
                         {/* Share options */}
                         {[
-                            { icon: <Send className="size-[24px] text-[#4b4b4b]" />, label: "Telegram" },
-                            { icon: <Twitter className="size-[24px] text-[#4b4b4b]" />, label: "Twitter" },
-                            { icon: <Linkedin className="size-[24px] text-[#4b4b4b]" />, label: "LinkedIn" },
+                            { icon: <Send className={`size-[24px] ${shareMethod === 'telegram' ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`} />, label: "Telegram" },
+                            { icon: <Twitter className={`size-[24px] ${shareMethod === 'twitter' ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`} />, label: "Twitter" },
+                            { icon: <Linkedin className={`size-[24px] ${shareMethod === 'linkedin' ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`} />, label: "LinkedIn" },
                         ].map(({ icon, label }) => (
                             <div
                                 key={label}
                                 className="flex flex-col items-center gap-[8px] cursor-pointer"
                                 id={`share-${label.toLowerCase()}`} data-testid={`share-${label.toLowerCase()}`}
                             >
-                                <div className="w-[72px] h-[72px] bg-[#f8f8f8] rounded-full flex items-center justify-center">
+                                <div className={`w-[72px] h-[72px]  rounded-full flex items-center justify-center ${shareMethod === label.toLowerCase() ? 'bg-[#d6eeec]' : 'bg-[#f8f8f8]'}`}>
                                     {icon}
                                 </div>
-                                <p className="text-[12px]/[15px] text-[#4b4b4b]">{label}</p>
+                                <p className={`text-[12px]/[15px] ${shareMethod === label.toLowerCase() ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`}>{label}</p>
                             </div>
                         ))}
                     </div>

@@ -4,11 +4,11 @@ import { Link, Linkedin } from "lucide-react";
 import { useState } from "react";
 
 export default function ApplicationSummary() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isExpOpen, setIsExpOpen] = useState(false);
-    const [isEduOpen, setIsEduOpen] = useState(false);
-    const [isCertOpen, setIsCertOpen] = useState(false);
-    const [isSkillOpen, setIsSkillOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
+    const [isExpOpen, setIsExpOpen] = useState(true);
+    const [isEduOpen, setIsEduOpen] = useState(true);
+    const [isCertOpen, setIsCertOpen] = useState(true);
+    const [isSkillOpen, setIsSkillOpen] = useState(true);
     return (
         <div>
             <div className="flex items-center gap-[10px]">
@@ -32,7 +32,7 @@ export default function ApplicationSummary() {
                 </div>
             </div>
             <div className="flex flex-col gap-[32px] w-full mt-[20px]">
-                <Collapsible className="w-full" onOpenChange={setIsOpen}>
+                <Collapsible open={isOpen} className="w-full" onOpenChange={setIsOpen}>
                     <CollapsibleTrigger className="w-full flex justify-between items-center cursor-pointer">
                         <p className="text-[13px]/[20px] font-medium text-[#4b4b4b]">Personal Information</p>
                         <span className="text-[18px] font-medium text-[#4b4b4b]">{isOpen ? '-' : '+'}</span>
@@ -54,7 +54,7 @@ export default function ApplicationSummary() {
                         </div>
                     </CollapsibleContent>
                 </Collapsible>
-                <Collapsible className="w-full" onOpenChange={setIsExpOpen}>
+                <Collapsible open={isExpOpen} className="w-full" onOpenChange={setIsExpOpen}>
                     <CollapsibleTrigger className="w-full flex justify-between items-center cursor-pointer">
                         <p className="text-[13px]/[20px] font-medium text-[#4b4b4b]">Work Experience </p>
                         <span className="text-[18px] font-medium text-[#4b4b4b]">{isExpOpen ? '-' : '+'}</span>
@@ -78,7 +78,7 @@ export default function ApplicationSummary() {
                         </div>
                     </CollapsibleContent>
                 </Collapsible>
-                <Collapsible className="w-full" onOpenChange={setIsEduOpen}>
+                <Collapsible open={isEduOpen} className="w-full" onOpenChange={setIsEduOpen}>
                     <CollapsibleTrigger className="w-full flex justify-between items-center cursor-pointer">
                         <p className="text-[13px]/[20px] font-medium text-[#4b4b4b]">Education </p>
                         <span className="text-[18px] font-medium text-[#4b4b4b]">{isEduOpen ? '-' : '+'}</span>
@@ -90,7 +90,7 @@ export default function ApplicationSummary() {
                         </div>
                     </CollapsibleContent>
                 </Collapsible>
-                <Collapsible className="w-full" onOpenChange={setIsCertOpen}>
+                <Collapsible open={isCertOpen} className="w-full" onOpenChange={setIsCertOpen}>
                     <CollapsibleTrigger className="w-full flex justify-between items-center cursor-pointer">
                         <p className="text-[13px]/[20px] font-medium text-[#4b4b4b]">Certifications </p>
                         <span className="text-[18px] font-medium text-[#4b4b4b]">{isCertOpen ? '-' : '+'}</span>
@@ -107,7 +107,7 @@ export default function ApplicationSummary() {
                         </div>
                     </CollapsibleContent>
                 </Collapsible>
-                <Collapsible className="w-full" onOpenChange={setIsSkillOpen}>
+                <Collapsible open={isSkillOpen} className="w-full" onOpenChange={setIsSkillOpen}>
                     <CollapsibleTrigger className="w-full flex justify-between items-center cursor-pointer">
                         <p className="text-[13px]/[20px] font-medium text-[#4b4b4b]">Skills </p>
                         <span className="text-[18px] font-medium text-[#4b4b4b]">{isSkillOpen ? '-' : '+'}</span>
