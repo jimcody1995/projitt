@@ -89,9 +89,9 @@ export default function ApplicantJobPage() {
                         </p>
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="job1">Job 1</SelectItem>
-                        <SelectItem value="job2">Job 2</SelectItem>
-                        <SelectItem value="job3">Job 3</SelectItem>
+                        <SelectItem value="job1">Backend Developer</SelectItem>
+                        <SelectItem value="job2">Frontend Developer</SelectItem>
+                        <SelectItem value="job3">Software Engineer</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
