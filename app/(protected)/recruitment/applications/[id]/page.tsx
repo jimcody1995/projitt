@@ -1,6 +1,6 @@
 'use client'
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, BriefcaseBusiness, ChevronDown, EllipsisVertical, MapPin, MessageSquareMore, PieChart, Users } from 'lucide-react';
+import { ArrowDown, ArrowLeft, BriefcaseBusiness, ChevronDown, EllipsisVertical, MapPin, MessageSquareMore, PieChart, Users } from 'lucide-react';
 import React, { JSX, useState } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import CheckDialog from '@/app/(protected)/recruitment/job-postings/components/checkDialog';
@@ -8,6 +8,7 @@ import Applicants from './components/applicants';
 import Share from '@/app/components/partials/common/share';
 import Interviews from './components/interview';
 import JobSummary from './components/job-summary';
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 export default function ApplicantJobPage() {
     const url = "https://www.figma.com/file/NlfVhYygR9mAQasassdsada/Share...";
     const [activeSection, setActiveSection] = useState<'applicants' | 'interviews' | 'job-summary'>('applicants');
@@ -73,24 +74,33 @@ export default function ApplicantJobPage() {
     }
     return <div>
 
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between sm:flex-row flex-col gap-[20px]'>
             <div className='flex gap-[16px] items-center'>
                 <button className='w-[24px] h-[24px] rounded-full border border-[#e9e9e9] flex items-center justify-center cursor-pointer'>
                     <ArrowLeft className='size-[12px] text-[#4b4b4b]' />
                 </button>
-                <p
-                    className='text-[24px]/[30px] font-semibold'
-                    data-testid="page-title"
-                >
-                    Senior Data Analyst
-                </p>
+                <Select>
+                    <SelectTrigger className='bg-transparent border-none shadow-none cursor-pointer'>
+                        <p
+                            className='text-[24px]/[30px] font-semibold text-[#1c1c1c]'
+                            data-testid="page-title"
+                        >
+                            Senior Data Analyst
+                        </p>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="job1">Job 1</SelectItem>
+                        <SelectItem value="job2">Job 2</SelectItem>
+                        <SelectItem value="job3">Job 3</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
             <div className='flex gap-[17px] items-center'>
                 <ActionsCell />
                 <Share url={url} className="w-[100px] h-[42px] text-white text-[14px] font-semibold rounded-[8px]" />
             </div>
         </div>
-        <div className='ml-[42px] mt-[12px] gap-[14px] flex items-center'>
+        <div className='ml-[42px] mt-[12px] gap-[14px] flex items-center flex-wrap sm:justify-start justify-center'>
             <Button
                 className='h-[24px] rounded-full bg-[#0D978B] hover:bg-[#0D978B]'
             >
@@ -134,5 +144,5 @@ export default function ApplicantJobPage() {
         {activeSection === 'applicants' && <Applicants />}
         {activeSection === 'interviews' && <Interviews />}
         {activeSection === 'job-summary' && <JobSummary />}
-    </div>;
+    </div >;
 }

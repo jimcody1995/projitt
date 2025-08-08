@@ -69,7 +69,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
     return (
         <div>
             <Sheet open={open} onOpenChange={onOpenChange}>
-                <SheetContent close={false} className="p-0 sm:w-[667px] sm:max-w-none bg-[#f7f7f7] gap-[0px]">
+                <SheetContent close={false} className="p-0 sm:w-[667px] w-full sm:max-w-none bg-[#f7f7f7] gap-[0px]">
                     <div className="px-[32px] py-[24px]">
                         <div className="w-full justify-between flex">
                             <div className="flex items-center gap-[10px]">
@@ -93,7 +93,9 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                 <Button
                                     mode="icon"
                                     variant="outline"
-
+                                    onClick={() => {
+                                        onOpenChange(false);
+                                    }}
                                 >
                                     <X className="size-[14px] text-[#1a1a1a]" />
                                 </Button>
@@ -413,7 +415,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                 </SheetContent>
             </Sheet>
             <Dialog open={preview} onOpenChange={setPreview}>
-                <DialogContent close={false} className="!w-[830px] max-w-[830px]">
+                <DialogContent close={false} className="md:max-w-[830px] max-w-full">
                     <DialogTitle></DialogTitle>
                     <div>
                         <div className="flex justify-between">

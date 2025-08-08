@@ -402,7 +402,7 @@ export default function JobPostings() {
                 recordCount={filteredData?.length || 0}
                 data-testid="job-postings-grid"
             >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between sm:flex-row flex-col gap-[20px]">
                     <div className="relative">
                         <Search
                             className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"
@@ -412,7 +412,7 @@ export default function JobPostings() {
                             placeholder="Search Job"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="ps-9 w-[243px] h-[42px]"
+                            className="ps-9 sm:w-[243px] w-full h-[42px]"
                             data-testid="search-input"
                         />
                         {searchQuery.length > 0 && (

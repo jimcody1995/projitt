@@ -5,6 +5,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar, EllipsisVertical, User, Video } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import Reschedule from './reschedule';
+import CancelInterview from './cancel-interview';
 
 // Placeholder data (replace with props or context as needed)
 const interviewData = [
@@ -35,7 +37,8 @@ function getDaysInMonth(year: number, month: number) {
 
 export default function CalendarMode({ setSelectedApplication }: { setSelectedApplication: (id: string) => void }) {
     const [currentMonth, setCurrentMonth] = useState(moment());
-
+    const [rescheduleOpen, setRescheduleOpen] = useState(false);
+    const [cancelOpen, setCancelOpen] = useState(false);
     const days = getDaysInMonth(currentMonth.year(), currentMonth.month());
     const monthLabel = currentMonth.format('MMMM YYYY');
 
@@ -70,13 +73,14 @@ export default function CalendarMode({ setSelectedApplication }: { setSelectedAp
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`view-applicants-action-${row.original.id}`}
-                        onClick={() => setSelectedApplication(row.original.id)}
+                        onClick={() => setRescheduleOpen(true)}
                     >
                         Reschedule
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`duplicate-action-${row.original.id}`}
+                        onClick={() => setCancelOpen(true)}
                     >
                         Cancel Interview
                     </div>
@@ -174,6 +178,8 @@ export default function CalendarMode({ setSelectedApplication }: { setSelectedAp
                     );
                 })}
             </div>
+            <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
+            <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
         </div>
     );
 }

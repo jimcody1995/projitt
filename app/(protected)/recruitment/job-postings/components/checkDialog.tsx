@@ -42,7 +42,7 @@ export default function CheckDialog({
             </DialogTitle>
 
             <DialogContent
-                className="w-[414px]"
+                className="sm:w-[414px] w-full"
                 id={`check-dialog-content-${action}`}
                 data-testid={`check-dialog-content-${action}`}
             >

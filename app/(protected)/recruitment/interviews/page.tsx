@@ -11,7 +11,7 @@ export default function Interviews() {
         setSelectedApplication(null);
     };
     return <div>
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between w-full sm:flex-row flex-col items-start gap-[10px]">
             <p className="text-[24px]/[30px] font-semibold text-[#1C1C1C]">Interviews</p>
             <div className="flex items-center bg-[#e9e9e9] rounded-[6px] p-[2px]">
                 <div className={`w-[131px] h-[42px] rounded-[6px] flex items-center justify-center cursor-pointer ${activeTab === 'calendar' ? 'bg-[#0d978b] text-white' : 'text-[#a5a5a5]'}`} onClick={() => setActiveTab('calendar')} >

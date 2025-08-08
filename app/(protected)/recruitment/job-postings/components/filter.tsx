@@ -81,7 +81,7 @@ export const FilterTool = ({ selectedLocations, selectedDepartments, selectedTyp
                     </div>
                 </PopoverTrigger>
                 <PopoverContent
-                    className="w-40 p-3"
+                    className="w-40 p-3 max-h-[200px] overflow-y-auto"
                     align="start"
                     id="filter-locations-content"
                     data-testid="filter-locations-content"
@@ -135,7 +135,7 @@ export const FilterTool = ({ selectedLocations, selectedDepartments, selectedTyp
                     </div>
                 </PopoverTrigger>
                 <PopoverContent
-                    className="w-40 p-3"
+                    className="w-40 p-3 max-h-[200px] overflow-y-auto"
                     align="start"
                     id="filter-departments-content"
                     data-testid="filter-departments-content"
@@ -189,7 +189,7 @@ export const FilterTool = ({ selectedLocations, selectedDepartments, selectedTyp
                     </div>
                 </PopoverTrigger>
                 <PopoverContent
-                    className="w-40 p-3"
+                    className="w-40 p-3 max-h-[200px] overflow-y-auto"
                     align="start"
                     id="filter-types-content"
                     data-testid="filter-types-content"
@@ -243,7 +243,7 @@ export const FilterTool = ({ selectedLocations, selectedDepartments, selectedTyp
                     </div>
                 </PopoverTrigger>
                 <PopoverContent
-                    className="w-40 p-3"
+                    className="w-40 p-3 max-h-[200px] overflow-y-auto"
                     align="start"
                     id="filter-status-content"
                     data-testid="filter-status-content"

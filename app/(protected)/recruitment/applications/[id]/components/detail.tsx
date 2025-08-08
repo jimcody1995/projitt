@@ -26,7 +26,7 @@ export default function Detail({ open, onOpenChange }: DetailProps) {
     return (
         <div>
             <Sheet open={open} onOpenChange={onOpenChange}>
-                <SheetContent close={false} className="p-0 sm:w-[667px] sm:max-w-none bg-[#f7f7f7] gap-[0px]">
+                <SheetContent close={false} className="p-0 w-full sm:w-[667px] sm:max-w-none bg-[#f7f7f7] gap-[0px]">
                     <div className="px-[32px] py-[24px]">
                         <div className="w-full justify-between flex">
                             <div className="flex items-center gap-[10px]">
@@ -50,7 +50,7 @@ export default function Detail({ open, onOpenChange }: DetailProps) {
                                 <Button
                                     mode="icon"
                                     variant="outline"
-
+                                    onClick={() => onOpenChange(false)}
                                 >
                                     <X className="size-[14px] text-[#1a1a1a]" />
                                 </Button>
@@ -138,7 +138,7 @@ export default function Detail({ open, onOpenChange }: DetailProps) {
                             </DropdownMenu>
                         </div>
                     </div>
-                    <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto h-[56px]'>
+                    <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto sm:h-[56px] h-[80px]'>
                         <div className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center cursor-pointer ${(activeSection === 'stages' || activeSection === 'schedule-interview') ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('stages')}>
                             <p className='whitespace-nowrap'>Stages</p>
                         </div>

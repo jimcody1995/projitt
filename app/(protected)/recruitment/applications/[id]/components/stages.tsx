@@ -5,7 +5,7 @@ export default function Stages() {
     return (
         <div className="flex flex-col gap-[32px]">
             <div className="pt-[28px] pb-[24px] px-[18px] bg-white w-full border border-[#e9e9e9] rounded-[8px]">
-                <div className="grid grid-cols-5 gap-[16px] ">
+                <div className="grid sm:grid-cols-5 grid-cols-2 gap-[16px] ">
                     <div className="w-full h-[26px] border-b-[2px] border-[#0d978b] text-[12px]/[18px] text-[#4b4b4b]">
                         New
                     </div>
@@ -37,7 +37,7 @@ export default function Stages() {
                 <div className="w-[6px] h-[6px] rounded-full bg-[#d2d2d2]"></div>
                 <div className="w-[1px] h-[30px] bg-[#d2d2d2]"></div>
                 <div className="p-[20px] bg-white w-full border border-[#e9e9e9] rounded-[8px]">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between sm:flex-row flex-col">
                         <p className="text-[16px]/[24px] font-medium">Cultural Fit</p>
                         <div className="flex gap-[10px] items-center">
                             <span className="pr-[10px] border-r border-[#e9e9e9] text-[12px]/[18px] underline text-[#0d978b]">Review Answers</span>
@@ -48,7 +48,7 @@ export default function Stages() {
                         </div>
                     </div>
                     <p className="text-[12px]/[18px] text-[#8f8f8f] mt-[3px]">Taken 5:00pm, Aug 23, 2025</p>
-                    <div className="mt-[24px] flex gap-[19px]">
+                    <div className="mt-[24px] flex gap-[19px] sm:flex-row flex-col">
                         <div className="w-full">
                             <p className="text-[13px]/[20px] text-[#0d978b]">Strenghts</p>
                             <div className="flex flex-col gap-[4px] mt-[4px]">
@@ -77,14 +77,14 @@ export default function Stages() {
                 <div className="w-[6px] h-[6px] rounded-full bg-[#d2d2d2]"></div>
                 <div className="w-[1px] h-[30px] bg-[#d2d2d2]"></div>
                 <div className="p-[20px] bg-white w-full border border-[#e9e9e9] rounded-[8px]">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between sm:flex-row flex-col">
                         <p className="text-[16px]/[24px] font-medium">Portfolio Review</p>
                         <p className="text-[12px]/[20px] text-[#053834]">Completed</p>
                     </div>
                     <div className="w-full border border-[#e9e9e9] rounded-[12px] p-[20px] flex flex-col gap-[12px] mt-[18px]">
                         <div className="flex gap-[6px]">
                             <Video className="size-[16px] text-[#4b4b4b]" />
-                            <p className="text-[12px]/[20px] text-[#4b4b4b]">https://example.zoom.us/j/1234567890?pwd=xxxxxxxxxxxx</p>
+                            <p className="text-[12px]/[20px] text-[#4b4b4b] wrap-anywhere">https://example.zoom.us/j/1234567890?pwd=xxxxxxxxxxxx</p>
                         </div>
                         <div className="border-b border-[#e9e9e9]"></div>
                         <div className="flex gap-[6px]">

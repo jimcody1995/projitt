@@ -34,7 +34,7 @@ export default function PdfViewer({ url }) {
     return (
         <div className="w-full">
             {loading && <p>Loading PDF...</p>}
-            <canvas ref={canvasRef}></canvas>
+            <canvas className="w-full" ref={canvasRef}></canvas>
         </div>
     );
 }

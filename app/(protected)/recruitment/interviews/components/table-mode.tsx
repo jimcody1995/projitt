@@ -350,7 +350,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                 onRowClick={(row) => setSelectedApplication(row)}
                 data-testid="job-postings-grid"
             >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between sm:flex-row flex-col gap-[10px]">
                     <div className="relative">
                         <Search
                             className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"

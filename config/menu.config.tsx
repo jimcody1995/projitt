@@ -94,7 +94,7 @@ export const MENU_SIDEBAR: MenuConfig = [
     icon: FolderSearch,
     children: [
       { title: 'Job Postings', path: '/recruitment/job-postings' },
-      { title: 'Applications', path: '/recruitment/applications' },
+      { title: 'Applications', path: '/recruitment/applications/1' },
       { title: 'Assessments', path: '/recruitment/assessments' },
       { title: 'Interview', path: '/recruitment/interviews' },
       { title: 'Pending Hires', path: '/recruitment/pending-hires' },

@@ -38,7 +38,7 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
             </p>
         </div>
         <div className="mt-[22px] w-full rounded-[20px] bg-[#fff] border border-[#e9e9e9] py-[40px] pl-[48px] pr-[77px]">
-            <div className="flex justify-between">
+            <div className="flex justify-between sm:flex-row flex-col gap-[10px]">
                 <div>
                     <p className="font-semibold text-[20px]/[30px] text-[#8f8f8f]"><span className="text-[#1C1C1C]">Alice Fernadez</span> ~ Senior Data Analyst </p>
                     <div className="flex gap-[15px] mt-[6px]">
@@ -58,7 +58,7 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
                 </div>
                 <Button className="w-[208px] h-[42px] ">Send Onboarding Invite</Button>
             </div>
-            <div className="mt-[40px] flex flex-col gap-[32px] w-[623px]">
+            <div className="mt-[40px] flex flex-col gap-[32px] md:w-[623px] w-full">
                 <div>
                     <p className="text-[14px]/[16px]  text-[#1C1C1C]">Email address</p>
                     <p className="text-[12px]/[20px]  text-[#8f8f8f] mt-[4px]">The email address that will be used to sign in to Projitt and receive personal info.</p>

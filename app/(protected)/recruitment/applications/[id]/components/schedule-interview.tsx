@@ -45,7 +45,7 @@ export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleI
     };
     const [isSent, setIsSent] = useState<boolean>(false);
     return (
-        <div className="bg-white w-full px-[164px] py-[28px] overflow-y-auto flex-1">
+        <div className="bg-white w-full px-[16px]  sm:px-[164px] py-[28px] overflow-y-auto flex-1">
             <div >
                 <button className="flex gap-[10px]" onClick={() => { setActive('stages') }}><ArrowLeft className="size-[20px] text-[#4b4b4b]" /> <span className="text-[#353535] text-[14px]/[22px]">Go Back</span></button>
                 <div className="flex gap-[24px] flex-col mt-[28px]">
@@ -110,15 +110,14 @@ export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleI
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0" align="start">
                                 <Calendar
-
-                                    initialFocus
                                     mode="range"
                                     defaultMonth={new Date()}
                                     selected={range}
                                     onSelect={setRange}
                                     numberOfMonths={1}
                                     classNames={{
-                                        day_button: 'cursor-pointer relative flex w-full mx-auto  size-6 items-center justify-center whitespace-nowrap rounded-md p-0 transition-200 group-[[data-selected]:not(.range-middle)]:[transition-property:color,background-color,border-radius,box-shadow] group-[[data-selected]:not(.range-middle)]:duration-150 group-data-disabled:pointer-events-none focus-visible:z-10 hover:not-in-data-selected:bg-[#D6EEEC] group-data-selected:bg-[#0D978B] hover:not-in-data-selected:text-foreground group-data-selected:text-[#fff] group-data-disabled:text-foreground/30 group-data-disabled:line-through group-data-outside:text-foreground/30 group-data-selected:group-data-outside:text-primary-foreground outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px] group-[.range-start:not(.range-end)]:rounded-e-none group-[.range-end:not(.range-start)]:rounded-s-none group-[.range-middle]:rounded-none group-[.range-middle]:group-data-selected:bg-[#D6EEEC] group-[.range-middle]:group-data-selected:text-[#787878]'
+                                        day_button: 'cursor-pointer relative flex w-full mx-auto  w-[40px] h-[40px] items-center justify-center whitespace-nowrap rounded-md p-0 transition-200 group-[[data-selected]:not(.range-middle)]:[transition-property:color,background-color,border-radius,box-shadow] group-[[data-selected]:not(.range-middle)]:duration-150 group-data-disabled:pointer-events-none focus-visible:z-10 hover:not-in-data-selected:bg-[#D6EEEC] group-data-selected:bg-[#0D978B] hover:not-in-data-selected:text-foreground group-data-selected:text-[#fff] group-data-disabled:text-foreground/30 group-data-disabled:line-through group-data-outside:text-foreground/30 group-data-selected:group-data-outside:text-primary-foreground outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px] group-[.range-start:not(.range-end)]:rounded-e-none group-[.range-end:not(.range-start)]:rounded-s-none group-[.range-middle]:rounded-none group-[.range-middle]:group-data-selected:bg-[#D6EEEC] group-[.range-middle]:group-data-selected:text-[#787878]',
+                                        day: 'group w-[42px] h-[42px] py-px text-sm'
                                     }}
                                 />
                                 <div className="flex gap-2 p-4 justify-center">

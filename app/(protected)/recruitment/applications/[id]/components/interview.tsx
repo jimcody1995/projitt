@@ -92,7 +92,7 @@ export default function Interviews() {
         }
     ])
     return (
-        <div className="flex gap-[8px] mt-[28px] ">
+        <div className="flex gap-[8px] mt-[28px] w-full overflow-x-auto">
             {data.map((item, index) => (
                 <>
                     <div>

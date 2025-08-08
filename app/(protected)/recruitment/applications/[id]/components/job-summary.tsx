@@ -22,9 +22,9 @@ export default function JobSummary() {
     },
     ]
     return (
-        <div className="mt-[29px]">
+        <div className="mt-[29px] w-full">
             <p className="text-[16px]/[24px] font-medium text-[#4b4b4b]">Job Details</p>
-            <div className="grid grid-cols-2 gap-[30px] w-[536px] pr-[80px]">
+            <div className="grid sm:grid-cols-2 grid-cols-1 gap-[30px] w-[536px] pr-[80px]">
                 <div className="flex flex-col gap-[2px]">
                     <p className="text-[14px]/[20px] font-medium text-[#a5a5a5]">Job Title</p>
                     <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">Senior Data Analyst</p>
@@ -58,7 +58,7 @@ export default function JobSummary() {
                     <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">10 June 2025</p>
                 </div>
             </div>
-            <div className="mt-[32px] w-[600px]">
+            <div className="mt-[32px] md:w-[600px] w-full">
                 <p className="text-[16px]/[24px] font-medium text-[#4b4b4b]">Job Description</p>
                 <p className="text-[14px]/[22px] font-medium text-[#a5a5a5] mt-[6px]">Data Analysis, UI/UX Prototyping, Wireframing</p>
                 <p className="text-[14px]/[22px] font-medium text-[#4b4b4b] mt-[2px]">Senior Data Analyst Position Overview<br />
@@ -76,13 +76,13 @@ export default function JobSummary() {
                     Strong experience with BI tools (Tableau, Power BI, or similar)<br />
                     Proven track record of delivering data-driven solutions</p>
             </div>
-            <div className="w-[364px] mt-[32px]">
+            <div className="md:w-[364px] w-full  mt-[32px] ">
                 <p className="text-[16px]/[24px] font-medium text-[#4b4b4b]">Applicant Questions</p>
-                <div className="mt-[6px] flex flex-col gap-[14px]">
+                <div className="mt-[6px] flex flex-col gap-[14px] w-full">
                     {qadata.map((item, index) => (
                         <div key={index}>
                             <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">{item.que}</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">{item.ans}</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#a5a5a5] break-words">{item.ans}</p>
                         </div>
                     ))}
                 </div>

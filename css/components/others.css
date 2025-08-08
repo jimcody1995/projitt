@@ -23,10 +23,6 @@
   animation-delay: 0.3s;
 }
 
-table {
-  border-collapse: separate !important;
-}
-
 .ql-toolbar.ql-snow {
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
@@ -35,7 +31,7 @@ table {
 }
 
 #custom-toolbar::after {
-  content: "";
+  content: '';
   display: none;
   height: 1px;
   background-color: #e9e9e9;

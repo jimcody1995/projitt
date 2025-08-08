@@ -35,7 +35,7 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent close={false} className="!w-[830px] max-w-[830px]">
+                <DialogContent close={false} className="md:max-w-[830px] w-full">
                     <DialogTitle></DialogTitle>
                     <div>
                         <div className="flex justify-center">
