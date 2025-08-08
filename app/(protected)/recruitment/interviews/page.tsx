@@ -37,6 +37,8 @@ export default function Interviews() {
                     <p className="text-[14px]/[22px] font-medium ">Table</p>
                 </div>
             </div>
+        </div>
+        <div>
             <div className="mt-[15px]" data-testid="interviews-content">
                 {activeTab === 'calendar' && <CalendarMode setSelectedApplication={setSelectedApplication} data-testid="calendar-mode-component" />}
                 {activeTab === 'table' && <TableMode setSelectedApplication={setSelectedApplication} data-testid="table-mode-component" />}
@@ -48,5 +50,5 @@ export default function Interviews() {
             />
         </div>
     </div>
-     
+
 }
