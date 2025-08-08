@@ -1,5 +1,5 @@
-'use client'
-import { JSX, useState } from "react";
+'use client';
+import React, { JSX, useState, useMemo } from "react";
 import {
     ColumnDef,
     getCoreRowModel,
@@ -9,7 +9,6 @@ import {
     Row,
     useReactTable,
 } from '@tanstack/react-table';
-import { useMemo } from 'react';
 import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { Button } from "@/components/ui/button";
@@ -18,8 +17,16 @@ import { DataGrid } from "@/components/ui/data-grid";
 import { NoData } from "../../assessments/components/noData";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import DetailLetter from "./detalilLetter";
+
+/**
+ * @description
+ * Approved is a component that displays a data table of applicants who have been approved and are in the final stages of the hiring process.
+ * The table shows applicant details like name, job title, location, and offer status.
+ * It features dynamic actions based on the applicant's offer status: "Start Onboarding," "Generate Offer Letter," or "Reset Letter."
+ * The component uses the `@tanstack/react-table` library for handling table state, sorting, and pagination.
+ * It also includes unique `data-testid` attributes on interactive elements to support UI test automation.
+ */
 export default function Approved({ setOnboarding }: { setOnboarding: any }) {
-    const [activeSection] = useState<'upcoming' | 'pending' | 'past'>('upcoming');
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -31,6 +38,7 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
 
     const [applicantsData, setApplicantsData] = useState<any[]>([
         {
+            id: '1',
             name: 'John Doe',
             job_title: 'Software Engineer',
             job_location: 'USA',
@@ -39,6 +47,7 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
             mode: 'Online',
         },
         {
+            id: '2',
             name: 'John David',
             job_title: 'Software Engineer',
             job_location: 'USA',
@@ -47,40 +56,45 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
             mode: 'Online',
         },
         {
-            name: 'John David',
-            job_title: 'Software Engineer',
-            job_location: 'USA',
-            status: '',
-            date: '2023-06-01 10:00 AM',
-            mode: 'Online',
-        },
-        {
-            name: 'John David',
-            job_title: 'Software Engineer',
-            job_location: 'USA',
+            id: '3',
+            name: 'Jane Smith',
+            job_title: 'Product Manager',
+            job_location: 'Canada',
             status: 'Accepted',
             date: '2023-06-01 10:00 AM',
             mode: 'Online',
         },
         {
-            name: 'John David',
-            job_title: 'Software Engineer',
-            job_location: 'USA',
+            id: '4',
+            name: 'Peter Jones',
+            job_title: 'UX Designer',
+            job_location: 'UK',
             status: 'Rejected',
             date: '2023-06-01 10:00 AM',
             mode: 'Online',
         },
     ]);
-    const statusTextColors = {
+
+    /**
+     * @description
+     * A map of offer statuses to their corresponding text colors for display.
+     */
+    const statusTextColors: { [key: string]: string } = {
         "Pending": 'text-[#fff]',
         "Accepted": 'text-[#0d978b]',
         "Rejected": 'text-[#FA1E1E]',
-    }
-    const statusBgColors = {
+    };
+
+    /**
+     * @description
+     * A map of offer statuses to their corresponding background colors for display.
+     */
+    const statusBgColors: { [key: string]: string } = {
         "Pending": 'bg-[#a5a5a5]',
         "Accepted": 'bg-[#d6eeec]',
         "Rejected": 'bg-[#FA1E1E26]',
-    }
+    };
+
     // const getData = async () => {
     //     try {
     //         const response = await getJobPostings({
@@ -103,7 +117,12 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
     //     getData();
     // }, [selectedLocations, selectedDepartments, selectedTypes, selectedStatuses]);
 
-
+    /**
+     * @description
+     * Defines the columns for the data grid table. It uses `useMemo` to prevent unnecessary re-renders.
+     * Each column specifies an accessor key, a header component, and a cell rendering function.
+     * The `actions` column's cell content is dynamically rendered based on the applicant's offer status.
+     */
     const columns = useMemo<ColumnDef<any>[]>(
         () => [
             {
@@ -167,17 +186,20 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
                         className='text-[14px] font-medium'
                         title="Offer Status"
                         column={column}
-                        data-testid="state-header"
+                        data-testid="status-header"
                     />
                 ),
-                cell: ({ row }) => (
-                    <span
-                        className={`text-[14px]/[22px]  px-[12px] py-[2px] rounded-[8px] ${statusTextColors[row.original.status as keyof typeof statusTextColors]} ${statusBgColors[row.original.status as keyof typeof statusBgColors]}`}
-                        data-testid={`stage-${row.original.id}`}
-                    >
-                        {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
-                    </span>
-                ),
+                cell: ({ row }) => {
+                    const status = row.original.status as keyof typeof statusTextColors;
+                    return (
+                        <span
+                            className={`text-[14px]/[22px] px-[12px] py-[2px] rounded-[8px] ${statusTextColors[status] || ''} ${statusBgColors[status] || ''}`}
+                            data-testid={`status-${row.original.id}`}
+                        >
+                            {row.original.status ? row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1) : 'Not Sent'}
+                        </span>
+                    );
+                },
                 enableSorting: true,
                 size: 90,
                 meta: {
@@ -194,51 +216,68 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
                         data-testid="action-header"
                     />
                 ),
-                cell: ({ row }) => (<>
-                    {row.original.status === 'Accepted' ? (
-                        <Button
-                            className="h-[38px]"
-                            data-testid={`actions-button-${row.original.id}`}
-                            onClick={() => setOnboarding(row.original.id)}
-                        >
-                            Start Onboarding
-                        </Button>
-                    )
-                        : row.original.status === '' ? (
-                            <button
-                                className="text-[#0d978b] text-[14px]/[22px] flex items-center cursor-pointer"
-                                data-testid={`actions-button-${row.original.id}`}
-                                onClick={() => setSelectedApplication(row.original.id)}
+                cell: ({ row }) => (
+                    <div data-testid={`actions-cell-${row.original.id}`}>
+                        {row.original.status === 'Accepted' ? (
+                            <Button
+                                className="h-[38px]"
+                                data-testid={`start-onboarding-button-${row.original.id}`}
+                                id={`start-onboarding-button-${row.original.id}`}
+                                onClick={() => setOnboarding(row.original.id)}
                             >
-                                Generate Offer Letter
-                                <ArrowRight className="ml-2 size-[16px]" />
-                            </button>
-                        ) :
-                            <button
-                                className="text-[#353535] text-[14px]/[22px] flex items-center cursor-pointer"
-                                data-testid={`actions-button-${row.original.id}`}
-                                onClick={() => setSelectedApplication(row.original.id)}
-                            >
-                                Reset Letter
-                                <ArrowRight className="ml-2 size-[16px]" />
-                            </button>
-                    }
-
-                </>),
+                                Start Onboarding
+                            </Button>
+                        )
+                            : row.original.status === '' ? (
+                                <button
+                                    className="text-[#0d978b] text-[14px]/[22px] flex items-center cursor-pointer"
+                                    data-testid={`generate-offer-letter-button-${row.original.id}`}
+                                    id={`generate-offer-letter-button-${row.original.id}`}
+                                    onClick={() => setSelectedApplication(row.original.id)}
+                                >
+                                    Generate Offer Letter
+                                    <ArrowRight className="ml-2 size-[16px]" />
+                                </button>
+                            ) : (
+                                <button
+                                    className="text-[#353535] text-[14px]/[22px] flex items-center cursor-pointer"
+                                    data-testid={`reset-letter-button-${row.original.id}`}
+                                    id={`reset-letter-button-${row.original.id}`}
+                                    onClick={() => setSelectedApplication(row.original.id)}
+                                >
+                                    Reset Letter
+                                    <ArrowRight className="ml-2 size-[16px]" />
+                                </button>
+                            )
+                        }
+                    </div>
+                ),
                 enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
                 },
             },
-        ].filter(Boolean),
-        [activeSection]
+        ],
+        []
     );
 
+    /**
+     * @description
+     * This function is a callback for the `DetailLetter` dialog's `onOpenChange` prop.
+     * It closes the dialog by setting `selectedApplication` back to `null`.
+     * @param {boolean} open - The new open state of the dialog.
+     */
     const handleOpenChange = (open: boolean) => {
-        setSelectedApplication(null);
+        if (!open) {
+            setSelectedApplication(null);
+        }
     };
 
+    /**
+     * @description
+     * `useReactTable` hook instance to handle table state, sorting, and pagination.
+     */
     const table = useReactTable({
         columns: columns as ColumnDef<any, any>[],
         data: applicantsData,
@@ -254,43 +293,37 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
         getPaginationRowModel: getPaginationRowModel(),
     });
 
-    /**
-     * ActionsCell Component
-     * 
-     * Renders action dropdown menu for a job posting row
-     * @param {Object} props - Component props
-     * @param {Row<IData>} props.row - Table row data
-     * @returns {JSX.Element} Actions dropdown menu
-     */
-    return <div>
-        <div className='w-full mt-[22px]'>
-            <DataGrid
-                className='w-full'
-                table={table}
-                recordCount={applicantsData?.length || 0}
-                data-testid="job-postings-grid"
-            >
-                <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
-                    <> {applicantsData.length === 0 ?
-                        <NoData data-testid="no-data-message" /> : <>
-                            <div
-                                className={`w-full overflow-x-auto h-[calc(100vh-300px)]`}
-                                data-testid="list-view-container"
-                            >
-                                <DataGridTable />
-                            </div>
-                            <DataGridPagination data-testid="pagination-controls" />
-                        </>
-                    }
-
-                    </>
-                </div>
-            </DataGrid>
-
+    return (
+        <div data-testid="approved-applicants-container">
+            <div className='w-full mt-[22px]'>
+                <DataGrid
+                    className='w-full'
+                    table={table}
+                    recordCount={applicantsData?.length || 0}
+                    data-testid="approved-applicants-grid"
+                >
+                    <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
+                        {applicantsData.length === 0 ? (
+                            <NoData data-testid="no-data-message" />
+                        ) : (
+                            <>
+                                <div
+                                    className={`w-full overflow-x-auto h-[calc(100vh-300px)]`}
+                                    data-testid="approved-list-view-container"
+                                >
+                                    <DataGridTable />
+                                </div>
+                                <DataGridPagination data-testid="approved-pagination-controls" />
+                            </>
+                        )}
+                    </div>
+                </DataGrid>
+            </div>
+            <DetailLetter
+                open={selectedApplication !== null}
+                onOpenChange={handleOpenChange}
+                data-testid="detail-letter-dialog"
+            />
         </div>
-        <DetailLetter
-            open={selectedApplication !== null}
-            onOpenChange={handleOpenChange}
-        />
-    </div>;
+    );
 }

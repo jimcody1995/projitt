@@ -1,4 +1,6 @@
-'use client'
+'use client';
+
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -8,6 +10,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/lib/utils";
 import { ArrowLeft, BriefcaseBusiness, CalendarDays, PieChart, Search } from "lucide-react";
 import moment from "moment";
+
+/**
+ * @description
+ * Onboarding is a component designed to manage and configure the onboarding process for a new hire.
+ * It displays a new employee's key information and provides a form for setting up their initial company access and tasks.
+ * The component includes fields for the employee's company email, their assigned manager, team, and start date.
+ * It also features interactive checklists for standard onboarding procedures and activities, as well as a dropdown for selecting a training path.
+ * Unique `data-testid` and `id` attributes are added to all key UI elements to support test automation.
+ */
 export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
     const onboardingCheckinglist = [
         "Upload ID & Certifications",
@@ -16,14 +27,14 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
         "Training & Orientation",
         "Benefits ",
         "Background Check"
-    ]
+    ];
 
     const onboardingAcitivites = [
         "Email ID Creation",
         "Laptop Issue",
         "Office Tour",
     ]
-    return <div>
+    return( <div>
         <div className='flex gap-[16px] items-center'>
             <button className='w-[24px] h-[24px] rounded-full border border-[#e9e9e9] flex items-center justify-center cursor-pointer'
                 onClick={() => setOnboarding(null)}
@@ -113,47 +124,50 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
 
                                     }}
                                     numberOfMonths={1}
+                                    data-testid="start-date-calendar"
+                                    id="start-date-calendar"
                                 />
                             </PopoverContent>
                         </Popover>
                     </div>
                 </div>
-                <div>
-                    <p className="text-[14px]/[16px]  text-[#1C1C1C]">Onboarding Checklist</p>
+                <div data-testid="onboarding-checklist-section">
+                    <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="onboarding-checklist-label" id="onboarding-checklist-label">Onboarding Checklist</p>
                     <div className="flex flex-col gap-[16px] mt-[12px]">
                         {onboardingCheckinglist.map((item, index) => (
-                            <div key={index} className="flex items-center gap-[6px]">
-                                <Checkbox className="size-[24px] text-[#0d978b]" />
-                                <p className="text-[14px]/[16px] text-[#4b4b4b]">{item}</p>
+                            <div key={index} className="flex items-center gap-[6px]" data-testid={`checklist-item-${index}`} id={`checklist-item-${index}`}>
+                                <Checkbox className="size-[24px] text-[#0d978b]" data-testid={`checklist-checkbox-${index}`} id={`checklist-checkbox-${index}`} />
+                                <p className="text-[14px]/[16px] text-[#4b4b4b]" data-testid={`checklist-text-${index}`}>{item}</p>
                             </div>
                         ))}
                     </div>
                 </div>
-                <div>
-                    <p className="text-[14px]/[16px]  text-[#1C1C1C]">Onboarding Activities</p>
+                <div data-testid="onboarding-activities-section">
+                    <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="onboarding-activities-label" id="onboarding-activities-label">Onboarding Activities</p>
                     <div className="flex flex-col gap-[16px] mt-[12px]">
                         {onboardingAcitivites.map((item, index) => (
-                            <div key={index} className="flex items-center gap-[6px]">
-                                <Checkbox className="size-[24px] text-[#0d978b]" />
-                                <p className="text-[14px]/[16px] text-[#4b4b4b]">{item}</p>
+                            <div key={index} className="flex items-center gap-[6px]" data-testid={`activity-item-${index}`} id={`activity-item-${index}`}>
+                                <Checkbox className="size-[24px] text-[#0d978b]" data-testid={`activity-checkbox-${index}`} id={`activity-checkbox-${index}`} />
+                                <p className="text-[14px]/[16px] text-[#4b4b4b]" data-testid={`activity-text-${index}`}>{item}</p>
                             </div>
                         ))}
                     </div>
                 </div>
-                <div>
-                    <p className="text-[14px]/[16px]  text-[#1C1C1C]">Select Training Learning Path</p>
-                    <Select value="1">
-                        <SelectTrigger className="w-full h-[48px] mt-[6px]">
+                <div data-testid="training-path-section">
+                    <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="training-path-label" id="training-path-label">Select Training Learning Path</p>
+                    <Select value="1" data-testid="training-path-select" id="training-path-select">
+                        <SelectTrigger className="w-full h-[48px] mt-[6px]" data-testid="training-path-select-trigger" id="training-path-select-trigger">
                             <SelectValue placeholder="Select" />
                         </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="1">New Employee Onboarding Videos</SelectItem>
-                            <SelectItem value="2">Path 2</SelectItem>
-                            <SelectItem value="3">Path 3</SelectItem>
+                        <SelectContent data-testid="training-path-select-content" id="training-path-select-content">
+                            <SelectItem value="1" data-testid="training-path-item-1" id="training-path-item-1">New Employee Onboarding Videos</SelectItem>
+                            <SelectItem value="2" data-testid="training-path-item-2" id="training-path-item-2">Path 2</SelectItem>
+                            <SelectItem value="3" data-testid="training-path-item-3" id="training-path-item-3">Path 3</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
             </div>
         </div>
-    </div>;
+    </div>
+    );
 }

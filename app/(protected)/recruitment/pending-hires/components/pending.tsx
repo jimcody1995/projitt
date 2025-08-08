@@ -1,5 +1,6 @@
-'use client'
-import { JSX, useState } from "react";
+'use client';
+
+import React, { JSX, useState, useMemo } from "react";
 import {
     ColumnDef,
     getCoreRowModel,
@@ -9,16 +10,24 @@ import {
     Row,
     useReactTable,
 } from '@tanstack/react-table';
-import { useMemo } from 'react';
 import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
-import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
+import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { EllipsisVertical } from "lucide-react";
 import { DataGrid } from "@/components/ui/data-grid";
 import { NoData } from "../../assessments/components/noData";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import Detail from "../../applications/[id]/components/detail";
+
+/**
+ * @description
+ * The `Pending` component displays a data grid of applicants whose applications are in a pending or rejected status.
+ * It uses `@tanstack/react-table` for managing the table's state, sorting, and pagination.
+ * The table shows key applicant details and provides an actions menu for each row, allowing for profile viewing, messaging, and rejection.
+ * The component also integrates with a `Detail` component to show a more detailed view of a selected applicant.
+ * All interactive elements and table components are equipped with unique `data-testid` and `id` attributes for reliable test automation.
+ */
 export default function Pending() {
     const [activeSection] = useState<'upcoming' | 'pending' | 'past'>('upcoming');
     const [pagination, setPagination] = useState<PaginationState>({
@@ -30,6 +39,7 @@ export default function Pending() {
     ]);
     const [applicantsData, setApplicantsData] = useState<any[]>([
         {
+            id: '1',
             name: 'John Doe',
             job_title: 'Software Engineer',
             job_location: 'USA',
@@ -38,6 +48,7 @@ export default function Pending() {
             mode: 'Online',
         },
         {
+            id: '2',
             name: 'John David',
             job_title: 'Software Engineer',
             job_location: 'USA',
@@ -70,7 +81,12 @@ export default function Pending() {
     //     getData();
     // }, [selectedLocations, selectedDepartments, selectedTypes, selectedStatuses]);
 
-
+    /**
+     * @description
+     * A memoized definition of the table columns. This includes column headers,
+     * cell rendering logic, and sorting configuration for each column.
+     * The `status` column applies dynamic styling based on the applicant's status.
+     */
     const columns = useMemo<ColumnDef<any>[]>(
         () => [
             {
@@ -134,13 +150,13 @@ export default function Pending() {
                         className='text-[14px] font-medium'
                         title="Status"
                         column={column}
-                        data-testid="state-header"
+                        data-testid="status-header"
                     />
                 ),
                 cell: ({ row }) => (
                     <span
-                        className={`text-[14px]/[22px]  px-[12px] py-[2px] rounded-[8px] ${row.original.status === 'Pending' ? 'bg-[#a5a5a5] text-white' : ' text-[#FA1E1E] bg-[#FA1E1E26]'}`}
-                        data-testid={`stage-${row.original.id}`}
+                        className={`text-[14px]/[22px] px-[12px] py-[2px] rounded-[8px] ${row.original.status === 'Pending' ? 'bg-[#a5a5a5] text-white' : ' text-[#FA1E1E] bg-[#FA1E1E26]'}`}
+                        data-testid={`status-${row.original.id}`}
                     >
                         {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
                     </span>
@@ -165,10 +181,22 @@ export default function Pending() {
         [activeSection]
     );
 
+    /**
+     * @description
+     * A callback function to handle the `onOpenChange` event of the `Detail` dialog.
+     * It closes the dialog by setting `selectedApplication` to `null`.
+     * @param {boolean} open - The new state of the dialog.
+     */
     const handleOpenChange = (open: boolean) => {
-        setSelectedApplication(null);
+        if (!open) {
+            setSelectedApplication(null);
+        }
     };
 
+    /**
+     * @description
+     * `useReactTable` hook instance for configuring the data table with columns, data, pagination, and sorting state.
+     */
     const table = useReactTable({
         columns: columns as ColumnDef<any, any>[],
         data: applicantsData,
@@ -185,15 +213,13 @@ export default function Pending() {
     });
 
     /**
-     * ActionsCell Component
-     * 
-     * Renders action dropdown menu for a job posting row
-     * @param {Object} props - Component props
-     * @param {Row<IData>} props.row - Table row data
-     * @returns {JSX.Element} Actions dropdown menu
+     * @description
+     * A component that renders a dropdown menu for a specific row in the table, providing actions for that applicant.
+     * @param {Object} props - The component props.
+     * @param {Row<any>} props.row - The table row data.
+     * @returns {JSX.Element} The actions dropdown menu JSX.
      */
     function ActionsCell({ row }: { row: Row<any> }): JSX.Element {
-
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -211,59 +237,62 @@ export default function Pending() {
                     align="end"
                     data-testid={`actions-menu-${row.original.id}`}
                 >
-
-                    <div
+                    <DropdownMenuItem
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`view-applicants-action-${row.original.id}`}
+                        data-testid={`view-profile-action-${row.original.id}`}
                         onClick={() => setSelectedApplication(row.original.id)}
                     >
                         View Profile
-                    </div>
-                    <div
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`duplicate-action-${row.original.id}`}
+                        data-testid={`message-action-${row.original.id}`}
                     >
                         Message
-                    </div>
-                    <div
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`duplicate-action-${row.original.id}`}
+                        data-testid={`reject-action-${row.original.id}`}
                     >
                         Reject
-                    </div>
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         );
     }
-    return <div>
-        <div className='w-full mt-[22px]'>
-            <DataGrid
-                className='w-full'
-                table={table}
-                recordCount={applicantsData?.length || 0}
-                data-testid="job-postings-grid"
-            >
-                <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
-                    <> {applicantsData.length === 0 ?
-                        <NoData data-testid="no-data-message" /> : <>
-                            <div
-                                className={`w-full overflow-x-auto h-[calc(100vh-300px)]`}
-                                data-testid="list-view-container"
-                            >
-                                <DataGridTable />
-                            </div>
-                            <DataGridPagination data-testid="pagination-controls" />
-                        </>
-                    }
 
-                    </>
-                </div>
-            </DataGrid>
+    return (
+        <div data-testid="pending-applicants-container">
+            <div className='w-full mt-[22px]'>
+                <DataGrid
+                    className='w-full'
+                    table={table}
+                    recordCount={applicantsData?.length || 0}
+                    data-testid="pending-applicants-grid"
+                >
+                    <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
+                        {applicantsData.length === 0 ? (
+                            <NoData data-testid="no-data-message" />
+                        ) : (
+                            <>
+                                <div
+                                    className={`w-full overflow-x-auto h-[calc(100vh-300px)]`}
+                                    data-testid="pending-list-view-container"
+                                >
+                                    <DataGridTable />
+                                </div>
+                                <DataGridPagination data-testid="pending-pagination-controls" />
+                            </>
+                        )}
+                    </div>
+                </DataGrid>
 
+            </div>
+            <Detail
+                open={selectedApplication !== null}
+                onOpenChange={handleOpenChange}
+                data-testid="applicant-detail-dialog"
+            />
         </div>
-        <Detail
-            open={selectedApplication !== null}
-            onOpenChange={handleOpenChange}
-        />
-    </div>;
+    );
 }

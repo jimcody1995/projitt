@@ -1,5 +1,6 @@
-'use client'
-import { useState } from "react";
+'use client';
+
+import { useState, useMemo } from "react";
 import {
     ColumnDef,
     getCoreRowModel,
@@ -12,7 +13,6 @@ import {
 } from '@tanstack/react-table';
 import moment from 'moment';
 import Detail from '../../applications/[id]/components/detail';
-import { useMemo } from 'react';
 import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
@@ -27,7 +27,14 @@ import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import Reschedule from "./reschedule";
 import CancelInterview from "./cancel-interview";
 
-
+/**
+ * @description
+ * TableMode is a component that displays a table of applicant interviews with filtering and sorting capabilities.
+ * It provides three sections: "Upcoming", "Pending", and "Past" interviews.
+ * The table uses a dynamic column definition based on the active section. Each row includes an actions menu for rescheduling or canceling an interview.
+ * The component also includes search functionality, a filter sidebar, and pagination.
+ * It uses `@tanstack/react-table` for efficient data table management and provides unique `data-testid` attributes for UI test automation.
+ */
 export default function TableMode({ setSelectedApplication }: { setSelectedApplication: (id: string) => void }) {
     const [activeSection, setActiveSection] = useState<'upcoming' | 'pending' | 'past'>('upcoming');
     const [pagination, setPagination] = useState<PaginationState>({
@@ -43,6 +50,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
     const [cancelOpen, setCancelOpen] = useState(false);
     const [applicantsData, setApplicantsData] = useState<any[]>([
         {
+            id: '1',
             name: 'John Doe',
             job_title: 'Software Engineer',
             job_location: 'USA',
@@ -51,6 +59,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
             mode: 'Online',
         },
         {
+            id: '2',
             name: 'John David',
             job_title: 'Software Engineer',
             job_location: 'USA',
@@ -73,8 +82,8 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
             const searchLower = (searchQuery || "").toLowerCase();
             const matchesSearch =
                 !searchQuery ||
-                item.title.toLowerCase().includes(searchLower) ||
-                (item.description || "").toLowerCase().includes(searchLower);
+                item.job_title.toLowerCase().includes(searchLower) ||
+                (item.name || "").toLowerCase().includes(searchLower);
 
             return matchesSearch && matchesStatus;
         });
@@ -101,7 +110,6 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
     // useEffect(() => {
     //     getData();
     // }, [selectedLocations, selectedDepartments, selectedTypes, selectedStatuses]);
-
 
     const columns = useMemo<ColumnDef<any>[]>(
         () => [
@@ -254,7 +262,9 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
     );
 
     const handleOpenChange = (open: boolean) => {
-        setSelectedApplication(null);
+        if (!open) {
+            setSelectedApplication(null);
+        }
     };
 
     const table = useReactTable({
@@ -274,15 +284,14 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
     });
 
     /**
-     * ActionsCell Component
-     * 
-     * Renders action dropdown menu for a job posting row
-     * @param {Object} props - Component props
-     * @param {Row<IData>} props.row - Table row data
-     * @returns {JSX.Element} Actions dropdown menu
+     * @description
+     * This component renders an action dropdown menu for a job posting row within the table.
+     * It provides options to "Reschedule", "Cancel Interview", and "Mark as No-show".
+     * @param {Object} props - The component props.
+     * @param {Row<any>} props.row - The table row data.
+     * @returns {JSX.Element} The actions dropdown menu.
      */
     function ActionsCell({ row }: { row: Row<any> }): JSX.Element {
-
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -301,25 +310,23 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                     align="end"
                     data-testid={`actions-menu-${row.original.id}`}
                 >
-
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`view-applicants-action-${row.original.id}`}
+                        data-testid={`reschedule-action-${row.original.id}`}
                         onClick={e => { e.stopPropagation(); setRescheduleOpen(true); }}
-
                     >
                         Reschedule
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`duplicate-action-${row.original.id}`}
+                        data-testid={`cancel-interview-action-${row.original.id}`}
                         onClick={e => { e.stopPropagation(); setCancelOpen(true); }}
                     >
                         Cancel Interview
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`duplicate-action-${row.original.id}`}
+                        data-testid={`no-show-action-${row.original.id}`}
                         onClick={e => e.stopPropagation()}
                     >
                         Mark as No-show
@@ -328,7 +335,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
             </DropdownMenu >
         );
     }
-    return <div>
+    return (<div>
         <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
             <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('upcoming')}>
                 <p className='whitespace-nowrap'>Upcoming</p>
@@ -409,11 +416,13 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         </>
                     }
 
+
                     </>
                 </div>
             </DataGrid>
             <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
             <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
         </div>
-    </div>;
+    </div>
+    );
 }
