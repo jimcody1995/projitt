@@ -1,5 +1,6 @@
-'use client'
-import { useState } from "react";
+'use client';
+
+import { useState, useMemo } from "react";
 import {
     ColumnDef,
     getCoreRowModel,
@@ -12,7 +13,6 @@ import {
 } from '@tanstack/react-table';
 import moment from 'moment';
 import Detail from '../../applications/[id]/components/detail';
-import { useMemo } from 'react';
 import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
@@ -27,7 +27,14 @@ import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import Reschedule from "./reschedule";
 import CancelInterview from "./cancel-interview";
 
-
+/**
+ * @description
+ * TableMode is a component that displays a table of applicant interviews with filtering and sorting capabilities.
+ * It provides three sections: "Upcoming", "Pending", and "Past" interviews.
+ * The table uses a dynamic column definition based on the active section. Each row includes an actions menu for rescheduling or canceling an interview.
+ * The component also includes search functionality, a filter sidebar, and pagination.
+ * It uses `@tanstack/react-table` for efficient data table management and provides unique `data-testid` attributes for UI test automation.
+ */
 export default function TableMode({ setSelectedApplication }: { setSelectedApplication: (id: string) => void }) {
     const [activeSection, setActiveSection] = useState<'upcoming' | 'pending' | 'past'>('upcoming');
     const [pagination, setPagination] = useState<PaginationState>({
@@ -43,6 +50,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
     const [cancelOpen, setCancelOpen] = useState(false);
     const [applicantsData, setApplicantsData] = useState<any[]>([
         {
+            id: '1',
             name: 'John Doe',
             job_title: 'Software Engineer',
             job_location: 'USA',
@@ -51,6 +59,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
             mode: 'Online',
         },
         {
+            id: '2',
             name: 'John David',
             job_title: 'Software Engineer',
             job_location: 'USA',
@@ -73,8 +82,8 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
             const searchLower = (searchQuery || "").toLowerCase();
             const matchesSearch =
                 !searchQuery ||
-                item.title.toLowerCase().includes(searchLower) ||
-                (item.description || "").toLowerCase().includes(searchLower);
+                item.job_title.toLowerCase().includes(searchLower) ||
+                (item.name || "").toLowerCase().includes(searchLower);
 
             return matchesSearch && matchesStatus;
         });
@@ -101,7 +110,6 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
     // useEffect(() => {
     //     getData();
     // }, [selectedLocations, selectedDepartments, selectedTypes, selectedStatuses]);
-
 
     const columns = useMemo<ColumnDef<any>[]>(
         () => [
@@ -254,7 +262,9 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
     );
 
     const handleOpenChange = (open: boolean) => {
-        setSelectedApplication(null);
+        if (!open) {
+            setSelectedApplication(null);
+        }
     };
 
     const table = useReactTable({
@@ -274,15 +284,14 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
     });
 
     /**
-     * ActionsCell Component
-     * 
-     * Renders action dropdown menu for a job posting row
-     * @param {Object} props - Component props
-     * @param {Row<IData>} props.row - Table row data
-     * @returns {JSX.Element} Actions dropdown menu
+     * @description
+     * This component renders an action dropdown menu for a job posting row within the table.
+     * It provides options to "Reschedule", "Cancel Interview", and "Mark as No-show".
+     * @param {Object} props - The component props.
+     * @param {Row<any>} props.row - The table row data.
+     * @returns {JSX.Element} The actions dropdown menu.
      */
     function ActionsCell({ row }: { row: Row<any> }): JSX.Element {
-
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -301,25 +310,23 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                     align="end"
                     data-testid={`actions-menu-${row.original.id}`}
                 >
-
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`view-applicants-action-${row.original.id}`}
+                        data-testid={`reschedule-action-${row.original.id}`}
                         onClick={e => { e.stopPropagation(); setRescheduleOpen(true); }}
-
                     >
                         Reschedule
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`duplicate-action-${row.original.id}`}
+                        data-testid={`cancel-interview-action-${row.original.id}`}
                         onClick={e => { e.stopPropagation(); setCancelOpen(true); }}
                     >
                         Cancel Interview
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`duplicate-action-${row.original.id}`}
+                        data-testid={`no-show-action-${row.original.id}`}
                         onClick={e => e.stopPropagation()}
                     >
                         Mark as No-show
@@ -328,92 +335,112 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
             </DropdownMenu >
         );
     }
-    return <div>
-        <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('upcoming')}>
-                <p className='whitespace-nowrap'>Upcoming</p>
-                <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
-            </div>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('interviews')}>
-                <p className='whitespace-nowrap'>Pending</p>
-                <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
-            </div>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('job-summary')}>
-                <p className='whitespace-nowrap'>Past</p>
-            </div>
-        </div>
-        <div className='w-full mt-[22px]'>
-            <DataGrid
-                className='w-full'
-                table={table}
-                recordCount={filteredData?.length || 0}
-                onRowClick={(row) => setSelectedApplication(row)}
-                data-testid="job-postings-grid"
-            >
-                <div className="flex items-center justify-between">
-                    <div className="relative">
-                        <Search
-                            className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"
-                            data-testid="search-icon"
-                        />
-                        <Input
-                            placeholder="Search Job"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="ps-9 w-[243px] h-[42px]"
-                            data-testid="search-input"
-                        />
-                        {searchQuery.length > 0 && (
-                            <Button
-                                mode="icon"
-                                variant="ghost"
-                                className="absolute end-1.5 top-1/2 -translate-y-1/2 h-6 w-6"
-                                onClick={() => setSearchQuery('')}
-                                data-testid="clear-search-button"
-                            >
-                                <X />
-                            </Button>
-                        )}
-                    </div>
-                    <div className='flex gap-[16px]'>
-                        <Button
-                            variant="outline"
-                            onClick={() => setShowFilter(!showFliter)}
-                            className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
-                            data-testid="filter-button"
-                        >
-                            <ListFilter className='size-[20px]' />
-                            Filter
-                        </Button>
-                        <Button
-                            variant="outline"
-                            className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
-                            data-testid="filter-button"
-                        >
-                            <Download className='size-[20px]' />
-                            Export
-                        </Button>
-                    </div>
-                </div>
-                {showFliter && <FilterTool selectedMode={selectedMode} selectedStatuses={selectedStatuses} setSelectedMode={setSelectedMode} setSelectedStatuses={setSelectedStatuses} />}
-                <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
-                    <> {filteredData.length === 0 ?
-                        <NoData data-testid="no-data-message" /> : <>
-                            <div
-                                className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFliter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
-                                data-testid="list-view-container"
-                            >
-                                <DataGridTable />
-                            </div>
-                            <DataGridPagination data-testid="pagination-controls" />
-                        </>
-                    }
 
-                    </>
+    return (
+        <div data-testid="table-mode-container">
+            <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
+                <div
+                    className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`}
+                    onClick={() => setActiveSection('upcoming')}
+                    data-testid="upcoming-tab-button"
+                >
+                    <p className='whitespace-nowrap'>Upcoming</p>
+                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
                 </div>
-            </DataGrid>
-            <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
-            <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
+                <div
+                    className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'pending' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`}
+                    onClick={() => setActiveSection('pending')}
+                    data-testid="pending-tab-button"
+                >
+                    <p className='whitespace-nowrap'>Pending</p>
+                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
+                </div>
+                <div
+                    className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'past' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`}
+                    onClick={() => setActiveSection('past')}
+                    data-testid="past-tab-button"
+                >
+                    <p className='whitespace-nowrap'>Past</p>
+                </div>
+            </div>
+            <div className='w-full mt-[22px]'>
+                <DataGrid
+                    className='w-full'
+                    table={table}
+                    recordCount={filteredData?.length || 0}
+                    onRowClick={(row) => setSelectedApplication(row.id)}
+                    data-testid="interviews-data-grid"
+                >
+                    <div className="flex items-center justify-between">
+                        <div className="relative">
+                            <Search
+                                className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"
+                                data-testid="search-icon"
+                                id="search-icon"
+                            />
+                            <Input
+                                placeholder="Search Job"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="ps-9 w-[243px] h-[42px]"
+                                data-testid="search-input"
+                                id="search-input"
+                            />
+                            {searchQuery.length > 0 && (
+                                <Button
+                                    mode="icon"
+                                    variant="ghost"
+                                    className="absolute end-1.5 top-1/2 -translate-y-1/2 h-6 w-6"
+                                    onClick={() => setSearchQuery('')}
+                                    data-testid="clear-search-button"
+                                    id="clear-search-button"
+                                >
+                                    <X />
+                                </Button>
+                            )}
+                        </div>
+                        <div className='flex gap-[16px]'>
+                            <Button
+                                variant="outline"
+                                onClick={() => setShowFilter(!showFliter)}
+                                className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
+                                data-testid="filter-button"
+                                id="filter-button"
+                            >
+                                <ListFilter className='size-[20px]' />
+                                Filter
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
+                                data-testid="export-button"
+                                id="export-button"
+                            >
+                                <Download className='size-[20px]' />
+                                Export
+                            </Button>
+                        </div>
+                    </div>
+                    {showFliter && <FilterTool selectedMode={selectedMode} selectedStatuses={selectedStatuses} setSelectedMode={setSelectedMode} setSelectedStatuses={setSelectedStatuses} />}
+                    <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
+                        <> {filteredData.length === 0 ?
+                            <NoData data-testid="no-data-message" /> : <>
+                                <div
+                                    className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFliter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
+                                    data-testid="list-view-container"
+                                >
+                                    <DataGridTable />
+                                </div>
+                                <DataGridPagination data-testid="pagination-controls" />
+                            </>
+                        }
+
+                        </>
+                    </div>
+                </DataGrid>
+                <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
+                <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
+            </div>
         </div>
-    </div>;
+    );
 }
