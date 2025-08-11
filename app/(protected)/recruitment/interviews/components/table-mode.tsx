@@ -335,17 +335,21 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
             </DropdownMenu >
         );
     }
-    return (<div>
+    return (
+    <div data-testid="table-mode-container">
         <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('upcoming')}>
+            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('upcoming')}
+                    data-testid="upcoming-tab-button">
                 <p className='whitespace-nowrap'>Upcoming</p>
                 <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
             </div>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('interviews')}>
+            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('interviews')}
+                    data-testid="pending-tab-button">
                 <p className='whitespace-nowrap'>Pending</p>
                 <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
             </div>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('job-summary')}>
+            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('job-summary')}
+                    data-testid="past-tab-button">
                 <p className='whitespace-nowrap'>Past</p>
             </div>
         </div>
@@ -355,13 +359,14 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                 table={table}
                 recordCount={filteredData?.length || 0}
                 onRowClick={(row) => setSelectedApplication(row)}
-                data-testid="job-postings-grid"
+                    data-testid="interviews-data-grid"
             >
                 <div className="flex items-center justify-between sm:flex-row flex-col gap-[10px]">
                     <div className="relative">
                         <Search
                             className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"
                             data-testid="search-icon"
+                                id="search-icon"
                         />
                         <Input
                             placeholder="Search Job"
@@ -369,6 +374,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="ps-9 w-[243px] h-[42px]"
                             data-testid="search-input"
+                                id="search-input"
                         />
                         {searchQuery.length > 0 && (
                             <Button
@@ -377,6 +383,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                                 className="absolute end-1.5 top-1/2 -translate-y-1/2 h-6 w-6"
                                 onClick={() => setSearchQuery('')}
                                 data-testid="clear-search-button"
+                                    id="clear-search-button"
                             >
                                 <X />
                             </Button>
@@ -388,6 +395,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                             onClick={() => setShowFilter(!showFliter)}
                             className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
                             data-testid="filter-button"
+                                id="filter-button"
                         >
                             <ListFilter className='size-[20px]' />
                             Filter
@@ -395,7 +403,8 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         <Button
                             variant="outline"
                             className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
-                            data-testid="filter-button"
+                                data-testid="export-button"
+                                id="export-button"
                         >
                             <Download className='size-[20px]' />
                             Export
