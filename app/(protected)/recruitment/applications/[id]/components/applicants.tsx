@@ -156,6 +156,7 @@ export default function JobPostings() {
                 id: 'select',
                 header: () => <DataGridTableRowSelectAll />,
                 cell: ({ row }) => <DataGridTableRowSelect row={row} />,
+
                 enableSorting: false,
                 enableHiding: false,
                 enableResizing: false,
@@ -366,13 +367,19 @@ export default function JobPostings() {
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`view-applicants-action-${row.original.id}`}
-                        onClick={() => setSelectedApplication(row.original.id)}
+                        // onClick={() => setSelectedApplication(row.original.id)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
                     >
                         View Applicants
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`duplicate-action-${row.original.id}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
                     >
                         Duplicate
                     </div>
@@ -383,6 +390,9 @@ export default function JobPostings() {
                             <div
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 data-testid={`delete-action-${row.original.id}`}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                }}
                             >
                                 Delete
                             </div>
@@ -400,6 +410,7 @@ export default function JobPostings() {
                 className='w-full'
                 table={table}
                 recordCount={filteredData?.length || 0}
+                onRowClick={(row) => setSelectedApplication(row)}
                 data-testid="job-postings-grid"
             >
                 <div className="flex items-center justify-between sm:flex-row flex-col gap-[20px]">

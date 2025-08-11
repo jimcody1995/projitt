@@ -410,12 +410,11 @@ function DataGridTableRowSelect<TData>({
       ></div>
       <input
         type="checkbox"
-
         checked={row.getIsSelected()}
-        onChange={(e) => row.toggleSelected(!!e.target.checked)}
+        onChange={(e) => { e.stopPropagation(); row.toggleSelected(!!e.target.checked) }}
+        onClick={(e) => e.stopPropagation()}
         aria-label="Select row"
         className="align-[inherit] accent-[#0D978B]"
-
       />
     </>
   );

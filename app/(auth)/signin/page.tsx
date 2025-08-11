@@ -95,7 +95,7 @@ export default function Page(): JSX.Element {
         localStorage.removeItem("userInfo");
       }
       axios.defaults.headers.common['Authorization'] = `Bearer ${response?.data?.data?.token}`;
-      router.push("/");
+      window.location.href = "/";
     } catch (err: any) {
       customToast("Error", err.response?.data?.message || "An error occurred", "error");
     } finally {

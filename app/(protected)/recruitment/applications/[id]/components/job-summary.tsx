@@ -24,7 +24,7 @@ export default function JobSummary() {
     return (
         <div className="mt-[29px] w-full">
             <p className="text-[16px]/[24px] font-medium text-[#4b4b4b]">Job Details</p>
-            <div className="grid sm:grid-cols-2 grid-cols-1 gap-[30px] w-[536px] pr-[80px]">
+            <div className="grid sm:grid-cols-2 grid-cols-1 gap-[30px] sm:w-[536px] pr-[80px]">
                 <div className="flex flex-col gap-[2px]">
                     <p className="text-[14px]/[20px] font-medium text-[#a5a5a5]">Job Title</p>
                     <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">Senior Data Analyst</p>

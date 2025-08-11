@@ -220,7 +220,7 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
                     <div data-testid={`actions-cell-${row.original.id}`}>
                         {row.original.status === 'Accepted' ? (
                             <Button
-                                className="h-[38px]"
+                                className="h-[38px] w-full sm:w-auto  !text-wrap"
                                 data-testid={`start-onboarding-button-${row.original.id}`}
                                 id={`start-onboarding-button-${row.original.id}`}
                                 onClick={() => setOnboarding(row.original.id)}

@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar, CalendarDays } from 'lucide-react';
+import { CalendarDays } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog"; // Corrected import for DialogHeader, DialogTitle
 
 import { cn } from "@/lib/utils";
+import { Calendar } from '@/components/ui/calendar';
 
 /**
  * @description

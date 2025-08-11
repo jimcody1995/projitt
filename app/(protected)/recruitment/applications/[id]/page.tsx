@@ -76,9 +76,6 @@ export default function ApplicantJobPage() {
 
         <div className='flex items-center justify-between sm:flex-row flex-col gap-[20px]'>
             <div className='flex gap-[16px] items-center'>
-                <button className='w-[24px] h-[24px] rounded-full border border-[#e9e9e9] flex items-center justify-center cursor-pointer'>
-                    <ArrowLeft className='size-[12px] text-[#4b4b4b]' />
-                </button>
                 <Select>
                     <SelectTrigger className='bg-transparent border-none shadow-none cursor-pointer'>
                         <p
