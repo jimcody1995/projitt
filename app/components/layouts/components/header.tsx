@@ -74,8 +74,9 @@ export function Header() {
                   close={false}
                 >
                   <SheetHeader className="p-0 space-y-0" />
-                  <SheetBody className="p-0 overflow-y-auto">
+                  <SheetBody className="p-0 overflow-y-auto h-full">
                     <SidebarMenu />
+                    sdfsdf
                   </SheetBody>
                 </SheetContent>
               </Sheet>

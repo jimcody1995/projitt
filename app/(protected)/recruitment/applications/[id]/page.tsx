@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button';
 import { ArrowDown, ArrowLeft, BriefcaseBusiness, ChevronDown, EllipsisVertical, MapPin, MessageSquareMore, PieChart, Users } from 'lucide-react';
-import React, { JSX, useState } from 'react';
+import React, { JSX, useEffect, useState } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import CheckDialog from '@/app/(protected)/recruitment/job-postings/components/checkDialog';
 import Applicants from './components/applicants';
@@ -9,6 +9,7 @@ import Share from '@/app/components/partials/common/share';
 import Interviews from './components/interview';
 import JobSummary from './components/job-summary';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
+import { getApplicantJobs } from '@/api/applications';
 export default function ApplicantJobPage() {
     const url = "https://www.figma.com/file/NlfVhYygR9mAQasassdsada/Share...";
     const [activeSection, setActiveSection] = useState<'applicants' | 'interviews' | 'job-summary'>('applicants');

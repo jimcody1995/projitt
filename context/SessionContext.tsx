@@ -22,6 +22,7 @@ type SessionContextType = {
     setSession: (session: Session) => void;
     clearSession: () => void;
     loading: boolean;
+    setLoading: (loading: boolean) => void;
 };
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -108,7 +109,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }): JSX.Elem
     };
 
     return (
-        <SessionContext.Provider value={{ session, setSession, clearSession, loading }}>
+        <SessionContext.Provider value={{ session, setSession, clearSession, loading, setLoading }}>
             {children}
         </SessionContext.Provider>
     );

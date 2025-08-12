@@ -2,7 +2,7 @@
 
 import { JSX, useCallback } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { MENU_SIDEBAR } from '@/config/menu.config';
 import { MenuConfig, MenuItem } from '@/config/types';
 import { cn } from '@/lib/utils';
@@ -17,6 +17,10 @@ import {
   AccordionMenuSubTrigger,
 } from '@/components/ui/accordion-menu';
 import { Badge } from '@/components/ui/badge';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { ChevronsUpDown, LogOut } from 'lucide-react';
+import { useSession } from '@/context/SessionContext';
+import { logout } from '@/api/user';
 
 export function SidebarMenu() {
   const pathname = usePathname();
@@ -213,17 +217,35 @@ export function SidebarMenu() {
     return <AccordionMenuLabel className="text-[11px]/[16px] text-[#a5a5a5] pt-[18px] mb-[8px]" key={index}>{item.heading}</AccordionMenuLabel>;
   };
 
+  const { setSession, setLoading } = useSession();
+  const router = useRouter();
+  const handleLogout = async () => {
+    setLoading(true);
+    const response = await logout()
+    if (response.data.status === true) {
+      setSession({ token: "", authenticated: false })
+      router.push('/signin')
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  }
+
   return (
-    <div className="kt-scrollable-y-hover flex grow shrink-0 pt-[48px] px-[14px] lg:max-h-[calc(100vh-5.5rem)]">
-      <AccordionMenu
-        selectedValue={pathname}
-        matchPath={matchPath}
-        type="single"
-        collapsible
-        classNames={classNames}
-      >
-        {buildMenu(MENU_SIDEBAR)}
-      </AccordionMenu>
+    <div className='flex flex-col justify-between h-full'>
+      <div className="kt-scrollable-y-hover flex grow shrink-0 pt-[48px] px-[14px] lg:max-h-[calc(100vh-5.5rem)]">
+        <AccordionMenu
+          selectedValue={pathname}
+          matchPath={matchPath}
+          type="single"
+          collapsible
+          classNames={classNames}
+        >
+          {buildMenu(MENU_SIDEBAR)}
+        </AccordionMenu>
+
+      </div>
+
     </div>
   );
 }

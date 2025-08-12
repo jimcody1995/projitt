@@ -14,13 +14,17 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/compon
 export function Sidebar() {
   const { settings } = useSettings();
   const pathname = usePathname();
-  const { setSession } = useSession();
+  const { setSession, setLoading } = useSession();
   const router = useRouter();
   const handleLogout = async () => {
+    setLoading(true);
     const response = await logout()
     if (response.data.status === true) {
       setSession({ token: "", authenticated: false })
       router.push('/signin')
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     }
   }
   return (
