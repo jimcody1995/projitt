@@ -54,7 +54,7 @@ export default function JobPostings() {
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRows, setSelectedRows] = useState<string[]>([]);
-    const [showFliter, setShowFilter] = useState(false);
+    const [showFilter, setShowFilter] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState<any>(null);
     const [progress, setProgress] = useState(0);
     const [applicantsData, setApplicantsData] = useState<any[]>([
@@ -441,7 +441,7 @@ export default function JobPostings() {
                     <div className='flex gap-[16px]'>
                         <Button
                             variant="outline"
-                            onClick={() => setShowFilter(!showFliter)}
+                            onClick={() => setShowFilter(!showFilter)}
                             className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
                             data-testid="filter-button"
                         >
@@ -461,7 +461,7 @@ export default function JobPostings() {
 
                     </div>
                 </div>
-                {showFliter && <FilterTool selectedAIScoring={selectedAIScoring} selectedShortListed={selectedShortListed} selectedStatuses={selectedStatuses} setSelectedAIScoring={setSelectedAIScoring} setSelectedShortListed={setSelectedShortListed} setSelectedStatuses={setSelectedStatuses} />}
+                {showFilter && <FilterTool selectedAIScoring={selectedAIScoring} selectedShortListed={selectedShortListed} selectedStatuses={selectedStatuses} setSelectedAIScoring={setSelectedAIScoring} setSelectedShortListed={setSelectedShortListed} setSelectedStatuses={setSelectedStatuses} />}
                 <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     <> {filteredData.length === 0 ?
                         <NoData data-testid="no-data-message" /> : <>
@@ -477,7 +477,7 @@ export default function JobPostings() {
                                 />
                             }
                             <div
-                                className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFliter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
+                                className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFilter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
                                 data-testid="list-view-container"
                             >
                                 <DataGridTable />

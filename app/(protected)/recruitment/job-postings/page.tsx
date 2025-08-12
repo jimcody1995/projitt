@@ -31,11 +31,9 @@ import {
     Users,
     X,
 } from 'lucide-react';
-import { toast } from 'sonner';
-import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 import { Button } from '@/components/ui/button';
 
-import { DataGrid, useDataGrid } from '@/components/ui/data-grid';
+import { DataGrid } from '@/components/ui/data-grid';
 import { DataGridColumnHeader } from '@/components/ui/data-grid-column-header';
 import { DataGridPagination } from '@/components/ui/data-grid-pagination';
 import {
@@ -46,9 +44,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { FilterTool } from './components/filter';
 import { SelectedDialog } from './components/selectedDialog';
-import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
-import { RiCheckboxCircleFill } from '@remixicon/react';
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
+import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
 import CheckDialog from './components/checkDialog';
 import { NoData } from './components/noData';
 import { useRouter } from 'next/navigation';
@@ -79,7 +75,7 @@ export default function JobPostings() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [view, setView] = useState<'list' | 'grid'>('list');
-    const [showFliter, setShowFilter] = useState(false);
+    const [showFilter, setShowFilter] = useState(false);
     const [jobData, setJobData] = useState<any[]>([]);
     const [selectedLocations, setSelectedLocations] = useState<number[]>([]);
     const [selectedDepartments, setSelectedDepartments] = useState<number[]>([]);
@@ -440,7 +436,7 @@ export default function JobPostings() {
             <div className='flex gap-[20px]'>
                 <Button
                     variant="outline"
-                    onClick={() => setShowFilter(!showFliter)}
+                    onClick={() => setShowFilter(!showFilter)}
                     className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
                     data-testid="filter-button"
                 >
@@ -523,7 +519,7 @@ export default function JobPostings() {
 
                     <Toolbar view={view} setView={setView} />
                 </div>
-                {showFliter && <FilterTool selectedLocations={selectedLocations} selectedDepartments={selectedDepartments} selectedTypes={selectedTypes} selectedStatuses={selectedStatuses} setSelectedLocations={setSelectedLocations} setSelectedDepartments={setSelectedDepartments} setSelectedTypes={setSelectedTypes} setSelectedStatuses={setSelectedStatuses} />}
+                {showFilter && <FilterTool selectedLocations={selectedLocations} selectedDepartments={selectedDepartments} selectedTypes={selectedTypes} selectedStatuses={selectedStatuses} setSelectedLocations={setSelectedLocations} setSelectedDepartments={setSelectedDepartments} setSelectedTypes={setSelectedTypes} setSelectedStatuses={setSelectedStatuses} />}
                 <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     {view === 'list' &&
                         <> {filteredData.length === 0 ?

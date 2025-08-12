@@ -36,7 +36,7 @@ import CancelInterview from "./cancel-interview";
  * It uses `@tanstack/react-table` for efficient data table management and provides unique `data-testid` attributes for UI test automation.
  */
 export default function TableMode({ setSelectedApplication }: { setSelectedApplication: (id: string) => void }) {
-    const [activeSection, setActiveSection] = useState<'upcoming' | 'pending' | 'past'>('upcoming');
+    const [activeSection, setActiveSection] = useState<'upcoming' | 'interviews' | 'job-summary'>('upcoming');
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -45,7 +45,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
         { id: 'lastSession', desc: true },
     ]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [showFliter, setShowFilter] = useState(false);
+    const [showFilter, setShowFilter] = useState(false);
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
     const [applicantsData, setApplicantsData] = useState<any[]>([
@@ -115,7 +115,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
         () => [
             {
                 accessorKey: 'name',
-                header: ({ column }) => (
+                header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
                         title="Name"
@@ -123,7 +123,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         data-testid="name-header"
                     />
                 ),
-                cell: ({ row }) => (
+                cell: ({ row }: { row: any }) => (
                     <span
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`name-${row.original.id}`}
@@ -139,7 +139,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
             },
             {
                 accessorKey: 'job-detail',
-                header: ({ column }) => (
+                header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
                         title="Job Details"
@@ -147,7 +147,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         data-testid="job-detail-header"
                     />
                 ),
-                cell: ({ row }) => (
+                cell: ({ row }: { row: any }) => (
                     <div data-testid={`job-detail-${row.original.id}`}>
                         <p
                             className="text-[14px]/[22px] text-[#4b4b4b]"
@@ -169,7 +169,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
             },
             {
                 accessorKey: 'state',
-                header: ({ column }) => (
+                header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
                         title="State"
@@ -177,7 +177,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         data-testid="state-header"
                     />
                 ),
-                cell: ({ row }) => (
+                cell: ({ row }: { row: any }) => (
                     <span
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`stage-${row.original.id}`}
@@ -224,7 +224,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                 : []),
             {
                 accessorKey: 'mode',
-                header: ({ column }) => (
+                header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
                         title="Mode"
@@ -232,7 +232,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         data-testid="mode-header"
                     />
                 ),
-                cell: ({ row }) => (
+                cell: ({ row }: { row: any }) => (
                     <span
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`mode-${row.original.id}`}
@@ -248,7 +248,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
             {
                 id: 'actions',
                 header: '',
-                cell: ({ row }) => <ActionsCell row={row} />,
+                cell: ({ row }: { row: any }) => <ActionsCell row={row} />,
                 enableSorting: false,
                 size: 40,
                 meta: {
@@ -261,7 +261,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
 
     const handleOpenChange = (open: boolean) => {
         if (!open) {
-            setSelectedApplication(null);
+            setSelectedApplication('');
         }
     };
 
@@ -289,7 +289,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
      * @param {Row<any>} props.row - The table row data.
      * @returns {JSX.Element} The actions dropdown menu.
      */
-    function ActionsCell({ row }: { row: Row<any> }): JSX.Element {
+    function ActionsCell({ row }: { row: Row<any> }) {
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -390,7 +390,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         <div className='flex gap-[16px]'>
                             <Button
                                 variant="outline"
-                                onClick={() => setShowFilter(!showFliter)}
+                                onClick={() => setShowFilter(!showFilter)}
                                 className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
                                 data-testid="filter-button"
                                 id="filter-button"
@@ -409,12 +409,12 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                             </Button>
                         </div>
                     </div>
-                    {showFliter && <FilterTool selectedMode={selectedMode} selectedStatuses={selectedStatuses} setSelectedMode={setSelectedMode} setSelectedStatuses={setSelectedStatuses} />}
+                    {showFilter && <FilterTool selectedMode={selectedMode} selectedStatuses={selectedStatuses} setSelectedMode={setSelectedMode} setSelectedStatuses={setSelectedStatuses} />}
                     <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                         <> {filteredData.length === 0 ?
                             <NoData data-testid="no-data-message" /> : <>
                                 <div
-                                    className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFliter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
+                                    className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFilter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
                                     data-testid="list-view-container"
                                 >
                                     <DataGridTable />

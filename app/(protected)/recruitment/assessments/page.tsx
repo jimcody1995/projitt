@@ -45,7 +45,7 @@ const jobData: IData[] = [
 export default function Assessment() {
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState('');
-    const [showFliter, setShowFilter] = useState(false);
+    const [showFilter, setShowFilter] = useState(false);
     const [filteredData, setFilteredData] = useState<IData[]>([]);
 
     useEffect(() => {
@@ -199,7 +199,7 @@ export default function Assessment() {
                 <Button
                     id="filter-button"
                     variant="outline"
-                    onClick={() => setShowFilter(!showFliter)}
+                    onClick={() => setShowFilter(!showFilter)}
                     className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
                     data-testid="filter-button"
                 >
@@ -207,7 +207,7 @@ export default function Assessment() {
                     Filter
                 </Button>
             </div>
-            {showFliter && <AssessmentFilterTool />}
+            {showFilter && <AssessmentFilterTool />}
             <div className="mt-[28px]">
                 {filteredData.length === 0 &&
                     <NoData data-testid="no-data-message" />

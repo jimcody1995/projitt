@@ -34,7 +34,7 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
         "Laptop Issue",
         "Office Tour",
     ]
-    return( <div>
+    return (<div>
         <div className='flex gap-[16px] items-center'>
             <button className='w-[24px] h-[24px] rounded-full border border-[#e9e9e9] flex items-center justify-center cursor-pointer'
                 onClick={() => setOnboarding(null)}
@@ -155,7 +155,7 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
                 </div>
                 <div data-testid="training-path-section">
                     <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="training-path-label" id="training-path-label">Select Training Learning Path</p>
-                    <Select value="1" data-testid="training-path-select" id="training-path-select">
+                    <Select value="1" data-testid="training-path-select">
                         <SelectTrigger className="w-full h-[48px] mt-[6px]" data-testid="training-path-select-trigger" id="training-path-select-trigger">
                             <SelectValue placeholder="Select" />
                         </SelectTrigger>

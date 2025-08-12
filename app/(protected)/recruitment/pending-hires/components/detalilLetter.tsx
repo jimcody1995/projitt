@@ -171,7 +171,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                         <span className="text-[28px]/[36px] font-semibold mt-[28px] text-[#353535] text-center" data-testid="hire-applicant-title" id="hire-applicant-title">Hire Applicant</span>
                                         <span className="text-[14px]/[24px] text-[#626262] mt-[8px] text-center" data-testid="hire-applicant-message" id="hire-applicant-message">You're about to send an offer to this applicant they will be moved to onboarding once accepted</span>
                                         <span className="mt-[28px] text-[14px]/[24px] text-[#8f8f8f]" data-testid="email-template-label" id="email-template-label">Select an email template</span>
-                                        <Select data-testid="email-template-select" id="email-template-select">
+                                        <Select data-testid="email-template-select">
                                             <SelectTrigger className="w-full h-[42px]" data-testid="email-template-select-trigger" id="email-template-select-trigger">
                                                 <SelectValue placeholder="Offer Letter Template" />
                                             </SelectTrigger>
@@ -284,7 +284,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                         </div>
                         {selectedOfferMethod === 'system-generated' && <div data-testid="system-generated-template-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="offer-letter-template-label" id="offer-letter-template-label">Offer Letter Template</p>
-                            <Select data-testid="offer-letter-template-select" id="offer-letter-template-select">
+                            <Select data-testid="offer-letter-template-select">
                                 <SelectTrigger className="w-full h-[48px] mt-[12px]" data-testid="offer-letter-template-select-trigger" id="offer-letter-template-select-trigger">
                                     <SelectValue placeholder="Select a template" />
                                 </SelectTrigger>
@@ -297,11 +297,11 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                         </div>}
                         {selectedOfferMethod === 'upload-manually' && <div data-testid="upload-offer-letter-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="upload-label" id="upload-label">Upload Offer Letter</p>
-                            <FileDropUpload file={file} setFile={setFile} setID={setID} data-testid="file-drop-upload" id="file-drop-upload" />
+                            <FileDropUpload file={file} setFile={setFile} setID={setID} label="Upload Offer Letter" data-testid="file-drop-upload" />
                         </div>}
                         <div data-testid="work-location-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="work-location-label" id="work-location-label">Work Location</p>
-                            <Select data-testid="work-location-select" id="work-location-select">
+                            <Select data-testid="work-location-select">
                                 <SelectTrigger className="w-full h-[48px] mt-[12px]" data-testid="work-location-select-trigger" id="work-location-select-trigger">
                                     <SelectValue placeholder="Select work address" />
                                 </SelectTrigger>
@@ -313,7 +313,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                         </div>
                         <div data-testid="work-hours-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="work-hours-label" id="work-hours-label">Work Hours</p>
-                            <Select data-testid="work-hours-select" id="work-hours-select">
+                            <Select data-testid="work-hours-select">
                                 <SelectTrigger className="w-full h-[48px] mt-[12px]" data-testid="work-hours-select-trigger" id="work-hours-select-trigger">
                                     <SelectValue placeholder="Select work hours" />
                                 </SelectTrigger>
@@ -415,7 +415,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                         </div>
                         <div data-testid="earning-structure-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="earning-structure-label" id="earning-structure-label">Earning Structure</p>
-                            <Select data-testid="earning-structure-select" id="earning-structure-select">
+                            <Select data-testid="earning-structure-select">
                                 <SelectTrigger className="w-full h-[48px] mt-[12px]" data-testid="earning-structure-select-trigger" id="earning-structure-select-trigger">
                                     <SelectValue placeholder="Select a template" />
                                 </SelectTrigger>

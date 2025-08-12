@@ -174,15 +174,15 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
                         </div>
                         <div className="flex flex-col" id="field-department" data-testid="field-department">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Department</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.department && typeof data.department === 'object' && 'name' in data.department ? data.department.name : "N/A"}</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.department && typeof data.department === 'object' && 'name' in data.department ? String(data.department.name) : "N/A"}</p>
                         </div>
                         <div className="flex flex-col" id="field-employment-type" data-testid="field-employment-type">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Employment Type</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.employment_type && typeof data.employment_type === 'object' && 'name' in data.employment_type ? data.employment_type.name : "N/A"}</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.employment_type && typeof data.employment_type === 'object' && 'name' in data.employment_type ? String(data.employment_type.name) : "N/A"}</p>
                         </div>
                         <div className="flex flex-col" id="field-openings" data-testid="field-openings">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">No. of Openings</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{data.no_of_job_opening || "N/A"}</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{String(data.no_of_job_opening) || "N/A"}</p>
                         </div>
                         <div className="flex flex-col" id="field-skills" data-testid="field-skills">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Skills</p>
@@ -201,22 +201,22 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
                         <div className="flex flex-col" id="field-location" data-testid="field-location">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Location Type</p>
                             <p className="text-[14px]/[22px] font-medium text-[#353535]">
-                                {data.location_type && typeof data.location_type === 'object' && 'name' in data.location_type ? data.location_type.name : "N/A"}
-                                {data.state && data.country && typeof data.country === 'object' && 'name' in data.country ? ` (${data.state}, ${data.country.name})` : ""}
+                                {data.location_type && typeof data.location_type === 'object' && 'name' in data.location_type ? String(data.location_type.name) : "N/A"}
+                                {data.state && data.country && typeof data.country === 'object' && 'name' in data.country ? ` (${data.state}, ${String(data.country.name)})` : ""}
                             </p>
                         </div>
                         <div className="flex flex-col" id="field-salary" data-testid="field-salary">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Salary</p>
                             <p className="text-[14px]/[22px] font-medium text-[#353535]">
                                 {data.salary_from && data.salary_to ?
-                                    `$${parseInt(data.salary_from).toLocaleString()} - $${parseInt(data.salary_to).toLocaleString()}` :
+                                    `$${parseInt(String(data.salary_from)).toLocaleString()} - $${parseInt(String(data.salary_to)).toLocaleString()}` :
                                     "N/A"
                                 }
                             </p>
                         </div>
                         <div className="flex flex-col" id="field-deadline" data-testid="field-deadline">
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Deadline</p>
-                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{formatDate(data.deadline)}</p>
+                            <p className="text-[14px]/[22px] font-medium text-[#353535]">{formatDate(String(data.deadline))}</p>
                         </div>
                     </div>
                 </div>

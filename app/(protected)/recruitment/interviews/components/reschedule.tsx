@@ -23,7 +23,7 @@ export default function Reschedule({ open, setOpen }: { open: boolean, setOpen: 
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent closeButton={false} className="max-w-[383px]" data-testid="reschedule-interview-dialog" id="reschedule-interview-dialog">
+            <DialogContent close={false} className="max-w-[383px]" data-testid="reschedule-interview-dialog" id="reschedule-interview-dialog">
                 <div>
                     <p className="text-[16px]/[20px] font-semibold text-[#353535]" data-testid="reschedule-dialog-title" id="reschedule-dialog-title">Reschedule Interview</p>
                     <p className="mt-[20px] text-[14px]/[16px] text-[#1c1c1c]" data-testid="select-date-time-label" id="select-date-time-label">Select New Date & Time</p>

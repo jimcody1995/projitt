@@ -10,9 +10,27 @@ import Interviews from './components/interview';
 import JobSummary from './components/job-summary';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { getApplicantJobs } from '@/api/applications';
+import { getJobPostings } from '@/api/job-posting';
+import { Input } from '@/components/ui/input';
 export default function ApplicantJobPage() {
     const url = "https://www.figma.com/file/NlfVhYygR9mAQasassdsada/Share...";
     const [activeSection, setActiveSection] = useState<'applicants' | 'interviews' | 'job-summary'>('applicants');
+    const [jobs, setJobs] = useState<any>([]);
+    const [filteredJobs, setFilteredJobs] = useState<any>([]);
+    const [selectedJob, setSelectedJob] = useState<any>(null);
+    const [search, setSearch] = useState('');
+    useEffect(() => {
+        const fetchJobs = async () => {
+            const response = await getJobPostings({});
+            setJobs(response.data);
+            setSelectedJob(response.data[0]);
+        };
+        fetchJobs();
+    }, []);
+    useEffect(() => {
+        const filtered = jobs.filter((job: any) => job.title.toLowerCase().includes(search.toLowerCase()));
+        setFilteredJobs(filtered);
+    }, [search]);
     function ActionsCell(): JSX.Element {
         return (
             <DropdownMenu>
@@ -77,19 +95,26 @@ export default function ApplicantJobPage() {
 
         <div className='flex items-center justify-between sm:flex-row flex-col gap-[20px]'>
             <div className='flex gap-[16px] items-center'>
-                <Select>
+                <Select value={selectedJob?.id} onValueChange={(value) => setSelectedJob(jobs?.find((job: any) => job.id === value))}>
                     <SelectTrigger className='bg-transparent border-none shadow-none cursor-pointer'>
                         <p
                             className='text-[24px]/[30px] font-semibold text-[#1c1c1c]'
                             data-testid="page-title"
                         >
-                            Senior Data Analyst
+                            {selectedJob?.title}
                         </p>
                     </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="job1">Backend Developer</SelectItem>
-                        <SelectItem value="job2">Frontend Developer</SelectItem>
-                        <SelectItem value="job3">Software Engineer</SelectItem>
+                    <SelectContent >
+                        <Input
+                            type="text"
+                            placeholder="Search"
+                            className='w-full mb-[20px] mt-[5px]'
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                        {filteredJobs?.map((job: any) => (
+                            <SelectItem key={job.id} value={job.id} >{job.title}</SelectItem>
+                        ))}
                     </SelectContent>
                 </Select>
             </div>
@@ -102,26 +127,26 @@ export default function ApplicantJobPage() {
             <Button
                 className='h-[24px] rounded-full bg-[#0D978B] hover:bg-[#0D978B]'
             >
-                <span className='text-[12px]/[22px] text-white'>Open</span>
+                <span className='text-[12px]/[22px] text-white'>{selectedJob?.status.charAt(0).toUpperCase() + selectedJob?.status.slice(1)}</span>
                 <ChevronDown className='size-[12px] text-white' />
             </Button>
             <span
                 className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
             >
                 <PieChart className='size-[20px] text-[#00d47d]' />
-                Data
+                {selectedJob?.department?.name}
             </span>
             <span
                 className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
             >
                 <BriefcaseBusiness className='size-[20px] text-[#4b4b4b]' />
-                Fulltime
+                {selectedJob?.employment_type?.name}
             </span>
             <span
                 className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
             >
                 <MapPin className='size-[20px] text-[#4b4b4b]' />
-                Onsite (United States)
+                {selectedJob?.country?.name}
             </span>
         </div>
         <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>

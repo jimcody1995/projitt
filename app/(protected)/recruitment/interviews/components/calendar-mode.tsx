@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar, EllipsisVertical, User, Video } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+
 import Reschedule from './reschedule';
 import CancelInterview from './cancel-interview';
 
@@ -35,7 +36,7 @@ function getDaysInMonth(year: number, month: number) {
     return days;
 }
 
-export default function CalendarMode({ setSelectedApplication }: { setSelectedApplication: (id: string) => void }) {
+export default function CalendarMode() {
     const [currentMonth, setCurrentMonth] = useState(moment());
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
@@ -50,50 +51,7 @@ export default function CalendarMode({ setSelectedApplication }: { setSelectedAp
         eventsByDate[key].push(event);
     });
 
-    function ActionsCell({ row }: { row: Row<any> }): JSX.Element {
 
-        return (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button
-                        className="size-7"
-                        mode="icon"
-                        variant="ghost"
-                        data-testid={`actions-button-${row.original.id}`}
-                    >
-                        <EllipsisVertical />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                    side="bottom"
-                    align="end"
-                    data-testid={`actions-menu-${row.original.id}`}
-                >
-
-                    <div
-                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`view-applicants-action-${row.original.id}`}
-                        onClick={() => setRescheduleOpen(true)}
-                    >
-                        Reschedule
-                    </div>
-                    <div
-                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`duplicate-action-${row.original.id}`}
-                        onClick={() => setCancelOpen(true)}
-                    >
-                        Cancel Interview
-                    </div>
-                    <div
-                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`duplicate-action-${row.original.id}`}
-                    >
-                        Mark as No-show
-                    </div>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        );
-    }
 
     return (
         <div className="bg-white rounded-[20px] overflow-hidden border border-[#E9E9E9]" >
@@ -148,7 +106,39 @@ export default function CalendarMode({ setSelectedApplication }: { setSelectedAp
                                                     <p className="text-[14px]/[20px] font-medium">{event.name}</p>
                                                     <p className="text-[12px]/[20px] text-[#0d978b]">{event.status}</p>
                                                 </div>
-                                                <ActionsCell row={{ original: event }} />
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button
+                                                            className="size-7"
+                                                            mode="icon"
+                                                            variant="ghost"
+                                                        >
+                                                            <EllipsisVertical />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent
+                                                        side="bottom"
+                                                        align="end"
+                                                    >
+                                                        <div
+                                                            className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                                            onClick={() => setRescheduleOpen(true)}
+                                                        >
+                                                            Reschedule
+                                                        </div>
+                                                        <div
+                                                            className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                                            onClick={() => setCancelOpen(true)}
+                                                        >
+                                                            Cancel Interview
+                                                        </div>
+                                                        <div
+                                                            className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                                        >
+                                                            Mark as No-show
+                                                        </div>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
                                             </div>
                                             <div className="w-full flex flex-col gap-[12px] mt-[18px]">
                                                 <div className="flex gap-[6px]">

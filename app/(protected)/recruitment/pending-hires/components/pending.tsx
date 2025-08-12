@@ -91,7 +91,7 @@ export default function Pending() {
         () => [
             {
                 accessorKey: 'name',
-                header: ({ column }) => (
+                header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
                         title="Name"
@@ -99,7 +99,7 @@ export default function Pending() {
                         data-testid="name-header"
                     />
                 ),
-                cell: ({ row }) => (
+                cell: ({ row }: { row: any }) => (
                     <span
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`name-${row.original.id}`}
@@ -115,7 +115,7 @@ export default function Pending() {
             },
             {
                 accessorKey: 'job-detail',
-                header: ({ column }) => (
+                header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
                         title="Job Details"
@@ -123,7 +123,7 @@ export default function Pending() {
                         data-testid="job-detail-header"
                     />
                 ),
-                cell: ({ row }) => (
+                cell: ({ row }: { row: any }) => (
                     <div data-testid={`job-detail-${row.original.id}`}>
                         <p
                             className="text-[14px]/[22px] text-[#4b4b4b]"
@@ -145,7 +145,7 @@ export default function Pending() {
             },
             {
                 accessorKey: 'status',
-                header: ({ column }) => (
+                header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
                         title="Status"
@@ -153,7 +153,7 @@ export default function Pending() {
                         data-testid="status-header"
                     />
                 ),
-                cell: ({ row }) => (
+                cell: ({ row }: { row: any }) => (
                     <span
                         className={`text-[14px]/[22px] px-[12px] py-[2px] rounded-[8px] ${row.original.status === 'Pending' ? 'bg-[#a5a5a5] text-white' : ' text-[#FA1E1E] bg-[#FA1E1E26]'}`}
                         data-testid={`status-${row.original.id}`}
@@ -170,7 +170,7 @@ export default function Pending() {
             {
                 id: 'actions',
                 header: '',
-                cell: ({ row }) => <ActionsCell row={row} />,
+                cell: ({ row }: { row: any }) => <ActionsCell row={row} />,
                 enableSorting: false,
                 size: 40,
                 meta: {

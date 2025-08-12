@@ -3,13 +3,23 @@
 import { useState } from "react";
 
 export default function Interviews() {
-    const colors = {
+    type StatusType = 'Screening' | 'Portfolio Review' | 'Cultural Fit' | 'Coding Test';
+
+    const colors: Record<StatusType, string> = {
         'Screening': 'bg-[#e1e4e8]',
         'Portfolio Review': 'bg-[#F0E7F6]',
         'Cultural Fit': 'bg-[#FFDCE0]',
         'Coding Test': 'bg-[#D1E3F0]'
     }
-    const [data, setData] = useState([
+
+    const [data, setData] = useState<Array<{
+        status: StatusType;
+        lists: Array<{
+            name: string;
+            type: string;
+            amount: string;
+        }>;
+    }>>([
         {
             status: 'Screening',
             lists: [

@@ -7,19 +7,20 @@ import { cn } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
 import moment from "moment";
 import { Calendar } from "@/components/ui/calendar";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import DialogContent, { Dialog, div, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface ScheduleInterviewProps {
-    setActive: (section: string) => void;
+    setActive: (section: 'stages' | 'application-summary' | 'resume' | 'applicant-question' | 'schedule-interview') => void;
     onOpenChange: (open: boolean) => void;
 }
 export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleInterviewProps) {
     const [schedulingType, setSchedulingType] = useState<'propose-time' | 'request-availability'>('propose-time');
     const [mode, setMode] = useState<'google' | 'zoom' | 'projitt' | 'teams'>('google');
-    const [range, setRange] = useState<{ from?: Date; to?: Date }>({})
+    const [range, setRange] = useState<{ from: Date | undefined; to: Date | undefined } | undefined>(undefined)
     const [selectedHour, setSelectedHour] = useState<string | null>(moment().format("hh"));
     const [selectedMinute, setSelectedMinute] = useState<string | null>(moment().format("mm"));
     const [selectedAmPm, setSelectedAmPm] = useState<string | null>(moment().format("A"));
@@ -110,10 +111,10 @@ export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleI
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0" align="start">
                                 <Calendar
-                                    mode="range"
+                                    mode="single"
                                     defaultMonth={new Date()}
-                                    selected={range}
-                                    onSelect={setRange}
+                                    selected={range?.from}
+                                    onSelect={(date) => setRange(date ? { from: date, to: date } : undefined)}
                                     numberOfMonths={1}
                                     classNames={{
                                         day_button: 'cursor-pointer relative flex w-full mx-auto  w-[40px] h-[40px] items-center justify-center whitespace-nowrap rounded-md p-0 transition-200 group-[[data-selected]:not(.range-middle)]:[transition-property:color,background-color,border-radius,box-shadow] group-[[data-selected]:not(.range-middle)]:duration-150 group-data-disabled:pointer-events-none focus-visible:z-10 hover:not-in-data-selected:bg-[#D6EEEC] group-data-selected:bg-[#0D978B] hover:not-in-data-selected:text-foreground group-data-selected:text-[#fff] group-data-disabled:text-foreground/30 group-data-disabled:line-through group-data-outside:text-foreground/30 group-data-selected:group-data-outside:text-primary-foreground outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px] group-[.range-start:not(.range-end)]:rounded-e-none group-[.range-end:not(.range-start)]:rounded-s-none group-[.range-middle]:rounded-none group-[.range-middle]:group-data-selected:bg-[#D6EEEC] group-[.range-middle]:group-data-selected:text-[#787878]',
@@ -173,7 +174,7 @@ export default function ScheduleInterview({ setActive, onOpenChange }: ScheduleI
                                         Close
                                     </Button>
                                     <Button className="w-full" onClick={() => {
-                                        if (range.from && range.to && selectedHour && selectedMinute && selectedAmPm) {
+                                        if (range && range.from && range.to && selectedHour && selectedMinute && selectedAmPm) {
                                             setAvailableDate([...availableDate, { from: range.from, to: range.to, hour: selectedHour, minute: selectedMinute, amPm: selectedAmPm }]);
                                         }
                                     }}>
