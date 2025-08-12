@@ -17,17 +17,17 @@ export default function Dashboard() {
             >
                 Dashboard
             </p>
-            <div className="mt-[24px] grid md:grid-cols-3  grid-cols-1 gap-[20px]">
+            <div className="mt-[24px] grid xl:grid-cols-3 lg:grid-cols-1 md:grid-cols-3  grid-cols-1 gap-[20px]">
                 <OpenJobs />
                 <ApplicantStatus />
                 <UpcommingInterviews />
             </div>
-            <div className="mt-[24px] grid md:grid-cols-[2fr_1fr_1fr] grid-cols-1 gap-[20px]">
+            <div className="mt-[24px] grid xl:grid-cols-[2fr_1fr_1fr] lg:grid-cols-1 md:grid-cols-3 grid-cols-1 gap-[20px]">
                 <QuickActions />
                 <EmployeeType />
                 <EmployeeStatus />
             </div>
-            <div className="mt-[24px] grid md:grid-cols-2 grid-cols-1 gap-[20px]">
+            <div className="mt-[24px] grid xl:grid-cols-2 lg:grid-cols-1 md:grid-cols-2 grid-cols-1 gap-[20px]">
                 <ActionList />
                 <YourPlan />
             </div>

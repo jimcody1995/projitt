@@ -4,8 +4,9 @@ import { ChevronDown, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { JSX, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { useBasic } from "@/context/BasicContext";
+import { Input } from "@/components/ui/input";
 
 /**
  * FilterTool component
@@ -20,8 +21,25 @@ import { useBasic } from "@/context/BasicContext";
  */
 export const FilterTool = ({ selectedLocations, selectedDepartments, selectedTypes, selectedStatuses, setSelectedLocations, setSelectedDepartments, setSelectedTypes, setSelectedStatuses }: { selectedLocations: number[], selectedDepartments: number[], selectedTypes: number[], selectedStatuses: string[], setSelectedLocations: (value: number[]) => void, setSelectedDepartments: (value: number[]) => void, setSelectedTypes: (value: number[]) => void, setSelectedStatuses: (value: string[]) => void }): JSX.Element => {
     const { department, employmentType, country } = useBasic();
+    const [searchLocationQuery, setSearchLocationQuery] = useState('');
+    const [filteredLocations, setFilteredLocations] = useState(country as any);
+    const [searchDepartmentQuery, setSearchDepartmentQuery] = useState('');
+    const [filteredDepartments, setFilteredDepartments] = useState(department as any);
+    const [searchTypeQuery, setSearchTypeQuery] = useState('');
+    const [filteredTypes, setFilteredTypes] = useState(employmentType as any);
     const statuses = ["Open", "Closed", "Draft"];
-
+    useEffect(() => {
+        const filteredLocations = country.filter((location: any) => location.name.toLowerCase().includes(searchLocationQuery.toLowerCase()));
+        setFilteredLocations(filteredLocations);
+    }, [searchLocationQuery]);
+    useEffect(() => {
+        const filteredDepartments = department.filter((department: any) => department.name.toLowerCase().includes(searchDepartmentQuery.toLowerCase()));
+        setFilteredDepartments(filteredDepartments);
+    }, [searchDepartmentQuery]);
+    useEffect(() => {
+        const filteredTypes = employmentType.filter((type: any) => type.name.toLowerCase().includes(searchTypeQuery.toLowerCase()));
+        setFilteredTypes(filteredTypes);
+    }, [searchTypeQuery]);
     /**
      * Handle department checkbox change
      * @param checked - boolean whether the checkbox is checked
@@ -87,7 +105,12 @@ export const FilterTool = ({ selectedLocations, selectedDepartments, selectedTyp
                     data-testid="filter-locations-content"
                 >
                     <div className="space-y-3">
-                        {country.map((location: any, index: number) => (
+                        <Input
+                            placeholder="Search location"
+                            value={searchLocationQuery}
+                            onChange={(e) => setSearchLocationQuery(e.target.value)}
+                        />
+                        {filteredLocations.map((location: any, index: number) => (
                             <div
                                 key={index}
                                 className="flex items-center gap-2.5"
@@ -141,7 +164,12 @@ export const FilterTool = ({ selectedLocations, selectedDepartments, selectedTyp
                     data-testid="filter-departments-content"
                 >
                     <div className="space-y-3">
-                        {department.map((department: any, index: number) => (
+                        <Input
+                            placeholder="Search department"
+                            value={searchDepartmentQuery}
+                            onChange={(e) => setSearchDepartmentQuery(e.target.value)}
+                        />
+                        {filteredDepartments.map((department: any, index: number) => (
                             <div
                                 key={index}
                                 className="flex items-center gap-2.5"
@@ -195,7 +223,12 @@ export const FilterTool = ({ selectedLocations, selectedDepartments, selectedTyp
                     data-testid="filter-types-content"
                 >
                     <div className="space-y-3">
-                        {employmentType.map((type: any, index: number) => (
+                        <Input
+                            placeholder="Search type"
+                            value={searchTypeQuery}
+                            onChange={(e) => setSearchTypeQuery(e.target.value)}
+                        />
+                        {filteredTypes.map((type: any, index: number) => (
                             <div
                                 key={index}
                                 className="flex items-center gap-2.5"

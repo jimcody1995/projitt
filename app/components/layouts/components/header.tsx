@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { NotificationsSheet } from '../../partials/topbar/notifications-sheet';
 import { UserDropdownMenu } from '../../partials/topbar/user-dropdown-menu';
 import {
@@ -10,6 +10,8 @@ import {
   Search,
   Menu,
   SquareChevronRight,
+  ChevronsUpDown,
+  LogOut,
 } from 'lucide-react';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { cn } from '@/lib/utils';
@@ -28,9 +30,10 @@ import { Breadcrumb } from './breadcrumb';
 import { Input } from '@/components/ui/input';
 import { LanguageDropdown } from '../../partials/topbar/language-dropdown';
 import { ChevronDown } from 'lucide-react';
-import Link from 'next/link';
 import { SidebarMenu } from './sidebar-menu';
-import { MegaMenuMobile } from './mega-menu-mobile';
+import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenu } from '@/components/ui/dropdown-menu';
+import { useSession } from '@/context/SessionContext';
+import { logout } from '@/api/user';
 
 export function Header() {
   const [isSidebarSheetOpen, setIsSidebarSheetOpen] = useState(false);
@@ -42,6 +45,19 @@ export function Header() {
   const scrollPosition = useScrollPosition();
   const headerSticky: boolean = scrollPosition > 0;
 
+  const { setSession, setLoading } = useSession();
+  const router = useRouter();
+  const handleLogout = async () => {
+    setLoading(true);
+    const response = await logout()
+    if (response.data.status === true) {
+      setSession({ token: "", authenticated: false })
+      router.push('/signin')
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  }
   // Close sheet when route changes
   useEffect(() => {
     setIsSidebarSheetOpen(false);
@@ -57,7 +73,7 @@ export function Header() {
     >
       <Container className="flex justify-between items-stretch lg:gap-4 lg:px-[48px]">
         <div className="flex gap-1 lg:hidden items-center gap-2.5">
-          <div className="flex items-center">
+          <div className="flex items-center h-full">
             {mobileMode && (
               <Sheet
                 open={isSidebarSheetOpen}
@@ -74,9 +90,33 @@ export function Header() {
                   close={false}
                 >
                   <SheetHeader className="p-0 space-y-0" />
-                  <SheetBody className="p-0 overflow-y-auto h-full">
+                  <SheetBody className="p-0 overflow-y-auto h-full flex flex-col justify-between">
                     <SidebarMenu />
-                    sdfsdf
+                    <div className='pl-[22px] pr-[19px] mb-[25px]'>
+                      <div className='w-full rounded-[8px] bg-[#f9f9f9] py-[14px] px-[12px] flex items-center justify-between'>
+                        <div className='flex items-center gap-[12px]'>
+                          <img src="/images/photo.png" alt="" className='w-[32px] h-[32px] rounded-full' />
+                          <div>
+                            <p className='font-medium text-[#4b4b4b] text-[14px]/[20px]'>Abubar Ali</p>
+                            <p className='text-[#a5a5a5] text-[12px]/[15px]'>HR Management</p>
+                          </div>
+                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="size-7 cursor-pointer">
+                              <ChevronsUpDown className='size-[20px]' />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent side="bottom" align="end">
+                            <div className="cursor-pointer hover:bg-[#e9e9e9] text-[14px]/[20px] py-[7px] px-[12px] rounded-[8px] flex items-center gap-[12px]" onClick={handleLogout}>
+                              <LogOut className='size-[20px]' />
+                              Logout
+                            </div>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+
+                      </div>
+                    </div>
                   </SheetBody>
                 </SheetContent>
               </Sheet>

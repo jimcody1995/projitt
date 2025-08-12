@@ -196,7 +196,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                         </div>
 
                     </div>
-                    <div className="border-t border-[#e9e9e9] bg-white py-[29px] pl-[32px] pr-[79px] flex flex-col gap-[28px] overflow-y-auto">
+                    <div className="border-t border-[#e9e9e9] bg-white py-[29px] pl-[32px] md:pr-[79px] pr-[20px] flex flex-col gap-[28px] overflow-y-auto">
                         <div data-testid="start-date-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="start-date-label" id="start-date-label">Select Start Date</p>
                             <div className="relative mt-[12px]">
@@ -465,7 +465,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                     <tr data-testid="total-earnings-row">
                                         <td className="pl-[16px] font-medium text-[12px] text-[#4b4b4b] border-b border-[#e9e9e9]" data-testid="total-earnings-label">Total</td>
                                         <td className="pl-[16px] font-medium text-[12px] text-[#4b4b4b] border-b border-[#e9e9e9]" data-testid="total-earnings-amount">${total}</td>
-                                        <td></td>
+                                        <td className="pl-[16px] font-medium text-[12px] text-[#4b4b4b] border-b border-[#e9e9e9]"></td>
                                     </tr>
                                 </tbody>
                             </table>

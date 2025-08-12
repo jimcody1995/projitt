@@ -216,8 +216,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                             </p>
                         </div>
                     ),
-                    enableSorting: true,
-                    size: 90,
+                    size: 130,
                     meta: {
                         headerClassName: '',
                     },
@@ -241,7 +240,6 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         {row.original.mode.charAt(0).toUpperCase() + row.original.mode.slice(1)}
                     </span>
                 ),
-                enableSorting: true,
                 size: 90,
                 meta: {
                     headerClassName: '',
@@ -336,102 +334,102 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
         );
     }
     return (
-    <div data-testid="table-mode-container">
-        <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('upcoming')}
+        <div data-testid="table-mode-container">
+            <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
+                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('upcoming')}
                     data-testid="upcoming-tab-button">
-                <p className='whitespace-nowrap'>Upcoming</p>
-                <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
-            </div>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('interviews')}
+                    <p className='whitespace-nowrap'>Upcoming</p>
+                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
+                </div>
+                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('interviews')}
                     data-testid="pending-tab-button">
-                <p className='whitespace-nowrap'>Pending</p>
-                <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
-            </div>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('job-summary')}
+                    <p className='whitespace-nowrap'>Pending</p>
+                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
+                </div>
+                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('job-summary')}
                     data-testid="past-tab-button">
-                <p className='whitespace-nowrap'>Past</p>
+                    <p className='whitespace-nowrap'>Past</p>
+                </div>
             </div>
-        </div>
-        <div className='w-full mt-[22px]'>
-            <DataGrid
-                className='w-full'
-                table={table}
-                recordCount={filteredData?.length || 0}
-                onRowClick={(row) => setSelectedApplication(row)}
+            <div className='w-full mt-[22px]'>
+                <DataGrid
+                    className='w-full'
+                    table={table}
+                    recordCount={filteredData?.length || 0}
+                    onRowClick={(row) => setSelectedApplication(row)}
                     data-testid="interviews-data-grid"
-            >
-                <div className="flex items-center justify-between sm:flex-row flex-col gap-[10px]">
-                    <div className="relative">
-                        <Search
-                            className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"
-                            data-testid="search-icon"
+                >
+                    <div className="flex items-center justify-between sm:flex-row flex-col gap-[10px]">
+                        <div className="relative">
+                            <Search
+                                className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"
+                                data-testid="search-icon"
                                 id="search-icon"
-                        />
-                        <Input
-                            placeholder="Search Job"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="ps-9 w-[243px] h-[42px]"
-                            data-testid="search-input"
+                            />
+                            <Input
+                                placeholder="Search Job"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="ps-9 w-[243px] h-[42px]"
+                                data-testid="search-input"
                                 id="search-input"
-                        />
-                        {searchQuery.length > 0 && (
-                            <Button
-                                mode="icon"
-                                variant="ghost"
-                                className="absolute end-1.5 top-1/2 -translate-y-1/2 h-6 w-6"
-                                onClick={() => setSearchQuery('')}
-                                data-testid="clear-search-button"
+                            />
+                            {searchQuery.length > 0 && (
+                                <Button
+                                    mode="icon"
+                                    variant="ghost"
+                                    className="absolute end-1.5 top-1/2 -translate-y-1/2 h-6 w-6"
+                                    onClick={() => setSearchQuery('')}
+                                    data-testid="clear-search-button"
                                     id="clear-search-button"
-                            >
-                                <X />
-                            </Button>
-                        )}
-                    </div>
-                    <div className='flex gap-[16px]'>
-                        <Button
-                            variant="outline"
-                            onClick={() => setShowFilter(!showFliter)}
-                            className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
-                            data-testid="filter-button"
+                                >
+                                    <X />
+                                </Button>
+                            )}
+                        </div>
+                        <div className='flex gap-[16px]'>
+                            <Button
+                                variant="outline"
+                                onClick={() => setShowFilter(!showFliter)}
+                                className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
+                                data-testid="filter-button"
                                 id="filter-button"
-                        >
-                            <ListFilter className='size-[20px]' />
-                            Filter
-                        </Button>
-                        <Button
-                            variant="outline"
-                            className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
+                            >
+                                <ListFilter className='size-[20px]' />
+                                Filter
+                            </Button>
+                            <Button
+                                variant="outline"
+                                className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
                                 data-testid="export-button"
                                 id="export-button"
-                        >
-                            <Download className='size-[20px]' />
-                            Export
-                        </Button>
-                    </div>
-                </div>
-                {showFliter && <FilterTool selectedMode={selectedMode} selectedStatuses={selectedStatuses} setSelectedMode={setSelectedMode} setSelectedStatuses={setSelectedStatuses} />}
-                <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
-                    <> {filteredData.length === 0 ?
-                        <NoData data-testid="no-data-message" /> : <>
-                            <div
-                                className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFliter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
-                                data-testid="list-view-container"
                             >
-                                <DataGridTable />
-                            </div>
-                            <DataGridPagination data-testid="pagination-controls" />
+                                <Download className='size-[20px]' />
+                                Export
+                            </Button>
+                        </div>
+                    </div>
+                    {showFliter && <FilterTool selectedMode={selectedMode} selectedStatuses={selectedStatuses} setSelectedMode={setSelectedMode} setSelectedStatuses={setSelectedStatuses} />}
+                    <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
+                        <> {filteredData.length === 0 ?
+                            <NoData data-testid="no-data-message" /> : <>
+                                <div
+                                    className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFliter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
+                                    data-testid="list-view-container"
+                                >
+                                    <DataGridTable />
+                                </div>
+                                <DataGridPagination data-testid="pagination-controls" />
+                            </>
+                        }
+
+
                         </>
-                    }
-
-
-                    </>
-                </div>
-            </DataGrid>
-            <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
-            <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
+                    </div>
+                </DataGrid>
+                <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
+                <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
+            </div>
         </div>
-    </div>
     );
 }

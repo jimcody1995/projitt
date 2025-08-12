@@ -166,7 +166,7 @@ export default function Detail({ open, onOpenChange }: DetailProps) {
                 </SheetContent >
             </Sheet >
             <Dialog open={preview} onOpenChange={setPreview}>
-                <DialogContent close={false} className="!w-[830px] max-w-[830px]">
+                <DialogContent close={false} className="md:max-w-[830px] w-full">
                     <DialogTitle></DialogTitle>
                     <div >
                         <div className="flex justify-between">

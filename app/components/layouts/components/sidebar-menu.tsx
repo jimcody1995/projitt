@@ -232,7 +232,7 @@ export function SidebarMenu() {
   }
 
   return (
-    <div className='flex flex-col justify-between h-full'>
+    <div className='flex flex-col justify-between '>
       <div className="kt-scrollable-y-hover flex grow shrink-0 pt-[48px] px-[14px] lg:max-h-[calc(100vh-5.5rem)]">
         <AccordionMenu
           selectedValue={pathname}
