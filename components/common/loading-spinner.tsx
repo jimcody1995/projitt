@@ -15,28 +15,30 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     className = "",
     spinnerClassName = "",
     contentClassName = "",
-    minHeight = "min-h-[400px]"
+    minHeight = "h-64"
 }) => {
     const sizeClasses = {
-        sm: 'h-6 w-6',
-        md: 'h-12 w-12',
-        lg: 'h-16 w-16'
+        sm: 'h-4 w-4',
+        md: 'h-6 w-6',
+        lg: 'h-8 w-8'
     };
 
     const contentSizeClasses = {
         sm: 'text-sm',
-        md: 'text-lg',
-        lg: 'text-xl'
+        md: 'text-base',
+        lg: 'text-lg'
     };
 
     return (
-        <div className={`flex items-center justify-center ${minHeight} ${className}`}>
-            <div className={`animate-spin rounded-full border-b-2 border-blue-600 ${sizeClasses[size]} ${spinnerClassName}`}></div>
-            {content && (
-                <span className={`ml-3 text-gray-600 ${contentSizeClasses[size]} ${contentClassName}`}>
-                    {content}
-                </span>
-            )}
+        <div className={`flex justify-center items-center ${minHeight} ${className}`}>
+            <div className="flex items-center gap-2">
+                <div className={`animate-spin rounded-full border-b-2 border-[#0d978b] ${sizeClasses[size]} ${spinnerClassName}`}></div>
+                {content && (
+                    <span className={`text-[#4b4b4b] ${contentSizeClasses[size]} ${contentClassName}`}>
+                        {content}
+                    </span>
+                )}
+            </div>
         </div>
     );
 };

@@ -20,6 +20,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { errorHandlers } from '@/utils/error-handler';
+import { LoadingSpinner } from '@/components/common/loading-spinner';
 
 import { getAssessmentDetails, addQuestionItem, editQuestionItem, getQuestionDetails } from '@/api/assessment';
 
@@ -619,12 +620,7 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
 
                             <div className="w-full mx-auto py-[31px] px-[25px]">
                                 {isLoadingQuestions ? (
-                                    <div className="flex justify-center items-center h-64">
-                                        <div className="flex items-center gap-2">
-                                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#0d978b]"></div>
-                                            <span className="text-[#4b4b4b]">Loading questions...</span>
-                                        </div>
-                                    </div>
+                                    <LoadingSpinner content="Loading questions..." />
                                 ) : (
                                     sections.filter((section) => section.id === activeSection).map((section) => (
                                         <div key={section.id} className="mb-8" data-testid={`section-content-${section.id}`}>
