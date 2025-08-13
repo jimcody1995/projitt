@@ -61,7 +61,7 @@ export default function Assessment() {
                     id: assessment.id.toString(),
                     title: assessment.name,
                     description: assessment.description,
-                    status: 'Open', // Status is always open as per requirements
+                    status: 'Draft', // Status is always open as per requirements : 'Open'
                     type: getAssessmentType(assessment.type_id)
                 }));
                 setAssessmentsData(transformedData);
@@ -117,17 +117,11 @@ export default function Assessment() {
                             id={`edit-action-${row}`}
                             className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                             data-testid={`edit-action-${row}`}
+                            onClick={() => router.push(`/recruitment/assessments/create-assessment?id=${row}`)}
                         >
                             Edit
                         </div>
                     }
-                    <div
-                        id={`view-applicants-action-${row}`}
-                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`view-applicants-action-${row}`}
-                    >
-                        View Applicants
-                    </div>
                     <div
                         id={`duplicate-action-${row}`}
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"

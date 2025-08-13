@@ -23,6 +23,7 @@ interface AssessmentDetailProps {
         duration?: string;
     };
     triggerValidation?: boolean;
+    isEditing?: boolean;
 }
 
 /**
@@ -36,6 +37,7 @@ export default function AssessmentDetail({
     setAssessmentData,
     errors = {},
     triggerValidation = false,
+    isEditing = false,
 }: AssessmentDetailProps) {
     return (
         <div className="sm:w-[586px] w-full">
@@ -76,22 +78,19 @@ export default function AssessmentDetail({
                     <div
                         id="type-psychometric"
                         data-test-id="card-psychometric"
-                        className={`w-full border rounded-[16px] p-[24px] cursor-pointer bg-white ${
-                            assessmentData.type === 'psychometric' ? 'border-[#0d978b]' : 'border-[#e9e9e9]'
-                        }`}
-                        onClick={() => setAssessmentData({ ...assessmentData, type: 'psychometric' })}
+                        className={`w-full border rounded-[16px] p-[24px] bg-white ${assessmentData.type === 'psychometric' ? 'border-[#0d978b]' : 'border-[#e9e9e9]'
+                            } ${!isEditing ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'}`}
+                        onClick={!isEditing ? () => setAssessmentData({ ...assessmentData, type: 'psychometric' }) : undefined}
                     >
                         <div
-                            className={`w-[24.5px] h-[24.5px] border-[1.17px] rounded-full flex items-center justify-center ${
-                                assessmentData.type === 'psychometric' ? 'border-[#0d978b] bg-[#0d978b]' : 'border-[#787878]'
-                            }`}
+                            className={`w-[24.5px] h-[24.5px] border-[1.17px] rounded-full flex items-center justify-center ${assessmentData.type === 'psychometric' ? 'border-[#0d978b] bg-[#0d978b]' : 'border-[#787878]'
+                                }`}
                         >
                             <div className="w-[10.5px] h-[10.5px] bg-white rounded-full"></div>
                         </div>
                         <p
-                            className={`text-[16px]/[24px] font-medium mt-[12px] ${
-                                assessmentData.type === 'psychometric' ? 'text-[#0d978b]' : 'text-[#4b4b4b]'
-                            }`}
+                            className={`text-[16px]/[24px] font-medium mt-[12px] ${assessmentData.type === 'psychometric' ? 'text-[#0d978b]' : 'text-[#4b4b4b]'
+                                }`}
                         >
                             Psychometric Assessment
                         </p>
@@ -103,22 +102,19 @@ export default function AssessmentDetail({
                     <div
                         id="type-coding"
                         data-test-id="card-coding"
-                        className={`w-full border rounded-[16px] p-[24px] cursor-pointer bg-white ${
-                            assessmentData.type === 'coding' ? 'border-[#0d978b]' : 'border-[#e9e9e9]'
-                        }`}
-                        onClick={() => setAssessmentData({ ...assessmentData, type: 'coding' })}
+                        className={`w-full border rounded-[16px] p-[24px] bg-white ${assessmentData.type === 'coding' ? 'border-[#0d978b]' : 'border-[#e9e9e9]'
+                            } ${!isEditing ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'}`}
+                        onClick={!isEditing ? () => setAssessmentData({ ...assessmentData, type: 'coding' }) : undefined}
                     >
                         <div
-                            className={`w-[24.5px] h-[24.5px] border-[1.17px] rounded-full flex items-center justify-center ${
-                                assessmentData.type === 'coding' ? 'border-[#0d978b] bg-[#0d978b]' : 'border-[#787878]'
-                            }`}
+                            className={`w-[24.5px] h-[24.5px] border-[1.17px] rounded-full flex items-center justify-center ${assessmentData.type === 'coding' ? 'border-[#0d978b] bg-[#0d978b]' : 'border-[#787878]'
+                                }`}
                         >
                             <div className="w-[10.5px] h-[10.5px] bg-white rounded-full"></div>
                         </div>
                         <p
-                            className={`text-[16px]/[24px] font-medium mt-[12px] ${
-                                assessmentData.type === 'coding' ? 'text-[#0d978b]' : 'text-[#4b4b4b]'
-                            }`}
+                            className={`text-[16px]/[24px] font-medium mt-[12px] ${assessmentData.type === 'coding' ? 'text-[#0d978b]' : 'text-[#4b4b4b]'
+                                }`}
                         >
                             Coding Asessment
                         </p>
