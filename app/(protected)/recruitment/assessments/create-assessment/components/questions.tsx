@@ -19,10 +19,11 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import TagInput from '@/components/ui/tag-input';
 import { errorHandlers } from '@/utils/error-handler';
 import { LoadingSpinner } from '@/components/common/loading-spinner';
 
-import { getAssessmentDetails, addQuestionItem, editQuestionItem, getQuestionDetails } from '@/api/assessment';
+import { getAssessmentDetails, addQuestionItem, editQuestionItem, getQuestionDetails, addCodingQuestionItem, editCodingQuestionItem } from '@/api/assessment';
 
 export interface Question {
     id: string;
@@ -44,7 +45,7 @@ interface CodingSection {
     id: string;
     title: string;
     instructions: string;
-    language: string;
+    language: string[];
     totalPoint: string;
     limit: string;
     autoGradeWithAI: boolean;
@@ -131,35 +132,71 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
                     const apiQuestions = response.data.questions;
                     const transformedQuestions: Question[] = [];
 
-                    // Load question details for each question
+                    // Load question details for each question based on assessment type
                     for (const assessmentQuestion of apiQuestions) {
                         try {
-                            const questionResponse = await getQuestionDetails(assessmentQuestion.question_id.toString());
-                            if (questionResponse.status === true && questionResponse.data) {
-                                const questionData = questionResponse.data;
-                                transformedQuestions.push({
-                                    id: questionData.id.toString(),
-                                    title: questionData.question_name,
-                                    type: mapAnswerTypeToComponentType(questionData.answer_type),
-                                    required: questionData.is_required,
-                                    options: questionData.options || undefined,
-                                    point: assessmentQuestion.point.toString(),
-                                    reverseScoring: false, // Default value, adjust based on your API
-                                });
+                            if (assessmentData.type === 'psychometric') {
+                                // Load psychometric questions
+                                const questionResponse = await getQuestionDetails(assessmentQuestion.question_id.toString());
+                                if (questionResponse.status === true && questionResponse.data) {
+                                    const questionData = questionResponse.data;
+                                    transformedQuestions.push({
+                                        id: questionData.id.toString(),
+                                        title: questionData.question_name,
+                                        type: mapAnswerTypeToComponentType(questionData.answer_type),
+                                        required: questionData.is_required,
+                                        options: questionData.options || undefined,
+                                        point: assessmentQuestion.point.toString(),
+                                        reverseScoring: false, // Default value, adjust based on your API
+                                    });
+                                }
+                            } else if (assessmentData.type === 'coding') {
+                                // Load coding questions - data is already in the response
+                                if (assessmentQuestion.question) {
+                                    const questionData = assessmentQuestion.question;
+                                    transformedQuestions.push({
+                                        id: questionData.id.toString(),
+                                        title: questionData.title,
+                                        type: 'short-answer' as Question['type'],
+                                        required: false,
+                                        point: questionData.total_point.toString(),
+                                        reverseScoring: false,
+                                    });
+                                }
                             }
                         } catch (error) {
                             console.error(`Error loading question ${assessmentQuestion.question_id}:`, error);
                         }
                     }
 
-                    // Update sections with loaded questions
-                    setSections([
-                        {
-                            id: '1',
-                            title: 'Cognitive',
-                            questions: transformedQuestions,
-                        },
-                    ]);
+                    if (assessmentData.type === 'psychometric') {
+                        // Update sections with loaded questions for psychometric
+                        setSections([
+                            {
+                                id: '1',
+                                title: 'Cognitive',
+                                questions: transformedQuestions,
+                            },
+                        ]);
+                    } else if (assessmentData.type === 'coding') {
+                        // Update codingData with loaded questions for coding
+                        const codingQuestions: CodingSection[] = [];
+                        for (const assessmentQuestion of apiQuestions) {
+                            if (assessmentQuestion.question) {
+                                const questionData = assessmentQuestion.question;
+                                codingQuestions.push({
+                                    id: questionData.id.toString(),
+                                    title: questionData.title,
+                                    instructions: questionData.description,
+                                    language: questionData.language || [],
+                                    totalPoint: questionData.total_point.toString(),
+                                    limit: questionData.time_limit.toString(),
+                                    autoGradeWithAI: false,
+                                });
+                            }
+                        }
+                        setCodingData(codingQuestions);
+                    }
 
                     // Store original questions for comparison
                     setOriginalQuestions(transformedQuestions);
@@ -172,21 +209,11 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
         };
 
         loadExistingQuestions();
-    }, [assessmentId]);
+    }, [assessmentId, assessmentData.type]);
 
 
 
-    const [codingData, setCodingData] = useState<CodingSection[]>([
-        {
-            id: '1',
-            title: '',
-            instructions: '',
-            language: '',
-            totalPoint: '',
-            limit: '',
-            autoGradeWithAI: false,
-        },
-    ]);
+    const [codingData, setCodingData] = useState<CodingSection[]>([]);
 
     const questionTypes = [
         { value: 'short-answer', label: 'Short answer' },
@@ -236,7 +263,7 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
             id: Date.now().toString(),
             title: '',
             instructions: '',
-            language: '',
+            language: [],
             totalPoint: '',
             limit: '',
             autoGradeWithAI: false,
@@ -398,125 +425,216 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
     /** Saves questions to the API and returns processed questions with IDs */
     const saveQuestions = async (): Promise<Question[]> => {
         try {
-            const currentQuestions = sections[0]?.questions || [];
-            const newQuestions: Question[] = [];
-            const editedQuestions: Question[] = [];
-            const processedQuestions: Question[] = [];
-
-            // Separate new and edited questions
-            currentQuestions.forEach(question => {
-                const originalQuestion = originalQuestions.find(q => q.id === question.id);
-                if (originalQuestion) {
-                    // Check if question was modified
-                    if (
-                        originalQuestion.title !== question.title ||
-                        originalQuestion.type !== question.type ||
-                        originalQuestion.required !== question.required ||
-                        originalQuestion.point !== question.point ||
-                        originalQuestion.reverseScoring !== question.reverseScoring ||
-                        JSON.stringify(originalQuestion.options) !== JSON.stringify(question.options)
-                    ) {
-                        editedQuestions.push(question);
-                    }
-                    processedQuestions.push(question); // Keep existing question with its ID
-                } else {
-                    // New question
-                    newQuestions.push(question);
-                }
-            });
-
-            // Add new questions first
-            for (const question of newQuestions) {
-                const payload: {
-                    question_name: string;
-                    answer_type: string;
-                    is_required: boolean;
-                    point?: number;
-                    reverse_scoring?: boolean;
-                    options?: string[] | null;
-                    tags: string[];
-                } = {
-                    question_name: question.title,
-                    answer_type: mapComponentTypeToAnswerType(question.type),
-                    is_required: question.required,
-                    tags: ["Assessment", "Psychometric", "Cognitive"]
-                };
-
-                // Add point if provided
-                if (question.point && question.point !== '') {
-                    payload.point = parseInt(question.point);
-                }
-
-                // Add reverse scoring if applicable
-                if (question.reverseScoring !== undefined) {
-                    payload.reverse_scoring = question.reverseScoring;
-                }
-
-                // Only include options for dropdown and checkbox questions
-                if (question.type === 'dropdown' || question.type === 'checkbox') {
-                    payload.options = question.options || null;
-                }
-
-                const response = await addQuestionItem(payload);
-                if (response.status === true) {
-                    // Add the question with its new ID from the API response
-                    processedQuestions.push({
-                        ...question,
-                        id: response.data.id.toString()
-                    });
-                }
+            // Handle different question types based on assessment type
+            if (assessmentData.type === 'psychometric') {
+                return await savePsychometricQuestions();
+            } else if (assessmentData.type === 'coding') {
+                return await saveCodingQuestions();
             }
 
-            // Edit existing questions
-            for (const question of editedQuestions) {
-                const payload: {
-                    id: number;
-                    question_name: string;
-                    answer_type: string;
-                    is_required: boolean;
-                    point?: number;
-                    reverse_scoring?: boolean;
-                    options?: string[] | null;
-                    tags: string[];
-                } = {
-                    id: parseInt(question.id),
-                    question_name: question.title,
-                    answer_type: mapComponentTypeToAnswerType(question.type),
-                    is_required: question.required,
-                    tags: ["Assessment", "Psychometric", "Cognitive"]
-                };
-
-                // Add point if provided
-                if (question.point && question.point !== '') {
-                    payload.point = parseInt(question.point);
-                }
-
-                // Add reverse scoring if applicable
-                if (question.reverseScoring !== undefined) {
-                    payload.reverse_scoring = question.reverseScoring;
-                }
-
-                // Only include options for dropdown and checkbox questions
-                if (question.type === 'dropdown' || question.type === 'checkbox') {
-                    payload.options = question.options || null;
-                }
-
-                await editQuestionItem(payload);
-            }
-
-            // Update original questions for future comparisons
-            setOriginalQuestions(processedQuestions);
-
-            // Call onSave with the processed questions (with proper IDs)
-            if (onSave) {
-                onSave(processedQuestions);
-            }
-
-            return processedQuestions;
+            return [];
         } catch (error) {
             errorHandlers.custom(error, 'Error saving questions');
             return [];
         }
+    };
+
+    /** Saves psychometric questions */
+    const savePsychometricQuestions = async (): Promise<Question[]> => {
+        const currentQuestions = sections[0]?.questions || [];
+        const newQuestions: Question[] = [];
+        const editedQuestions: Question[] = [];
+        const processedQuestions: Question[] = [];
+
+        // Separate new and edited questions
+        currentQuestions.forEach(question => {
+            const originalQuestion = originalQuestions.find(q => q.id === question.id);
+            if (originalQuestion) {
+                // Check if question was modified
+                if (
+                    originalQuestion.title !== question.title ||
+                    originalQuestion.type !== question.type ||
+                    originalQuestion.required !== question.required ||
+                    originalQuestion.point !== question.point ||
+                    originalQuestion.reverseScoring !== question.reverseScoring ||
+                    JSON.stringify(originalQuestion.options) !== JSON.stringify(question.options)
+                ) {
+                    editedQuestions.push(question);
+                }
+                processedQuestions.push(question); // Keep existing question with its ID
+            } else {
+                // New question
+                newQuestions.push(question);
+            }
+        });
+
+        // Add new questions first
+        for (const question of newQuestions) {
+            const payload: {
+                question_name: string;
+                answer_type: string;
+                is_required: boolean;
+                point?: number;
+                reverse_scoring?: boolean;
+                options?: string[] | null;
+                tags: string[];
+            } = {
+                question_name: question.title,
+                answer_type: mapComponentTypeToAnswerType(question.type),
+                is_required: question.required,
+                tags: ["Assessment", "Psychometric", "Cognitive"]
+            };
+
+            // Add point if provided
+            if (question.point && question.point !== '') {
+                payload.point = parseInt(question.point);
+            }
+
+            // Add reverse scoring if applicable
+            if (question.reverseScoring !== undefined) {
+                payload.reverse_scoring = question.reverseScoring;
+            }
+
+            // Only include options for dropdown and checkbox questions
+            if (question.type === 'dropdown' || question.type === 'checkbox') {
+                payload.options = question.options || null;
+            }
+
+            const response = await addQuestionItem(payload);
+            if (response.status === true) {
+                // Add the question with its new ID from the API response
+                processedQuestions.push({
+                    ...question,
+                    id: response.data.id.toString()
+                });
+            }
+        }
+
+        // Edit existing questions
+        for (const question of editedQuestions) {
+            const payload: {
+                id: number;
+                question_name: string;
+                answer_type: string;
+                is_required: boolean;
+                point?: number;
+                reverse_scoring?: boolean;
+                options?: string[] | null;
+                tags: string[];
+            } = {
+                id: parseInt(question.id),
+                question_name: question.title,
+                answer_type: mapComponentTypeToAnswerType(question.type),
+                is_required: question.required,
+                tags: ["Assessment", "Psychometric", "Cognitive"]
+            };
+
+            // Add point if provided
+            if (question.point && question.point !== '') {
+                payload.point = parseInt(question.point);
+            }
+
+            // Add reverse scoring if applicable
+            if (question.reverseScoring !== undefined) {
+                payload.reverse_scoring = question.reverseScoring;
+            }
+
+            // Only include options for dropdown and checkbox questions
+            if (question.type === 'dropdown' || question.type === 'checkbox') {
+                payload.options = question.options || null;
+            }
+
+            await editQuestionItem(payload);
+        }
+
+        // Update original questions for future comparisons
+        setOriginalQuestions(processedQuestions);
+
+        // Call onSave with the processed questions (with proper IDs)
+        if (onSave) {
+            onSave(processedQuestions);
+        }
+
+        return processedQuestions;
+    };
+
+    /** Saves coding questions */
+    const saveCodingQuestions = async (): Promise<Question[]> => {
+        const currentQuestions = codingData;
+        const newQuestions: CodingSection[] = [];
+        const editedQuestions: CodingSection[] = [];
+        const processedQuestions: Question[] = [];
+
+        // Separate new and edited questions
+        currentQuestions.forEach(question => {
+            const originalQuestion = originalQuestions.find(q => q.id === question.id);
+            if (originalQuestion) {
+                // Check if question was modified
+                if (
+                    originalQuestion.title !== question.title ||
+                    originalQuestion.point !== question.totalPoint
+                ) {
+                    editedQuestions.push(question);
+                }
+                processedQuestions.push({
+                    id: question.id,
+                    title: question.title,
+                    type: 'short-answer' as Question['type'],
+                    required: false,
+                    point: question.totalPoint
+                }); // Keep existing question with its ID
+            } else {
+                // New question
+                newQuestions.push(question);
+            }
+        });
+
+        // Add new coding questions first
+        for (const question of newQuestions) {
+            const payload = {
+                title: question.title,
+                description: question.instructions,
+                language: question.language || [],
+                total_point: parseInt(question.totalPoint || '0'),
+                time_limit: parseInt(question.limit || '0')
+            };
+
+            const response = await addCodingQuestionItem(payload);
+            if (response.status === true) {
+                // Add the question with its new ID from the API response
+                processedQuestions.push({
+                    id: response.message.id.toString(),
+                    title: question.title,
+                    type: 'short-answer' as Question['type'],
+                    required: false,
+                    point: question.totalPoint
+                });
+            }
+        }
+
+        // Edit existing coding questions
+        for (const question of editedQuestions) {
+            const payload = {
+                id: parseInt(question.id),
+                title: question.title,
+                description: question.instructions,
+                language: question.language || [],
+                total_point: parseInt(question.totalPoint || '0'),
+                time_limit: parseInt(question.limit || '0')
+            };
+
+            await editCodingQuestionItem(payload);
+        }
+
+        // Update original questions for future comparisons
+        setOriginalQuestions(processedQuestions);
+
+        // Call onSave with the processed questions (with proper IDs)
+        if (onSave) {
+            onSave(processedQuestions);
+        }
+
+        return processedQuestions;
     };
 
     /** Maps component type to API answer type */
@@ -757,123 +875,143 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
 
                     {assessmentData.type === 'coding' && (
                         <div className="space-y-4 p-[20px]">
-                            <button
-                                onClick={addQuestionForCoding}
-                                className="w-full py-3 border border-[#053834] rounded-[12px] text-[15px] font-medium text-[#053834] hover:border-teal-400 hover:text-teal-600 transition-colors flex items-center justify-center gap-2"
-                                data-testid="add-coding-question-button"
-                            >
-                                <CirclePlus className="w-5 h-5" />
-                                Add New Question
-                            </button>
+                            {isLoadingQuestions ? (
+                                <LoadingSpinner content="Loading coding questions..." />
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={addQuestionForCoding}
+                                        className="w-full py-3 border border-[#053834] rounded-[12px] text-[15px] font-medium text-[#053834] hover:border-teal-400 hover:text-teal-600 transition-colors flex items-center justify-center gap-2"
+                                        data-testid="add-coding-question-button"
+                                    >
+                                        <CirclePlus className="w-5 h-5" />
+                                        Add New Question
+                                    </button>
 
-                            {codingData.map((question) => (
-                                <div
-                                    key={question.id}
-                                    className="bg-[#F5F5F5] rounded-lg shadow-sm border border-[#e9e9e9] group hover:shadow-md transition-shadow"
-                                    data-testid={`coding-question-container-${question.id}`}
-                                >
-                                    <div className="">
-                                        <div className="flex items-center gap-4 py-[20px] px-[16px]">
-                                            <button
-                                                className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing"
-                                                data-testid={`coding-drag-handle-${question.id}`}
+                                    {codingData.length === 0 ? (
+                                        <div className="text-center py-8 text-gray-500">
+                                            <p>No coding questions added yet.</p>
+                                            <p className="text-sm mt-2">Click "Add New Question" to get started.</p>
+                                        </div>
+                                    ) : (
+                                        codingData.map((question) => (
+                                            <div
+                                                key={question.id}
+                                                className="bg-[#F5F5F5] rounded-lg shadow-sm border border-[#e9e9e9] group hover:shadow-md transition-shadow"
+                                                data-testid={`coding-question-container-${question.id}`}
                                             >
-                                                <GripVertical className="w-5 h-5" />
-                                            </button>
-                                            <div className='flex flex-col gap-[20px] w-full'>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Problem Title"
-                                                    className="h-[40px]"
-                                                    value={question.title}
-                                                    onChange={(e) => updateQuestionForCoding(question.id, { title: e.target.value })}
-                                                    data-testid={`coding-title-input-${question.id}`}
-                                                />
-                                                <Textarea
-                                                    placeholder="Instructions"
-                                                    className="h-[135px]"
-                                                    value={question.instructions}
-                                                    onChange={(e) => updateQuestionForCoding(question.id, { instructions: e.target.value })}
-                                                    data-testid={`coding-instructions-textarea-${question.id}`}
-                                                />
-                                                <div className='flex gap-[10px] sm:flex-row flex-col'>
-                                                    <Select
-                                                        value={question.language}
-                                                        onValueChange={(value) => updateQuestionForCoding(question.id, { language: value })}
-                                                        data-testid={`coding-language-select-${question.id}`}
-                                                    >
-                                                        <SelectTrigger className="h-[40px]">
-                                                            <SelectValue placeholder="Language Allowed" />
-                                                        </SelectTrigger>
-                                                        <SelectContent>
-                                                            <SelectItem value="python">Python</SelectItem>
-                                                            <SelectItem value="javascript">JavaScript</SelectItem>
-                                                            <SelectItem value="java">Java</SelectItem>
-                                                            <SelectItem value="c">C</SelectItem>
-                                                            <SelectItem value="c++">C++</SelectItem>
-                                                            <SelectItem value="c#">C#</SelectItem>
-                                                        </SelectContent>
-                                                    </Select>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Total Point"
-                                                        className="h-[40px]"
-                                                        value={question.totalPoint}
-                                                        onChange={(e) => updateQuestionForCoding(question.id, { totalPoint: e.target.value })}
-                                                        data-testid={`coding-point-input-${question.id}`}
-                                                    />
-                                                    <div className='relative w-full'>
-                                                        <Input
-                                                            type="text"
-                                                            placeholder="Limit"
-                                                            className="h-[40px]"
-                                                            value={question.limit}
-                                                            onChange={(e) => updateQuestionForCoding(question.id, { limit: e.target.value })}
-                                                            data-testid={`coding-limit-input-${question.id}`}
-                                                        />
-                                                        <span className="absolute text-[12px]/[18px] right-[16px] top-1/2 transform -translate-y-1/2 text-[#a5a5a5]">sec</span>
+                                                <div className="">
+                                                    <div className="flex items-center gap-4 py-[20px] px-[16px]">
+                                                        <button
+                                                            className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing"
+                                                            data-testid={`coding-drag-handle-${question.id}`}
+                                                        >
+                                                            <GripVertical className="w-5 h-5" />
+                                                        </button>
+                                                        <div className='flex flex-col gap-[20px] w-full'>
+                                                            <Input
+                                                                type="text"
+                                                                placeholder="Problem Title"
+                                                                className="h-[40px]"
+                                                                value={question.title}
+                                                                onChange={(e) => updateQuestionForCoding(question.id, { title: e.target.value })}
+                                                                data-testid={`coding-title-input-${question.id}`}
+                                                            />
+                                                            <Textarea
+                                                                placeholder="Instructions"
+                                                                className="h-[135px]"
+                                                                value={question.instructions}
+                                                                onChange={(e) => updateQuestionForCoding(question.id, { instructions: e.target.value })}
+                                                                data-testid={`coding-instructions-textarea-${question.id}`}
+                                                            />
+                                                            <div className='flex gap-[10px] sm:flex-row flex-col'>
+                                                                <TagInput
+                                                                    tags={question.language || []}
+                                                                    setTags={(tags) => updateQuestionForCoding(question.id, { language: tags })}
+                                                                    suggestions={[
+                                                                        { id: 'python', name: 'Python' },
+                                                                        { id: 'javascript', name: 'JavaScript' },
+                                                                        { id: 'java', name: 'Java' },
+                                                                        { id: 'c', name: 'C' },
+                                                                        { id: 'c++', name: 'C++' },
+                                                                        { id: 'c#', name: 'C#' },
+                                                                        { id: 'php', name: 'PHP' },
+                                                                        { id: 'ruby', name: 'Ruby' },
+                                                                        { id: 'go', name: 'Go' },
+                                                                        { id: 'rust', name: 'Rust' },
+                                                                        { id: 'swift', name: 'Swift' },
+                                                                        { id: 'kotlin', name: 'Kotlin' },
+                                                                        { id: 'scala', name: 'Scala' },
+                                                                        { id: 'typescript', name: 'TypeScript' },
+                                                                        { id: 'html', name: 'HTML' },
+                                                                        { id: 'css', name: 'CSS' },
+                                                                        { id: 'sql', name: 'SQL' }
+                                                                    ]}
+                                                                    restrictToSuggestions={true}
+                                                                />
+                                                                <Input
+                                                                    type="text"
+                                                                    placeholder="Total Point"
+                                                                    className="h-[40px]"
+                                                                    value={question.totalPoint}
+                                                                    onChange={(e) => updateQuestionForCoding(question.id, { totalPoint: e.target.value })}
+                                                                    data-testid={`coding-point-input-${question.id}`}
+                                                                />
+                                                                <div className='relative w-full'>
+                                                                    <Input
+                                                                        type="text"
+                                                                        placeholder="Limit"
+                                                                        className="h-[40px]"
+                                                                        value={question.limit}
+                                                                        onChange={(e) => updateQuestionForCoding(question.id, { limit: e.target.value })}
+                                                                        data-testid={`coding-limit-input-${question.id}`}
+                                                                    />
+                                                                    <span className="absolute text-[12px]/[18px] right-[16px] top-1/2 transform -translate-y-1/2 text-[#a5a5a5]">sec</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className='bg-white px-[20px] py-[16px]'>
+                                                        <div className="flex items-center justify-between border-t border-[#d9d9d9] pt-[14px] sm:flex-row flex-col gap-[10px]">
+                                                            <div className="flex items-center gap-3">
+                                                                <label className="flex items-center gap-2 text-[12px]/[16px] text-[#4b4b4b]">
+                                                                    <Switch
+                                                                        shape="square"
+                                                                        checked={question.autoGradeWithAI}
+                                                                        onCheckedChange={(checked) => setCodingData(codingData.map((q) => q.id === question.id ? { ...q, autoGradeWithAI: checked } : q))}
+                                                                        data-testid={`auto-grade-switch-${question.id}`}
+                                                                    />
+                                                                    Auto-grade with AI
+                                                                </label>
+                                                            </div>
+
+                                                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                <button
+                                                                    onClick={() => duplicateQuestionForCoding(question.id)}
+                                                                    className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                                    data-testid={`duplicate-coding-button-${question.id}`}
+                                                                >
+                                                                    <Copy className="w-4 h-4" />
+                                                                    Duplicate
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => deleteQuestionForCoding(question.id)}
+                                                                    className="flex items-center gap-1 px-3 py-1 text-[#c30606] hover:bg-[#c30606]/10 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                                    data-testid={`delete-coding-button-${question.id}`}
+                                                                >
+                                                                    <Trash2 className="w-4 h-4" />
+                                                                    Delete
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div className='bg-white px-[20px] py-[16px]'>
-                                            <div className="flex items-center justify-between border-t border-[#d9d9d9] pt-[14px] sm:flex-row flex-col gap-[10px]">
-                                                <div className="flex items-center gap-3">
-                                                    <label className="flex items-center gap-2 text-[12px]/[16px] text-[#4b4b4b]">
-                                                        <Switch
-                                                            shape="square"
-                                                            checked={question.autoGradeWithAI}
-                                                            onCheckedChange={(checked) => setCodingData(codingData.map((q) => q.id === question.id ? { ...q, autoGradeWithAI: checked } : q))}
-                                                            data-testid={`auto-grade-switch-${question.id}`}
-                                                        />
-                                                        Auto-grade with AI
-                                                    </label>
-                                                </div>
-
-                                                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button
-                                                        onClick={() => duplicateQuestionForCoding(question.id)}
-                                                        className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
-                                                        data-testid={`duplicate-coding-button-${question.id}`}
-                                                    >
-                                                        <Copy className="w-4 h-4" />
-                                                        Duplicate
-                                                    </button>
-                                                    <button
-                                                        onClick={() => deleteQuestionForCoding(question.id)}
-                                                        className="flex items-center gap-1 px-3 py-1 text-[#c30606] hover:bg-[#c30606]/10 rounded text-[12px]/[20px] transition-colors cursor-pointer"
-                                                        data-testid={`delete-coding-button-${question.id}`}
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                                        ))
+                                    )}
+                                </>
+                            )}
                         </div>
                     )}
                 </div>

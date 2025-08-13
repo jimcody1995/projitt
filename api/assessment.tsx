@@ -170,3 +170,79 @@ export const editAssessment = async (data: {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/edit`, data);
     return response.data;
 };
+
+// Get coding question details by ID
+export const getCodingQuestionDetails = async (questionId: string): Promise<{
+    status: boolean;
+    message: string;
+    data: {
+        id: number;
+        title: string;
+        description: string;
+        language: string[];
+        total_point: number;
+        time_limit: number;
+    };
+}> => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/question/coding/single/${questionId}`);
+    return response.data;
+};
+
+// Add new coding question
+export const addCodingQuestionItem = async (data: {
+    title: string;
+    description: string;
+    language: string[];
+    total_point: number;
+    time_limit: number;
+}): Promise<{
+    status: boolean;
+    message: {
+        id: number;
+        title: string;
+        description: string;
+        language: string[];
+        total_point: number;
+        time_limit: number;
+        created_by: number;
+        updated_by: number | null;
+        deleted_by: number | null;
+        created_at: string;
+        updated_at: string;
+        deleted_at: string | null;
+    };
+    data: string;
+}> => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/question/coding/add`, data);
+    return response.data;
+};
+
+// Edit existing coding question
+export const editCodingQuestionItem = async (data: {
+    id: number;
+    title: string;
+    description: string;
+    language: string[];
+    total_point: number;
+    time_limit: number;
+}): Promise<{
+    status: boolean;
+    message: {
+        id: number;
+        title: string;
+        description: string;
+        language: string[];
+        total_point: number;
+        time_limit: number;
+        created_by: number;
+        updated_by: number;
+        deleted_by: number | null;
+        created_at: string;
+        updated_at: string;
+        deleted_at: string | null;
+    };
+    data: string;
+}> => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/question/coding/edit`, data);
+    return response.data;
+};
