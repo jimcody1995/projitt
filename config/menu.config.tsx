@@ -90,7 +90,7 @@ export const MENU_SIDEBAR: MenuConfig = [
     path: '/dashboard',
   },
   {
-    title: 'Recuruitment',
+    title: 'Recruitment',
     icon: FolderSearch,
     children: [
       { title: 'Job Postings', path: '/recruitment/job-postings' },

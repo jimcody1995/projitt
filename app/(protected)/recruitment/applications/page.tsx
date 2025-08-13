@@ -75,6 +75,15 @@ export default function ApplicantJobPage() {
                     </div>
                     <CheckDialog
                         action="close"
+                        id={selectedJob?.id?.toString() || ''}
+                        getData={() => {
+                            const fetchJobs = async () => {
+                                const response = await getJobPostings({});
+                                setJobs(response.data);
+                                setFilteredJobs(response.data);
+                            };
+                            fetchJobs();
+                        }}
                         trigger={
                             <div
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
@@ -85,6 +94,15 @@ export default function ApplicantJobPage() {
                     />
                     <CheckDialog
                         action="unpublish"
+                        id={selectedJob?.id?.toString() || ''}
+                        getData={() => {
+                            const fetchJobs = async () => {
+                                const response = await getJobPostings({});
+                                setJobs(response.data);
+                                setFilteredJobs(response.data);
+                            };
+                            fetchJobs();
+                        }}
                         trigger={
                             <div
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
@@ -95,6 +113,15 @@ export default function ApplicantJobPage() {
                     />
                     <CheckDialog
                         action="delete"
+                        id={selectedJob?.id?.toString() || ''}
+                        getData={() => {
+                            const fetchJobs = async () => {
+                                const response = await getJobPostings({});
+                                setJobs(response.data);
+                                setFilteredJobs(response.data);
+                            };
+                            fetchJobs();
+                        }}
                         trigger={
                             <div
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
@@ -213,5 +240,5 @@ export default function ApplicantJobPage() {
         {activeSection === 'applicants' && <Applicants id={selectedJob?.id} />}
         {activeSection === 'interviews' && <Interviews />}
         {selectedJob && activeSection === 'job-summary' && <JobSummary selected={selectedJob} />}
-    </div >;
+    </div>
 }

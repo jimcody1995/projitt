@@ -174,11 +174,6 @@ export default function Assessment() {
         );
     }
 
-    // Show loading state while fetching data
-    if (loading) {
-        return <LoadingSpinner content="Loading assessments..." />;
-    }
-
     return (
         <div className='w-full' data-testid="assessments-container" id="assessments-container">
             <div className='flex items-center justify-between mb-[37px]'>
@@ -239,10 +234,15 @@ export default function Assessment() {
             </div>
             {showFilter && <AssessmentFilterTool />}
             <div className="mt-[28px]">
-                {filteredData.length === 0 &&
+                {loading && (
+                    <div className="flex justify-center items-center py-8">
+                        <LoadingSpinner />
+                    </div>
+                )}
+                {!loading && filteredData.length === 0 &&
                     <NoData data-testid="no-data-message" />
                 }
-                {filteredData.length > 0 &&
+                {!loading && filteredData.length > 0 &&
                     <div
                         className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[32px] h-fit overflow-y-auto'
                         data-testid="grid-view-container"
