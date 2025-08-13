@@ -27,6 +27,7 @@ import { ChangePasswordSchemaType, getChangePasswordSchema } from '../../forms/c
 import { resetPassword } from '@/api/user';
 import { customToast } from '@/components/common/toastr';
 import FooterWithCompanyLogo from '../../component/footerWithCompayLogo';
+import { errorHandlers } from '@/utils/error-handler';
 
 export default function Page() {
   const router = useRouter();
@@ -80,7 +81,7 @@ export default function Page() {
       customToast('Success', 'Password reset successful. Redirecting to login...', 'success');
       setTimeout(() => router.push('/signin'), 3000);
     } catch (err: any) {
-      customToast('Error', err?.response?.data?.message || 'Something went wrong', 'error');
+      errorHandlers.custom(err, 'Something went wrong');
     } finally {
       setIsProcessing(false);
     }

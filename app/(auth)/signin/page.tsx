@@ -24,6 +24,7 @@ import { login } from '@/api/user';
 import { useSession } from '@/context/SessionContext';
 import axios from 'axios';
 import FooterWithCompanyLogo from '../component/footerWithCompayLogo';
+import { errorHandlers } from '@/utils/error-handler';
 
 /**
  * Page component renders the user login interface and handles login logic.
@@ -97,7 +98,7 @@ export default function Page(): JSX.Element {
       axios.defaults.headers.common['Authorization'] = `Bearer ${response?.data?.data?.token}`;
       window.location.href = "/";
     } catch (err: any) {
-      customToast("Error", err.response?.data?.message || "An error occurred", "error");
+      errorHandlers.custom(err, 'Something went wrong');
     } finally {
       setIsProcessing(false);
     }

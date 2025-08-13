@@ -21,6 +21,7 @@ import { LoaderCircleIcon } from 'lucide-react';
 import { forgotPasssword } from '@/api/user';
 import { customToast } from '@/components/common/toastr';
 import FooterWithCompanyLogo from '../component/footerWithCompayLogo';
+import { errorHandlers } from '@/utils/error-handler';
 
 /**
  * Page component renders the Reset Password page with an email input form.
@@ -71,7 +72,7 @@ export default function Page(): JSX.Element {
       setChecking(true);
       form.reset();
     } catch (err: any) {
-      customToast("Error", err.response?.data?.message ?? 'Something went wrong', "error");
+      errorHandlers.custom(err, 'Something went wrong');
     } finally {
       setIsProcessing(false);
     }
