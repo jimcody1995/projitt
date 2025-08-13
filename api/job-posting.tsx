@@ -41,7 +41,12 @@ export const duplicateJob = async (id: string) => {
 }
 
 export const changeJobStatus = async (id: string, status: string) => {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/change-status`, { id, status });
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/change-status`, { ids: [id], status });
+    return response.data;
+}
+
+export const changeJobStatusMultiple = async (ids: string[], status: string) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/change-status`, { ids, status });
     return response.data;
 }
 

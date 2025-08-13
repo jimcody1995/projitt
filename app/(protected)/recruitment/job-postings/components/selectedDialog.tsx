@@ -1,5 +1,5 @@
 'use client'
-import { changeJobStatus, deleteJob } from "@/api/job-posting";
+import { changeJobStatus, changeJobStatusMultiple, deleteJob } from "@/api/job-posting";
 import { customToast } from "@/components/common/toastr";
 import { Ban, Loader2, Trash, Upload } from "lucide-react";
 import { JSX } from "react";
@@ -33,9 +33,7 @@ export const SelectedDialog = ({
     const handleCloseJobs = async () => {
         setLoading(true);
         try {
-            selectedRows.forEach(async (id) => {
-                await changeJobStatus(id, "closed");
-            });
+            await changeJobStatusMultiple(selectedRows, "closed");
             customToast("Success", "Jobs closed successfully", "success");
             setSelectedRows([]);
             setRowSelection({});
