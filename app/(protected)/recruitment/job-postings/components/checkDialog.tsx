@@ -31,13 +31,24 @@ export default function CheckDialog({
     getData: () => void;
 }): JSX.Element {
     const [loading, setLoading] = useState(false);
+    const [deleteConfirmValue, setDeleteConfirmValue] = useState("");
+    const [deleteError, setDeleteError] = useState("");
     const handleDeleteJob = async () => {
+        // Validate delete confirmation
+        if (deleteConfirmValue !== "DELETE") {
+            setDeleteError("Please type DELETE to confirm");
+            return;
+        }
+
         console.log(id);
         setLoading(true);
         try {
             await deleteJob([id]);
             customToast("Success", "Job deleted successfully", "success");
             getData();
+            // Reset form after successful deletion
+            setDeleteConfirmValue("");
+            setDeleteError("");
         } catch (error: any) {
             customToast("Error", error.response.data.message, "error");
         }
@@ -84,6 +95,15 @@ export default function CheckDialog({
             setLoading(false);
         }
     }
+
+    const handleDeleteInputChange = (value: string) => {
+        setDeleteConfirmValue(value);
+        // Clear error when user starts typing
+        if (deleteError) {
+            setDeleteError("");
+        }
+    };
+
     return (
         <Dialog>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -151,12 +171,21 @@ export default function CheckDialog({
                 </p>
 
                 {action === "delete" && (
-                    <Input
-                        placeholder="Type DELETE to Confirm"
-                        className="mt-[18px]"
-                        id="check-dialog-delete-input"
-                        data-testid="check-dialog-delete-input"
-                    />
+                    <div className="mt-[18px] w-full">
+                        <Input
+                            placeholder="Type DELETE to Confirm"
+                            className={deleteError ? "border-red-500" : ""}
+                            id="check-dialog-delete-input"
+                            data-testid="check-dialog-delete-input"
+                            value={deleteConfirmValue}
+                            onChange={(e) => handleDeleteInputChange(e.target.value)}
+                        />
+                        {deleteError && (
+                            <p className="mt-1 text-red-500 text-sm" data-testid="check-dialog-delete-error">
+                                {deleteError}
+                            </p>
+                        )}
+                    </div>
                 )}
 
                 <div
@@ -182,7 +211,7 @@ export default function CheckDialog({
                             id="check-dialog-delete-button"
                             data-testid="check-dialog-delete-button"
                             onClick={handleDeleteJob}
-                            disabled={loading}
+                            disabled={loading || deleteConfirmValue !== "DELETE"}
                         >
                             {loading ? "Deleting..." : "Delete Job"}
                         </Button>
