@@ -25,13 +25,23 @@ export const getJobDetails = async (id: string) => {
     return response.data;
 }
 
-export const deleteJob = async (id: string) => {
-    const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/delete/${id}`);
+export const deleteJob = async (ids: string[]) => {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/delete`, { data: { ids } });
     return response.data;
 }
 
 export const publishJob = async (id: string) => {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/publish`, { id });
+    return response.data;
+}
+
+export const duplicateJob = async (id: string) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/duplicate`, { id });
+    return response.data;
+}
+
+export const changeJobStatus = async (id: string, status: string) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/change-status`, { id, status });
     return response.data;
 }
 

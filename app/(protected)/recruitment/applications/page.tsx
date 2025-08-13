@@ -1,6 +1,6 @@
 'use client'
 import { Button } from '@/components/ui/button';
-import { ArrowDown, ArrowLeft, BriefcaseBusiness, ChevronDown, EllipsisVertical, MapPin, MessageSquareMore, PieChart, Users } from 'lucide-react';
+import { ArrowDown, ArrowLeft, BriefcaseBusiness, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, MapPin, MessageSquareMore, PieChart, Users } from 'lucide-react';
 import React, { JSX, useEffect, useState } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import CheckDialog from '@/app/(protected)/recruitment/job-postings/components/checkDialog';
@@ -12,6 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/u
 import { getApplicantJobs } from '@/api/applications';
 import { getJobPostings } from '@/api/job-posting';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 export default function ApplicantJobPage() {
     const url = "https://www.figma.com/file/NlfVhYygR9mAQasassdsada/Share...";
     const [activeSection, setActiveSection] = useState<'applicants' | 'interviews' | 'job-summary'>('applicants');
@@ -19,11 +22,23 @@ export default function ApplicantJobPage() {
     const [filteredJobs, setFilteredJobs] = useState<any>([]);
     const [selectedJob, setSelectedJob] = useState<any>(null);
     const [search, setSearch] = useState('');
+    const [open, setOpen] = useState(false);
+    const params = useSearchParams();
+    const router = useRouter();
     useEffect(() => {
         const fetchJobs = async () => {
             const response = await getJobPostings({});
             setJobs(response.data);
-            setSelectedJob(response.data[0]);
+            setFilteredJobs(response.data);
+            const jobId = params.get('jobId');
+            console.log(jobId);
+
+            if (jobId) {
+                const job = response.data.find((job: any) => job.id === Number(jobId));
+                setSelectedJob(job);
+            }
+            else setSelectedJob(response.data[0]);
+            router.push(`/recruitment/applications?jobId=${response.data[0].id}`);
         };
         fetchJobs();
     }, []);
@@ -31,6 +46,9 @@ export default function ApplicantJobPage() {
         const filtered = jobs.filter((job: any) => job.title.toLowerCase().includes(search.toLowerCase()));
         setFilteredJobs(filtered);
     }, [search]);
+    useEffect(() => {
+        router.push(`/recruitment/applications?jobId=${selectedJob?.id}`);
+    }, [selectedJob]);
     function ActionsCell(): JSX.Element {
         return (
             <DropdownMenu>
@@ -95,16 +113,17 @@ export default function ApplicantJobPage() {
 
         <div className='flex items-center justify-between sm:flex-row flex-col gap-[20px]'>
             <div className='flex gap-[16px] items-center'>
-                <Select value={selectedJob?.id} onValueChange={(value) => setSelectedJob(jobs?.find((job: any) => job.id === value))}>
-                    <SelectTrigger className='bg-transparent border-none shadow-none cursor-pointer'>
+                <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger className='bg-transparent border-none shadow-none cursor-pointer text-left flex items-center gap-[12px] justify-between'>
                         <p
                             className='text-[24px]/[30px] font-semibold text-[#1c1c1c]'
                             data-testid="page-title"
                         >
                             {selectedJob?.title}
                         </p>
-                    </SelectTrigger>
-                    <SelectContent >
+                        <ChevronDown className='size-[20px] text-[#1c1c1c]' />
+                    </PopoverTrigger>
+                    <PopoverContent className='min-w-[300px]'>
                         <Input
                             type="text"
                             placeholder="Search"
@@ -113,12 +132,41 @@ export default function ApplicantJobPage() {
                             onChange={(e) => setSearch(e.target.value)}
                         />
                         {filteredJobs?.map((job: any) => (
-                            <SelectItem key={job.id} value={job.id} >{job.title}</SelectItem>
+                            <div key={job.id} className='cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]' onClick={() => { setSelectedJob(job); setOpen(false) }}>{job.title}</div>
                         ))}
-                    </SelectContent>
-                </Select>
+                    </PopoverContent>
+                </Popover>
             </div>
             <div className='flex gap-[17px] items-center'>
+                <div className='flex gap-[10px] items-center'>
+                    <Button
+                        type='button'
+                        variant='outline'
+                        disabled={jobs?.findIndex((job: any) => job.id === selectedJob?.id) === 0}
+                        onClick={() => {
+                            const index = jobs?.findIndex((job: any) => job.id === selectedJob?.id);
+                            if (index !== -1 && index > 0) {
+                                setSelectedJob(jobs[index - 1]);
+                            }
+                        }}
+                    >
+                        <ChevronLeft className='size-[16px] text-[#1a1a1a]' />
+                    </Button>
+                    <Button
+                        type='button'
+                        variant='outline'
+                        disabled={jobs?.findIndex((job: any) => job.id === selectedJob?.id) === jobs.length - 1}
+                        onClick={() => {
+                            const index = jobs?.findIndex((job: any) => job.id === selectedJob?.id);
+                            if (index !== -1 && index < jobs.length - 1) {
+                                setSelectedJob(jobs[index + 1]);
+                            }
+                        }}
+                    >
+                        <ChevronRight className='size-[16px] text-[#1a1a1a]' />
+                    </Button>
+                    <span className='text-[14px]/[22px] text-[#1a1a1a]'>{jobs?.findIndex((job: any) => job.id === selectedJob?.id) + 1} of {jobs.length}</span>
+                </div>
                 <ActionsCell />
                 <Share url={url} className="w-[100px] h-[42px] text-white text-[14px] font-semibold rounded-[8px]" />
             </div>
@@ -166,6 +214,6 @@ export default function ApplicantJobPage() {
         </div>
         {activeSection === 'applicants' && <Applicants />}
         {activeSection === 'interviews' && <Interviews />}
-        {activeSection === 'job-summary' && <JobSummary />}
+        {selectedJob && activeSection === 'job-summary' && <JobSummary selected={selectedJob} />}
     </div >;
 }

@@ -17,8 +17,6 @@ import {
   AccordionMenuSubTrigger,
 } from '@/components/ui/accordion-menu';
 import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { ChevronsUpDown, LogOut } from 'lucide-react';
 import { useSession } from '@/context/SessionContext';
 import { logout } from '@/api/user';
 

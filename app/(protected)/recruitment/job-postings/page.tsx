@@ -50,6 +50,7 @@ import { NoData } from './components/noData';
 import { useRouter } from 'next/navigation';
 import { getJobPostings } from '@/api/job-posting';
 import moment from 'moment';
+import LoadingSpinner from '@/components/common/loading-spinner';
 
 /**
  * Interface representing job posting data structure
@@ -81,6 +82,7 @@ export default function JobPostings() {
     const [selectedDepartments, setSelectedDepartments] = useState<number[]>([]);
     const [selectedTypes, setSelectedTypes] = useState<number[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     /**
      * Filters job data based on search query and selected statuses
@@ -107,6 +109,7 @@ export default function JobPostings() {
 
     const getData = async () => {
         try {
+            setLoading(true);
             const response = await getJobPostings({
                 country_ids: selectedLocations,
                 department_ids: selectedDepartments,
@@ -120,6 +123,8 @@ export default function JobPostings() {
             setJobData(response.data);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -371,6 +376,7 @@ export default function JobPostings() {
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`view-applicants-action-${row.original.id}`}
+                        onClick={() => router.push(`/recruitment/applications?jobId=${row.original.id}`)}
                     >
                         View Applicants
                     </div>
@@ -380,8 +386,25 @@ export default function JobPostings() {
                     >
                         Duplicate
                     </div>
+                    {row.original.status === "closed" &&
+                        <CheckDialog
+                            getData={getData}
+                            action="open"
+                            id={row.original.id}
+                            trigger={
+                                <div
+                                    className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                    data-testid={`open-action-${row.original.id}`}
+                                >
+                                    Open
+                                </div>
+                            }
+                        />
+                    }
                     {row.original.status === "open" &&
                         <CheckDialog
+                            getData={getData}
+                            id={row.original.id}
                             action="close"
                             trigger={
                                 <div
@@ -395,7 +418,9 @@ export default function JobPostings() {
                     }
                     {row.original.status === "open" &&
                         <CheckDialog
+                            getData={getData}
                             action="unpublish"
+                            id={row.original.id}
                             trigger={
                                 <div
                                     className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
@@ -406,8 +431,11 @@ export default function JobPostings() {
                             }
                         />
                     }
+
                     <CheckDialog
+                        getData={getData}
                         action="delete"
+                        id={row.original.id}
                         trigger={
                             <div
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
@@ -520,12 +548,14 @@ export default function JobPostings() {
                     <Toolbar view={view} setView={setView} />
                 </div>
                 {showFilter && <FilterTool selectedLocations={selectedLocations} selectedDepartments={selectedDepartments} selectedTypes={selectedTypes} selectedStatuses={selectedStatuses} setSelectedLocations={setSelectedLocations} setSelectedDepartments={setSelectedDepartments} setSelectedTypes={setSelectedTypes} setSelectedStatuses={setSelectedStatuses} />}
-                <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
+
+                {loading ? <LoadingSpinner content='Loading Job Postings...' /> : <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     {view === 'list' &&
                         <> {filteredData.length === 0 ?
                             <NoData data-testid="no-data-message" /> : <>
                                 {selectedRows.length > 0 &&
                                     <SelectedDialog
+                                        getData={getData}
                                         selectedRows={selectedRows}
                                         totalCount={filteredData?.length}
                                         allData={filteredData}
@@ -699,6 +729,7 @@ export default function JobPostings() {
                         </>
                     }
                 </div>
+                }
             </DataGrid>
         </div>
     );

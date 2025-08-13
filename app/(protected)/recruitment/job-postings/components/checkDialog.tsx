@@ -1,8 +1,10 @@
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { JSX, ReactNode } from "react";
+import { JSX, ReactNode, useState } from "react";
 import { Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { changeJobStatus, deleteJob } from "@/api/job-posting";
+import { customToast } from "@/components/common/toastr";
 
 /**
  * CheckDialog component
@@ -20,10 +22,68 @@ import { Input } from "@/components/ui/input";
 export default function CheckDialog({
     trigger,
     action,
+    id,
+    getData,
 }: {
     trigger: ReactNode;
-    action: "unpublish" | "close" | "delete";
+    action: "unpublish" | "close" | "delete" | "open";
+    id: string;
+    getData: () => void;
 }): JSX.Element {
+    const [loading, setLoading] = useState(false);
+    const handleDeleteJob = async () => {
+        console.log(id);
+        setLoading(true);
+        try {
+            await deleteJob([id]);
+            customToast("Success", "Job deleted successfully", "success");
+            getData();
+        } catch (error: any) {
+            customToast("Error", error.response.data.message, "error");
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+    const handleCloseJob = async () => {
+        setLoading(true);
+        try {
+            await changeJobStatus(id, "closed");
+            customToast("Success", "Job closed successfully", "success");
+            getData();
+        } catch (error: any) {
+            customToast("Error", error.response.data.message, "error");
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+    const handleUnpublishJob = async () => {
+        setLoading(true);
+        try {
+            await changeJobStatus(id, "hold");
+            customToast("Success", "Job unpublished successfully", "success");
+            getData();
+        } catch (error: any) {
+            customToast("Error", error.response.data.message, "error");
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+    const handleOpenJob = async () => {
+        setLoading(true);
+        try {
+            await changeJobStatus(id, "open");
+            customToast("Success", "Job opened successfully", "success");
+            getData();
+        } catch (error: any) {
+            customToast("Error", error.response.data.message, "error");
+        }
+        finally {
+            setLoading(false);
+        }
+    }
     return (
         <Dialog>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -71,7 +131,9 @@ export default function CheckDialog({
                         ? "Unpublish this Job?"
                         : action === "close"
                             ? "Close this Job Posting?"
-                            : "Permanently Delete This Job?"}
+                            : action === "open"
+                                ? "Open this Job Posting?"
+                                : "Permanently Delete This Job?"}
                 </p>
 
                 <p
@@ -83,7 +145,9 @@ export default function CheckDialog({
                         ? "Applicants will no longer be able to apply, but the job remains open internally and can be re-published from drafts anytime."
                         : action === "close"
                             ? "Applicants will no longer be able to apply, and the job will be marked as closed in your system."
-                            : "This action will remove this job posting and all associated data. It cannot be undone! You can unpublish or close this job instead to remove temporarily."}
+                            : action === "open"
+                                ? "Applicants will be able to apply again, and the job will be marked as open in your system."
+                                : "This action will remove this job posting and all associated data. It cannot be undone! You can unpublish or close this job instead to remove temporarily."}
                 </p>
 
                 {action === "delete" && (
@@ -106,35 +170,38 @@ export default function CheckDialog({
                             id={`check-dialog-cancel-button-${action}`}
                             data-testid={`check-dialog-cancel-button-${action}`}
                             variant="outline"
+                            disabled={loading}
                         >
                             Cancel
                         </Button>
                     </DialogClose>
 
                     {action === "delete" ? (
-                        <DialogClose asChild>
-                            <Button
-                                className="h-[36px] bg-[#C30606] hover:bg-[#C30606]/80"
-                                id="check-dialog-delete-button"
-                                data-testid="check-dialog-delete-button"
-                            >
-                                Delete Job
-                            </Button>
-                        </DialogClose>
+                        <Button
+                            className="h-[36px] bg-[#C30606] hover:bg-[#C30606]/80"
+                            id="check-dialog-delete-button"
+                            data-testid="check-dialog-delete-button"
+                            onClick={handleDeleteJob}
+                            disabled={loading}
+                        >
+                            {loading ? "Deleting..." : "Delete Job"}
+                        </Button>
                     ) : (
-                        <DialogClose asChild>
-                            <Button
-                                className="h-[36px]"
-                                id={`check-dialog-confirm-button-${action}`}
-                                data-testid={`check-dialog-confirm-button-${action}`}
-                            >
-                                {action === "unpublish"
-                                    ? "Unpublish"
-                                    : action === "close"
-                                        ? "Close Job"
-                                        : "Delete"}
-                            </Button>
-                        </DialogClose>
+                        <Button
+                            className="h-[36px]"
+                            id={`check-dialog-confirm-button-${action}`}
+                            data-testid={`check-dialog-confirm-button-${action}`}
+                            onClick={action === "close" ? handleCloseJob : action === "open" ? handleOpenJob : handleUnpublishJob}
+                            disabled={loading}
+                        >
+                            {action === "unpublish"
+                                ? (loading ? "Unpublishing..." : "Unpublish")
+                                : action === "close"
+                                    ? (loading ? "Closing..." : "Close Job")
+                                    : action === "open"
+                                        ? (loading ? "Opening..." : "Open Job")
+                                        : (loading ? "Deleting..." : "Delete")}
+                        </Button>
                     )}
                 </div>
             </DialogContent>
