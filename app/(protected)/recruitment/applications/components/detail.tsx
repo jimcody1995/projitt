@@ -2,7 +2,7 @@
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, CirclePlus, Plus, Star, X } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, CirclePlus, Loader2, Plus, Star, X } from "lucide-react";
 import ApplicationSummary from "./application-summary";
 import Resume from "./resume";
 import ApplicantQuestions from "./applicant-questions";
@@ -12,6 +12,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import DialogContent, { Dialog, div, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Message from "../../components/message";
+import { getApplicationInfo, rejectApplication } from "@/api/applications";
+import { customToast } from "@/components/common/toastr";
+import { useBasic } from "@/context/BasicContext";
 
 interface DetailProps {
     open: boolean;
@@ -24,6 +27,756 @@ export default function Detail({ open, onOpenChange, selectedApplication }: Deta
     const [rejectOpen, setRejectOpen] = useState(false);
     const [preview, setPreview] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const { country } = useBasic();
+    const [applicantDetails, setApplicantDetails] = useState<any>({
+        "id": 1,
+        "applicant_id": 18,
+        "job_id": 1,
+        "address": "1335 Rosie Ln",
+        "city": "Cedar Park",
+        "state": "TX",
+        "zip_code": "78613",
+        "country": "USA",
+        "contact_code": "+1",
+        "contact_number": null,
+        "status": "submitted",
+        "linkedin_link": "http://asdf",
+        "portfolio_link": "http://asdf",
+        "cv_media_id": 49,
+        "cover_media_id": 44,
+        "skill_ids": [
+            56,
+            57
+        ],
+        "other_links": [],
+        "skills": [
+            {
+                "id": 56,
+                "name": "PHP",
+                "slug": "php",
+                "description": "PHP Skill",
+                "type_id": 4,
+                "created_by": null,
+                "created_at": "2025-07-31T23:25:03.000000Z"
+            },
+            {
+                "id": 57,
+                "name": "Laravel",
+                "slug": "laravel",
+                "description": "Laravel Skill",
+                "type_id": 4,
+                "created_by": null,
+                "created_at": "2025-07-31T23:25:03.000000Z"
+            }
+        ],
+        "questions": [
+            {
+                "id": 4,
+                "question_name": "How do you handle stress and pressure?",
+                "answer_type": "long_detail",
+                "options": null,
+                "is_required": true,
+                "correct_answer": null,
+                "tags": [
+                    "business"
+                ],
+                "created_at": "2025-07-31T23:25:03.000000Z",
+                "updated_at": "2025-07-31T23:25:03.000000Z"
+            },
+            {
+                "id": 6,
+                "question_name": "What motivates you at work?",
+                "answer_type": "long_detail",
+                "options": null,
+                "is_required": false,
+                "correct_answer": null,
+                "tags": [
+                    "work",
+                    "experience"
+                ],
+                "created_at": "2025-07-31T23:25:03.000000Z",
+                "updated_at": "2025-07-31T23:25:03.000000Z"
+            },
+            {
+                "id": 9,
+                "question_name": "What are your salary expectations?",
+                "answer_type": "checkbox",
+                "options": [
+                    "Neutral",
+                    "Yes"
+                ],
+                "is_required": true,
+                "correct_answer": null,
+                "tags": [
+                    "goals"
+                ],
+                "created_at": "2025-07-31T23:25:03.000000Z",
+                "updated_at": "2025-07-31T23:25:03.000000Z"
+            }
+        ],
+        "work_experience": [
+            {
+                "id": 3,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "Senior Software Engineer",
+                "company": "TecCorp",
+                "location": "San Francisco, CA",
+                "from_date": "2020-04-25T00:00:00.000000Z",
+                "to_date": "2023-04-24T00:00:00.000000Z",
+                "is_currently_working": false,
+                "role_description": "Worked on building scalable backend APIs using Laravel and Node.js."
+            },
+            {
+                "id": 4,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "Senior Software Engineer",
+                "company": "TechCorp",
+                "location": "San Francisco, CA",
+                "from_date": "2020-04-25T00:00:00.000000Z",
+                "to_date": "2023-04-24T00:00:00.000000Z",
+                "is_currently_working": false,
+                "role_description": "Worked on building scalable backend APIs using Laravel and Node.js."
+            },
+            {
+                "id": 5,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "Senior Software Engineer",
+                "company": "TechCorp",
+                "location": "San Francisco, CA",
+                "from_date": "2020-04-25T00:00:00.000000Z",
+                "to_date": "2023-04-24T00:00:00.000000Z",
+                "is_currently_working": false,
+                "role_description": "Worked on building scalable backend APIs using Laravel and Node.js."
+            },
+            {
+                "id": 6,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "qwer",
+                "company": "qwer",
+                "location": "qwerqwer",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-08T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 7,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "sadfasd",
+                "company": "asdf",
+                "location": "asdf",
+                "from_date": "2025-08-05T00:00:00.000000Z",
+                "to_date": "2025-08-22T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 8,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "xcvbzxc",
+                "company": "asdfasd",
+                "location": "asdfasdf",
+                "from_date": "2025-07-31T00:00:00.000000Z",
+                "to_date": "2025-07-31T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 9,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "asdf",
+                "company": "asdf",
+                "location": "asdf",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 10,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "asdf",
+                "company": "asdf",
+                "location": "asdf",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 11,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "asdf",
+                "company": "asdf",
+                "location": "asdf",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 12,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "asdf",
+                "company": "asdf",
+                "location": "asdf",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 13,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "wert",
+                "company": "wert",
+                "location": "wert",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 14,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "wert",
+                "company": "wert",
+                "location": "wert",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 15,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "asdf",
+                "company": "asdf",
+                "location": "asdf",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 16,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "A",
+                "company": "A",
+                "location": "A",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": false,
+                "role_description": null
+            },
+            {
+                "id": 17,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "B",
+                "company": "B",
+                "location": "B",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 18,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "C",
+                "company": "C",
+                "location": "C",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 19,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "A",
+                "company": "A",
+                "location": "A",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": false,
+                "role_description": null
+            },
+            {
+                "id": 20,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "B",
+                "company": "B",
+                "location": "B",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 21,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "C",
+                "company": "C",
+                "location": "C",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 22,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "A",
+                "company": "A",
+                "location": "A",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": false,
+                "role_description": null
+            },
+            {
+                "id": 23,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "B",
+                "company": "B",
+                "location": "B",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 24,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "C",
+                "company": "C",
+                "location": "C",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 25,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "A",
+                "company": "A",
+                "location": "A",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": false,
+                "role_description": null
+            },
+            {
+                "id": 26,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "B",
+                "company": "B",
+                "location": "B",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 27,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "C",
+                "company": "C",
+                "location": "C",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": true,
+                "role_description": null
+            },
+            {
+                "id": 28,
+                "job_id": 1,
+                "applicant_id": 18,
+                "job_title": "1",
+                "company": "1",
+                "location": "1",
+                "from_date": "2025-08-01T00:00:00.000000Z",
+                "to_date": "2025-08-01T00:00:00.000000Z",
+                "is_currently_working": false,
+                "role_description": "1"
+            }
+        ],
+        "education": [
+            {
+                "id": 1,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "Harvard University",
+                "degree_id": 5,
+                "field_of_study": "Computer Science",
+                "degree": {
+                    "id": 5,
+                    "name": "Sales",
+                    "slug": "sales",
+                    "description": "Sales Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 2,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "234",
+                "degree_id": 2,
+                "field_of_study": "1234234",
+                "degree": {
+                    "id": 2,
+                    "name": "Finance",
+                    "slug": "finance",
+                    "description": "Finance Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 3,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "234",
+                "degree_id": 2,
+                "field_of_study": "1234234",
+                "degree": {
+                    "id": 2,
+                    "name": "Finance",
+                    "slug": "finance",
+                    "description": "Finance Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 4,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "23423",
+                "degree_id": 2,
+                "field_of_study": "234234",
+                "degree": {
+                    "id": 2,
+                    "name": "Finance",
+                    "slug": "finance",
+                    "description": "Finance Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 5,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "23423",
+                "degree_id": 2,
+                "field_of_study": "234234",
+                "degree": {
+                    "id": 2,
+                    "name": "Finance",
+                    "slug": "finance",
+                    "description": "Finance Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 6,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "asdf",
+                "degree_id": 2,
+                "field_of_study": "asdf",
+                "degree": {
+                    "id": 2,
+                    "name": "Finance",
+                    "slug": "finance",
+                    "description": "Finance Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 7,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "qweqr",
+                "degree_id": 2,
+                "field_of_study": "qwer",
+                "degree": {
+                    "id": 2,
+                    "name": "Finance",
+                    "slug": "finance",
+                    "description": "Finance Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 8,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "A",
+                "degree_id": 2,
+                "field_of_study": "AA",
+                "degree": {
+                    "id": 2,
+                    "name": "Finance",
+                    "slug": "finance",
+                    "description": "Finance Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 9,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "BB",
+                "degree_id": 1,
+                "field_of_study": "CC",
+                "degree": {
+                    "id": 1,
+                    "name": "Human Resources",
+                    "slug": "human-resources",
+                    "description": "Human Resources Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 10,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "A",
+                "degree_id": 2,
+                "field_of_study": "AA",
+                "degree": {
+                    "id": 2,
+                    "name": "Finance",
+                    "slug": "finance",
+                    "description": "Finance Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 11,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "BB",
+                "degree_id": 1,
+                "field_of_study": "CC",
+                "degree": {
+                    "id": 1,
+                    "name": "Human Resources",
+                    "slug": "human-resources",
+                    "description": "Human Resources Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 12,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "A",
+                "degree_id": 2,
+                "field_of_study": "AA",
+                "degree": {
+                    "id": 2,
+                    "name": "Finance",
+                    "slug": "finance",
+                    "description": "Finance Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 13,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "BB",
+                "degree_id": 1,
+                "field_of_study": "CC",
+                "degree": {
+                    "id": 1,
+                    "name": "Human Resources",
+                    "slug": "human-resources",
+                    "description": "Human Resources Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 14,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "A",
+                "degree_id": 2,
+                "field_of_study": "AA",
+                "degree": {
+                    "id": 2,
+                    "name": "Finance",
+                    "slug": "finance",
+                    "description": "Finance Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            },
+            {
+                "id": 15,
+                "job_id": 1,
+                "applicant_id": 18,
+                "school": "BB",
+                "degree_id": 1,
+                "field_of_study": "CC",
+                "degree": {
+                    "id": 1,
+                    "name": "Human Resources",
+                    "slug": "human-resources",
+                    "description": "Human Resources Department",
+                    "type_id": 1,
+                    "created_by": null,
+                    "created_at": "2025-07-31T23:25:03.000000Z"
+                }
+            }
+        ],
+        "certificate": [
+            {
+                "id": 13,
+                "job_id": 7,
+                "applicant_id": 18,
+                "title": "AWS Certified Solutions Architect",
+                "number": "AWS-12345678",
+                "issued_date": "2022-01-15T00:00:00.000000Z",
+                "expiration_date": "2025-01-15T00:00:00.000000Z"
+            }
+        ],
+        "applicant": {
+            "id": 18,
+            "uuid": "JL18418",
+            "first_name": "John",
+            "middle_name": "Edward",
+            "last_name": "Doe",
+            "email": "james.lee@projitt.com",
+            "first_login": 1,
+            "created_at": "2025-08-01T01:16:36.000000Z",
+            "updated_at": "2025-08-13T11:38:39.000000Z",
+            "deleted_at": null,
+            "role_id": 6,
+            "otp": null,
+            "otp_expires_at": null
+        },
+        "job": null,
+        "cv_media": {
+            "id": 49,
+            "unique_name": "17546891099664040_real_size.pdf",
+            "thumb_size": "17546891105839816_small_size.pdf",
+            "medium_size": "17546891107485696_medium_size.pdf",
+            "base_url": "https://projitt-dev-bucket.s3.amazonaws.com/",
+            "folder_path": "",
+            "original_name": "sample-local-pdf.pdf",
+            "title": null,
+            "extension": "pdf",
+            "size": "48.51 KB",
+            "alt_tag": "sample-local-pdf.pdf",
+            "batch_no": null,
+            "description": null,
+            "created_by": null,
+            "created_at": "2025-08-08T21:38:30.000000Z"
+        },
+        "cover_media": {
+            "id": 44,
+            "unique_name": "17546587793929040_real_size.pdf",
+            "thumb_size": "17546587799099791_small_size.pdf",
+            "medium_size": "17546587800446258_medium_size.pdf",
+            "base_url": "https://projitt-dev-bucket.s3.amazonaws.com/",
+            "folder_path": "",
+            "original_name": "1.pdf",
+            "title": null,
+            "extension": "pdf",
+            "size": "15.83 KB",
+            "alt_tag": "1.pdf",
+            "batch_no": null,
+            "description": null,
+            "created_by": null,
+            "created_at": "2025-08-08T13:13:00.000000Z"
+        }
+    });
+    const handleRejectApplication = async () => {
+        try {
+            setLoading(true);
+            await rejectApplication([selectedApplication?.id]);
+            customToast("Success", "Application rejected successfully", "success");
+            onOpenChange(false);
+        } catch (error: any) {
+            customToast("Error", error.response.data.message, "error");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // const getApplicantDetails = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const response = await getApplicationInfo(selectedApplication?.job_id, selectedApplication?.applicant_id);
+    //         setApplicantDetails(response.data);
+    //     } catch (error: any) {
+    //         customToast("Error", error.response.data.message, "error");
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // }
+    // useEffect(() => {
+    //     if (selectedApplication) {
+    //         getApplicantDetails();
+    //     }
+    // }, [selectedApplication]);
     return (
         <div>
             <Sheet open={open} onOpenChange={onOpenChange}>
@@ -47,7 +800,7 @@ export default function Detail({ open, onOpenChange, selectedApplication }: Deta
                                 </Button>
                             </div>
                             <div className="flex items-center gap-[10px]">
-                                <span className="text-[14px] text-[#626262]">Senior Data Analyst ~ United States</span>
+                                <span className="text-[14px] text-[#626262]">{applicantDetails?.job?.title} ~ {country?.find((item: any) => item.id === applicantDetails?.job?.country_id)?.name}</span>
                                 <Button
                                     mode="icon"
                                     variant="outline"
@@ -60,7 +813,7 @@ export default function Detail({ open, onOpenChange, selectedApplication }: Deta
                         <p className="text-[14px]/[22px] text-[#8f8f8f] mt-[16px]">{selectedApplication?.applicant_id}</p>
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-[22px]/[30px] font-medium flex items-center gap-[6px]">Alice Fernadez <Star className="size-[20px] text-[#353535]" /></p>
+                                <p className="text-[22px]/[30px] font-medium flex items-center gap-[6px]">{selectedApplication?.first_name} {selectedApplication?.last_name} <Star className="size-[20px] text-[#353535]" /></p>
                                 <div className="flex items-center gap-[12px] mt-[10px]">
                                     <div className="py-[5px] px-[9px] rounded-[9px] bg-[#d6eeec] text-[#0d978b] text-[14px]/[22px]">New</div>
                                     <div className="flex gap-[8px] py-[5px] px-[9px] text-[14px]/[22px] text-white bg-[#0d978b] rounded-[4px]">
@@ -129,7 +882,7 @@ export default function Detail({ open, onOpenChange, selectedApplication }: Deta
                                                     <button className="text-[14px]/[24px] text-[#0d978b] underline mt-[6px] text-start cursor-pointer" onClick={() => setPreview(true)}>Preview/Edit Email</button>
                                                     <div className="flex items-center gap-[12px] mt-[28px] w-full">
                                                         <Button variant="outline" className="w-full h-[42px]" onClick={() => setRejectOpen(false)}>Cancel</Button>
-                                                        <Button className="bg-[#C30606] hover:bg-[#C30606] w-full h-[42px]">Reject Applicant</Button>
+                                                        <Button className="bg-[#C30606] hover:bg-[#C30606] w-full h-[42px]" onClick={handleRejectApplication}>{loading ? <Loader2 className="size-[20px] animate-spin" /> : ''}Reject Applicant</Button>
                                                     </div>
                                                 </div>
                                             </DialogHeader>
@@ -158,9 +911,9 @@ export default function Detail({ open, onOpenChange, selectedApplication }: Deta
                         :
                         <div className="px-[32px] py-[24px] overflow-y-auto flex-1">
                             {activeSection === 'stages' && <Stages />}
-                            {activeSection === 'application-summary' && <ApplicationSummary />}
-                            {activeSection === 'resume' && <Resume />}
-                            {activeSection === 'applicant-question' && <ApplicantQuestions />}
+                            {activeSection === 'application-summary' && <ApplicationSummary applicantDetails={applicantDetails} />}
+                            {activeSection === 'resume' && <Resume applicantDetails={applicantDetails} />}
+                            {activeSection === 'applicant-question' && <ApplicantQuestions questions={applicantDetails?.questions} />}
                         </div>
                     }
 

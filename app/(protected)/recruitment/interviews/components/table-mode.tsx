@@ -109,7 +109,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`name-${row.original.id}`}
                     >
-                        {row.original.name}
+                        {row.original.applicant.first_name + " " + row.original.applicant.last_name}
                     </span>
                 ),
                 enableSorting: true,

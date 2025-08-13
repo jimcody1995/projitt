@@ -43,7 +43,8 @@ import DialogContent, { Dialog, div, DialogTitle, DialogTrigger } from '@/compon
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import "react-circular-progressbar/dist/styles.css";
 import Message from '../../components/message';
-import { getApplicantJobs } from '@/api/applications';
+import { getJobApplications } from '@/api/applications';
+import LoadingSpinner from '@/components/common/loading-spinner';
 export default function Applicants({ id }: { id: string }) {
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -58,44 +59,12 @@ export default function Applicants({ id }: { id: string }) {
     const [showFilter, setShowFilter] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState<any>(null);
     const [progress, setProgress] = useState(0);
-    const [applicantsData, setApplicantsData] = useState<any[]>([
-        {
-            id: '1',
-            application_id: '#E0001',
-            name: 'Alice Fernadez',
-            ai_score: 85,
-            date: '2023-06-01',
-            status: 'interview',
-        },
-        {
-            id: '2',
-            application_id: '#E0002',
-            name: 'Bob Johnson',
-            ai_score: 72,
-            date: '2024-06-02',
-            status: 'new',
-        },
-        {
-            id: '3',
-            application_id: '#E0003',
-            name: 'Charlie Davis',
-            ai_score: 68,
-            date: '2024-06-03',
-            status: 'hired',
-        },
-        {
-            id: '4',
-            application_id: '#E0004',
-            name: 'David Wilson',
-            ai_score: 40,
-            date: '2025-06-04',
-            status: 'rejected',
-        },
-    ]);
+    const [applicantsData, setApplicantsData] = useState<any[]>([]);
     const [selectedAIScoring, setSelectedAIScoring] = useState<number[]>([]);
     const [selectedShortListed, setSelectedShortListed] = useState<string>("");
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const [isMessage, setIsMessage] = useState(false);
+    const [loading, setLoading] = useState(false);
     const filteredData = useMemo<any[]>(() => {
         return applicantsData.filter((item) => {
             const matchesStatus =
@@ -117,10 +86,14 @@ export default function Applicants({ id }: { id: string }) {
 
     const getData = async () => {
         try {
-            const response = await getApplicantJobs('18');
+            setLoading(true);
+            const response = await getJobApplications(id);
             setApplicantsData(response.data);
         } catch (error) {
             console.log(error);
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -158,7 +131,7 @@ export default function Applicants({ id }: { id: string }) {
                 },
             },
             {
-                accessorKey: 'application-id',
+                accessorKey: 'applicant_id',
                 header: ({ column }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
@@ -172,7 +145,7 @@ export default function Applicants({ id }: { id: string }) {
                         className="text-[14px] text-[#4b4b4b] "
                         data-testid={`application-id-${row.original.id}`}
                     >
-                        {row.original.application_id}
+                        {row.original.applicant_id}
                     </span>
                 ),
                 enableSorting: true,
@@ -196,7 +169,7 @@ export default function Applicants({ id }: { id: string }) {
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`name-${row.original.id}`}
                     >
-                        {row.original.name}
+                        {row.original.first_name + " " + row.original.last_name}
                     </span>
                 ),
                 enableSorting: true,
@@ -305,8 +278,6 @@ export default function Applicants({ id }: { id: string }) {
 
 
     const handleOpenChange = (open: boolean) => {
-        console.log("Asdfasdf");
-
         setSelectedApplication(null);
     };
 
@@ -454,11 +425,12 @@ export default function Applicants({ id }: { id: string }) {
                     </div>
                 </div>
                 {showFilter && <FilterTool selectedAIScoring={selectedAIScoring} selectedShortListed={selectedShortListed} selectedStatuses={selectedStatuses} setSelectedAIScoring={setSelectedAIScoring} setSelectedShortListed={setSelectedShortListed} setSelectedStatuses={setSelectedStatuses} />}
-                <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
+                {loading ? <LoadingSpinner content='Loading Applicants' /> : <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     <> {filteredData.length === 0 ?
                         <NoData data-testid="no-data-message" /> : <>
                             {selectedRows.length > 0 &&
                                 <SelectedDialog
+                                    getData={getData}
                                     selectedRows={selectedRows}
                                     totalCount={filteredData?.length}
                                     allData={filteredData}
@@ -479,11 +451,12 @@ export default function Applicants({ id }: { id: string }) {
                     }
 
                     </>
-                </div>
+                </div>}
             </DataGrid>
             <Detail
                 open={selectedApplication !== null}
                 onOpenChange={handleOpenChange}
+                selectedApplication={selectedApplication}
             />
             <Dialog open={progress > 0 && progress < 100}>
                 <DialogContent className='max-w-[313px]' close={false}>

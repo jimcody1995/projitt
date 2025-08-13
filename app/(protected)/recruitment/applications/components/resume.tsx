@@ -3,7 +3,7 @@ import PdfViewer from "@/components/ui/pdf-viewer";
 import { useState } from "react";
 
 
-export default function Resume() {
+export default function Resume({ applicantDetails }: { applicantDetails: any }) {
     const [activeTab, setActiveTab] = useState<'resume' | 'cover-letter'>('resume');
     return (
         <div>
@@ -17,8 +17,8 @@ export default function Resume() {
                     </div>
                 </div>
                 <div className="w-full mt-[23px]">
-                    {activeTab === 'resume' && <PdfViewer url="/1.pdf" />}
-                    {activeTab === 'cover-letter' && <PdfViewer url="/cover-letter.pdf" />}
+                    {activeTab === 'resume' && <PdfViewer url={applicantDetails?.cv_media?.base_url + applicantDetails?.cv_media?.medium_size} />}
+                    {activeTab === 'cover-letter' && <PdfViewer url={applicantDetails?.cover_media?.base_url + applicantDetails?.cover_media?.medium_size} />}
                 </div>
             </div>
         </div>

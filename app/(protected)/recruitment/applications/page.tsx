@@ -8,8 +8,6 @@ import Applicants from './components/applicants';
 import Share from '@/app/components/partials/common/share';
 import Interviews from './components/interview';
 import JobSummary from './components/job-summary';
-import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
-import { getApplicantJobs } from '@/api/applications';
 import { getJobPostings } from '@/api/job-posting';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
@@ -212,7 +210,7 @@ export default function ApplicantJobPage() {
                 <p className='whitespace-nowrap'>Job Summary</p>
             </div>
         </div>
-        {activeSection === 'applicants' && <Applicants />}
+        {activeSection === 'applicants' && <Applicants id={selectedJob?.id} />}
         {activeSection === 'interviews' && <Interviews />}
         {selectedJob && activeSection === 'job-summary' && <JobSummary selected={selectedJob} />}
     </div >;
