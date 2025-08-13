@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CalendarMode from "./components/calendar-mode";
 import TableMode from "./components/table-mode";
-import Detail from "../applications/[id]/components/detail";
+import Detail from "../applications/components/detail";
+import { getInterviews } from '@/api/interviews';
 
 /**
  * @description
@@ -16,7 +17,7 @@ import Detail from "../applications/[id]/components/detail";
 export default function Interviews() {
     const [activeTab, setActiveTab] = useState<'calendar' | 'table'>('calendar');
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
-
+    const [interviews, setInterviews] = useState<any[]>([]);
     /**
      * @description
      * This function is a callback for the `Detail` dialog's `onOpenChange` prop.
@@ -26,6 +27,17 @@ export default function Interviews() {
     const handleOpenChange = (open: boolean) => {
         setSelectedApplication(null);
     };
+    const getData = async () => {
+        try {
+            const response = await getInterviews({});
+            setInterviews(response.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        getData();
+    }, []);
     return <div>
         <div className="flex justify-between w-full sm:flex-row flex-col items-start gap-[10px]">
             <p className="text-[24px]/[30px] font-semibold text-[#1C1C1C]">Interviews</p>
@@ -41,10 +53,11 @@ export default function Interviews() {
         <div>
             <div className="mt-[15px]" data-testid="interviews-content">
                 {activeTab === 'calendar' && <CalendarMode data-testid="calendar-mode-component" />}
-                {activeTab === 'table' && <TableMode setSelectedApplication={setSelectedApplication} data-testid="table-mode-component" />}
+                {activeTab === 'table' && <TableMode interviews={interviews} setSelectedApplication={setSelectedApplication} data-testid="table-mode-component" />}
             </div>
             <Detail
                 open={selectedApplication !== null}
+                selectedApplication={selectedApplication}
                 onOpenChange={handleOpenChange}
                 data-testid="detail-dialog"
             />

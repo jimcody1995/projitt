@@ -18,7 +18,7 @@ import { EllipsisVertical } from "lucide-react";
 import { DataGrid } from "@/components/ui/data-grid";
 import { NoData } from "../../assessments/components/noData";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
-import Detail from "../../applications/[id]/components/detail";
+import Detail from "../../applications/components/detail";
 
 /**
  * @description

@@ -12,7 +12,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import moment from 'moment';
-import Detail from '../../applications/[id]/components/detail';
+import Detail from '../../applications/components/detail';
 import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
@@ -35,7 +35,7 @@ import CancelInterview from "./cancel-interview";
  * The component also includes search functionality, a filter sidebar, and pagination.
  * It uses `@tanstack/react-table` for efficient data table management and provides unique `data-testid` attributes for UI test automation.
  */
-export default function TableMode({ setSelectedApplication }: { setSelectedApplication: (id: string) => void }) {
+export default function TableMode({ setSelectedApplication, interviews }: { setSelectedApplication: (id: string) => void, interviews: any[] }) {
     const [activeSection, setActiveSection] = useState<'upcoming' | 'interviews' | 'job-summary'>('upcoming');
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -48,26 +48,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
     const [showFilter, setShowFilter] = useState(false);
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
-    const [applicantsData, setApplicantsData] = useState<any[]>([
-        {
-            id: '1',
-            name: 'John Doe',
-            job_title: 'Software Engineer',
-            job_location: 'USA',
-            state: 'Interview',
-            date: '2023-06-01 10:00 AM',
-            mode: 'Online',
-        },
-        {
-            id: '2',
-            name: 'John David',
-            job_title: 'Software Engineer',
-            job_location: 'USA',
-            state: 'Interview',
-            date: '2023-06-01 10:00 AM',
-            mode: 'Online',
-        },
-    ]);
+    const [applicantsData, setApplicantsData] = useState<any[]>(interviews);
     const [selectedMode, setSelectedMode] = useState<number[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const filteredData = useMemo<any[]>(() => {
@@ -182,7 +163,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`stage-${row.original.id}`}
                     >
-                        {row.original.state.charAt(0).toUpperCase() + row.original.state.slice(1)}
+                        {row.original.status}
                     </span>
                 ),
                 enableSorting: true,
@@ -237,7 +218,7 @@ export default function TableMode({ setSelectedApplication }: { setSelectedAppli
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`mode-${row.original.id}`}
                     >
-                        {row.original.mode.charAt(0).toUpperCase() + row.original.mode.slice(1)}
+                        {row.original.mode}
                     </span>
                 ),
                 size: 90,
