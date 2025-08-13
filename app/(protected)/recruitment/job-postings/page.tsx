@@ -48,9 +48,10 @@ import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from '@/compon
 import CheckDialog from './components/checkDialog';
 import { NoData } from './components/noData';
 import { useRouter } from 'next/navigation';
-import { getJobPostings } from '@/api/job-posting';
+import { getJobPostings, duplicateJob } from '@/api/job-posting';
 import moment from 'moment';
 import LoadingSpinner from '@/components/common/loading-spinner';
+import { errorHandlers } from '@/utils/error-handler';
 
 /**
  * Interface representing job posting data structure
@@ -123,6 +124,24 @@ export default function JobPostings() {
             setJobData(response.data);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleDuplicate = async (id: string) => {
+        try {
+            setLoading(true);
+            const response = await duplicateJob(id);
+
+            if (response.status === true) {
+                // Reload the data after successful duplication
+                await getData();
+            } else {
+                errorHandlers.custom(new Error(response.message || 'Failed to duplicate job'), 'Duplicate failed');
+            }
+        } catch (error) {
+            errorHandlers.jobPosting(error);
         } finally {
             setLoading(false);
         }
@@ -383,6 +402,7 @@ export default function JobPostings() {
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`duplicate-action-${row.original.id}`}
+                        onClick={() => handleDuplicate(row.original.id)}
                     >
                         Duplicate
                     </div>

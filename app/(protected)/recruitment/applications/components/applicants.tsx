@@ -193,7 +193,8 @@ export default function Applicants({ id }: { id: string }) {
                         className={`text-[14px] ${row.original.ai_score >= 80 ? 'text-[#0D978B]' : row.original.ai_score >= 80 ? 'text-[#FFC107]' : row.original.ai_score >= 50 ? 'text-[#BE5E00]' : 'text-[#C30606]'}`}
                         data-testid={`ai-score-${row.original.id}`}
                     >
-                        {row.original.ai_score}%
+                        {/* {row.original.ai_score}% */}
+                        20%
                     </span>
                 ),
                 enableSorting: true,

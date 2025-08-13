@@ -36,7 +36,7 @@ export const publishJob = async (id: string) => {
 }
 
 export const duplicateJob = async (id: string) => {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/duplicate`, { id });
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/duplicate/${id}`);
     return response.data;
 }
 
