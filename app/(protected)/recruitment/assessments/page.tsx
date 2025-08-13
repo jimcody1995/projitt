@@ -9,6 +9,8 @@ import { AssessmentFilterTool } from "./components/filter";
 import { NoData } from "./components/noData";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import CheckDialog from "../job-postings/components/checkDialog";
+import { getAssessments } from "@/api/job-posting";
+import LoadingSpinner from "@/components/common/loading-spinner";
 
 /**
  * Interface representing each assessment/job item.
@@ -21,21 +23,7 @@ interface IData {
     type: string;
 }
 
-// Mock job data for assessments
-const jobData: IData[] = [
-    { id: '1', title: 'JS Array Drill', description: 'Evaluates alignment with company values and logical skills.', status: 'Open', type: 'Coding Challenge' },
-    { id: '2', title: 'Culture Fit + Reasoning', description: 'Evaluates alignment with company values and logical skills.', status: 'Open', type: 'Coding Challenge' },
-    { id: '3', title: 'Python Code Test', description: 'Evaluates alignment with company values and logical skills.', status: 'Open', type: 'Coding Challenge' },
-    { id: '4', title: 'Culture Fit + Reasoning', description: 'Evaluates alignment with company values and logical skills.', status: 'Open', type: 'Coding Challenge' },
-    { id: '5', title: 'JS Array Drill', description: 'Evaluates alignment with company values and logical skills.', status: 'Draft', type: 'Coding Challenge' },
-    { id: '6', title: 'JS Array Drill', description: 'Evaluates alignment with company values and logical skills.', status: 'Open', type: 'Coding Challenge' },
-    { id: '7', title: 'Python Code Test', description: 'Evaluates alignment with company values and logical skills.', status: 'Open', type: 'Coding Challenge' },
-    { id: '8', title: 'Culture Fit + Reasoning', description: 'Evaluates alignment with company values and logical skills.', status: 'Open', type: 'Coding Challenge' },
-    { id: '9', title: 'Js Code Test', description: 'Evaluates alignment with company values and logical skills.', status: 'Open', type: 'Coding Challenge' },
-    { id: '10', title: 'Java Test', description: 'Evaluates alignment with company values and logical skills.', status: 'Open', type: 'Coding Challenge' },
-    { id: '11', title: 'Rust Test', description: 'Evaluates alignment with company values and logical skills.', status: 'Open', type: 'Coding Challenge' },
 
-];
 
 /**
  * Component: Assessment
@@ -47,14 +35,57 @@ export default function Assessment() {
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilter, setShowFilter] = useState(false);
     const [filteredData, setFilteredData] = useState<IData[]>([]);
+    const [assessmentsData, setAssessmentsData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
+    // Function to get assessment type name based on type_id
+    const getAssessmentType = (typeId: number): string => {
+        switch (typeId) {
+            case 1:
+                return "Psychometric Assessment";
+            case 2:
+                return "Coding Assessment";
+            default:
+                return "Assessment";
+        }
+    };
+
+    // Function to fetch assessments from API
+    const fetchAssessments = async () => {
+        try {
+            setLoading(true);
+            const response = await getAssessments();
+            if (response.status === true) {
+                // Transform API data to match the expected format
+                const transformedData = response.data.map((assessment: any) => ({
+                    id: assessment.id.toString(),
+                    title: assessment.name,
+                    description: assessment.description,
+                    status: 'Open', // Status is always open as per requirements
+                    type: getAssessmentType(assessment.type_id)
+                }));
+                setAssessmentsData(transformedData);
+            }
+        } catch (error) {
+            console.error('Error fetching assessments:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Fetch assessments on component mount
+    useEffect(() => {
+        fetchAssessments();
+    }, []);
+
+    // Filter data based on search query
     useEffect(() => {
         setFilteredData(
-            jobData.filter((item) =>
+            assessmentsData.filter((item) =>
                 item.title.toLowerCase().includes(searchQuery.toLowerCase())
             )
         );
-    }, [searchQuery]);
+    }, [searchQuery, assessmentsData]);
 
     /**
      * Component: ActionsCell
@@ -149,6 +180,11 @@ export default function Assessment() {
         );
     }
 
+    // Show loading state while fetching data
+    if (loading) {
+        return <LoadingSpinner content="Loading assessments..." />;
+    }
+
     return (
         <div className='w-full' data-testid="assessments-container" id="assessments-container">
             <div className='flex items-center justify-between mb-[37px]'>
@@ -177,7 +213,7 @@ export default function Assessment() {
                     />
                     <Input
                         id="search-input"
-                        placeholder="Search Job"
+                        placeholder="Search Assessment"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-[172px] ps-9 h-[32px]"
@@ -214,7 +250,7 @@ export default function Assessment() {
                 }
                 {filteredData.length > 0 &&
                     <div
-                        className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[32px] h-[calc(100vh-300px)] overflow-y-auto'
+                        className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[32px] h-fit overflow-y-auto'
                         data-testid="grid-view-container"
                         id="grid-view-container"
                     >

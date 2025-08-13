@@ -99,3 +99,38 @@ export const editJobQuestions = async (data: {
     return response.data;
 }
 
+
+export const getAssessments = async () => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/list-with-filters`);
+    return response.data;
+}
+
+export const getAssessmentDetails = async (id: string) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/single/${id}`);
+    return response.data;
+}
+
+export const createAssessment = async (data: any) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/add`, data);
+    return response.data;
+}
+
+export const editAssessment = async (data: any) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/edit`, data);
+    return response.data;
+}
+
+export const deleteAssessment = async (id: string) => {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/delete/${id}`);
+    return response.data;
+}
+
+export const closeAssessment = async (id: string) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/close`, { id });
+    return response.data;
+}
+
+export const unpublishAssessment = async (id: string) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/unpublish`, { id });
+    return response.data;
+}
