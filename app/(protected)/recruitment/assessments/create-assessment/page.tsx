@@ -135,8 +135,14 @@ export default function CreateAssessment() {
         setIsLoading(true);
         try {
             // If we're on step 2 (questions step), save questions first
+            let processedQuestions: Array<{ question_id: number; point: number }> = [];
             if (currentStep === 2 && questionsRef.current) {
-                await questionsRef.current.saveQuestions();
+                const questions = await questionsRef.current.saveQuestions();
+                // Convert questions to the format expected by the assessment API
+                processedQuestions = questions.map(q => ({
+                    question_id: parseInt(q.id),
+                    point: parseInt(q.point || '0')
+                }));
             }
 
             // Prepare payload based on API requirements
@@ -147,7 +153,7 @@ export default function CreateAssessment() {
                     parseInt(assessmentData.duration.toString().trim()) : 0,
                 type_id: assessmentData.type === 'psychometric' ? 1 : 2,
                 points: assessmentData.points || 100,
-                questions: currentStep === 1 ? [] : (assessmentData.questions || [])
+                questions: currentStep === 1 ? [] : processedQuestions
             };
 
             let response;
@@ -267,43 +273,15 @@ export default function CreateAssessment() {
                         triggerValidation={triggerValidation}
                         assessmentData={assessmentData}
                         setAssessmentData={setAssessmentData}
+                        isEditing={isEditing}
                     />
                 )}
                 {currentStep === 2 && (
                     <Questions
                         ref={questionsRef}
                         assessmentData={assessmentData}
-                        setAssessmentData={setAssessmentData}
                         assessmentId={assessId || undefined}
-                        onSave={(questions) => {
-                            console.log('Questions from onSave:', questions);
-                            // Update assessment data with questions, removing duplicates
-                            const uniqueQuestions = questions.reduce((acc, q) => {
-                                const questionId = parseInt(q.id);
-                                const existingIndex = acc.findIndex(existing => existing.question_id === questionId);
 
-                                if (existingIndex >= 0) {
-                                    // Update existing question with new point
-                                    acc[existingIndex] = {
-                                        question_id: questionId,
-                                        point: parseInt(q.point || '0')
-                                    };
-                                } else {
-                                    // Add new question
-                                    acc.push({
-                                        question_id: questionId,
-                                        point: parseInt(q.point || '0')
-                                    });
-                                }
-                                return acc;
-                            }, [] as Array<{ question_id: number, point: number }>);
-
-                            console.log('Unique questions after deduplication:', uniqueQuestions);
-                            setAssessmentData(prev => ({
-                                ...prev,
-                                questions: uniqueQuestions
-                            }));
-                        }}
                     />
                 )}
             </div>

@@ -61,7 +61,7 @@ interface QuestionsProps {
         points?: number;
         questions?: Array<{ question_id: number; point: number }>;
     };
-    setAssessmentData: (data: QuestionsProps['assessmentData']) => void;
+    setAssessmentData?: React.Dispatch<React.SetStateAction<QuestionsProps['assessmentData']>>;
     assessmentId?: string;
     onSave?: (questions: Question[]) => void;
     errors?: {
@@ -74,7 +74,7 @@ interface QuestionsProps {
 }
 
 export interface QuestionsRef {
-    saveQuestions: () => Promise<void>;
+    saveQuestions: () => Promise<Question[]>;
 }
 /**
  * AssessmentQuestionsEditor - A component for creating and managing assessment questions.
@@ -86,7 +86,6 @@ export interface QuestionsRef {
 
 const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
     assessmentData,
-    setAssessmentData,
     assessmentId,
     onSave,
 }, ref) => {
@@ -175,22 +174,7 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
         loadExistingQuestions();
     }, [assessmentId]);
 
-    // Sync questions data with parent component
-    const syncQuestionsWithParent = (updatedSections: Section[]) => {
-        const questions = updatedSections.flatMap(section =>
-            section.questions
-                .filter(q => q.point && q.point !== '')
-                .map(q => ({
-                    question_id: parseInt(q.id),
-                    point: parseInt(q.point || '0')
-                }))
-        );
 
-        setAssessmentData({
-            ...assessmentData,
-            questions: questions
-        });
-    };
 
     const [codingData, setCodingData] = useState<CodingSection[]>([
         {
@@ -238,11 +222,10 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
         };
         const updatedSections = sections.map(section =>
             section.id === sectionId
-                ? { ...section, questions: [newQuestion, ...section.questions] }
+                ? { ...section, questions: [...section.questions, newQuestion] }
                 : section
         );
         setSections(updatedSections);
-        syncQuestionsWithParent(updatedSections);
     };
 
     /**
@@ -283,7 +266,6 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
                 : section
         );
         setSections(updatedSections);
-        syncQuestionsWithParent(updatedSections);
     };
 
     /**
@@ -333,7 +315,6 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
                 : section
         );
         setSections(updatedSections);
-        syncQuestionsWithParent(updatedSections);
     };
 
     /**
@@ -414,15 +395,13 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
         }
     };
 
-    /** Saves questions to the API */
-    const saveQuestions = async (): Promise<void> => {
-        if (!assessmentId) return;
-
+    /** Saves questions to the API and returns processed questions with IDs */
+    const saveQuestions = async (): Promise<Question[]> => {
         try {
             const currentQuestions = sections[0]?.questions || [];
             const newQuestions: Question[] = [];
             const editedQuestions: Question[] = [];
-            const questionIds: number[] = [];
+            const processedQuestions: Question[] = [];
 
             // Separate new and edited questions
             currentQuestions.forEach(question => {
@@ -439,14 +418,14 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
                     ) {
                         editedQuestions.push(question);
                     }
-                    questionIds.push(parseInt(question.id));
+                    processedQuestions.push(question); // Keep existing question with its ID
                 } else {
                     // New question
                     newQuestions.push(question);
                 }
             });
 
-            // Add new questions
+            // Add new questions first
             for (const question of newQuestions) {
                 const payload: {
                     question_name: string;
@@ -480,7 +459,11 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
 
                 const response = await addQuestionItem(payload);
                 if (response.status === true) {
-                    questionIds.push(response.data.id);
+                    // Add the question with its new ID from the API response
+                    processedQuestions.push({
+                        ...question,
+                        id: response.data.id.toString()
+                    });
                 }
             }
 
@@ -519,27 +502,20 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
                 }
 
                 await editQuestionItem(payload);
-                questionIds.push(parseInt(question.id));
             }
-
-            // Note: Assessment questions are saved through the parent component's editAssessment function
-            // which handles the complete assessment update including questions
 
             // Update original questions for future comparisons
-            const updatedQuestions = currentQuestions.map(q => {
-                const newQuestion = newQuestions.find(nq => nq.title === q.title && nq.type === q.type);
-                if (newQuestion) {
-                    return { ...q, id: newQuestion.id };
-                }
-                return q;
-            });
-            setOriginalQuestions(updatedQuestions);
+            setOriginalQuestions(processedQuestions);
 
+            // Call onSave with the processed questions (with proper IDs)
             if (onSave) {
-                onSave(currentQuestions);
+                onSave(processedQuestions);
             }
+
+            return processedQuestions;
         } catch (error) {
             errorHandlers.custom(error, 'Error saving questions');
+            return [];
         }
     };
 
