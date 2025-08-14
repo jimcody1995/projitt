@@ -1,6 +1,6 @@
 'use client'
 import { Button } from '@/components/ui/button';
-import { ArrowDown, ArrowLeft, BriefcaseBusiness, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, MapPin, MessageSquareMore, PieChart, Users } from 'lucide-react';
+import { BriefcaseBusiness, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, MapPin, MessageSquareMore, PieChart, Users } from 'lucide-react';
 import React, { JSX, useEffect, useState } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import CheckDialog from '@/app/(protected)/recruitment/job-postings/components/checkDialog';
@@ -9,10 +9,12 @@ import Share from '@/app/components/partials/common/share';
 import Interviews from './components/interview';
 import JobSummary from './components/job-summary';
 import { getJobPostings } from '@/api/job-posting';
+import { duplicateJob } from '@/api/job-posting';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { errorHandlers } from '@/utils/error-handler';
 export default function ApplicantJobPage() {
     const url = "https://www.figma.com/file/NlfVhYygR9mAQasassdsada/Share...";
     const [activeSection, setActiveSection] = useState<'applicants' | 'interviews' | 'job-summary'>('applicants');
@@ -21,23 +23,27 @@ export default function ApplicantJobPage() {
     const [selectedJob, setSelectedJob] = useState<any>(null);
     const [search, setSearch] = useState('');
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
     const params = useSearchParams();
     const router = useRouter();
-    useEffect(() => {
-        const fetchJobs = async () => {
-            const response = await getJobPostings({});
-            setJobs(response.data);
-            setFilteredJobs(response.data);
-            const jobId = params.get('jobId');
-            console.log(jobId);
+    // Extracted fetchJobs function
+    const fetchJobs = async () => {
+        const response = await getJobPostings({});
+        setJobs(response.data);
+        setFilteredJobs(response.data);
+        const jobId = params.get('jobId');
+        console.log(jobId);
 
-            if (jobId) {
-                const job = response.data.find((job: any) => job.id === Number(jobId));
-                setSelectedJob(job);
-            }
-            else setSelectedJob(response.data[0]);
-            router.push(`/recruitment/applications?jobId=${response.data[0].id}`);
-        };
+        if (jobId) {
+            const job = response.data.find((job: any) => job.id === Number(jobId));
+            setSelectedJob(job);
+        }
+        else setSelectedJob(response.data[0]);
+        router.push(`/recruitment/applications?jobId=${response.data[0].id}`);
+    };
+
+    useEffect(() => {
         fetchJobs();
     }, []);
     useEffect(() => {
@@ -47,9 +53,29 @@ export default function ApplicantJobPage() {
     useEffect(() => {
         router.push(`/recruitment/applications?jobId=${selectedJob?.id}`);
     }, [selectedJob]);
+
+    const handleDuplicate = async (id: string) => {
+        try {
+            setLoading(true);
+            const response = await duplicateJob(id);
+
+            if (response.status === true) {
+                // Reload the data after successful duplication
+                await fetchJobs();
+                setDropdownOpen(false); // Close dropdown after successful duplication
+            } else {
+                errorHandlers.custom(new Error(response.message || 'Failed to duplicate application'), 'Duplicate failed');
+            }
+        } catch (error) {
+            errorHandlers.jobPosting(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     function ActionsCell(): JSX.Element {
         return (
-            <DropdownMenu>
+            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                 <DropdownMenuTrigger asChild>
                     <Button
                         className="size-[24px]"
@@ -69,21 +95,22 @@ export default function ApplicantJobPage() {
                         View Applicants
                     </div>
                     <div
-                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        className={`cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px] flex items-center gap-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (!loading) {
+                                handleDuplicate(selectedJob?.id?.toString() || '');
+                            }
+                        }}
                     >
-                        Duplicate
+                        {loading && <div className="animate-spin rounded-full border-b-2 border-[#0d978b] h-3 w-3"></div>}
+                        {loading ? 'Duplicating...' : 'Duplicate'}
                     </div>
                     <CheckDialog
                         action="close"
                         id={selectedJob?.id?.toString() || ''}
-                        getData={() => {
-                            const fetchJobs = async () => {
-                                const response = await getJobPostings({});
-                                setJobs(response.data);
-                                setFilteredJobs(response.data);
-                            };
-                            fetchJobs();
-                        }}
+                        getData={fetchJobs}
                         trigger={
                             <div
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
@@ -95,14 +122,7 @@ export default function ApplicantJobPage() {
                     <CheckDialog
                         action="unpublish"
                         id={selectedJob?.id?.toString() || ''}
-                        getData={() => {
-                            const fetchJobs = async () => {
-                                const response = await getJobPostings({});
-                                setJobs(response.data);
-                                setFilteredJobs(response.data);
-                            };
-                            fetchJobs();
-                        }}
+                        getData={fetchJobs}
                         trigger={
                             <div
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
@@ -114,14 +134,7 @@ export default function ApplicantJobPage() {
                     <CheckDialog
                         action="delete"
                         id={selectedJob?.id?.toString() || ''}
-                        getData={() => {
-                            const fetchJobs = async () => {
-                                const response = await getJobPostings({});
-                                setJobs(response.data);
-                                setFilteredJobs(response.data);
-                            };
-                            fetchJobs();
-                        }}
+                        getData={fetchJobs}
                         trigger={
                             <div
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"

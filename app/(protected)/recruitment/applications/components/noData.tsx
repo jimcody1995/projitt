@@ -29,24 +29,15 @@ export const NoData = (): JSX.Element => {
                 id="no-data-title"
                 data-testid="no-data-title"
             >
-                No Jobs Posted Yet
+                No Applicants
             </p>
             <p
                 className="text-[16px]/[26px] text-[#4b4b4b] mt-[8px]"
                 id="no-data-description"
                 data-testid="no-data-description"
             >
-                Start attracting the right talent by creating your first job listing.
+                Start attracting the right applicants by posting your first application.
             </p>
-            <Button
-                className="h-[42px] font-semibold text-[14px]/[20px] mt-[28px]"
-                id="create-new-job-button"
-                data-testid="create-new-job-button"
-                onClick={() => { router.push('/recruitment/job-postings/create-job') }}
-            >
-                <Plus className="size-[18px]" />
-                Create New Job
-            </Button>
         </div>
     );
 };
