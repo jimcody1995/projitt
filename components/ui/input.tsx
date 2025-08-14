@@ -6,10 +6,10 @@ import { cva, type VariantProps } from 'class-variance-authority';
 const inputVariants = cva(
   `
     flex w-full bg-background border border-input border-[#bcbcbc] shadow-xs shadow-black/5 transition-[color,box-shadow] text-foreground placeholder:text-[#bcbcbc]
-    focus-visible:ring-[#0D978B33]  focus-visible:border-ring focus-visible:outline-none focus-visible:ring-[3px]  focus-visible:border-[#0D978B]   
+    focus-visible:ring-[#0D978B33]  focus-visible:border-ring focus-visible:outline-none focus-visible:ring-[3px]  focus-visible:border-[#0D978B]    
     disabled:cursor-not-allowed disabled:bg-[#F5F5F5] disabled:text-[#353535]
     [&[readonly]]:bg-muted/80 [&[readonly]]:cursor-not-allowed
-    file:h-full [&[type=file]]:py-0 file:border-solid file:border-input file:bg-transparent 
+    file:h-full [&[type=file]]:py-0 file:border-solid file:border-input file:bg-transparent  
     file:font-medium file:not-italic file:text-foreground file:p-0 file:border-0 file:border-e
     aria-invalid:border-destructive/60 aria-invalid:ring-destructive/10 dark:aria-invalid:border-destructive dark:aria-invalid:ring-destructive/20
   `,
@@ -53,7 +53,7 @@ const inputGroupVariants = cva(
     flex items-stretch
     [&_[data-slot=input]]:grow
     [&_[data-slot=input-addon]:has(+[data-slot=input])]:rounded-e-none [&_[data-slot=input-addon]:has(+[data-slot=input])]:border-e-0
-    [&_[data-slot=input-addon]:has(+[data-slot=datefield])]:rounded-e-none [&_[data-slot=input-addon]:has(+[data-slot=datefield])]:border-e-0 
+    [&_[data-slot=input-addon]:has(+[data-slot=datefield])]:rounded-e-none [&_[data-slot=input-addon]:has(+[data-slot=datefield])]:border-e-0  
     [&_[data-slot=input]+[data-slot=input-addon]]:rounded-s-none [&_[data-slot=input]+[data-slot=input-addon]]:border-s-0
     [&_[data-slot=input-addon]:has(+[data-slot=button])]:rounded-e-none
     [&_[data-slot=input]+[data-slot=button]]:rounded-s-none
@@ -75,31 +75,31 @@ const inputGroupVariants = cva(
 const inputWrapperVariants = cva(
   `
     flex items-center gap-1.5
-    has-[:focus-visible]:ring-ring/30 
+    has-[:focus-visible]:ring-ring/30  
     has-[:focus-visible]:border-ring
-    has-[:focus-visible]:outline-none 
+    has-[:focus-visible]:outline-none  
     has-[:focus-visible]:ring-[3px]
 
-    [&_[data-slot=datefield]]:grow 
-    [&_[data-slot=input]]:data-focus-within:ring-transparent  
-    [&_[data-slot=input]]:data-focus-within:ring-0 
-    [&_[data-slot=input]]:data-focus-within:border-0 
-    [&_[data-slot=input]]:flex 
-    [&_[data-slot=input]]:w-full 
-    [&_[data-slot=input]]:outline-none 
-    [&_[data-slot=input]]:transition-colors 
+    [&_[data-slot=datefield]]:grow  
+    [&_[data-slot=input]]:data-focus-within:ring-transparent    
+    [&_[data-slot=input]]:data-focus-within:ring-0  
+    [&_[data-slot=input]]:data-focus-within:border-0  
+    [&_[data-slot=input]]:flex  
+    [&_[data-slot=input]]:w-full  
+    [&_[data-slot=input]]:outline-none  
+    [&_[data-slot=input]]:transition-colors  
     [&_[data-slot=input]]:text-foreground
-    [&_[data-slot=input]]:placeholder:text-muted-foreground 
-    [&_[data-slot=input]]:border-0 
-    [&_[data-slot=input]]:bg-transparent 
+    [&_[data-slot=input]]:placeholder:text-muted-foreground  
+    [&_[data-slot=input]]:border-0  
+    [&_[data-slot=input]]:bg-transparent  
     [&_[data-slot=input]]:p-0
-    [&_[data-slot=input]]:shadow-none 
-    [&_[data-slot=input]]:focus-visible:ring-0 
-    [&_[data-slot=input]]:h-auto 
+    [&_[data-slot=input]]:shadow-none  
+    [&_[data-slot=input]]:focus-visible:ring-0  
+    [&_[data-slot=input]]:h-auto  
     [&_[data-slot=input]]:disabled:cursor-not-allowed
     [&_[data-slot=input]]:disabled:opacity-50    
 
-    [&_svg]:text-muted-foreground 
+    [&_svg]:text-muted-foreground  
   `,
   {
     variants: {
@@ -119,15 +119,24 @@ function Input({
   className,
   type,
   variant,
-  value,
+  value, // Explicitly destructure value
+  onChange, // Explicitly destructure onChange
+  defaultValue, // Explicitly destructure defaultValue
   ...props
 }: React.ComponentProps<'input'> & VariantProps<typeof inputVariants>) {
+  // Determine if 'value' is provided. If it is, we assume it's meant to be a controlled component.
+  const isControlled = value !== undefined;
+
   return (
     <input
       data-slot="input"
       type={type}
       className={cn(inputVariants({ variant }), className)}
-      value={value ?? ''}
+      // If `value` is provided, always use it and expect an `onChange` handler.
+      // If `onChange` is NOT provided with `value`, add `readOnly` to prevent the warning.
+      {...(isControlled
+        ? { value: value, onChange: onChange, readOnly: onChange === undefined ? true : undefined }
+        : { defaultValue: defaultValue })}
       {...props}
     />
   );
