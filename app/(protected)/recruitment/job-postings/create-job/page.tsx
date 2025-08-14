@@ -513,7 +513,7 @@ export default function CreateJob(): JSX.Element {
                 </div>
             )}
             {currentStep === 6 && (
-                <Completed jobId={searchParams.get('id') || undefined} />
+                <Completed jobId={searchParams.get('id') ? parseInt(searchParams.get('id')!, 10) : undefined} />
             )}
         </>
     )
