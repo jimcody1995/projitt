@@ -70,13 +70,77 @@ export const SelectedDialog = ({
             customToast("Error", "No data to export", "error");
             return;
         }
-        // Get headers
-        const headers = Object.keys(data[0]);
-        csvRows.push(headers.join(","));
+
+        // Define the headers we want to export with readable names
+        const headers = [
+            { key: 'title', label: 'Job Title' },
+            { key: 'description', label: 'Description' },
+            { key: 'no_of_job_opening', label: 'Number of Openings' },
+            { key: 'status', label: 'Status' },
+            { key: 'department', label: 'Department' },
+            { key: 'employment_type', label: 'Employment Type' },
+            { key: 'location_type', label: 'Location Type' },
+            { key: 'country', label: 'Country' },
+            { key: 'state', label: 'State' },
+            { key: 'salary_from', label: 'Salary From' },
+            { key: 'salary_to', label: 'Salary To' },
+            { key: 'deadline', label: 'Deadline' },
+            { key: 'is_set_default_template', label: 'Default Template' },
+            { key: 'skills', label: 'Skills' },
+            { key: 'questions', label: 'Questions' }
+        ];
+
+        // Add header row
+        csvRows.push(headers.map(h => h.label).join(","));
 
         // Loop over rows
         for (const row of data) {
-            const values = headers.map(header => `"${row[header]}"`);
+            const values = headers.map(header => {
+                let value = row[header.key];
+
+                // Handle nested objects to extract names
+                if (header.key === 'department' && value && typeof value === 'object') {
+                    value = value.name || '';
+                } else if (header.key === 'employment_type' && value && typeof value === 'object') {
+                    value = value.name || '';
+                } else if (header.key === 'location_type' && value && typeof value === 'object') {
+                    value = value.name || '';
+                } else if (header.key === 'country' && value && typeof value === 'object') {
+                    value = value.name || '';
+                } else if (header.key === 'skills' && Array.isArray(value)) {
+                    value = value.map((skill: { name?: string }) => skill.name || skill).join(', ');
+                } else if (header.key === 'questions' && Array.isArray(value)) {
+                    value = value.map((question: {
+                        question_name?: string;
+                        answer_type?: string;
+                        is_required?: boolean;
+                        correct_answer?: string;
+                        tags?: string[] | string;
+                    }) => {
+                        const questionName = question.question_name || '';
+                        const answerType = question.answer_type || '';
+                        const isRequired = question.is_required ? 'Required' : 'Optional';
+                        const correctAnswer = question.correct_answer || 'N/A';
+                        const tags = Array.isArray(question.tags) ? question.tags.join(', ') : question.tags || 'N/A';
+
+                        return `${questionName} (${answerType}, ${isRequired}, Answer: ${correctAnswer}, Tags: ${tags})`;
+                    }).join('; ');
+                } else if (header.key === 'media' && Array.isArray(value)) {
+                    value = value.map((media: { name?: string }) => media.name || media).join(', ');
+                } else if (header.key === 'deadline' && value) {
+                    // Format date to be more readable
+                    value = new Date(value).toLocaleDateString();
+                } else if (header.key === 'is_set_default_template') {
+                    value = value ? 'Yes' : 'No';
+                }
+
+                // Handle null/undefined values
+                if (value === null || value === undefined) {
+                    value = '';
+                }
+
+                return `"${String(value).replace(/"/g, '""')}"`;
+            });
             csvRows.push(values.join(","));
         }
 
