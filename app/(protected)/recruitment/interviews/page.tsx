@@ -52,7 +52,7 @@ export default function Interviews() {
         </div>
         <div>
             <div className="mt-[15px]" data-testid="interviews-content">
-                {activeTab === 'calendar' && <CalendarMode data-testid="calendar-mode-component" />}
+                {interviews && activeTab === 'calendar' && <CalendarMode interviews={interviews} setSelectedApplication={setSelectedApplication} data-testid="calendar-mode-component" />}
                 {activeTab === 'table' && <TableMode interviews={interviews} setSelectedApplication={setSelectedApplication} data-testid="table-mode-component" />}
             </div>
             <Detail

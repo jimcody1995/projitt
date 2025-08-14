@@ -9,7 +9,7 @@
 import 'react-quill-new/dist/quill.snow.css';
 import ReactQuill from 'react-quill-new';
 import { useState, useRef, JSX } from 'react';
-import { CheckLine, Cloud, File, HardDrive, Link, Redo, Undo } from 'lucide-react';
+import { CheckLine, Cloud, File, HardDrive, Link, Loader2, Redo, Undo } from 'lucide-react';
 import {
     Popover,
     PopoverContent,
@@ -24,6 +24,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { uploadMedia } from '@/api/media';
+import LoadingSpinner from '@/components/common/loading-spinner';
+import { customToast } from '@/components/common/toastr';
 
 export default function JobDescription({
     jobData,
@@ -34,19 +36,30 @@ export default function JobDescription({
     const [files, setFiles] = useState<File[]>([]);
     const [selectedStyle, setSelectedStyle] = useState<string>('Formal');
     const quillRef = useRef<ReactQuill | null>(null);
+    const [loading, setLoading] = useState(false);
 
     /**
      * Handles file input changes
      */
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+        console.log("asdfasdf");
+
         const files = e.target.files;
         if (!files) return;
         const formData: any = new FormData();
         formData.append('media', files[0]);
-        const response = await uploadMedia(formData);
-        console.log(response);
-        if (files) {
-            setFiles([...files, ...Array.from(files)]);
+        setLoading(true);
+        try {
+            const response = await uploadMedia(formData);
+            console.log(response);
+            if (files) {
+                setFiles([...files, ...Array.from(files)]);
+            }
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            customToast("Error", error?.response.data.message, "error");
+            setLoading(false);
         }
     };
 
@@ -306,7 +319,7 @@ export default function JobDescription({
                             <div className='flex gap-[10px] w-full mt-[10px]'>
                                 <button className='flex flex-col w-full items-center gap-[10px] border-[#717171] border-dashed border rounded-[6.52px] py-[10px] hover:border-[#0d978b] hover:bg-[#dcfffc] cursor-pointer' onClick={() => { document.getElementById('fileInput')?.click() }}>
                                     <HardDrive className="size-[25px] text-[#0d978b]" />
-                                    <span className="text-[14px]/[20px] text-[#4b4b4b]">From Local</span>
+                                    <span className="text-[14px]/[20px] text-[#4b4b4b]">{loading ? <><Loader2 className="size-[20px] animate-spin" /></> : 'From Local'}</span>
                                 </button>
                                 <button className='flex flex-col w-full items-center gap-[10px] border-[#717171] border-dashed border rounded-[6.52px] py-[10px] hover:border-[#0d978b] hover:bg-[#dcfffc] cursor-pointer' onClick={() => { }}>
                                     <Cloud className="size-[25px] text-[#0d978b]" />
