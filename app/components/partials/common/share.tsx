@@ -13,6 +13,7 @@ interface ShareProps {
 export default function Share({ url, className }: ShareProps) {
     const [open, setOpen] = useState(false);
     const [shareMethod, setShareMethod] = useState<'telegram' | 'twitter' | 'linkedin'>('telegram');
+
     /**
      * Copies the job share URL to the clipboard and shows tooltip feedback.
      */
@@ -25,6 +26,34 @@ export default function Share({ url, className }: ShareProps) {
         }).catch((err) => {
             console.error("Failed to copy: ", err);
         });
+    };
+
+    /**
+     * Handles sharing to different social media platforms
+     */
+    const handleShare = (platform: 'telegram' | 'twitter' | 'linkedin') => {
+        setShareMethod(platform);
+
+        let shareUrl = '';
+        const encodedUrl = encodeURIComponent(url);
+        const encodedText = encodeURIComponent('Check out this job opportunity!');
+
+        switch (platform) {
+            case 'telegram':
+                shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
+                break;
+            case 'twitter':
+                shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`;
+                break;
+            case 'linkedin':
+                shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+                break;
+        }
+
+        // Open the share URL in a new window/tab
+        if (shareUrl) {
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
     };
     return (
         <Dialog>
@@ -48,19 +77,20 @@ export default function Share({ url, className }: ShareProps) {
                     <div className="flex w-full justify-between mt-[36px] px-[18px]">
                         {/* Share options */}
                         {[
-                            { icon: <Send className={`size-[24px] ${shareMethod === 'telegram' ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`} />, label: "Telegram" },
-                            { icon: <Twitter className={`size-[24px] ${shareMethod === 'twitter' ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`} />, label: "Twitter" },
-                            { icon: <Linkedin className={`size-[24px] ${shareMethod === 'linkedin' ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`} />, label: "LinkedIn" },
-                        ].map(({ icon, label }) => (
+                            { icon: <Send className={`size-[24px] ${shareMethod === 'telegram' ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`} />, label: "Telegram", platform: 'telegram' as const },
+                            { icon: <Twitter className={`size-[24px] ${shareMethod === 'twitter' ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`} />, label: "Twitter", platform: 'twitter' as const },
+                            { icon: <Linkedin className={`size-[24px] ${shareMethod === 'linkedin' ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`} />, label: "LinkedIn", platform: 'linkedin' as const },
+                        ].map(({ icon, label, platform }) => (
                             <div
                                 key={label}
                                 className="flex flex-col items-center gap-[8px] cursor-pointer"
                                 id={`share-${label.toLowerCase()}`} data-testid={`share-${label.toLowerCase()}`}
+                                onClick={() => handleShare(platform)}
                             >
-                                <div className={`w-[72px] h-[72px]  rounded-full flex items-center justify-center ${shareMethod === label.toLowerCase() ? 'bg-[#d6eeec]' : 'bg-[#f8f8f8]'}`}>
+                                <div className={`w-[72px] h-[72px]  rounded-full flex items-center justify-center ${shareMethod === platform ? 'bg-[#d6eeec]' : 'bg-[#f8f8f8]'}`}>
                                     {icon}
                                 </div>
-                                <p className={`text-[12px]/[15px] ${shareMethod === label.toLowerCase() ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`}>{label}</p>
+                                <p className={`text-[12px]/[15px] ${shareMethod === platform ? 'text-[#0d978b]' : 'text-[#4b4b4b] '}`}>{label}</p>
                             </div>
                         ))}
                     </div>
