@@ -119,6 +119,7 @@ function Input({
   className,
   type,
   variant,
+  value,
   ...props
 }: React.ComponentProps<'input'> & VariantProps<typeof inputVariants>) {
   return (
@@ -126,6 +127,7 @@ function Input({
       data-slot="input"
       type={type}
       className={cn(inputVariants({ variant }), className)}
+      value={value ?? ''}
       {...props}
     />
   );

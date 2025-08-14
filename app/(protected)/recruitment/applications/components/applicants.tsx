@@ -87,13 +87,20 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
     const getData = async () => {
         try {
             setLoading(true);
-            if (!id) return;
+            if (!id || id === 'undefined' || id === 'null') {
+                setApplicantsData([]);
+                setApplicantCount(0);
+                setLoading(false);
+                return;
+            }
             const response = await getJobApplications(id);
-            setApplicantsData(response.data);
-            setApplicantCount(response.data.length);
+            setApplicantsData(response.data || []);
+            setApplicantCount(response.data?.length || 0);
             setLoading(false);
         } catch (error) {
             console.log(error);
+            setApplicantsData([]);
+            setApplicantCount(0);
             setLoading(false);
         }
     }

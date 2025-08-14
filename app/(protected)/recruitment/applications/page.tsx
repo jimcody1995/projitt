@@ -240,7 +240,7 @@ export default function ApplicantJobPage() {
             <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'applicants' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('applicants')}>
                 <Users className='size-[20px] ' />
                 <p className='whitespace-nowrap'>Applicants</p>
-                <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{applicantCount}</span>
+                <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{applicantCount || 0}</span>
             </div>
             <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('interviews')}>
                 <MessageSquareMore className='size-[20px] ' />
@@ -251,7 +251,7 @@ export default function ApplicantJobPage() {
                 <p className='whitespace-nowrap'>Job Summary</p>
             </div>
         </div>
-        {activeSection === 'applicants' && <Applicants setApplicantCount={setApplicantCount} id={selectedJob?.id} />}
+        {activeSection === 'applicants' && selectedJob?.id && <Applicants setApplicantCount={setApplicantCount} id={selectedJob.id.toString()} />}
         {activeSection === 'interviews' && <Interviews />}
         {selectedJob && activeSection === 'job-summary' && <JobSummary selected={selectedJob} />}
     </div>

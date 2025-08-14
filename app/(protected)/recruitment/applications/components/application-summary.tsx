@@ -22,13 +22,13 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
                     <Link className="size-[16px] text-[#4b4b4b]" />
                 </div>
                 {(applicantDetails.other_links || []).map((link: string, index: number) => (
-                    <>
+                    <div key={index}>
                         <div className="h-[14px] border-[1.2px] border-[#626262]"></div>
                         <div className="flex gap-[4px] items-center">
                             <span className="text-[12px]/[20px] font-medium text-[#4b4b4b]">{link}</span>
                             <Link className="size-[16px] text-[#4b4b4b]" />
                         </div>
-                    </>
+                    </div>
                 ))}
             </div>
             <div className="flex flex-col gap-[32px] w-full mt-[20px]">
@@ -61,20 +61,18 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
                     </CollapsibleTrigger>
                     <CollapsibleContent className="w-full mt-[12px] flex flex-col gap-[10px]">
                         {(applicantDetails.work_experience || []).map((experience: any, index: number) => (
-                            <>
-                                <div className="w-full  py-[20px] px-[24px] bg-white rounded-[12px]">
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            <p className="text-[16px]/[20px] font-medium text-[#4b4b4b]">{experience.job_title}</p>
-                                            <p className="text-[14px]/[20px] font-medium text-[#4b4b4b]">{experience.company} ~ {experience.location}</p>
-                                        </div>
-                                        <p className="text-[14px]/[20px] font-medium text-[#787878]">{moment(experience.from_date).format('MMM YYYY')} - {moment(experience.to_date).format('MMM YYYY')}</p>
+                            <div key={index} className="w-full  py-[20px] px-[24px] bg-white rounded-[12px]">
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <p className="text-[16px]/[20px] font-medium text-[#4b4b4b]">{experience.job_title}</p>
+                                        <p className="text-[14px]/[20px] font-medium text-[#4b4b4b]">{experience.company} ~ {experience.location}</p>
                                     </div>
-                                    <p className="mt-[12px] text-[13px]/[20px]">
-                                        {experience.role_description}
-                                    </p>
+                                    <p className="text-[14px]/[20px] font-medium text-[#787878]">{moment(experience.from_date).format('MMM YYYY')} - {moment(experience.to_date).format('MMM YYYY')}</p>
                                 </div>
-                            </>
+                                <p className="mt-[12px] text-[13px]/[20px]">
+                                    {experience.role_description}
+                                </p>
+                            </div>
                         ))}
                     </CollapsibleContent>
                 </Collapsible>
@@ -85,12 +83,10 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
                     </CollapsibleTrigger>
                     <CollapsibleContent className="w-full mt-[12px] flex flex-col gap-[10px]">
                         {(applicantDetails.education || []).map((education: any, index: number) => (
-                            <>
-                                <div className="w-full  py-[20px] px-[24px] bg-white rounded-[12px]">
-                                    <p className="text-[16px]/[20px] font-medium text-[#4b4b4b]">{education.school}</p>
-                                    <p className="text-[14px]/[20px] font-medium text-[#4b4b4b]">{education.degree.description}</p>
-                                </div>
-                            </>
+                            <div key={index} className="w-full  py-[20px] px-[24px] bg-white rounded-[12px]">
+                                <p className="text-[16px]/[20px] font-medium text-[#4b4b4b]">{education.school}</p>
+                                <p className="text-[14px]/[20px] font-medium text-[#4b4b4b]">{education.degree.description}</p>
+                            </div>
                         ))}
                     </CollapsibleContent>
                 </Collapsible>
@@ -101,17 +97,15 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
                     </CollapsibleTrigger>
                     <CollapsibleContent className="w-full mt-[12px] flex flex-col gap-[10px]">
                         {(applicantDetails.certificate || []).map((certification: any, index: number) => (
-                            <>
-                                <div className="w-full  py-[20px] px-[24px] bg-white rounded-[12px]">
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            <p className="text-[16px]/[20px] font-medium text-[#4b4b4b]">{certification.title}</p>
-                                            <p className="text-[14px]/[20px] font-medium text-[#4b4b4b]">{certification.number}</p>
-                                        </div>
-                                        <p className="text-[14px]/[20px] font-medium text-[#787878]">{moment(certification.issued_date).format('MMM YYYY')} - {moment(certification.expiration_date).format('MMM YYYY')}</p>
+                            <div key={index} className="w-full  py-[20px] px-[24px] bg-white rounded-[12px]">
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <p className="text-[16px]/[20px] font-medium text-[#4b4b4b]">{certification.title}</p>
+                                        <p className="text-[14px]/[20px] font-medium text-[#4b4b4b]">{certification.number}</p>
                                     </div>
+                                    <p className="text-[14px]/[20px] font-medium text-[#787878]">{moment(certification.issued_date).format('MMM YYYY')} - {moment(certification.expiration_date).format('MMM YYYY')}</p>
                                 </div>
-                            </>
+                            </div>
                         ))}
                     </CollapsibleContent>
                 </Collapsible>

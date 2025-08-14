@@ -183,10 +183,59 @@ export default function CreateAssessment() {
     };
 
     /**
-     * Redirects user to assessments page on exit.
+     * Saves assessment data and redirects user to assessments page on exit.
      * @returns void
      */
-    const handleSaveExit = (): void => {
+    const handleSaveExit = async (): Promise<void> => {
+        // If we're on step 1, save the assessment data first
+        if (currentStep === 1) {
+            const validationErrors = validateJobDetails(assessmentData);
+            setErrors(validationErrors);
+            setTriggerValidation(true);
+
+            if (Object.keys(validationErrors).length > 0) return;
+
+            setIsLoading(true);
+            try {
+                // Prepare payload with no questions for step 1
+                const payload = {
+                    name: assessmentData.name,
+                    description: assessmentData.description,
+                    time_duration: assessmentData.duration && assessmentData.duration.toString().trim() ?
+                        parseInt(assessmentData.duration.toString().trim()) : 0,
+                    type_id: assessmentData.type === 'psychometric' ? 1 : 2,
+                    points: assessmentData.points || 100
+                    // questions: [] // No questions payload for step 1
+                };
+
+                let response;
+                if (isEditing) {
+                    // Edit existing assessment
+                    response = await editAssessment({
+                        id: parseInt(assessId!),
+                        ...payload
+                    });
+                } else {
+                    // Create new assessment
+                    response = await createAssessment(payload);
+                }
+
+                if (response.status === true) {
+                    customToast('Success', isEditing ? 'Assessment updated successfully' : 'Assessment created successfully', 'success');
+                } else {
+                    customToast('Error', response.message || 'Failed to save assessment', 'error');
+                    return; // Don't exit if save failed
+                }
+            } catch (error: unknown) {
+                console.error('Error saving assessment:', error);
+                errorHandlers.custom(error, 'Failed to save assessment');
+                return; // Don't exit if save failed
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        // Exit to assessments page
         router.push('/recruitment/assessments');
     };
 
