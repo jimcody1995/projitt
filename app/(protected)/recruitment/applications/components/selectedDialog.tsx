@@ -73,9 +73,16 @@ export const SelectedDialog = ({
         const blob = new Blob([csvString], { type: "text/csv" });
         const url = window.URL.createObjectURL(blob);
 
+        // Generate current datetime for filename
+        const now = new Date();
+        const dateTimeString = now.toISOString()
+            .replace(/[:.]/g, '-')
+            .replace('T', '_')
+            .slice(0, 19); // Remove milliseconds and timezone
+
         const a = document.createElement("a");
         a.setAttribute("href", url);
-        a.setAttribute("download", "job-postings.csv");
+        a.setAttribute("download", `applications-${dateTimeString}.csv`);
         a.click();
     };
     return (
