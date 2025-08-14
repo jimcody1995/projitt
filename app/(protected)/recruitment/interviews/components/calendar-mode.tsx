@@ -38,11 +38,26 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
         console.log(interviews);
         if (interviews?.length > 0) {
             interviews.forEach((event: any) => {
-                const key = moment(event.updated_at).format('YYYY-MM-DD');
+                // Debug: Log the original date and how it's being processed
+                console.log('Original date:', event.date);
+                console.log('Moment UTC:', moment.utc(event.date).format());
+                console.log('Moment local:', moment.utc(event.date).local().format());
+                console.log('Key generated:', moment.utc(event.date).local().format('YYYY-MM-DD'));
+
+                // Try different approaches to handle the date
+                let key;
+                if (event.date.includes('T00:00:00')) {
+                    // If it's a date-only string (no time), parse it directly
+                    key = moment(event.date.split('T')[0]).format('YYYY-MM-DD');
+                } else {
+                    // For datetime strings, use UTC parsing
+                    key = moment.utc(event.date).local().format('YYYY-MM-DD');
+                }
+
                 if (!eventsBy[key]) eventsBy[key] = [];
                 eventsBy[key].push(event);
             });
-            console.log(eventsBy);
+            console.log('Final eventsBy:', eventsBy);
             setEventsByDate(eventsBy);
         }
 
@@ -79,6 +94,7 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
             <div className="grid grid-cols-7">
                 {days.map(day => {
                     const key = day.format('YYYY-MM-DD');
+                    console.log('Calendar day key:', key, 'for date:', day.format('YYYY-MM-DD HH:mm:ss'));
                     const isCurrentMonth = day.month() === currentMonth.month();
                     return (
                         <div

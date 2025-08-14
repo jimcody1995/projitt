@@ -22,7 +22,7 @@ interface ScheduleInterviewProps {
 }
 export default function ScheduleInterview({ setActive, onOpenChange, selectedApplication }: ScheduleInterviewProps) {
     const [schedulingType, setSchedulingType] = useState<'propose_time' | 'request_availability'>('propose_time');
-    const [mode, setMode] = useState<'google' | 'zoom' | 'projitt' | 'teams'>('zoom');
+    const [mode, setMode] = useState<'google_meet' | 'zoom' | 'projitt_video_conference' | 'microsoft_team'>('zoom');
     const [range, setRange] = useState<{ from: Date | undefined; to: Date | undefined } | undefined>(undefined)
     const [selectedHour, setSelectedHour] = useState<string | null>(moment().format("hh"));
     const [selectedMinute, setSelectedMinute] = useState<string | null>(moment().format("mm"));
@@ -92,12 +92,12 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                     </div>
                     <div>
                         <p className="text-[14px]/[16px] text-[#1c1c1c]">Select Mode</p>
-                        <Select value={mode} onValueChange={(value) => setMode(value as 'google' | 'zoom' | 'projitt' | 'teams')}>
+                        <Select value={mode} onValueChange={(value) => setMode(value as 'google_meet' | 'zoom' | 'projitt_video_conference' | 'microsoft_team')}>
                             <SelectTrigger className="mt-[12px] h-[48px]">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="google">
+                                <SelectItem value="google_meet">
                                     <div className="flex gap-[10px] items-center">
                                         <img src="/images/meeting/google.png" className="size-[20px]" alt="" />Google Meet
                                     </div>
@@ -107,12 +107,12 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                                         <img src="/images/meeting/zoom.png" className="size-[20px]" alt="" />Zoom
                                     </div>
                                 </SelectItem>
-                                <SelectItem value="projitt">
+                                <SelectItem value="projitt_video_conference">
                                     <div className="flex gap-[10px] items-center">
                                         <img src="/images/meeting/projit.png" className="size-[20px]" alt="" />Projitt Video Conferencing
                                     </div>
                                 </SelectItem>
-                                <SelectItem value="teams">
+                                <SelectItem value="microsoft_team">
                                     <div className="flex gap-[10px] items-center">
                                         <img src="/images/meeting/team.png" className="size-[20px]" alt="" />Microsoft Teams
                                     </div>

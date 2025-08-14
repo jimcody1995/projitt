@@ -194,8 +194,7 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                         className={`text-[14px] ${row.original.ai_score >= 80 ? 'text-[#0D978B]' : row.original.ai_score >= 80 ? 'text-[#FFC107]' : row.original.ai_score >= 50 ? 'text-[#BE5E00]' : 'text-[#C30606]'}`}
                         data-testid={`ai-score-${row.original.id}`}
                     >
-                        {/* {row.original.ai_score}% */}
-                        20%
+                        {row.original.ai_score}%
                     </span>
                 ),
                 enableSorting: true,
