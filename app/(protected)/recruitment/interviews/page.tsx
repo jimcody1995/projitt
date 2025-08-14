@@ -60,6 +60,7 @@ export default function Interviews() {
                 selectedApplication={selectedApplication}
                 onOpenChange={handleOpenChange}
                 data-testid="detail-dialog"
+                getData={getData}
             />
         </div>
     </div>

@@ -757,7 +757,7 @@ export default function Detail({ open, onOpenChange, selectedApplication, getDat
             getData();
             onOpenChange(false);
         } catch (error: any) {
-            customToast("Error", error.response.data.message, "error");
+            customToast("Error", error?.response?.data?.message || error?.message || "An error occurred while rejecting the application", "error");
         } finally {
             setLoading(false);
         }

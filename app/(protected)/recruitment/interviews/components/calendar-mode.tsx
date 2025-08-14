@@ -94,7 +94,7 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
             <div className="grid grid-cols-7">
                 {days.map(day => {
                     const key = day.format('YYYY-MM-DD');
-                    console.log('Calendar day key:', key, 'for date:', day.format('YYYY-MM-DD HH:mm:ss'));
+                    // console.log('Calendar day key:', key, 'for date:', day.format('YYYY-MM-DD HH:mm:ss'));
                     const isCurrentMonth = day.month() === currentMonth.month();
                     return (
                         <div
@@ -103,79 +103,77 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
                         >
                             <div className="text-[14px] font-medium text-center text-[#5D5555] mb-1">{isCurrentMonth ? day.date() : moment(day).format('MMM') + ' ' + day.date()}</div>
                             {eventsByDate[key]?.map((event: any, idx: number) => (
-                                <>
-                                    <Popover key={idx}>
-                                        <PopoverTrigger asChild>
-                                            <div
-                                                className="bg-[#D6EEEC] text-[#0D978B] text-[12px] rounded px-1 py-0.5 mb-1 cursor-pointer truncate"
-                                                title={event.name}
-                                            >
-                                                {event.applicant.first_name + ' ' + event.applicant.last_name}
+                                <Popover key={`${key}-${idx}`}>
+                                    <PopoverTrigger asChild>
+                                        <div
+                                            className="bg-[#D6EEEC] text-[#0D978B] text-[12px] rounded px-1 py-0.5 mb-1 cursor-pointer truncate"
+                                            title={event.name}
+                                        >
+                                            {event.applicant.first_name + ' ' + event.applicant.last_name}
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                        <div className='flex justify-between items-start'>
+                                            <div>
+                                                <p className="text-[14px]/[20px] font-medium">{event.applicant.first_name + ' ' + event.applicant.last_name}</p>
+                                                <p className="text-[12px]/[20px] text-[#0d978b]">{event.status}</p>
                                             </div>
-                                        </PopoverTrigger>
-                                        <PopoverContent>
-                                            <div className='flex justify-between items-start'>
-                                                <div>
-                                                    <p className="text-[14px]/[20px] font-medium">{event.applicant.first_name + ' ' + event.applicant.last_name}</p>
-                                                    <p className="text-[12px]/[20px] text-[#0d978b]">{event.status}</p>
-                                                </div>
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button
-                                                            className="size-7"
-                                                            mode="icon"
-                                                            variant="ghost"
-                                                        >
-                                                            <EllipsisVertical />
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent
-                                                        side="bottom"
-                                                        align="end"
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        className="size-7"
+                                                        mode="icon"
+                                                        variant="ghost"
                                                     >
-                                                        <div
-                                                            className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                                                            onClick={() => setRescheduleOpen(true)}
-                                                        >
-                                                            Reschedule
-                                                        </div>
-                                                        <div
-                                                            className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                                                            onClick={() => setCancelOpen(true)}
-                                                        >
-                                                            Cancel Interview
-                                                        </div>
-                                                        <div
-                                                            className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                                                        >
-                                                            Mark as No-show
-                                                        </div>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </div>
-                                            <div className="w-full flex flex-col gap-[12px] mt-[18px]">
-                                                <div className="flex gap-[6px]">
-                                                    <Video className="size-[16px] text-[#4b4b4b]" />
-                                                    <p className="text-[12px]/[20px] text-[#4b4b4b]">{event.link}</p>
-                                                </div>
-                                                <div className="border-b border-[#e9e9e9]"></div>
-                                                <div className="flex gap-[6px]">
-                                                    <Calendar className="size-[16px] text-[#4b4b4b]" />
-                                                    <p className="text-[12px]/[20px] text-[#4b4b4b]">{event.time}</p>
-                                                </div>
-                                                <div className="border-b border-[#e9e9e9]"></div>
-                                                <div className="flex gap-[6px]">
-                                                    <User className="size-[16px] text-[#4b4b4b]" />
-                                                    <div className="flex gap-[7px] flex-wrap">
-                                                        {event.interviewers_ids.map((interviewer, idx) => (
-                                                            <span key={idx} className="py-[3.75px] px-[6.25px] rounded-[5px] bg-[#ebebeb] text-[12px]/[12.5px] text-[#4b4b4b]">{interviewer}</span>
-                                                        ))}
+                                                        <EllipsisVertical />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent
+                                                    side="bottom"
+                                                    align="end"
+                                                >
+                                                    <div
+                                                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                                        onClick={() => setRescheduleOpen(true)}
+                                                    >
+                                                        Reschedule
                                                     </div>
+                                                    <div
+                                                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                                        onClick={() => setCancelOpen(true)}
+                                                    >
+                                                        Cancel Interview
+                                                    </div>
+                                                    <div
+                                                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                                    >
+                                                        Mark as No-show
+                                                    </div>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
+                                        <div className="w-full flex flex-col gap-[12px] mt-[18px]">
+                                            <div className="flex gap-[6px]">
+                                                <Video className="size-[16px] text-[#4b4b4b]" />
+                                                <p className="text-[12px]/[20px] text-[#4b4b4b]">{event.link}</p>
+                                            </div>
+                                            <div className="border-b border-[#e9e9e9]"></div>
+                                            <div className="flex gap-[6px]">
+                                                <Calendar className="size-[16px] text-[#4b4b4b]" />
+                                                <p className="text-[12px]/[20px] text-[#4b4b4b]">{event.time}</p>
+                                            </div>
+                                            <div className="border-b border-[#e9e9e9]"></div>
+                                            <div className="flex gap-[6px]">
+                                                <User className="size-[16px] text-[#4b4b4b]" />
+                                                <div className="flex gap-[7px] flex-wrap">
+                                                    {event.interviewers_ids.map((interviewer, idx) => (
+                                                        <span key={idx} className="py-[3.75px] px-[6.25px] rounded-[5px] bg-[#ebebeb] text-[12px]/[12.5px] text-[#4b4b4b]">{interviewer}</span>
+                                                    ))}
                                                 </div>
                                             </div>
-                                        </PopoverContent>
-                                    </Popover>
-                                </>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
                             ))}
                         </div>
                     );
@@ -183,6 +181,6 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
             </div>
             <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
             <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
-        </div>
+        </div >
     );
 }

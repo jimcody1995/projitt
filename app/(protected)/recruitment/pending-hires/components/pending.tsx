@@ -59,23 +59,9 @@ export default function Pending() {
     ]);
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
 
-    // const getData = async () => {
-    //     try {
-    //         const response = await getJobPostings({
-    //             country_ids: selectedLocations,
-    //             department_ids: selectedDepartments,
-    //             employment_type_ids: selectedTypes,
-    //             // status: selectedStatuses,
-    //             page: pagination.pageIndex,
-    //             per_page: pagination.pageSize,
-    //         });
-    //         console.log(response.data);
-
-    //         setApplicantsData(response.data);
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
+    const getData = async () => {
+        console.log('getData');
+    }
 
     // useEffect(() => {
     //     getData();
@@ -291,7 +277,9 @@ export default function Pending() {
             <Detail
                 open={selectedApplication !== null}
                 onOpenChange={handleOpenChange}
+                selectedApplication={selectedApplication}
                 data-testid="applicant-detail-dialog"
+                getData={getData}
             />
         </div>
     );
