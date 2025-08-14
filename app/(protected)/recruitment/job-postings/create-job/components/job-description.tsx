@@ -37,25 +37,26 @@ export default function JobDescription({
     const [selectedStyle, setSelectedStyle] = useState<string>('Formal');
     const quillRef = useRef<ReactQuill | null>(null);
     const [loading, setLoading] = useState(false);
-
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
     /**
      * Handles file input changes
      */
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
-        console.log("asdfasdf");
-
-        const files = e.target.files;
-        if (!files) return;
+        const media = e.target.files;
+        if (!media) return;
         const formData: any = new FormData();
-        formData.append('media', files[0]);
+        formData.append('media', media[0]);
         setLoading(true);
         try {
             const response = await uploadMedia(formData);
             console.log(response);
-            if (files) {
-                setFiles([...files, ...Array.from(files)]);
+            if (media) {
+                setFiles([...files, ...Array.from(media)]);
             }
             setLoading(false);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+            }
         } catch (error) {
             console.log(error);
             customToast("Error", error?.response.data.message, "error");
@@ -260,6 +261,7 @@ export default function JobDescription({
                     id="fileInput"
                     type="file"
                     multiple
+                    ref={fileInputRef}
                     onChange={handleFileChange}
                     className="hidden"
                     data-testid="job-description-file-input"
