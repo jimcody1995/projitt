@@ -1,17 +1,26 @@
 import Share from "@/app/components/partials/common/share";
 import { Button } from "@/components/ui/button";
-import DialogContent, { Dialog, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { BriefcaseBusiness, ChevronDown, Clock, Copy, Linkedin, MapPin, PieChart, Plane, Send, Share2, Star, Twitter, Users } from "lucide-react";
-import { useState } from "react";
+import { BriefcaseBusiness, ChevronDown, Clock, MapPin, PieChart, Star, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 /**
  * Completed Component
  * Displays a confirmation message that the job has been published,
  * along with share options (social and copy link) and view job details.
  */
-export default function Completed() {
+interface CompletedProps {
+    jobId?: number;
+}
+
+export default function Completed({ jobId }: CompletedProps) {
+    const router = useRouter();
     const url = "https://www.figma.com/file/NlfVhYygR9mAQasassdsada/Share...";
+
+    const handleViewDetails = () => {
+        if (jobId) {
+            router.push(`/recruitment/applications?jobId=${jobId}`);
+        }
+    };
 
 
     return (
@@ -94,6 +103,7 @@ export default function Completed() {
                         variant="outline"
                         className="w-[116px] h-[42px] bg-transparent border-[#053834] text-[#053834] font-semibold"
                         id="view-details-button" data-testid="view-details-button"
+                        onClick={handleViewDetails}
                     >
                         View Details
                     </Button>
