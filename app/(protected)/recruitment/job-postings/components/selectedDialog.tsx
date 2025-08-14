@@ -29,139 +29,156 @@ export const SelectedDialog = ({
     setRowSelection: (selection: any) => void;
     getData: () => void;
 }): JSX.Element => {
-    const [loading, setLoading] = useState(false);
+    const [closeLoading, setCloseLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    const [exportLoading, setExportLoading] = useState(false);
+
+    // Check if any operation is in progress
+    const isAnyLoading = closeLoading || deleteLoading || exportLoading;
+
     const handleCloseJobs = async () => {
-        setLoading(true);
+        setCloseLoading(true);
         try {
             await changeJobStatusMultiple(selectedRows, "closed");
             customToast("Success", "Jobs closed successfully", "success");
             setSelectedRows([]);
             setRowSelection({});
             getData();
-        } catch (error: any) {
-            customToast("Error", error.response.data.message, "error");
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+            customToast("Error", errorMessage, "error");
         }
         finally {
-            setLoading(false);
+            setCloseLoading(false);
         }
     }
     const handleDeleteJobs = async () => {
-        setLoading(true);
+        setDeleteLoading(true);
         try {
             await deleteJob(selectedRows);
             customToast("Success", "Jobs deleted successfully", "success");
             setSelectedRows([]);
             setRowSelection({});
             getData();
-        } catch (error: any) {
-            customToast("Error", error.response.data.message, "error");
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+            customToast("Error", errorMessage, "error");
         }
         finally {
-            setLoading(false);
+            setDeleteLoading(false);
         }
     }
-    const downloadCSV = () => {
-        const csvRows = [];
-        console.log(allData);
-        console.log(selectedRows);
+    const downloadCSV = async () => {
+        setExportLoading(true);
+        try {
+            const csvRows = [];
+            console.log(allData);
+            console.log(selectedRows);
 
-        const data = allData.filter((item: any) => selectedRows.includes(item.id.toString()));
-        if (data.length === 0) {
-            customToast("Error", "No data to export", "error");
-            return;
+            const data = allData.filter((item: { id: string | number }) => selectedRows.includes(item.id.toString()));
+            if (data.length === 0) {
+                customToast("Error", "No data to export", "error");
+                return;
+            }
+
+            // Define the headers we want to export with readable names
+            const headers = [
+                { key: 'title', label: 'Job Title' },
+                { key: 'description', label: 'Description' },
+                { key: 'no_of_job_opening', label: 'Number of Openings' },
+                { key: 'status', label: 'Status' },
+                { key: 'department', label: 'Department' },
+                { key: 'employment_type', label: 'Employment Type' },
+                { key: 'location_type', label: 'Location Type' },
+                { key: 'country', label: 'Country' },
+                { key: 'state', label: 'State' },
+                { key: 'salary_from', label: 'Salary From' },
+                { key: 'salary_to', label: 'Salary To' },
+                { key: 'deadline', label: 'Deadline' },
+                { key: 'is_set_default_template', label: 'Default Template' },
+                { key: 'skills', label: 'Skills' },
+                { key: 'questions', label: 'Questions' }
+            ];
+
+            // Add header row
+            csvRows.push(headers.map(h => h.label).join(","));
+
+            // Loop over rows
+            for (const row of data) {
+                const values = headers.map(header => {
+                    let value = row[header.key];
+
+                    // Handle nested objects to extract names
+                    if (header.key === 'department' && value && typeof value === 'object') {
+                        value = value.name || '';
+                    } else if (header.key === 'employment_type' && value && typeof value === 'object') {
+                        value = value.name || '';
+                    } else if (header.key === 'location_type' && value && typeof value === 'object') {
+                        value = value.name || '';
+                    } else if (header.key === 'country' && value && typeof value === 'object') {
+                        value = value.name || '';
+                    } else if (header.key === 'skills' && Array.isArray(value)) {
+                        value = value.map((skill: { name?: string }) => skill.name || skill).join(', ');
+                    } else if (header.key === 'questions' && Array.isArray(value)) {
+                        value = value.map((question: {
+                            question_name?: string;
+                            answer_type?: string;
+                            is_required?: boolean;
+                            correct_answer?: string;
+                            tags?: string[] | string;
+                        }) => {
+                            const questionName = question.question_name || '';
+                            const answerType = question.answer_type || '';
+                            const isRequired = question.is_required ? 'Required' : 'Optional';
+                            const correctAnswer = question.correct_answer || 'N/A';
+                            const tags = Array.isArray(question.tags) ? question.tags.join(', ') : question.tags || 'N/A';
+
+                            return `${questionName} (${answerType}, ${isRequired}, Answer: ${correctAnswer}, Tags: ${tags})`;
+                        }).join('; ');
+                    } else if (header.key === 'media' && Array.isArray(value)) {
+                        value = value.map((media: { name?: string }) => media.name || media).join(', ');
+                    } else if (header.key === 'deadline' && value) {
+                        // Format date to be more readable
+                        value = new Date(value).toLocaleDateString();
+                    } else if (header.key === 'is_set_default_template') {
+                        value = value ? 'Yes' : 'No';
+                    }
+
+                    // Handle null/undefined values
+                    if (value === null || value === undefined) {
+                        value = '';
+                    }
+
+                    return `"${String(value).replace(/"/g, '""')}"`;
+                });
+                csvRows.push(values.join(","));
+            }
+
+            // Create CSV string
+            const csvString = csvRows.join("\n");
+
+            // Create a Blob and trigger download
+            const blob = new Blob([csvString], { type: "text/csv" });
+            const url = window.URL.createObjectURL(blob);
+
+            // Generate current datetime for filename
+            const now = new Date();
+            const dateTimeString = now.toISOString()
+                .replace(/[:.]/g, '-')
+                .replace('T', '_')
+                .slice(0, 19); // Remove milliseconds and timezone
+
+            const a = document.createElement("a");
+            a.setAttribute("href", url);
+            a.setAttribute("download", `job-postings-${dateTimeString}.csv`);
+            a.click();
+
+            customToast("Success", "CSV exported successfully", "success");
+        } catch {
+            customToast("Error", "Failed to export CSV", "error");
+        } finally {
+            setExportLoading(false);
         }
-
-        // Define the headers we want to export with readable names
-        const headers = [
-            { key: 'title', label: 'Job Title' },
-            { key: 'description', label: 'Description' },
-            { key: 'no_of_job_opening', label: 'Number of Openings' },
-            { key: 'status', label: 'Status' },
-            { key: 'department', label: 'Department' },
-            { key: 'employment_type', label: 'Employment Type' },
-            { key: 'location_type', label: 'Location Type' },
-            { key: 'country', label: 'Country' },
-            { key: 'state', label: 'State' },
-            { key: 'salary_from', label: 'Salary From' },
-            { key: 'salary_to', label: 'Salary To' },
-            { key: 'deadline', label: 'Deadline' },
-            { key: 'is_set_default_template', label: 'Default Template' },
-            { key: 'skills', label: 'Skills' },
-            { key: 'questions', label: 'Questions' }
-        ];
-
-        // Add header row
-        csvRows.push(headers.map(h => h.label).join(","));
-
-        // Loop over rows
-        for (const row of data) {
-            const values = headers.map(header => {
-                let value = row[header.key];
-
-                // Handle nested objects to extract names
-                if (header.key === 'department' && value && typeof value === 'object') {
-                    value = value.name || '';
-                } else if (header.key === 'employment_type' && value && typeof value === 'object') {
-                    value = value.name || '';
-                } else if (header.key === 'location_type' && value && typeof value === 'object') {
-                    value = value.name || '';
-                } else if (header.key === 'country' && value && typeof value === 'object') {
-                    value = value.name || '';
-                } else if (header.key === 'skills' && Array.isArray(value)) {
-                    value = value.map((skill: { name?: string }) => skill.name || skill).join(', ');
-                } else if (header.key === 'questions' && Array.isArray(value)) {
-                    value = value.map((question: {
-                        question_name?: string;
-                        answer_type?: string;
-                        is_required?: boolean;
-                        correct_answer?: string;
-                        tags?: string[] | string;
-                    }) => {
-                        const questionName = question.question_name || '';
-                        const answerType = question.answer_type || '';
-                        const isRequired = question.is_required ? 'Required' : 'Optional';
-                        const correctAnswer = question.correct_answer || 'N/A';
-                        const tags = Array.isArray(question.tags) ? question.tags.join(', ') : question.tags || 'N/A';
-
-                        return `${questionName} (${answerType}, ${isRequired}, Answer: ${correctAnswer}, Tags: ${tags})`;
-                    }).join('; ');
-                } else if (header.key === 'media' && Array.isArray(value)) {
-                    value = value.map((media: { name?: string }) => media.name || media).join(', ');
-                } else if (header.key === 'deadline' && value) {
-                    // Format date to be more readable
-                    value = new Date(value).toLocaleDateString();
-                } else if (header.key === 'is_set_default_template') {
-                    value = value ? 'Yes' : 'No';
-                }
-
-                // Handle null/undefined values
-                if (value === null || value === undefined) {
-                    value = '';
-                }
-
-                return `"${String(value).replace(/"/g, '""')}"`;
-            });
-            csvRows.push(values.join(","));
-        }
-
-        // Create CSV string
-        const csvString = csvRows.join("\n");
-
-        // Create a Blob and trigger download
-        const blob = new Blob([csvString], { type: "text/csv" });
-        const url = window.URL.createObjectURL(blob);
-
-        // Generate current datetime for filename
-        const now = new Date();
-        const dateTimeString = now.toISOString()
-            .replace(/[:.]/g, '-')
-            .replace('T', '_')
-            .slice(0, 19); // Remove milliseconds and timezone
-
-        const a = document.createElement("a");
-        a.setAttribute("href", url);
-        a.setAttribute("download", `job-postings-${dateTimeString}.csv`);
-        a.click();
     };
     return (
         <div
@@ -209,9 +226,9 @@ export const SelectedDialog = ({
                         data-testid="close-button"
                         type="button"
                         onClick={handleCloseJobs}
-                        disabled={loading}
+                        disabled={isAnyLoading}
                     >
-                        {loading ? <Loader2 className="size-[16px] animate-spin" /> : <Ban className="size-[16px]" />}
+                        {closeLoading ? <Loader2 className="size-[16px] animate-spin" /> : <Ban className="size-[16px]" />}
                         Close
                     </button>
                     <button
@@ -220,9 +237,9 @@ export const SelectedDialog = ({
                         data-testid="delete-button"
                         type="button"
                         onClick={handleDeleteJobs}
-                        disabled={loading}
+                        disabled={isAnyLoading}
                     >
-                        {loading ? <Loader2 className="size-[16px] animate-spin" /> : <Trash className="size-[16px]" />}
+                        {deleteLoading ? <Loader2 className="size-[16px] animate-spin" /> : <Trash className="size-[16px]" />}
                         Delete
                     </button>
                     <button
@@ -231,9 +248,9 @@ export const SelectedDialog = ({
                         data-testid="export-csv-button"
                         type="button"
                         onClick={downloadCSV}
-                        disabled={loading}
+                        disabled={isAnyLoading}
                     >
-                        {loading ? <Loader2 className="size-[16px] animate-spin" /> : <Upload className="size-[16px]" />}
+                        {exportLoading ? <Loader2 className="size-[16px] animate-spin" /> : <Upload className="size-[16px]" />}
                         Export CSV
                     </button>
                 </div>
