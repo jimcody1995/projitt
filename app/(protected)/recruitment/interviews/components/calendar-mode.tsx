@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar, EllipsisVertical, User, Video } from 'lucide-react';
@@ -10,18 +10,6 @@ import Reschedule from './reschedule';
 import CancelInterview from './cancel-interview';
 
 // Placeholder data (replace with props or context as needed)
-const interviewData = [
-    {
-        name: 'Alice Fernandez',
-        date: '2025-08-11T10:00:00',
-        title: 'Test Interview',
-        status: 'Confirmed',
-        link: 'https://example.zoom.us/j/12345',
-        time: '20 Nov, 4:00pm',
-        interviewers: ['Abubakar Ali', 'Steve Larry', 'Arnold Leviticus'],
-    },
-    // Add more events as needed
-];
 
 function getDaysInMonth(year: number, month: number) {
     const start = moment([year, month]);
@@ -36,7 +24,7 @@ function getDaysInMonth(year: number, month: number) {
     return days;
 }
 
-export default function CalendarMode() {
+export default function CalendarMode({ interviews, setSelectedApplication }: { interviews: any[]; setSelectedApplication: (application: string | null) => void }) {
     const [currentMonth, setCurrentMonth] = useState(moment());
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
@@ -44,12 +32,21 @@ export default function CalendarMode() {
     const monthLabel = currentMonth.format('MMMM YYYY');
 
     // Group interviews by date (YYYY-MM-DD)
-    const eventsByDate: Record<string, typeof interviewData> = {};
-    interviewData.forEach(event => {
-        const key = moment(event.date).format('YYYY-MM-DD');
-        if (!eventsByDate[key]) eventsByDate[key] = [];
-        eventsByDate[key].push(event);
-    });
+    const [eventsByDate, setEventsByDate] = useState<Record<string, any[]>>({});
+    useEffect(() => {
+        const eventsBy: Record<string, any[]> = {};
+        console.log(interviews);
+        if (interviews?.length > 0) {
+            interviews.forEach((event: any) => {
+                const key = moment(event.updated_at).format('YYYY-MM-DD');
+                if (!eventsBy[key]) eventsBy[key] = [];
+                eventsBy[key].push(event);
+            });
+            console.log(eventsBy);
+            setEventsByDate(eventsBy);
+        }
+
+    }, [interviews]);
 
 
 
@@ -89,7 +86,7 @@ export default function CalendarMode() {
                             className={`min-h-[128px]  p-1 relative border border-[#D3F0EC]`}
                         >
                             <div className="text-[14px] font-medium text-center text-[#5D5555] mb-1">{isCurrentMonth ? day.date() : moment(day).format('MMM') + ' ' + day.date()}</div>
-                            {eventsByDate[key]?.map((event, idx) => (
+                            {eventsByDate[key]?.map((event: any, idx: number) => (
                                 <>
                                     <Popover key={idx}>
                                         <PopoverTrigger asChild>
@@ -97,13 +94,13 @@ export default function CalendarMode() {
                                                 className="bg-[#D6EEEC] text-[#0D978B] text-[12px] rounded px-1 py-0.5 mb-1 cursor-pointer truncate"
                                                 title={event.name}
                                             >
-                                                {event.name}
+                                                {event.applicant.first_name + ' ' + event.applicant.last_name}
                                             </div>
                                         </PopoverTrigger>
                                         <PopoverContent>
                                             <div className='flex justify-between items-start'>
                                                 <div>
-                                                    <p className="text-[14px]/[20px] font-medium">{event.name}</p>
+                                                    <p className="text-[14px]/[20px] font-medium">{event.applicant.first_name + ' ' + event.applicant.last_name}</p>
                                                     <p className="text-[12px]/[20px] text-[#0d978b]">{event.status}</p>
                                                 </div>
                                                 <DropdownMenu>
@@ -154,7 +151,7 @@ export default function CalendarMode() {
                                                 <div className="flex gap-[6px]">
                                                     <User className="size-[16px] text-[#4b4b4b]" />
                                                     <div className="flex gap-[7px] flex-wrap">
-                                                        {event.interviewers.map((interviewer, idx) => (
+                                                        {event.interviewers_ids.map((interviewer, idx) => (
                                                             <span key={idx} className="py-[3.75px] px-[6.25px] rounded-[5px] bg-[#ebebeb] text-[12px]/[12.5px] text-[#4b4b4b]">{interviewer}</span>
                                                         ))}
                                                     </div>

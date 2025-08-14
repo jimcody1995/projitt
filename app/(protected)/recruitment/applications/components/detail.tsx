@@ -20,9 +20,10 @@ interface DetailProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     selectedApplication: any | null;
+    getData: () => void;
 }
 
-export default function Detail({ open, onOpenChange, selectedApplication }: DetailProps) {
+export default function Detail({ open, onOpenChange, selectedApplication, getData }: DetailProps) {
     const [activeSection, setActiveSection] = useState<'stages' | 'application-summary' | 'resume' | 'applicant-question' | 'schedule-interview'>('stages');
     const [rejectOpen, setRejectOpen] = useState(false);
     const [preview, setPreview] = useState<boolean>(false);
@@ -753,6 +754,7 @@ export default function Detail({ open, onOpenChange, selectedApplication }: Deta
             setLoading(true);
             await rejectApplication([selectedApplication?.id]);
             customToast("Success", "Application rejected successfully", "success");
+            getData();
             onOpenChange(false);
         } catch (error: any) {
             customToast("Error", error.response.data.message, "error");

@@ -188,12 +188,12 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                             <p
                                 className="text-[14px]/[22px] text-[#4b4b4b]"
                             >
-                                {moment(row.original.date).format('DD MMM, YYYY')}
+                                {moment(row.original.updated_at).format('DD MMM, YYYY')}
                             </p>
                             <p
                                 className="text-[11px]/[14px] text-[#8f8f8f]"
                             >
-                                {moment(row.original.date).format('HH:MM A')}
+                                {moment(row.original.updated_at).format('HH:MM A')}
                             </p>
                         </div>
                     ),

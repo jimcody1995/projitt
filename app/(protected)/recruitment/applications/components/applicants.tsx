@@ -45,7 +45,7 @@ import "react-circular-progressbar/dist/styles.css";
 import Message from '../../components/message';
 import { getJobApplications } from '@/api/applications';
 import LoadingSpinner from '@/components/common/loading-spinner';
-export default function Applicants({ id }: { id: string }) {
+export default function Applicants({ id, setApplicantCount }: { id: string, setApplicantCount: (count: number) => void }) {
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -64,7 +64,7 @@ export default function Applicants({ id }: { id: string }) {
     const [selectedShortListed, setSelectedShortListed] = useState<string>("");
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const [isMessage, setIsMessage] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const filteredData = useMemo<any[]>(() => {
         return applicantsData.filter((item) => {
             const matchesStatus =
@@ -87,12 +87,13 @@ export default function Applicants({ id }: { id: string }) {
     const getData = async () => {
         try {
             setLoading(true);
+            if (!id) return;
             const response = await getJobApplications(id);
             setApplicantsData(response.data);
+            setApplicantCount(response.data.length);
+            setLoading(false);
         } catch (error) {
             console.log(error);
-        }
-        finally {
             setLoading(false);
         }
     }
@@ -374,7 +375,7 @@ export default function Applicants({ id }: { id: string }) {
                 className='w-full'
                 table={table}
                 recordCount={filteredData?.length || 0}
-                onRowClick={(row) => setSelectedApplication(row)}
+                onRowClick={(row) => setSelectedApplication({ ...row, job_id: id })}
                 data-testid="job-postings-grid"
             >
                 <div className="flex items-center justify-between sm:flex-row flex-col gap-[20px]">
@@ -458,6 +459,7 @@ export default function Applicants({ id }: { id: string }) {
                 open={selectedApplication !== null}
                 onOpenChange={handleOpenChange}
                 selectedApplication={selectedApplication}
+                getData={getData}
             />
             <Dialog open={progress > 0 && progress < 100}>
                 <DialogContent className='max-w-[313px]' close={false}>
