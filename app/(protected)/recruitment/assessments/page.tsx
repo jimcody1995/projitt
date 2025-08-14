@@ -300,7 +300,7 @@ export default function Assessment() {
             <div className="mt-[28px]">
                 {loading && (
                     <div className="flex justify-center items-center py-8">
-                        <LoadingSpinner />
+                        <LoadingSpinner content="Loading assessments..." />
                     </div>
                 )}
                 {!loading && filteredData.length === 0 &&

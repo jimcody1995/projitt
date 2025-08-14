@@ -728,6 +728,7 @@ export default function JobPostings() {
                                                     <button
                                                         className='text-[#0d978b] flex items-center gap-[2px]'
                                                         data-testid={`view-details-${item.id}`}
+                                                        onClick={() => router.push(`/recruitment/applications?jobId=${item.id}`)}
                                                     >
                                                         <span className='text-[14px]/[22px] font-medium'>View Details</span>
                                                         <ArrowRight className='size-[16px]' />
