@@ -246,3 +246,23 @@ export const editCodingQuestionItem = async (data: {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/question/coding/edit`, data);
     return response.data;
 };
+
+// Delete assessment(s)
+export const deleteAssessment = async (ids: number[]): Promise<{
+    status: boolean;
+    message: string;
+    data: any;
+}> => {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/delete`, { ids });
+    return response.data;
+};
+
+// Change assessment status
+export const changeAssessmentStatus = async (ids: number[], status: 'draft' | 'open' | 'closed' | 'hold'): Promise<{
+    status: boolean;
+    message: string;
+    data: any;
+}> => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/change-status`, { ids, status });
+    return response.data;
+};

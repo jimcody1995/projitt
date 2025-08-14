@@ -8,8 +8,9 @@ import { JSX, useEffect, useState } from "react";
 import { AssessmentFilterTool } from "./components/filter";
 import { NoData } from "./components/noData";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import CheckDialog from "../job-postings/components/checkDialog";
 import { getAssessments } from "@/api/job-posting";
+import { deleteAssessment, changeAssessmentStatus } from "@/api/assessment";
+import { errorHandlers } from "@/utils/error-handler";
 import LoadingSpinner from "@/components/common/loading-spinner";
 
 /**
@@ -37,6 +38,7 @@ export default function Assessment() {
     const [filteredData, setFilteredData] = useState<IData[]>([]);
     const [assessmentsData, setAssessmentsData] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [statusChangingIds, setStatusChangingIds] = useState<Set<string>>(new Set());
 
     // Function to get assessment type name based on type_id
     const getAssessmentType = (typeId: number): string => {
@@ -61,7 +63,7 @@ export default function Assessment() {
                     id: assessment.id.toString(),
                     title: assessment.name,
                     description: assessment.description,
-                    status: 'Draft', // Status is always open as per requirements : 'Open'
+                    status: assessment.status,
                     type: getAssessmentType(assessment.type_id)
                 }));
                 setAssessmentsData(transformedData);
@@ -93,6 +95,52 @@ export default function Assessment() {
      * Renders dropdown action items for each assessment row.
      */
     function ActionsCell({ row }: { row: string }): JSX.Element {
+        const currentAssessment = filteredData.find((item) => item.id === row);
+        const status = currentAssessment?.status?.toLowerCase();
+
+        const handleStatusChange = async (newStatus: 'draft' | 'open' | 'closed' | 'hold') => {
+            try {
+                setStatusChangingIds(prev => new Set(prev).add(row));
+                const response = await changeAssessmentStatus([parseInt(row)], newStatus);
+                if (response.status === true) {
+                    // Update local state instead of reloading all data
+                    setAssessmentsData(prevData =>
+                        prevData.map(assessment =>
+                            assessment.id === row
+                                ? { ...assessment, status: newStatus }
+                                : assessment
+                        )
+                    );
+                } else {
+                    errorHandlers.custom(new Error(response.message || 'Failed to change status'), 'Status change failed');
+                }
+            } catch (error) {
+                errorHandlers.custom(error, "Assessment Error", "Failed to change assessment status");
+            } finally {
+                setStatusChangingIds(prev => {
+                    const newSet = new Set(prev);
+                    newSet.delete(row);
+                    return newSet;
+                });
+            }
+        };
+
+        const handleDelete = async () => {
+            try {
+                setLoading(true);
+                const response = await deleteAssessment([parseInt(row)]);
+                if (response.status === true) {
+                    await fetchAssessments(); // Refresh the data
+                } else {
+                    errorHandlers.custom(new Error(response.message || 'Failed to delete assessment'), 'Delete failed');
+                }
+            } catch (error) {
+                errorHandlers.custom(error, "Assessment Error", "Failed to delete assessment");
+            } finally {
+                setLoading(false);
+            }
+        };
+
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -112,63 +160,79 @@ export default function Assessment() {
                     align="end"
                     data-testid={`actions-menu-${row}`}
                 >
-                    {filteredData.find((item) => item.id === row)?.status === "Draft" &&
-                        <div
-                            id={`edit-action-${row}`}
-                            className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                            data-testid={`edit-action-${row}`}
-                            onClick={() => router.push(`/recruitment/assessments/create-assessment?id=${row}`)}
-                        >
-                            Edit
-                        </div>
-                    }
-                    <div
-                        id={`duplicate-action-${row}`}
-                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                        data-testid={`duplicate-action-${row}`}
-                    >
-                        Duplicate
-                    </div>
-                    {filteredData.find((item) => item.id === row)?.status === "Open" &&
-                        <CheckDialog
-                            action="close"
-                            trigger={
-                                <div
-                                    id={`close-job-action-${row}`}
-                                    className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                                    data-testid={`close-job-action-${row}`}
-                                >
-                                    Close Assessment
-                                </div>
-                            }
-                        />
-                    }
-                    {filteredData.find((item) => item.id === row)?.status === "Open" &&
-                        <CheckDialog
-                            action="unpublish"
-                            trigger={
-                                <div
-                                    id={`unpublish-action-${row}`}
-                                    className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                                    data-testid={`unpublish-action-${row}`}
-                                >
-                                    Unpublish
-                                </div>
-                            }
-                        />
-                    }
-                    <CheckDialog
-                        action="delete"
-                        trigger={
+                    {/* Draft status menu items */}
+                    {status === "draft" && (
+                        <>
+                            <div
+                                id={`edit-action-${row}`}
+                                className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                data-testid={`edit-action-${row}`}
+                                onClick={() => router.push(`/recruitment/assessments/create-assessment?id=${row}`)}
+                            >
+                                Edit
+                            </div>
+                            <div
+                                id={`open-action-${row}`}
+                                className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                data-testid={`open-action-${row}`}
+                                onClick={() => handleStatusChange('open')}
+                            >
+                                Open
+                            </div>
                             <div
                                 id={`delete-action-${row}`}
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 data-testid={`delete-action-${row}`}
+                                onClick={handleDelete}
                             >
                                 Delete
                             </div>
-                        }
-                    />
+                        </>
+                    )}
+
+                    {/* Open status menu items */}
+                    {status === "open" && (
+                        <>
+                            <div
+                                id={`close-action-${row}`}
+                                className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                data-testid={`close-action-${row}`}
+                                onClick={() => handleStatusChange('closed')}
+                            >
+                                Close
+                            </div>
+                            <div
+                                id={`delete-action-${row}`}
+                                className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                data-testid={`delete-action-${row}`}
+                                onClick={handleDelete}
+                            >
+                                Delete
+                            </div>
+                        </>
+                    )}
+
+                    {/* Closed status menu items */}
+                    {status === "closed" && (
+                        <>
+                            <div
+                                id={`open-action-${row}`}
+                                className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                data-testid={`open-action-${row}`}
+                                onClick={() => handleStatusChange('open')}
+                            >
+                                Open
+                            </div>
+                            <div
+                                id={`delete-action-${row}`}
+                                className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                data-testid={`delete-action-${row}`}
+                                onClick={handleDelete}
+                            >
+                                Delete
+                            </div>
+                        </>
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
         );
@@ -258,16 +322,22 @@ export default function Assessment() {
                                 <div className='w-full flex justify-between'>
                                     <p className="text-[16px]/[24px] font-medium">{item.title}</p>
                                     <div className='flex gap-[14px]'>
-                                        <ActionsCell row={item.id} />
+                                        {statusChangingIds.has(item.id) ? (
+                                            <div className="flex items-center justify-center size-7">
+                                                <div className="animate-spin rounded-full border-b-2 border-[#0d978b] h-4 w-4"></div>
+                                            </div>
+                                        ) : (
+                                            <ActionsCell row={item.id} />
+                                        )}
                                     </div>
                                 </div>
                                 <p className="text-[14px]/[22px] mt-[8px] text-[#626262]">{item.description}</p>
                                 <div className="mt-[12px] flex justify-between">
-                                    <div className={`rounded-[100px] px-[8px] py-[2px] flex gap-[4px] items-center ${item.status === "Open" ? "bg-[#d6eeec] text-[#0d978b]" : "bg-[#e9e9e9] text-[#626262]"}`}>
+                                    <div className={`rounded-[100px] px-[8px] py-[2px] flex gap-[4px] items-center ${item?.status?.toLocaleLowerCase() === "open" ? "bg-[#d6eeec] text-[#0d978b]" : "bg-[#e9e9e9] text-[#626262]"}`}>
                                         <Code className="size-[16px]" />
                                         <p className="text-[14px]/[22px]">{item.type}</p>
                                     </div>
-                                    {item.status === "Draft" && <p className="text-[12px]/[20px] text-[#626262]">{item.status}</p>}
+                                    {item?.status?.toLowerCase() === "draft" && <p className="text-[12px]/[20px] text-[#626262]">{item.status.charAt(0).toUpperCase() + item.status.slice(1).toLowerCase()}</p>}
                                 </div>
                             </div>
                         ))}

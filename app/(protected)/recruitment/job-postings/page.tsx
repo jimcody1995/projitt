@@ -94,8 +94,8 @@ export default function JobPostings() {
             const matchesStatus =
                 !selectedStatuses?.length ||
                 selectedStatuses.includes(
-                    item.status.replace('bg-', '').charAt(0).toUpperCase() +
-                    item.status.replace('bg-', '').slice(1),
+                    item?.status?.toLowerCase()?.charAt(0)?.toUpperCase() +
+                    item?.status?.toLowerCase()?.slice(1),
                 );
 
             const searchLower = (searchQuery || "").toLowerCase();
@@ -609,7 +609,7 @@ export default function JobPostings() {
                                     {filteredData.map((item) => (
                                         <div
                                             key={item.id}
-                                            className={`w-full bg-white flex flex-col rounded-[4px] border-t-[3px] ${item.status === 'Open' ? 'border-[#0D978B]' : item.status === 'Closed' ? 'border-[#A5A5A5]' : 'border-white'} px-[20px] py-[24px]`}
+                                            className={`w-full bg-white flex flex-col rounded-[4px] border-t-[3px] ${item?.status?.toLowerCase() === 'open' ? 'border-[#0D978B]' : item?.status?.toLowerCase() === 'closed' ? 'border-[#A5A5A5]' : 'border-white'} px-[20px] py-[24px]`}
                                             data-testid={`job-card-${item.id}`}
                                         >
                                             <div className='w-full flex justify-between'>
@@ -655,7 +655,7 @@ export default function JobPostings() {
                                                     {item.location_type.name}
                                                 </span>
                                             </div>
-                                            {item.status !== 'Draft' ? (
+                                            {item?.status?.toLowerCase() !== 'draft' ? (
                                                 <div
                                                     className='mt-[14px] w-full flex rounded-[6px] border border-[#e9e9e9] pl-[14px] pr-[8px] py-[8px]'
                                                     data-testid={`stats-container-${item.id}`}
@@ -688,7 +688,7 @@ export default function JobPostings() {
                                                     Complete the job details to publish
                                                 </div>
                                             )}
-                                            {item.status !== 'Draft' && (
+                                            {item?.status?.toLowerCase() !== 'draft' && (
                                                 <div
                                                     className='mt-[8px] flex gap-[4px]'
                                                     data-testid={`due-date-${item.id}`}
@@ -698,7 +698,7 @@ export default function JobPostings() {
                                                 </div>
                                             )}
                                             <div className='mt-[19px] flex justify-between w-full'>
-                                                {item.status === 'Open' && (
+                                                {item?.status?.toLowerCase() === 'open' && (
                                                     <Button
                                                         className='h-[24px] rounded-full bg-[#0D978B] hover:bg-[#0D978B]'
                                                         data-testid={`status-button-${item.id}`}
@@ -707,7 +707,7 @@ export default function JobPostings() {
                                                         <ChevronDown className='size-[12px] text-white' />
                                                     </Button>
                                                 )}
-                                                {item.status === 'Closed' && (
+                                                {item?.status?.toLowerCase() === 'closed' && (
                                                     <Button
                                                         className='h-[24px] rounded-full bg-[#353535] text-white hover:bg-[#e9e9e9]'
                                                         data-testid={`status-button-${item.id}`}
@@ -716,7 +716,7 @@ export default function JobPostings() {
                                                         <ChevronDown className='size-[12px]' />
                                                     </Button>
                                                 )}
-                                                {item.status === 'Draft' && (
+                                                {item?.status?.toLowerCase() === 'draft' && (
                                                     <Button
                                                         className='h-[24px] rounded-full bg-[#e9e9e9] text-[#353535] hover:bg-[#e9e9e9]'
                                                         data-testid={`status-button-${item.id}`}
@@ -724,7 +724,7 @@ export default function JobPostings() {
                                                         <span className='text-[12px]/[22px]'>Draft</span>
                                                     </Button>
                                                 )}
-                                                {item.status !== 'Draft' ? (
+                                                {item?.status?.toLowerCase() !== 'draft' ? (
                                                     <button
                                                         className='text-[#0d978b] flex items-center gap-[2px]'
                                                         data-testid={`view-details-${item.id}`}
@@ -736,6 +736,7 @@ export default function JobPostings() {
                                                     <button
                                                         className='text-[#0d978b] flex items-center gap-[2px]'
                                                         data-testid={`continue-edit-${item.id}`}
+                                                        onClick={() => router.push(`/recruitment/job-postings/create-job?id=${item.id}`)}
                                                     >
                                                         <span className='text-[14px]/[22px] font-medium'>Continue Edit</span>
                                                         <ArrowRight className='size-[16px]' />
