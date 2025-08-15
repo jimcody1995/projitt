@@ -10,6 +10,16 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
     const [isEduOpen, setIsEduOpen] = useState(true);
     const [isCertOpen, setIsCertOpen] = useState(true);
     const [isSkillOpen, setIsSkillOpen] = useState(true);
+
+    // Early return if applicantDetails is null or undefined
+    if (!applicantDetails) {
+        return (
+            <div className="flex items-center justify-center h-32">
+                <p className="text-[#626262]">No applicant details available</p>
+            </div>
+        );
+    }
+
     return (
         <div>
             <div className="flex items-center gap-[10px]">
@@ -18,7 +28,7 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
                 </div>
                 <div className="h-[14px] border-[1.2px] border-[#626262]"></div>
                 <div className="flex gap-[4px] items-center">
-                    <span className="text-[12px]/[20px] font-medium text-[#4b4b4b]">{applicantDetails.portfolio_link}</span>
+                    <span className="text-[12px]/[20px] font-medium text-[#4b4b4b]">{applicantDetails.portfolio_link || 'No portfolio link'}</span>
                     <Link className="size-[16px] text-[#4b4b4b]" />
                 </div>
                 {(applicantDetails.other_links || []).map((link: string, index: number) => (
@@ -41,15 +51,28 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
                         <div className="w-full flex flex-col gap-[16px] py-[16px] px-[24px] bg-white rounded-[12px]">
                             <div className="flex items-center gap-[28px]">
                                 <p className="text-[14px]/[22px] font-medium text-[#787878] w-[100px]">Email</p>
-                                <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">{applicantDetails.applicant.email}</p>
+                                <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">{applicantDetails.applicant?.email || 'No email provided'}</p>
                             </div>
                             <div className="flex items-center gap-[28px]">
                                 <p className="text-[14px]/[22px] font-medium text-[#787878] w-[100px]">Phone</p>
-                                <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">{applicantDetails.contact_number && (applicantDetails.contact_code + applicantDetails.contact_number)}</p>
+                                <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">
+                                    {applicantDetails.contact_number && applicantDetails.contact_code
+                                        ? (applicantDetails.contact_code + applicantDetails.contact_number)
+                                        : 'No phone provided'
+                                    }
+                                </p>
                             </div>
                             <div className="flex items-center gap-[28px]">
                                 <p className="text-[14px]/[22px] font-medium text-[#787878] w-[100px]">Address</p>
-                                <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">{applicantDetails.address + ', ' + applicantDetails.city + ', ' + applicantDetails.state + ', ' + applicantDetails.zip_code + ', ' + applicantDetails.country}</p>
+                                <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">
+                                    {[
+                                        applicantDetails.address,
+                                        applicantDetails.city,
+                                        applicantDetails.state,
+                                        applicantDetails.zip_code,
+                                        applicantDetails.country
+                                    ].filter(Boolean).join(', ') || 'No address provided'}
+                                </p>
                             </div>
                         </div>
                     </CollapsibleContent>
@@ -84,8 +107,8 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
                     <CollapsibleContent className="w-full mt-[12px] flex flex-col gap-[10px]">
                         {(applicantDetails.education || []).map((education: any, index: number) => (
                             <div key={index} className="w-full  py-[20px] px-[24px] bg-white rounded-[12px]">
-                                <p className="text-[16px]/[20px] font-medium text-[#4b4b4b]">{education.school}</p>
-                                <p className="text-[14px]/[20px] font-medium text-[#4b4b4b]">{education.degree.description}</p>
+                                <p className="text-[16px]/[20px] font-medium text-[#4b4b4b]">{education.school || 'No school name'}</p>
+                                <p className="text-[14px]/[20px] font-medium text-[#4b4b4b]">{education.degree?.description || 'No degree information'}</p>
                             </div>
                         ))}
                     </CollapsibleContent>
@@ -117,7 +140,7 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
                     <CollapsibleContent className="w-full mt-[12px]">
                         <div className="w-full flex flex-wrap  gap-[8px] py-[20px] px-[24px] bg-white rounded-[12px]">
                             {(applicantDetails.skills || []).map((skill: any, index: number) => (
-                                <span key={index} className="py-[5.25px] px-[8.75px] rounded-[7px] bg-[#d6eeec] text-[#0d978b] text-[12px]/[16px]">{skill.name}</span>
+                                <span key={index} className="py-[5.25px] px-[8.75px] rounded-[7px] bg-[#d6eeec] text-[#0d978b] text-[12px]/[16px]">{skill.name || 'Unnamed skill'}</span>
                             ))}
                         </div>
                     </CollapsibleContent>
