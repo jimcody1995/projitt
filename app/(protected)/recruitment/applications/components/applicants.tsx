@@ -225,7 +225,7 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`applicants-${row.original.id}`}
                     >
-                        {moment(row.original.date).format('DD MMM, YYYY')}
+                        {moment(row.original.created_at).format('DD MMM, YYYY')}
                     </span>
                 ),
                 enableSorting: true,
