@@ -26,6 +26,7 @@ import { NoData } from "../../assessments/components/noData";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import Reschedule from "./reschedule";
 import CancelInterview from "./cancel-interview";
+import { useBasic } from "@/context/BasicContext";
 
 /**
  * @description
@@ -51,6 +52,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
     const [applicantsData, setApplicantsData] = useState<any[]>(interviews);
     const [selectedMode, setSelectedMode] = useState<number[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+    const { country } = useBasic()
     const filteredData = useMemo<any[]>(() => {
         return applicantsData.filter((item) => {
             const matchesStatus =
@@ -69,6 +71,8 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
             return matchesSearch && matchesStatus;
         });
     }, [searchQuery, selectedStatuses, applicantsData]);
+
+
 
     // const getData = async () => {
     //     try {
@@ -133,12 +137,12 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                         <p
                             className="text-[14px]/[22px] text-[#4b4b4b]"
                         >
-                            {row.original.job_title}
+                            {row.original.job?.title}
                         </p>
                         <p
                             className="text-[11px]/[14px] text-[#8f8f8f]"
                         >
-                            {row.original.job_location}
+                            {country.find((item: any) => item.id === row.original.job?.country_id)?.name}
                         </p>
                     </div>
                 ),

@@ -1,7 +1,7 @@
 'use client'
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, CirclePlus, Loader2, Plus, Star, X } from "lucide-react";
 import ApplicationSummary from "./application-summary";
 import Resume from "./resume";
@@ -763,22 +763,22 @@ export default function Detail({ open, onOpenChange, selectedApplication, getDat
         }
     }
 
-    // const getApplicantDetails = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const response = await getApplicationInfo(selectedApplication?.job_id, selectedApplication?.applicant_id);
-    //         setApplicantDetails(response.data);
-    //     } catch (error: any) {
-    //         customToast("Error", error.response.data.message, "error");
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }
-    // useEffect(() => {
-    //     if (selectedApplication) {
-    //         getApplicantDetails();
-    //     }
-    // }, [selectedApplication]);
+    const getApplicantDetails = async () => {
+        try {
+            setLoading(true);
+            const response = await getApplicationInfo(selectedApplication?.job_id, selectedApplication?.applicant_id);
+            setApplicantDetails(response.data);
+        } catch (error: any) {
+            customToast("Error", error.response.data.message, "error");
+        } finally {
+            setLoading(false);
+        }
+    }
+    useEffect(() => {
+        if (selectedApplication) {
+            getApplicantDetails();
+        }
+    }, [selectedApplication]);
     return (
         <div>
             <Sheet open={open} onOpenChange={onOpenChange}>
@@ -815,7 +815,7 @@ export default function Detail({ open, onOpenChange, selectedApplication, getDat
                         <p className="text-[14px]/[22px] text-[#8f8f8f] mt-[16px]">{selectedApplication?.applicant_id}</p>
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-[22px]/[30px] font-medium flex items-center gap-[6px]">{selectedApplication?.first_name} {selectedApplication?.last_name} <Star className="size-[20px] text-[#353535]" /></p>
+                                <p className="text-[22px]/[30px] font-medium flex items-center gap-[6px]">{selectedApplication?.first_name || selectedApplication?.applicant?.first_name} {selectedApplication?.last_name || selectedApplication?.applicant?.last_name} <Star className="size-[20px] text-[#353535]" /></p>
                                 <div className="flex items-center gap-[12px] mt-[10px]">
                                     <div className="py-[5px] px-[9px] rounded-[9px] bg-[#d6eeec] text-[#0d978b] text-[14px]/[22px]">New</div>
                                     <div className="flex gap-[8px] py-[5px] px-[9px] text-[14px]/[22px] text-white bg-[#0d978b] rounded-[4px]">
