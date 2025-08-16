@@ -260,9 +260,10 @@ export default function CreateAssessment() {
             <div className="flex justify-between items-center">
                 <div>
                     <p
-                        className="text-[12px]/[20px] text-[#a5a5a5]"
+                        className="text-[12px]/[20px] text-[#a5a5a5] cursor-pointer"
                         id="breadcrumb-text"
                         data-testid="breadcrumb-text"
+                        onClick={() => router.push(`/recruitment/assessments`)}
                     >
                         Assessments <span className="text-[#0d978b]">/ {isEditing ? 'Edit' : 'Create'} Assessment</span>
                     </p>
