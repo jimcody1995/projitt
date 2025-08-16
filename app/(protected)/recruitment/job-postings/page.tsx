@@ -488,7 +488,7 @@ export default function JobPostings() {
                     className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
                     data-testid="filter-button"
                 >
-                    <ListFilter className='size-[20px]' />
+                    <ListFilter className={`size-[20px] transition-transform duration-300 ${showFilter ? 'rotate-180' : ''}`} />
                     Filter
                 </Button>
                 <div className='flex h-[32px] bg-[#e9e9e9] rounded-[8px]'>
@@ -567,7 +567,23 @@ export default function JobPostings() {
 
                     <Toolbar view={view} setView={setView} />
                 </div>
-                {showFilter && <FilterTool selectedLocations={selectedLocations} selectedDepartments={selectedDepartments} selectedTypes={selectedTypes} selectedStatuses={selectedStatuses} setSelectedLocations={setSelectedLocations} setSelectedDepartments={setSelectedDepartments} setSelectedTypes={setSelectedTypes} setSelectedStatuses={setSelectedStatuses} />}
+                <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${showFilter
+                        ? 'max-h-[200px] opacity-100 mt-[5px]'
+                        : 'max-h-0 opacity-0 mt-0'
+                        }`}
+                >
+                    <FilterTool
+                        selectedLocations={selectedLocations}
+                        selectedDepartments={selectedDepartments}
+                        selectedTypes={selectedTypes}
+                        selectedStatuses={selectedStatuses}
+                        setSelectedLocations={setSelectedLocations}
+                        setSelectedDepartments={setSelectedDepartments}
+                        setSelectedTypes={setSelectedTypes}
+                        setSelectedStatuses={setSelectedStatuses}
+                    />
+                </div>
 
                 {loading ? <LoadingSpinner content='Loading Job Postings...' /> : <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     {view === 'list' &&
