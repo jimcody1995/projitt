@@ -26,11 +26,11 @@ export const FilterTool = ({
     setSelectedCountries,
     setNameFilter
 }: {
-    selectedMode: number[],
+    selectedMode: string[],
     selectedStatuses: string[],
     selectedCountries: number[],
     nameFilter: string,
-    setSelectedMode: (value: number[]) => void,
+    setSelectedMode: (value: string[]) => void,
     setSelectedStatuses: (value: string[]) => void,
     setSelectedCountries: (value: number[]) => void,
     setNameFilter: (value: string) => void
@@ -41,9 +41,10 @@ export const FilterTool = ({
     const [isCountryOpen, setIsCountryOpen] = useState(false);
 
     const modeData = [
-        { id: 1, value: "Google Meet", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
-        { id: 2, value: "Zoom", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
-        { id: 3, value: "Projitt", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
+        { id: "google_meet", value: "Google Meet", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
+        { id: "zoom", value: "Zoom", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
+        { id: "projitt_video_conference", value: "Projitt Video Conference", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
+        { id: "microsoft_team", value: "Microsoft Team", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
     ];
 
     const statuses = ["Review", "Screen", "Test", "Completed", "Cancelled"];
@@ -57,7 +58,7 @@ export const FilterTool = ({
     ];
 
 
-    const handleModeChange = (checked: boolean, value: number): void => {
+    const handleModeChange = (checked: boolean, value: string): void => {
         setSelectedMode(checked ? [...selectedMode, value] : selectedMode.filter((v) => v !== value))
     };
 
@@ -204,7 +205,7 @@ export const FilterTool = ({
                     data-testid="filter-mode-content"
                 >
                     <div className="space-y-3">
-                        {modeData.map((mode: any, index: number) => (
+                        {modeData.map((mode: { id: string; value: string; icon: JSX.Element }, index: number) => (
                             <div
                                 key={index}
                                 className="flex items-center gap-2.5"
@@ -260,7 +261,7 @@ export const FilterTool = ({
                     data-testid="filter-country-content"
                 >
                     <div className="space-y-3">
-                        {countries.map((country: any, index: number) => (
+                        {countries.map((country: { id: number; name: string }, index: number) => (
                             <div
                                 key={index}
                                 className="flex items-center gap-2.5"

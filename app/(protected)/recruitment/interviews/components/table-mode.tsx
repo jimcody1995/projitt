@@ -50,7 +50,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
     const [applicantsData, setApplicantsData] = useState<any[]>(interviews);
-    const [selectedMode, setSelectedMode] = useState<number[]>([]);
+    const [selectedMode, setSelectedMode] = useState<string[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
     const [nameFilter, setNameFilter] = useState<string>('');
@@ -68,7 +68,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
             // Mode filter
             const matchesMode =
                 !selectedMode?.length ||
-                selectedMode.includes(item.mode_id || 0);
+                selectedMode.includes(item.mode || '');
 
             // Country filter
             const matchesCountry =
