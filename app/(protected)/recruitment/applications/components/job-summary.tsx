@@ -46,9 +46,9 @@ export default function JobSummary({ selected }: { selected: any }) {
                 <p className="text-[16px]/[24px] font-medium text-[#4b4b4b]">Job Description</p>
                 <p className="text-[14px]/[22px] font-medium text-[#a5a5a5] mt-[6px]">{selected?.skills?.map((item: any) => item.name).join(', ')}</p>
 
-                <p className="text-[14px]/[22px] font-medium text-[#4b4b4b] mt-[2px]">
+                <div className="text-[14px]/[22px] font-medium text-[#4b4b4b] mt-[2px]">
                     {selected?.description && typeof selected.description === 'string' ? parse(selected.description) : selected?.description || ''}
-                </p>
+                </div>
             </div>
             <div className="md:w-[364px] w-full  mt-[32px] ">
                 <p className="text-[16px]/[24px] font-medium text-[#4b4b4b]">Applicant Questions</p>

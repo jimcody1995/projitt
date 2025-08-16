@@ -48,7 +48,7 @@ export default function ApplicantJobPage() {
         fetchJobs();
     }, []);
     useEffect(() => {
-        const filtered = jobs.filter((job: any) => job.title.toLowerCase().includes(search.toLowerCase()));
+        const filtered = jobs.filter((job: any) => job?.title?.toLowerCase().includes(search.toLowerCase()));
         setFilteredJobs(filtered);
     }, [search]);
     useEffect(() => {
