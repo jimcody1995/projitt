@@ -40,6 +40,10 @@ export default function Assessment() {
     const [loading, setLoading] = useState(true);
     const [statusChangingIds, setStatusChangingIds] = useState<Set<string>>(new Set());
 
+    // Filter states
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+    const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+
     // Function to get assessment type name based on type_id
     const getAssessmentType = (typeId: number): string => {
         switch (typeId) {
@@ -80,14 +84,31 @@ export default function Assessment() {
         fetchAssessments();
     }, []);
 
-    // Filter data based on search query
+    // Filter data based on search query and filters
     useEffect(() => {
         setFilteredData(
-            assessmentsData.filter((item) =>
-                item.title.toLowerCase().includes(searchQuery.toLowerCase())
-            )
+            assessmentsData.filter((item) => {
+                // Search filter
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+                // Type filter
+                const matchesType = selectedTypes.length === 0 ||
+                    selectedTypes.some(type => {
+                        if (type === "Psychometric") return item.type.includes("Psychometric");
+                        if (type === "Coding") return item.type.includes("Coding");
+                        return false;
+                    });
+
+                // Status filter
+                const matchesStatus = selectedStatuses.length === 0 ||
+                    selectedStatuses.some(status =>
+                        item.status.toLowerCase() === status.toLowerCase()
+                    );
+
+                return matchesSearch && matchesType && matchesStatus;
+            })
         );
-    }, [searchQuery, assessmentsData]);
+    }, [searchQuery, assessmentsData, selectedTypes, selectedStatuses]);
 
     /**
      * Component: ActionsCell
@@ -289,14 +310,26 @@ export default function Assessment() {
                     id="filter-button"
                     variant="outline"
                     onClick={() => setShowFilter(!showFilter)}
-                    className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
+                    className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold transition-all duration-300'
                     data-testid="filter-button"
                 >
-                    <ListFilter className='size-[20px]' />
+                    <ListFilter className={`size-[20px] transition-transform duration-300 ${showFilter ? 'rotate-180' : ''}`} />
                     Filter
                 </Button>
             </div>
-            {showFilter && <AssessmentFilterTool />}
+            <div
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${showFilter
+                    ? 'max-h-[200px] opacity-100 mt-[11px]'
+                    : 'max-h-0 opacity-0 mt-0'
+                    }`}
+            >
+                <AssessmentFilterTool
+                    selectedTypes={selectedTypes}
+                    selectedStatuses={selectedStatuses}
+                    setSelectedTypes={setSelectedTypes}
+                    setSelectedStatuses={setSelectedStatuses}
+                />
+            </div>
             <div className="mt-[28px]">
                 {loading && (
                     <div className="flex justify-center items-center py-8">

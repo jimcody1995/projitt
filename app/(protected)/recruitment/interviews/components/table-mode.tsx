@@ -12,13 +12,11 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import moment from 'moment';
-import Detail from '../../applications/components/detail';
 import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Download, EllipsisVertical, ListFilter, Search, X } from "lucide-react";
-import CheckDialog from "../../job-postings/components/checkDialog";
 import { DataGrid } from "@/components/ui/data-grid";
 import { Input } from "@/components/ui/input";
 import { FilterTool } from "./filter";
@@ -37,7 +35,7 @@ import { useBasic } from "@/context/BasicContext";
  * It uses `@tanstack/react-table` for efficient data table management and provides unique `data-testid` attributes for UI test automation.
  */
 export default function TableMode({ setSelectedApplication, interviews }: { setSelectedApplication: (id: string) => void, interviews: any[] }) {
-    const [activeSection, setActiveSection] = useState<'upcoming' | 'interviews' | 'job-summary'>('upcoming');
+    const [activeSection, setActiveSection] = useState<'upcoming' | 'pending' | 'past'>('upcoming');
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -49,14 +47,42 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
     const [showFilter, setShowFilter] = useState(false);
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
-    const [applicantsData, setApplicantsData] = useState<any[]>(interviews);
     const [selectedMode, setSelectedMode] = useState<string[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
     const [nameFilter, setNameFilter] = useState<string>('');
     const { country } = useBasic()
+
+    // Categorize interviews by date
+    const categorizedInterviews = useMemo(() => {
+        const today = moment().startOf('day');
+        const tomorrow = moment().add(1, 'day').startOf('day');
+
+        return {
+            upcoming: interviews.filter(interview => {
+                // Parse date-only part to avoid timezone issues
+                const interviewDate = moment(interview.date.split('T')[0]);
+                return interviewDate.isSameOrAfter(tomorrow);
+            }),
+            pending: interviews.filter(interview => {
+                // Parse date-only part to avoid timezone issues
+                const interviewDate = moment(interview.date.split('T')[0]);
+                return interviewDate.isSame(today);
+            }),
+            past: interviews.filter(interview => {
+                // Parse date-only part to avoid timezone issues
+                const interviewDate = moment(interview.date.split('T')[0]);
+                return interviewDate.isBefore(today);
+            })
+        };
+    }, [interviews]);
+
+    // Get data for current active section
+    const currentSectionData = useMemo(() => {
+        return categorizedInterviews[activeSection] || [];
+    }, [categorizedInterviews, activeSection]);
     const filteredData = useMemo<any[]>(() => {
-        return applicantsData.filter((item) => {
+        return currentSectionData.filter((item) => {
             // Status filter
             const matchesStatus =
                 !selectedStatuses?.length ||
@@ -89,7 +115,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
 
             return matchesSearch && matchesStatus && matchesMode && matchesCountry && matchesName;
         });
-    }, [searchQuery, selectedStatuses, selectedMode, selectedCountries, nameFilter, applicantsData]);
+    }, [searchQuery, selectedStatuses, selectedMode, selectedCountries, nameFilter, currentSectionData]);
 
 
 
@@ -161,7 +187,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                         <p
                             className="text-[11px]/[14px] text-[#8f8f8f]"
                         >
-                            {country.find((item: any) => item.id === row.original.job?.country_id)?.name}
+                            {country.find((item: any) => item.id === row.original.job?.country_id)?.name || 'N/A'}
                         </p>
                     </div>
                 ),
@@ -204,37 +230,40 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                     headerClassName: '',
                 },
             },
-            ...(activeSection === "upcoming"
-                ? [{
-                    accessorKey: 'date',
-                    header: ({ column }: { column: any }) => (
-                        <DataGridColumnHeader
-                            className='text-[14px] font-medium'
-                            title="Application Date"
-                            column={column}
-                            data-testid="applicants-header"
-                        />
-                    ),
-                    cell: ({ row }: { row: any }) => (
-                        <div data-testid={`job-detail-${row.original.id}`}>
+            {
+                accessorKey: 'date',
+                header: ({ column }: { column: any }) => (
+                    <DataGridColumnHeader
+                        className='text-[14px] font-medium'
+                        title="Interview Date"
+                        column={column}
+                        data-testid="interview-date-header"
+                    />
+                ),
+                cell: ({ row }: { row: any }) => {
+                    // Parse the date and treat it as a date-only value (ignore timezone conversion)
+                    const date = moment(row.original.date.split('T')[0]);
+
+                    return (
+                        <div data-testid={`interview-date-${row.original.id}`}>
                             <p
                                 className="text-[14px]/[22px] text-[#4b4b4b]"
                             >
-                                {moment(row.original.updated_at).format('DD MMM, YYYY')}
+                                {date.format('DD MMM, YYYY')}
                             </p>
-                            <p
+                            {/* <p
                                 className="text-[11px]/[14px] text-[#8f8f8f]"
                             >
-                                {moment(row.original.updated_at).format('HH:MM A')}
-                            </p>
+                                {date.format('HH:mm A')}
+                            </p> */}
                         </div>
-                    ),
-                    size: 130,
-                    meta: {
-                        headerClassName: '',
-                    },
-                }]
-                : []),
+                    );
+                },
+                size: 130,
+                meta: {
+                    headerClassName: '',
+                },
+            },
             {
                 accessorKey: 'mode',
                 header: ({ column }: { column: any }) => (
@@ -352,16 +381,17 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                 <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('upcoming')}
                     data-testid="upcoming-tab-button">
                     <p className='whitespace-nowrap'>Upcoming</p>
-                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
+                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.upcoming.length}</span>
                 </div>
-                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('interviews')}
+                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'pending' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('pending')}
                     data-testid="pending-tab-button">
                     <p className='whitespace-nowrap'>Pending</p>
-                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
+                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.pending.length}</span>
                 </div>
-                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('job-summary')}
+                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'past' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('past')}
                     data-testid="past-tab-button">
                     <p className='whitespace-nowrap'>Past</p>
+                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.past.length}</span>
                 </div>
             </div>
             <div className='w-full mt-[22px]'>

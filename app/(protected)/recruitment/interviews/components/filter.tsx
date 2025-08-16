@@ -2,8 +2,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ChevronDown, X, User, Globe, Video, Clock } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { JSX, useState } from "react";
+import { JSX, useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
+import { useBasic } from "@/context/BasicContext";
 
 /**
  * FilterTool component
@@ -39,6 +40,9 @@ export const FilterTool = ({
     const [isStatusOpen, setIsStatusOpen] = useState(false);
     const [isModeOpen, setIsModeOpen] = useState(false);
     const [isCountryOpen, setIsCountryOpen] = useState(false);
+    const [searchCountryQuery, setSearchCountryQuery] = useState('');
+
+    const { country } = useBasic();
 
     const modeData = [
         { id: "google_meet", value: "Google Meet", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
@@ -49,13 +53,12 @@ export const FilterTool = ({
 
     const statuses = ["Review", "Screen", "Test", "Completed", "Cancelled"];
 
-    const countries = [
-        { id: 1, name: "United States" },
-        { id: 2, name: "Canada" },
-        { id: 3, name: "United Kingdom" },
-        { id: 4, name: "Australia" },
-        { id: 5, name: "Germany" },
-    ];
+    // Filter countries based on search query
+    const filteredCountries = useMemo(() => {
+        return country.filter((location: any) =>
+            location.name.toLowerCase().includes(searchCountryQuery.toLowerCase())
+        );
+    }, [country, searchCountryQuery]);
 
 
     const handleModeChange = (checked: boolean, value: string): void => {
@@ -261,7 +264,12 @@ export const FilterTool = ({
                     data-testid="filter-country-content"
                 >
                     <div className="space-y-3">
-                        {countries.map((country: { id: number; name: string }, index: number) => (
+                        <Input
+                            placeholder="Search location"
+                            value={searchCountryQuery}
+                            onChange={(e) => setSearchCountryQuery(e.target.value)}
+                        />
+                        {filteredCountries.map((location: any, index: number) => (
                             <div
                                 key={index}
                                 className="flex items-center gap-2.5"
@@ -270,9 +278,9 @@ export const FilterTool = ({
                             >
                                 <Checkbox
                                     id={`filter-country-checkbox-${index}`}
-                                    checked={selectedCountries.find((s) => s === country.id) !== undefined}
+                                    checked={selectedCountries.includes(location.id)}
                                     onCheckedChange={(checked) =>
-                                        handleCountryChange(checked === true, country.id)
+                                        handleCountryChange(checked === true, location.id)
                                     }
                                     data-testid={`filter-country-checkbox-${index}`}
                                 />
@@ -280,7 +288,7 @@ export const FilterTool = ({
                                     htmlFor={`filter-country-checkbox-${index}`}
                                     className="grow flex items-center justify-between font-normal gap-1.5"
                                 >
-                                    {country.name}
+                                    {location.name}
                                 </Label>
                             </div>
                         ))}
