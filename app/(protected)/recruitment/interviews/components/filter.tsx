@@ -1,8 +1,9 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, X, User, Globe, Video, Clock } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { JSX } from "react";
+import { JSX, useState } from "react";
+import { Input } from "@/components/ui/input";
 
 /**
  * FilterTool component
@@ -15,13 +16,45 @@ import { JSX } from "react";
  * Returns:
  *  JSX.Element - The rendered filter tool component.
  */
-export const FilterTool = ({ selectedMode, selectedStatuses, setSelectedMode, setSelectedStatuses }: { selectedMode: number[], selectedStatuses: string[], setSelectedMode: (value: number[]) => void, setSelectedStatuses: (value: string[]) => void }): JSX.Element => {
+export const FilterTool = ({
+    selectedMode,
+    selectedStatuses,
+    selectedCountries,
+    nameFilter,
+    setSelectedMode,
+    setSelectedStatuses,
+    setSelectedCountries,
+    setNameFilter
+}: {
+    selectedMode: number[],
+    selectedStatuses: string[],
+    selectedCountries: number[],
+    nameFilter: string,
+    setSelectedMode: (value: number[]) => void,
+    setSelectedStatuses: (value: string[]) => void,
+    setSelectedCountries: (value: number[]) => void,
+    setNameFilter: (value: string) => void
+}): JSX.Element => {
+    const [isNameOpen, setIsNameOpen] = useState(false);
+    const [isStatusOpen, setIsStatusOpen] = useState(false);
+    const [isModeOpen, setIsModeOpen] = useState(false);
+    const [isCountryOpen, setIsCountryOpen] = useState(false);
+
     const modeData = [
-        { id: 1, value: "Google Meet" },
-        { id: 2, value: "Zoom" },
-        { id: 3, value: "Projitt" },
+        { id: 1, value: "Google Meet", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
+        { id: 2, value: "Zoom", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
+        { id: 3, value: "Projitt", icon: <Video className="size-[18px] text-[#4b4b4b]" /> },
     ];
-    const statuses = ["Review", "Screen", "Test"];
+
+    const statuses = ["Review", "Screen", "Test", "Completed", "Cancelled"];
+
+    const countries = [
+        { id: 1, name: "United States" },
+        { id: 2, name: "Canada" },
+        { id: 3, name: "United Kingdom" },
+        { id: 4, name: "Australia" },
+        { id: 5, name: "Germany" },
+    ];
 
 
     const handleModeChange = (checked: boolean, value: number): void => {
@@ -32,51 +65,107 @@ export const FilterTool = ({ selectedMode, selectedStatuses, setSelectedMode, se
         setSelectedStatuses(checked ? [...selectedStatuses, value] : selectedStatuses.filter((v) => v !== value))
     };
 
+    const handleCountryChange = (checked: boolean, value: number): void => {
+        setSelectedCountries(checked ? [...selectedCountries, value] : selectedCountries.filter((v) => v !== value))
+    };
+
+    const clearAllFilters = (): void => {
+        setSelectedMode([]);
+        setSelectedStatuses([]);
+        setSelectedCountries([]);
+        setNameFilter('');
+    };
+
     return (
-        <div className="flex flex-wrap gap-[11px] mt-[17px] items-center">
-            <Popover>
+        <div className="flex flex-wrap gap-[11px] mt-[5px] items-center">
+            {/* Name Filter */}
+            <Popover open={isNameOpen} onOpenChange={setIsNameOpen}>
                 <PopoverTrigger asChild>
                     <div
-                        className="cursor-pointer flex gap-[8px] py-[6px] px-[14px] border border-[#d2d2d2] rounded-[8px]"
-                        id="filter-mode-trigger"
-                        data-testid="filter-mode-trigger"
+                        className="cursor-pointer flex gap-[8px] py-[6px] px-[14px] border border-[#d2d2d2] rounded-[8px] transition-all duration-200 hover:border-[#4b4b4b]"
+                        id="filter-name-trigger"
+                        data-testid="filter-name-trigger"
                     >
+                        <User className="size-[18px] text-[#4b4b4b]" />
+                        <span className="text-[14px]/[20px] text-[#787878]">
+                            {nameFilter ? "Name: " + nameFilter : "Name"}
+                        </span>
+                        <ChevronDown
+                            className={`size-[18px] text-[#4b4b4b] transition-transform duration-200 ${isNameOpen ? 'rotate-180' : ''
+                                }`}
+                            id="filter-name-chevron"
+                            data-testid="filter-name-chevron"
+                        />
+                    </div>
+                </PopoverTrigger>
+                <PopoverContent
+                    className="w-64 p-3 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+                    align="start"
+                    id="filter-name-content"
+                    data-testid="filter-name-content"
+                >
+                    <div className="space-y-3">
+                        <div className="space-y-2">
+                            <Label className="text-[12px] font-medium text-[#4b4b4b]">
+                                Search by applicant name
+                            </Label>
+                            <Input
+                                placeholder="Enter applicant name..."
+                                value={nameFilter}
+                                onChange={(e) => setNameFilter(e.target.value)}
+                                className="h-8 text-[12px]"
+                                data-testid="name-filter-input"
+                            />
+                        </div>
+                    </div>
+                </PopoverContent>
+            </Popover>
+            {/* Status Filter */}
+            <Popover open={isStatusOpen} onOpenChange={setIsStatusOpen}>
+                <PopoverTrigger asChild>
+                    <div
+                        className="cursor-pointer flex gap-[8px] py-[6px] px-[14px] border border-[#d2d2d2] rounded-[8px] transition-all duration-200 hover:border-[#4b4b4b]"
+                        id="filter-status-trigger"
+                        data-testid="filter-status-trigger"
+                    >
+                        <Clock className="size-[18px] text-[#4b4b4b]" />
                         <span className="text-[14px]/[20px] text-[#787878]">
                             {selectedStatuses.length > 0
                                 ? "Status: " + selectedStatuses.length + " selected"
                                 : "Status"}
                         </span>
                         <ChevronDown
-                            className="size-[18px] text-[#4b4b4b]"
-                            id="filter-mode-chevron"
-                            data-testid="filter-mode-chevron"
+                            className={`size-[18px] text-[#4b4b4b] transition-transform duration-200 ${isStatusOpen ? 'rotate-180' : ''
+                                }`}
+                            id="filter-status-chevron"
+                            data-testid="filter-status-chevron"
                         />
                     </div>
                 </PopoverTrigger>
                 <PopoverContent
-                    className="w-40 p-3"
+                    className="w-40 p-3 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
                     align="start"
-                    id="filter-mode-content"
-                    data-testid="filter-mode-content"
+                    id="filter-status-content"
+                    data-testid="filter-status-content"
                 >
                     <div className="space-y-3">
                         {statuses.map((status: string, index: number) => (
                             <div
                                 key={index}
                                 className="flex items-center gap-2.5"
-                                id={`filter-mode-item-${index}`}
-                                data-testid={`filter-mode-item-${index}`}
+                                id={`filter-status-item-${index}`}
+                                data-testid={`filter-status-item-${index}`}
                             >
                                 <Checkbox
-                                    id={`filter-mode-checkbox-${index}`}
+                                    id={`filter-status-checkbox-${index}`}
                                     checked={selectedStatuses.find((s) => s === status) !== undefined}
                                     onCheckedChange={(checked) =>
                                         handleStatusChange(checked === true, status)
                                     }
-                                    data-testid={`filter-mode-checkbox-${index}`}
+                                    data-testid={`filter-status-checkbox-${index}`}
                                 />
                                 <Label
-                                    htmlFor={`filter-mode-checkbox-${index}`}
+                                    htmlFor={`filter-status-checkbox-${index}`}
                                     className="grow flex items-center justify-between font-normal gap-1.5"
                                 >
                                     {status}
@@ -86,27 +175,30 @@ export const FilterTool = ({ selectedMode, selectedStatuses, setSelectedMode, se
                     </div>
                 </PopoverContent>
             </Popover>
-            <Popover>
+            {/* Mode Filter */}
+            <Popover open={isModeOpen} onOpenChange={setIsModeOpen}>
                 <PopoverTrigger asChild>
                     <div
-                        className="cursor-pointer flex gap-[8px] py-[6px] px-[14px] border border-[#d2d2d2] rounded-[8px]"
+                        className="cursor-pointer flex gap-[8px] py-[6px] px-[14px] border border-[#d2d2d2] rounded-[8px] transition-all duration-200 hover:border-[#4b4b4b]"
                         id="filter-mode-trigger"
                         data-testid="filter-mode-trigger"
                     >
+                        <Video className="size-[18px] text-[#4b4b4b]" />
                         <span className="text-[14px]/[20px] text-[#787878]">
                             {selectedMode.length > 0
                                 ? "Mode: " + selectedMode.length + " selected"
                                 : "Mode"}
                         </span>
                         <ChevronDown
-                            className="size-[18px] text-[#4b4b4b]"
+                            className={`size-[18px] text-[#4b4b4b] transition-transform duration-200 ${isModeOpen ? 'rotate-180' : ''
+                                }`}
                             id="filter-mode-chevron"
                             data-testid="filter-mode-chevron"
                         />
                     </div>
                 </PopoverTrigger>
                 <PopoverContent
-                    className="w-40 p-3"
+                    className="w-40 p-3 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
                     align="start"
                     id="filter-mode-content"
                     data-testid="filter-mode-content"
@@ -138,10 +230,68 @@ export const FilterTool = ({ selectedMode, selectedStatuses, setSelectedMode, se
                     </div>
                 </PopoverContent>
             </Popover>
-            <button className="flex gap-[6px] cursor-pointer" onClick={() => {
-                setSelectedMode([]);
-                setSelectedStatuses([]);
-            }}>
+
+            {/* Country Filter */}
+            <Popover open={isCountryOpen} onOpenChange={setIsCountryOpen}>
+                <PopoverTrigger asChild>
+                    <div
+                        className="cursor-pointer flex gap-[8px] py-[6px] px-[14px] border border-[#d2d2d2] rounded-[8px] transition-all duration-200 hover:border-[#4b4b4b]"
+                        id="filter-country-trigger"
+                        data-testid="filter-country-trigger"
+                    >
+                        <Globe className="size-[18px] text-[#4b4b4b]" />
+                        <span className="text-[14px]/[20px] text-[#787878]">
+                            {selectedCountries.length > 0
+                                ? "Country: " + selectedCountries.length + " selected"
+                                : "Country"}
+                        </span>
+                        <ChevronDown
+                            className={`size-[18px] text-[#4b4b4b] transition-transform duration-200 ${isCountryOpen ? 'rotate-180' : ''
+                                }`}
+                            id="filter-country-chevron"
+                            data-testid="filter-country-chevron"
+                        />
+                    </div>
+                </PopoverTrigger>
+                <PopoverContent
+                    className="w-48 p-3 animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+                    align="start"
+                    id="filter-country-content"
+                    data-testid="filter-country-content"
+                >
+                    <div className="space-y-3">
+                        {countries.map((country: any, index: number) => (
+                            <div
+                                key={index}
+                                className="flex items-center gap-2.5"
+                                id={`filter-country-item-${index}`}
+                                data-testid={`filter-country-item-${index}`}
+                            >
+                                <Checkbox
+                                    id={`filter-country-checkbox-${index}`}
+                                    checked={selectedCountries.find((s) => s === country.id) !== undefined}
+                                    onCheckedChange={(checked) =>
+                                        handleCountryChange(checked === true, country.id)
+                                    }
+                                    data-testid={`filter-country-checkbox-${index}`}
+                                />
+                                <Label
+                                    htmlFor={`filter-country-checkbox-${index}`}
+                                    className="grow flex items-center justify-between font-normal gap-1.5"
+                                >
+                                    {country.name}
+                                </Label>
+                            </div>
+                        ))}
+                    </div>
+                </PopoverContent>
+            </Popover>
+
+            {/* Clear All Button */}
+            <button
+                className="flex gap-[6px] cursor-pointer transition-all duration-200 hover:opacity-70"
+                onClick={clearAllFilters}
+            >
                 <X className="size-[20px]" />
                 <span className="text-[14px]/[20px] text-[#353535]">Clear All</span>
             </button>

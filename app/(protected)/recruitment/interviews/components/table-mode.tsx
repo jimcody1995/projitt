@@ -22,7 +22,7 @@ import CheckDialog from "../../job-postings/components/checkDialog";
 import { DataGrid } from "@/components/ui/data-grid";
 import { Input } from "@/components/ui/input";
 import { FilterTool } from "./filter";
-import { NoData } from "../../assessments/components/noData";
+import { NoData } from "./noData";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import Reschedule from "./reschedule";
 import CancelInterview from "./cancel-interview";
@@ -52,9 +52,12 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
     const [applicantsData, setApplicantsData] = useState<any[]>(interviews);
     const [selectedMode, setSelectedMode] = useState<number[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+    const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
+    const [nameFilter, setNameFilter] = useState<string>('');
     const { country } = useBasic()
     const filteredData = useMemo<any[]>(() => {
         return applicantsData.filter((item) => {
+            // Status filter
             const matchesStatus =
                 !selectedStatuses?.length ||
                 selectedStatuses.includes(
@@ -62,15 +65,31 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                     item.status.replace('bg-', '').slice(1),
                 );
 
+            // Mode filter
+            const matchesMode =
+                !selectedMode?.length ||
+                selectedMode.includes(item.mode_id || 0);
+
+            // Country filter
+            const matchesCountry =
+                !selectedCountries?.length ||
+                selectedCountries.includes(item.job?.country_id || 0);
+
+            // Name filter
+            const matchesName =
+                !nameFilter ||
+                (item.applicant.first_name + " " + item.applicant.last_name).toLowerCase().includes(nameFilter.toLowerCase());
+
+            // Search filter
             const searchLower = (searchQuery || "").toLowerCase();
             const matchesSearch =
                 !searchQuery ||
-                item.job_title.toLowerCase().includes(searchLower) ||
-                (item.name || "").toLowerCase().includes(searchLower);
+                item.job?.title.toLowerCase().includes(searchLower) ||
+                (item.applicant.first_name + " " + item.applicant.last_name).toLowerCase().includes(searchLower);
 
-            return matchesSearch && matchesStatus;
+            return matchesSearch && matchesStatus && matchesMode && matchesCountry && matchesName;
         });
-    }, [searchQuery, selectedStatuses, applicantsData]);
+    }, [searchQuery, selectedStatuses, selectedMode, selectedCountries, nameFilter, applicantsData]);
 
 
 
@@ -162,14 +181,23 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                         data-testid="state-header"
                     />
                 ),
-                cell: ({ row }: { row: any }) => (
-                    <span
-                        className="text-[14px] text-[#4b4b4b]"
-                        data-testid={`stage-${row.original.id}`}
-                    >
-                        {row.original.status}
-                    </span>
-                ),
+                cell: ({ row }: { row: any }) => {
+                    let badgeClass = "bg-muted text-foreground";
+                    if (row.original.status === "review") badgeClass = "bg-[#d6eeec] text-[#0D978B]";
+                    else if (row.original.status === "screen") badgeClass = "bg-[#fff3cd] text-[#856404]";
+                    else if (row.original.status === "test") badgeClass = "bg-[#d1ecf1] text-[#0c5460]";
+                    else if (row.original.status === "completed") badgeClass = "bg-[#d4edda] text-[#155724]";
+                    else if (row.original.status === "cancelled") badgeClass = "bg-[#f8d7da] text-[#721c24]";
+
+                    return (
+                        <span
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}`}
+                            data-testid={`status-badge-${row.original.id}`}
+                        >
+                            {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
+                        </span>
+                    );
+                },
                 enableSorting: true,
                 size: 90,
                 meta: {
@@ -352,7 +380,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                                 id="search-icon"
                             />
                             <Input
-                                placeholder="Search Job"
+                                placeholder="Search Interviews"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="ps-9 w-[243px] h-[42px]"
@@ -380,7 +408,10 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                                 data-testid="filter-button"
                                 id="filter-button"
                             >
-                                <ListFilter className='size-[20px]' />
+                                <ListFilter
+                                    className={`size-[20px] transition-transform duration-300 ease-in-out ${showFilter ? 'rotate-180' : 'rotate-0'
+                                        }`}
+                                />
                                 Filter
                             </Button>
                             <Button
@@ -394,12 +425,31 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                             </Button>
                         </div>
                     </div>
-                    {showFilter && <FilterTool selectedMode={selectedMode} selectedStatuses={selectedStatuses} setSelectedMode={setSelectedMode} setSelectedStatuses={setSelectedStatuses} />}
+                    <div
+                        className={`overflow-hidden transition-all duration-300 ease-in-out ${showFilter
+                            ? 'max-h-[500px] opacity-100 mt-4'
+                            : 'max-h-0 opacity-0 mt-0'
+                            }`}
+                    >
+                        <FilterTool
+                            selectedMode={selectedMode}
+                            selectedStatuses={selectedStatuses}
+                            selectedCountries={selectedCountries}
+                            nameFilter={nameFilter}
+                            setSelectedMode={setSelectedMode}
+                            setSelectedStatuses={setSelectedStatuses}
+                            setSelectedCountries={setSelectedCountries}
+                            setNameFilter={setNameFilter}
+                        />
+                    </div>
                     <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                         <> {filteredData.length === 0 ?
                             <NoData data-testid="no-data-message" /> : <>
                                 <div
-                                    className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFilter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
+                                    className={`w-full overflow-x-auto transition-all duration-300 ease-in-out ${showFilter
+                                        ? 'h-[calc(100vh-375px)]'
+                                        : 'h-[calc(100vh-375px)]'
+                                        }`}
                                     data-testid="list-view-container"
                                 >
                                     <DataGridTable />
