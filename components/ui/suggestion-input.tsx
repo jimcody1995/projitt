@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Input } from '@/components/ui/input';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 /**
  * SuggestionInput Component
@@ -63,39 +65,53 @@ export default function SuggestionInput({
 
   return (
     <div className="relative w-full">
-      <Input
-        ref={inputRef}
-        id="suggestion-input"
-        data-testid="suggestion-input"
-        className="h-[48px] w-full border border-[#bcbcbc] rounded-[10px] px-3 outline-none text-gray-700"
-        value={inputValue}
-        placeholder={placeholder}
-        autoComplete="off"
-        onFocus={() => setShowDropdown(true)}
-        onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
-        onChange={e => {
-          setInputValue(e.target.value);
-          onChange(e.target.value);
-        }}
-      />
+      <div className="relative">
+        <Input
+          ref={inputRef}
+          id="suggestion-input"
+          data-testid="suggestion-input"
+          className={cn(
+            "h-[48px] w-full border border-[#bcbcbc] rounded-[10px] px-3 pr-10 outline-none text-gray-700",
+            "focus-visible:border-[#0D978B] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#0D978B]/30",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            "aria-invalid:border-destructive/60 aria-invalid:ring-destructive/10"
+          )}
+          value={inputValue}
+          placeholder={placeholder}
+          autoComplete="off"
+          onFocus={() => setShowDropdown(true)}
+          onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
+          onChange={e => {
+            setInputValue(e.target.value);
+            onChange(e.target.value);
+          }}
+        />
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          {showDropdown ? (
+            <ChevronUp className="h-4 w-4 opacity-60" />
+          ) : (
+            <ChevronDown className="h-4 w-4 opacity-60" />
+          )}
+        </div>
+      </div>
       {showDropdown && filteredSuggestions.length > 0 && (
-        <ul
-          id="suggestion-dropdown"
-          data-testid="suggestion-dropdown"
-          className="absolute left-0 top-full mt-1 z-10 bg-white border border-gray-200 w-full rounded shadow max-h-48 overflow-y-auto"
-        >
-          {filteredSuggestions.map((s) => (
-            <li
-              key={s.id}
-              id={`suggestion-item-${s.id}`}
-              data-testid={`suggestion-item-${s.id}`}
-              onMouseDown={() => handleSelect(s.name)}
-              className="px-3 py-2 cursor-pointer hover:bg-gray-100"
-            >
-              {s.name}
-            </li>
-          ))}
-        </ul>
+        <div className="absolute left-0 top-full mt-1 z-50 w-full">
+          <div className="relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover shadow-md shadow-black/5 text-secondary-foreground">
+            <div className="p-1.5 max-h-48 overflow-y-auto">
+              {filteredSuggestions.map((s) => (
+                <div
+                  key={s.id}
+                  id={`suggestion-item-${s.id}`}
+                  data-testid={`suggestion-item-${s.id}`}
+                  onMouseDown={() => handleSelect(s.name)}
+                  className="relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 px-2 text-sm outline-hidden text-foreground hover:bg-[#EBFFF7] focus:bg-[#EBFFF7] data-disabled:pointer-events-none data-disabled:opacity-50"
+                >
+                  {s.name}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
