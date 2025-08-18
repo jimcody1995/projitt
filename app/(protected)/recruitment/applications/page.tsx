@@ -15,6 +15,8 @@ import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { errorHandlers } from '@/utils/error-handler';
+import { Skeleton } from '@/components/ui/skeleton';
+
 export default function ApplicantJobPage() {
     const url = "https://www.figma.com/file/NlfVhYygR9mAQasassdsada/Share...";
     const [activeSection, setActiveSection] = useState<'applicants' | 'interviews' | 'job-summary'>('applicants');
@@ -26,33 +28,43 @@ export default function ApplicantJobPage() {
     const [loading, setLoading] = useState(false);
     const [applicantCount, setApplicantCount] = useState(0);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
     const params = useSearchParams();
     const router = useRouter();
     // Extracted fetchJobs function
     const fetchJobs = async () => {
-        const response = await getJobPostings({});
-        setJobs(response.data);
-        setFilteredJobs(response.data);
-        const jobId = params.get('jobId');
-        console.log(jobId);
+        try {
+            setIsInitialLoading(true);
+            const response = await getJobPostings({});
+            setJobs(response.data);
+            setFilteredJobs(response.data);
+            const jobId = params.get('jobId');
+            console.log(jobId);
 
-        if (jobId) {
-            const job = response.data.find((job: any) => job.id === Number(jobId));
-            setSelectedJob(job);
+            if (jobId) {
+                const job = response.data.find((job: any) => job.id === Number(jobId));
+                setSelectedJob(job);
+            }
+            else setSelectedJob(response.data[0]);
+            router.push(`/recruitment/applications?jobId=${response.data[0].id}`);
+        } catch (error) {
+            console.error('Error fetching jobs:', error);
+        } finally {
+            setIsInitialLoading(false);
         }
-        else setSelectedJob(response.data[0]);
-        router.push(`/recruitment/applications?jobId=${response.data[0].id}`);
     };
 
     useEffect(() => {
         fetchJobs();
     }, []);
     useEffect(() => {
-        const filtered = jobs.filter((job: any) => job.title.toLowerCase().includes(search.toLowerCase()));
+        const filtered = jobs.filter((job: any) => job?.title?.toLowerCase().includes(search.toLowerCase()));
         setFilteredJobs(filtered);
     }, [search]);
     useEffect(() => {
-        router.push(`/recruitment/applications?jobId=${selectedJob?.id}`);
+        if (selectedJob?.id) {
+            router.push(`/recruitment/applications?jobId=${selectedJob?.id}`);
+        }
     }, [selectedJob]);
 
     const handleDuplicate = async (id: string) => {
@@ -154,12 +166,16 @@ export default function ApplicantJobPage() {
             <div className='flex gap-[16px] items-center'>
                 <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger className='bg-transparent border-none shadow-none cursor-pointer text-left flex items-center gap-[12px] justify-between'>
-                        <p
-                            className='text-[24px]/[30px] font-semibold text-[#1c1c1c]'
-                            data-testid="page-title"
-                        >
-                            {selectedJob?.title}
-                        </p>
+                        {isInitialLoading ? (
+                            <Skeleton className="h-[30px] w-[200px]" />
+                        ) : (
+                            <p
+                                className='text-[24px]/[30px] font-semibold text-[#1c1c1c]'
+                                data-testid="page-title"
+                            >
+                                {selectedJob?.title}
+                            </p>
+                        )}
                         <ChevronDown className='size-[20px] text-[#1c1c1c]' />
                     </PopoverTrigger>
                     <PopoverContent className='min-w-[300px]'>
@@ -211,30 +227,41 @@ export default function ApplicantJobPage() {
             </div>
         </div>
         <div className='ml-[42px] mt-[12px] gap-[14px] flex items-center flex-wrap sm:justify-start justify-center'>
-            <Button
-                className='h-[24px] rounded-full bg-[#0D978B] hover:bg-[#0D978B]'
-            >
-                <span className='text-[12px]/[22px] text-white'>{selectedJob?.status.charAt(0).toUpperCase() + selectedJob?.status.slice(1)}</span>
-                <ChevronDown className='size-[12px] text-white' />
-            </Button>
-            <span
-                className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
-            >
-                <PieChart className='size-[20px] text-[#00d47d]' />
-                {selectedJob?.department?.name}
-            </span>
-            <span
-                className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
-            >
-                <BriefcaseBusiness className='size-[20px] text-[#4b4b4b]' />
-                {selectedJob?.employment_type?.name}
-            </span>
-            <span
-                className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
-            >
-                <MapPin className='size-[20px] text-[#4b4b4b]' />
-                {selectedJob?.country?.name}
-            </span>
+            {isInitialLoading ? (
+                <>
+                    <Skeleton className="h-[24px] w-[80px] rounded-full" />
+                    <Skeleton className="h-[22px] w-[120px]" />
+                    <Skeleton className="h-[22px] w-[100px]" />
+                    <Skeleton className="h-[22px] w-[90px]" />
+                </>
+            ) : (
+                <>
+                    <Button
+                        className='h-[24px] rounded-full bg-[#0D978B] hover:bg-[#0D978B]'
+                    >
+                        <span className='text-[12px]/[22px] text-white'>{selectedJob?.status.charAt(0).toUpperCase() + selectedJob?.status.slice(1)}</span>
+                        <ChevronDown className='size-[12px] text-white' />
+                    </Button>
+                    <span
+                        className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
+                    >
+                        <PieChart className='size-[20px] text-[#00d47d]' />
+                        {selectedJob?.department?.name}
+                    </span>
+                    <span
+                        className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
+                    >
+                        <BriefcaseBusiness className='size-[20px] text-[#4b4b4b]' />
+                        {selectedJob?.employment_type?.name}
+                    </span>
+                    <span
+                        className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
+                    >
+                        <MapPin className='size-[20px] text-[#4b4b4b]' />
+                        {selectedJob?.country?.name}
+                    </span>
+                </>
+            )}
         </div>
         <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
             <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'applicants' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('applicants')}>

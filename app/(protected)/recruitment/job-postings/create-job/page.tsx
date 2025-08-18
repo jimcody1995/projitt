@@ -263,6 +263,7 @@ export default function CreateJob(): JSX.Element {
                     ...jobData,
                     salary_from,
                     salary_to,
+                    state: jobData.location_type_id === 3 ? 'N/A' : jobData.state,
                     skill_ids: jobData.skill_ids.map(skillName => {
                         const skill = (skills as Skill[]).find(skill => skill.name === skillName);
                         return skill ? skill.id : null;
@@ -428,7 +429,12 @@ export default function CreateJob(): JSX.Element {
                                 id="breadcrumb-text"
                                 data-testid="breadcrumb-text"
                             >
-                                Job Postings <span className="text-[#0d978b]">/ Create Job Post</span>
+                                <span
+                                    className="cursor-pointer hover:text-[#0d978b] transition-colors"
+                                    onClick={() => router.push('/recruitment/job-postings')}
+                                >
+                                    Job Postings
+                                </span> <span className="text-[#0d978b]">/ Create Job Post</span>
                             </p>
                             <h1
                                 className="text-[24px]/[30px] font-semibold text-[#1c1c1c] mt-[4px]"

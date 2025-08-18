@@ -152,7 +152,7 @@ export default function TagInput({
                         <li
                             key={s.id}
                             onMouseDown={() => handleAddTag(s.name)}
-                            className="px-3 py-2 cursor-pointer hover:bg-gray-100"
+                            className="px-4 py-3 cursor-pointer hover:bg-[#EBFFF7] transition-colors duration-150 flex items-center h-9"
                         >
                             {s.name}
                         </li>

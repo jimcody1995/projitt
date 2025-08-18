@@ -503,50 +503,7 @@ export default function JobPostings() {
         );
     }
 
-    /**
-     * Toolbar Component
-     * 
-     * Renders view controls and filter button
-     * @param {Object} props - Component props
-     * @param {'list' | 'grid'} props.view - Current view mode
-     * @param {(view: 'list' | 'grid') => void} props.setView - View mode setter
-     * @returns {JSX.Element} Toolbar controls
-     */
-    const Toolbar = ({ view, setView }: { view: 'list' | 'grid'; setView: (view: 'list' | 'grid') => void }): JSX.Element => {
-        return (
-            <div className='flex gap-[20px]'>
-                <Button
-                    variant="outline"
-                    onClick={() => setShowFilter(!showFilter)}
-                    className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
-                    data-testid="filter-button"
-                >
-                    <ListFilter className='size-[20px]' />
-                    Filter
-                </Button>
-                <div className='flex h-[32px] bg-[#e9e9e9] rounded-[8px]'>
-                    <div
-                        className={`flex items-center justify-center h-full w-[32px] cursor-pointer rounded-[8px] ${view === 'list' ? 'bg-[#0D978B]' : ''}`}
-                        data-testid="list-view-button"
-                    >
-                        <LayoutList
-                            className={`${view === 'list' ? 'text-white' : 'text-[#4b4b4b]'} size-[20px]`}
-                            onClick={() => setView('list')}
-                        />
-                    </div>
-                    <div
-                        className={`flex items-center justify-center h-full w-[32px] cursor-pointer rounded-[8px] ${view === 'grid' ? 'bg-[#0D978B]' : ''}`}
-                        data-testid="grid-view-button"
-                    >
-                        <LayoutGrid
-                            className={`${view === 'grid' ? 'text-white' : 'text-[#4b4b4b]'} size-[20px]`}
-                            onClick={() => setView('grid')}
-                        />
-                    </div>
-                </div>
-            </div>
-        );
-    };
+
 
     return (
         <div className='w-full' data-testid="job-postings-container">
@@ -598,9 +555,55 @@ export default function JobPostings() {
                         )}
                     </div>
 
-                    <Toolbar view={view} setView={setView} />
+                    <div className='flex gap-[20px]'>
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowFilter(!showFilter)}
+                            className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
+                            data-testid="filter-button"
+                        >
+                            <ListFilter className={`size-[20px] transition-transform duration-300 ${showFilter ? 'rotate-180' : ''}`} />
+                            Filter
+                        </Button>
+                        <div className='flex h-[32px] bg-[#e9e9e9] rounded-[8px]'>
+                            <div
+                                className={`flex items-center justify-center h-full w-[32px] cursor-pointer rounded-[8px] ${view === 'list' ? 'bg-[#0D978B]' : ''}`}
+                                data-testid="list-view-button"
+                            >
+                                <LayoutList
+                                    className={`${view === 'list' ? 'text-white' : 'text-[#4b4b4b]'} size-[20px]`}
+                                    onClick={() => setView('list')}
+                                />
+                            </div>
+                            <div
+                                className={`flex items-center justify-center h-full w-[32px] cursor-pointer rounded-[8px] ${view === 'grid' ? 'bg-[#0D978B]' : ''}`}
+                                data-testid="grid-view-button"
+                            >
+                                <LayoutGrid
+                                    className={`${view === 'grid' ? 'text-white' : 'text-[#4b4b4b]'} size-[20px]`}
+                                    onClick={() => setView('grid')}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {showFilter && <FilterTool selectedLocations={selectedLocations} selectedDepartments={selectedDepartments} selectedTypes={selectedTypes} selectedStatuses={selectedStatuses} setSelectedLocations={setSelectedLocations} setSelectedDepartments={setSelectedDepartments} setSelectedTypes={setSelectedTypes} setSelectedStatuses={setSelectedStatuses} />}
+                <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${showFilter
+                        ? 'max-h-[200px] opacity-100 mt-[5px]'
+                        : 'max-h-0 opacity-0 mt-0'
+                        }`}
+                >
+                    <FilterTool
+                        selectedLocations={selectedLocations}
+                        selectedDepartments={selectedDepartments}
+                        selectedTypes={selectedTypes}
+                        selectedStatuses={selectedStatuses}
+                        setSelectedLocations={setSelectedLocations}
+                        setSelectedDepartments={setSelectedDepartments}
+                        setSelectedTypes={setSelectedTypes}
+                        setSelectedStatuses={setSelectedStatuses}
+                    />
+                </div>
 
                 {loading ? <LoadingSpinner content='Loading Job Postings...' /> : <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     {view === 'list' &&

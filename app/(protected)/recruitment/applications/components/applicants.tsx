@@ -77,8 +77,10 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
             const searchLower = (searchQuery || "").toLowerCase();
             const matchesSearch =
                 !searchQuery ||
-                item.title.toLowerCase().includes(searchLower) ||
-                (item.description || "").toLowerCase().includes(searchLower);
+                (item?.first_name || "").toLowerCase().includes(searchLower) ||
+                (item?.last_name || "").toLowerCase().includes(searchLower) ||
+                `${(item?.first_name || "")} ${(item?.last_name || "")}`.toLowerCase().includes(searchLower) ||
+                (item?.status || "").toLowerCase().includes(searchLower);
 
             return matchesSearch && matchesStatus;
         });
@@ -415,7 +417,7 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                             data-testid="search-icon"
                         />
                         <Input
-                            placeholder="Search Job"
+                            placeholder="Search Applicant"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="ps-9 sm:w-[243px] w-full h-[42px]"
@@ -440,7 +442,7 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                             className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
                             data-testid="filter-button"
                         >
-                            <ListFilter className='size-[20px]' />
+                            <ListFilter className={`size-[20px] transition-transform duration-300 ${showFilter ? 'rotate-180' : ''}`} />
                             Filter
                         </Button>
                         <Button
@@ -456,7 +458,21 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
 
                     </div>
                 </div>
-                {showFilter && <FilterTool selectedAIScoring={selectedAIScoring} selectedShortListed={selectedShortListed} selectedStatuses={selectedStatuses} setSelectedAIScoring={setSelectedAIScoring} setSelectedShortListed={setSelectedShortListed} setSelectedStatuses={setSelectedStatuses} />}
+                <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${showFilter
+                        ? 'max-h-[200px] opacity-100 mt-[17px]'
+                        : 'max-h-0 opacity-0 mt-0'
+                        }`}
+                >
+                    <FilterTool
+                        selectedAIScoring={selectedAIScoring}
+                        selectedShortListed={selectedShortListed}
+                        selectedStatuses={selectedStatuses}
+                        setSelectedAIScoring={setSelectedAIScoring}
+                        setSelectedShortListed={setSelectedShortListed}
+                        setSelectedStatuses={setSelectedStatuses}
+                    />
+                </div>
                 {loading ? <LoadingSpinner content='Loading Applicants' /> : <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     <> {sortedData.length === 0 ?
                         <NoData data-testid="no-data-message" /> : <>
