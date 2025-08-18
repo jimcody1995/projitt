@@ -71,7 +71,7 @@ export default function JobPostings() {
         pageSize: 10,
     });
     const [sorting, setSorting] = useState<SortingState>([
-        { id: 'lastSession', desc: true },
+        { id: 'title', desc: false },
     ]);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [searchQuery, setSearchQuery] = useState('');
@@ -107,6 +107,39 @@ export default function JobPostings() {
             return matchesSearch && matchesStatus;
         });
     }, [searchQuery, selectedStatuses, jobData]);
+
+    const sortedData = useMemo<any[]>(() => {
+        if (sorting.length === 0) return filteredData;
+
+        const { id, desc } = sorting[0];
+
+        return [...filteredData].sort((a, b) => {
+            let aValue: any = a[id];
+            let bValue: any = b[id];
+
+            // If sorting by department object, compare its name
+            if (id === "department") {
+                aValue = aValue?.name ?? "";
+                bValue = bValue?.name ?? "";
+            }
+            if (id === "location_type") {
+                aValue = aValue?.name ?? "";
+                bValue = bValue?.name ?? "";
+            }
+
+
+            // Ensure values are strings before localeCompare
+            aValue = String(aValue ?? "");
+            bValue = String(bValue ?? "");
+
+            return desc
+                ? bValue.localeCompare(aValue) // Descending
+                : aValue.localeCompare(bValue); // Ascending
+        });
+    }, [sorting, filteredData]);
+    useEffect(() => {
+        console.log(sortedData);
+    }, [sortedData]);
 
     const getData = async () => {
         try {
@@ -219,7 +252,7 @@ export default function JobPostings() {
                 },
             },
             {
-                accessorKey: 'location',
+                accessorKey: 'location_type',
                 header: ({ column }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
@@ -260,7 +293,7 @@ export default function JobPostings() {
                         {row.original.applicants}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
@@ -314,8 +347,8 @@ export default function JobPostings() {
                         {new Date(row.original.deadline) > new Date() ? moment(row.original.deadline).fromNow() : 'Expired'}
                     </span>
                 ),
-                enableSorting: true,
                 size: 100,
+                enableSorting: false,
                 meta: {
                     headerClassName: '',
                 },
@@ -340,8 +373,8 @@ export default function JobPostings() {
 
     const table = useReactTable({
         columns: columns as ColumnDef<any, any>[],
-        data: filteredData,
-        pageCount: Math.ceil((filteredData?.length || 0) / pagination.pageSize),
+        data: sortedData,
+        pageCount: Math.ceil((sortedData?.length || 0) / pagination.pageSize),
         getRowId: (row: any) => row.id,
         state: {
             pagination,
@@ -536,7 +569,7 @@ export default function JobPostings() {
             <DataGrid
                 className='w-full'
                 table={table}
-                recordCount={filteredData?.length || 0}
+                recordCount={sortedData?.length || 0}
                 data-testid="job-postings-grid"
             >
                 <div className="flex items-center justify-between">
@@ -577,20 +610,20 @@ export default function JobPostings() {
                                     <SelectedDialog
                                         getData={getData}
                                         selectedRows={selectedRows}
-                                        totalCount={filteredData?.length}
-                                        allData={filteredData}
+                                        totalCount={sortedData?.length}
+                                        allData={sortedData}
                                         setSelectedRows={setSelectedRows}
                                         setRowSelection={setRowSelection}
                                         data-testid="selected-dialog"
                                     />
                                 }
                                 <div
-                                    className='w-full overflow-x-auto h-[calc(100vh-300px)]'
+                                    className={`w-full overflow-x-auto ${showFilter ? 'h-[calc(100vh-370px)]' : 'h-[calc(100vh-320px)]'} border-b border-gray-300`}
                                     data-testid="list-view-container"
                                 >
                                     <DataGridTable />
                                 </div>
-                                <DataGridPagination data-testid="pagination-controls" />
+                                <DataGridPagination data-testid="pagination-controls" className='mt-[25px]' />
                             </>
                         }
 

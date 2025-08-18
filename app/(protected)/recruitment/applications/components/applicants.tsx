@@ -84,6 +84,30 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
         });
     }, [searchQuery, selectedStatuses, applicantsData]);
 
+    const sortedData = useMemo<any[]>(() => {
+        if (sorting.length === 0) return filteredData;
+
+        const { id, desc } = sorting[0];
+
+        return [...filteredData].sort((a, b) => {
+            let aValue: any = a[id];
+            let bValue: any = b[id];
+
+            // If sorting by department object, compare its name
+            if (id === "name") {
+                aValue = a?.first_name ?? "";
+                bValue = b?.first_name ?? "";
+            }
+            // Ensure values are strings before localeCompare
+            aValue = String(aValue ?? "");
+            bValue = String(bValue ?? "");
+
+            return desc
+                ? bValue.localeCompare(aValue) // Descending
+                : aValue.localeCompare(bValue); // Ascending
+        });
+    }, [sorting, filteredData]);
+
     const getData = async () => {
         try {
             setLoading(true);
@@ -187,7 +211,7 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                 },
             },
             {
-                accessorKey: 'ai-score',
+                accessorKey: 'ai_score',
                 header: ({ column }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
@@ -204,14 +228,14 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                         {row.original.ai_score}%
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 90,
                 meta: {
                     headerClassName: '',
                 },
             },
             {
-                accessorKey: 'date',
+                accessorKey: 'created_at',
                 header: ({ column }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
@@ -291,8 +315,8 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
 
     const table = useReactTable({
         columns: columns as ColumnDef<any, any>[],
-        data: filteredData,
-        pageCount: Math.ceil((filteredData?.length || 0) / pagination.pageSize),
+        data: sortedData,
+        pageCount: Math.ceil((sortedData?.length || 0) / pagination.pageSize),
         getRowId: (row: any) => row.id,
         state: {
             pagination,
@@ -380,7 +404,7 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
             <DataGrid
                 className='w-full'
                 table={table}
-                recordCount={filteredData?.length || 0}
+                recordCount={sortedData?.length || 0}
                 onRowClick={(row) => setSelectedApplication({ ...row, job_id: id })}
                 data-testid="job-postings-grid"
             >
@@ -434,14 +458,14 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                 </div>
                 {showFilter && <FilterTool selectedAIScoring={selectedAIScoring} selectedShortListed={selectedShortListed} selectedStatuses={selectedStatuses} setSelectedAIScoring={setSelectedAIScoring} setSelectedShortListed={setSelectedShortListed} setSelectedStatuses={setSelectedStatuses} />}
                 {loading ? <LoadingSpinner content='Loading Applicants' /> : <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
-                    <> {filteredData.length === 0 ?
+                    <> {sortedData.length === 0 ?
                         <NoData data-testid="no-data-message" /> : <>
                             {selectedRows.length > 0 &&
                                 <SelectedDialog
                                     getData={getData}
                                     selectedRows={selectedRows}
-                                    totalCount={filteredData?.length}
-                                    allData={filteredData}
+                                    totalCount={sortedData?.length}
+                                    allData={sortedData}
                                     setSelectedRows={setSelectedRows}
                                     setRowSelection={setRowSelection}
                                     setIsMessage={setIsMessage}
@@ -449,12 +473,12 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                                 />
                             }
                             <div
-                                className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFilter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
+                                className={`w-full overflow-x-auto  ${showFilter ? 'h-[calc(100vh-480px)]' : 'h-[calc(100vh-430px)]'}`}
                                 data-testid="list-view-container"
                             >
                                 <DataGridTable />
                             </div>
-                            <DataGridPagination data-testid="pagination-controls" />
+                            <DataGridPagination data-testid="pagination-controls" className='mt-[25px]' />
                         </>
                     }
 

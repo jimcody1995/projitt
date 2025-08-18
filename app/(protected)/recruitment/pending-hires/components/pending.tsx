@@ -59,6 +59,29 @@ export default function Pending() {
     ]);
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
 
+    const sortedData = useMemo<any[]>(() => {
+        if (sorting.length === 0) return applicantsData;
+
+        const { id, desc } = sorting[0];
+
+        return [...applicantsData].sort((a, b) => {
+            let aValue: any = a[id];
+            let bValue: any = b[id];
+
+            // If sorting by department object, compare its name
+            if (id === "job-detail") {
+                aValue = a?.job_title ?? "";
+                bValue = b?.job_title ?? "";
+            }
+
+            if (desc) {
+                return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+            } else {
+                return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+            }
+        });
+    }, [sorting, applicantsData]);
+
     const getData = async () => {
         console.log('getData');
     }
@@ -185,8 +208,8 @@ export default function Pending() {
      */
     const table = useReactTable({
         columns: columns as ColumnDef<any, any>[],
-        data: applicantsData,
-        pageCount: Math.ceil((applicantsData?.length || 0) / pagination.pageSize),
+        data: sortedData,
+        pageCount: Math.ceil((sortedData?.length || 0) / pagination.pageSize),
         getRowId: (row: any) => row.id,
         state: {
             pagination,
@@ -253,21 +276,21 @@ export default function Pending() {
                 <DataGrid
                     className='w-full'
                     table={table}
-                    recordCount={applicantsData?.length || 0}
+                    recordCount={sortedData?.length || 0}
                     data-testid="pending-applicants-grid"
                 >
                     <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
-                        {applicantsData.length === 0 ? (
+                        {sortedData.length === 0 ? (
                             <NoData data-testid="no-data-message" />
                         ) : (
                             <>
                                 <div
-                                    className={`w-full overflow-x-auto h-[calc(100vh-300px)]`}
+                                    className={`w-full overflow-x-auto h-[calc(100vh-325px)]`}
                                     data-testid="pending-list-view-container"
                                 >
                                     <DataGridTable />
                                 </div>
-                                <DataGridPagination data-testid="pending-pagination-controls" />
+                                <DataGridPagination data-testid="pending-pagination-controls" className="mt-[25px]" />
                             </>
                         )}
                     </div>

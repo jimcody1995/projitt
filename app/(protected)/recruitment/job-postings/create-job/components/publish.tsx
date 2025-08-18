@@ -223,7 +223,7 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
             </div>
 
             {/* Job Description Section */}
-            <div className="md:w-[650px] w-full flex flex-col gap-[36px] mt-[50px]">
+            <div className="xl:w-[650px] w-full flex flex-col gap-[36px] mt-[50px]">
                 <div
                     className="border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] p-[20px]"
                     id="job-description-section"
@@ -251,7 +251,7 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
             </div>
 
             {/* Applicant Questions Section */}
-            <div className="md:w-[650px] w-full flex flex-col gap-[36px] mt-[50px]">
+            <div className="xl:w-[650px] w-full flex flex-col gap-[36px] mt-[50px]">
                 <div
                     className="border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] p-[20px]"
                     id="applicant-questions-section"

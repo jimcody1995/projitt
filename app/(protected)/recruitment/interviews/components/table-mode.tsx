@@ -12,17 +12,15 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import moment from 'moment';
-import Detail from '../../applications/components/detail';
 import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Download, EllipsisVertical, ListFilter, Search, X } from "lucide-react";
-import CheckDialog from "../../job-postings/components/checkDialog";
 import { DataGrid } from "@/components/ui/data-grid";
 import { Input } from "@/components/ui/input";
 import { FilterTool } from "./filter";
-import { NoData } from "../../assessments/components/noData";
+import { NoData } from "./no-data";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import Reschedule from "./reschedule";
 import CancelInterview from "./cancel-interview";
@@ -72,6 +70,29 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
         });
     }, [searchQuery, selectedStatuses, applicantsData]);
 
+    const sortedData = useMemo<any[]>(() => {
+        if (sorting.length === 0) return filteredData;
+
+        const { id, desc } = sorting[0];
+
+        return [...filteredData].sort((a, b) => {
+            let aValue: any = a[id];
+            let bValue: any = b[id];
+
+            // If sorting by department object, compare its name
+            if (id === "name") {
+                aValue = a?.first_name ?? "";
+                bValue = b?.first_name ?? "";
+            }
+            if (id === "job-detail") {
+                aValue = a?.job?.title ?? "";
+                bValue = b?.job?.title ?? "";
+            }
+
+            // Ensure values are strings before localeCompare
+            return aValue.localeCompare(bValue, undefined, { sensitivity: "base" });
+        });
+    }, [sorting, filteredData]);
 
 
     // const getData = async () => {
@@ -153,7 +174,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                 },
             },
             {
-                accessorKey: 'state',
+                accessorKey: 'status',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
@@ -178,7 +199,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
             },
             ...(activeSection === "upcoming"
                 ? [{
-                    accessorKey: 'date',
+                    accessorKey: 'updated_at',
                     header: ({ column }: { column: any }) => (
                         <DataGridColumnHeader
                             className='text-[14px] font-medium'
@@ -399,12 +420,12 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                         <> {filteredData.length === 0 ?
                             <NoData data-testid="no-data-message" /> : <>
                                 <div
-                                    className={`w-full overflow-x-auto h-[calc(100vh-405px)] ${showFilter ? 'h-[calc(100vh-455px)]' : 'h-[calc(100vh-405px)]'}`}
+                                    className={`w-full overflow-x-auto ${showFilter ? 'h-[calc(100vh-480px)]' : 'h-[calc(100vh-430px)]'}`}
                                     data-testid="list-view-container"
                                 >
                                     <DataGridTable />
                                 </div>
-                                <DataGridPagination data-testid="pagination-controls" />
+                                <DataGridPagination data-testid="pagination-controls" className="mt-[25px]" />
                             </>
                         }
 
