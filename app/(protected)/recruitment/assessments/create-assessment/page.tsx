@@ -204,8 +204,8 @@ export default function CreateAssessment() {
                     time_duration: assessmentData.duration && assessmentData.duration.toString().trim() ?
                         parseInt(assessmentData.duration.toString().trim()) : 0,
                     type_id: assessmentData.type === 'psychometric' ? 1 : 2,
-                    points: assessmentData.points || 100
-                    // questions: [] // No questions payload for step 1
+                    points: assessmentData.points || 100,
+                    questions: [] // Adding empty questions array to satisfy TypeScript
                 };
 
                 let response;

@@ -65,12 +65,15 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
             }
             await addInterview(payload);
             setIsSent(true)
-        } catch (error) {
-            customToast('Error', error?.response.data.message, "error");
+        } catch (error: any) {
+            if (error?.response?.data?.message) {
+                customToast('Error', error.response.data.message, "error");
+            } else {
+                customToast('Error', 'An error occurred', "error");
+            }
         }
         finally {
             setLoading(false);
-
         }
     }
     return (
@@ -214,10 +217,7 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                         <div className="flex flex-col gap-[11px] mt-[11px] items-start">
                             {availableDate.map((date, index) => (
                                 <div key={index} className="flex gap-[8px] py-[6px] px-[10px] text-[#0d978b] rounded-[8px] bg-[#d6eeec]">
-                                    <span className="text-[14px]/[20px]">{
-                                        `${moment(date.from).format('DD MMM')} - ${moment(date.to).format('DD MMM')}` + ' ' +
-                                        `${date.hour}:${date.minute} ${date.amPm}`
-                                    }</span>
+                                    <span className="text-[14px]/[20px]">{moment(date.from).format('DD MMM YYYY')} {date.hour}:{date.minute} {date.amPm}</span>
                                     <button onClick={() => {
                                         setAvailableDate(availableDate.filter((_, i) => i !== index));
                                     }}><X className="size-[16px]" /></button>
@@ -226,52 +226,28 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                         </div>
                     </div>}
                     <div>
-                        <p className="text-[14px]/[16px] text-[#1c1c1c]">Add Interviewers</p>
+                        <p className="text-[14px]/[16px] text-[#1c1c1c]">Select Interviewers</p>
                         <Popover>
-                            <PopoverTrigger asChild className="w-full mt-[12px]">
-                                <div
-                                    className="cursor-pointer flex gap-[8px] py-[6px] px-[14px] border border-[#d2d2d2] rounded-[8px] justify-between items-center h-[48px]"
-                                    id="filter-locations-trigger"
-                                    data-testid="filter-locations-trigger"
+                            <PopoverTrigger asChild className="mt-[12px]">
+                                <Button
+                                    mode="input"
+                                    variant="outline"
+                                    id="date"
+                                    className={cn(
+                                        'w-full h-[48px] flex gap-[12px] border-[#bcbcbc] data-[state=open]:border-primary',
+                                    )}
+                                    data-test-id="certificate-issue-date"
                                 >
-                                    <span className="text-[14px]/[20px] text-[#787878]">
-                                        Communical
-                                    </span>
-                                    <ChevronDown
-                                        className="size-[18px] text-[#4b4b4b]"
-                                        id="filter-locations-chevron"
-                                        data-testid="filter-locations-chevron"
-                                    />
-                                </div>
+                                    <span className="flex-1 text-start">Select Interviewers</span>
+                                    <ChevronDown className="size-[16px]" />
+                                </Button>
                             </PopoverTrigger>
-                            <PopoverContent
-                                className="w-[330px] p-3"
-                                align="start"
-                                id="filter-locations-content"
-                                data-testid="filter-locations-content"
-                            >
-                                <div className="space-y-3">
-                                    {interviewers.map((interviewer: { id: string, name: string }, index: number) => (
-                                        <div
-                                            key={index}
-                                            className="flex items-center gap-2.5"
-                                            id={`filter-location-item-${index}`}
-                                            data-testid={`filter-location-item-${index}`}
-                                        >
-                                            <Checkbox
-                                                id={`filter-location-checkbox-${index}`}
-                                                checked={selectedInterviewers.includes(interviewer.id)}
-                                                onCheckedChange={(checked) =>
-                                                    handleInterviewersChange(checked === true, interviewer.id)
-                                                }
-                                                data-testid={`filter-location-checkbox-${index}`}
-                                            />
-                                            <Label
-                                                htmlFor={`filter-location-checkbox-${index}`}
-                                                className="grow flex items-center justify-between font-normal gap-1.5"
-                                            >
-                                                {interviewer.name}
-                                            </Label>
+                            <PopoverContent className="w-[300px] p-0" align="start">
+                                <div className="p-[16px] flex flex-col gap-[12px]">
+                                    {interviewers.map((interviewer) => (
+                                        <div key={interviewer.id} className="flex items-center space-x-2">
+                                            <Checkbox id={interviewer.id} onCheckedChange={(checked) => handleInterviewersChange(checked as boolean, interviewer.id)} />
+                                            <Label htmlFor={interviewer.id}>{interviewer.name}</Label>
                                         </div>
                                     ))}
                                 </div>
@@ -304,8 +280,8 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                         <DialogTitle></DialogTitle>
                         <div className="flex flex-col items-center">
                             <img src="/images/applicant/success.png" alt="" className="w-[120px] h-[120px]" />
-                            <span className="text-[28px]/[36px] font-semibold mt-[28px] text-[#353535]">{schedulingType === 'propose-time' ? 'Interview Invite Sent' : 'Availability Request Sent'}</span>
-                            <span className="text-[14px]/[24px] text-[#626262] mt-[8px] text-center">{schedulingType === 'propose-time' ? 'Your interview request has been sent to Alice Fernadez. They’ve been invited to confirm the proposed time.' : 'We’ve asked Alice Fernadez to share their availability. You’ll be notified once they submit their preferred time slots.'}</span>
+                            <span className="text-[28px]/[36px] font-semibold mt-[28px] text-[#353535]">{schedulingType === 'propose_time' ? 'Interview Invite Sent' : 'Availability Request Sent'}</span>
+                            <span className="text-[14px]/[24px] text-[#626262] mt-[8px] text-center">{schedulingType === 'propose_time' ? 'Your interview request has been sent to Alice Fernadez. They have been invited to confirm the proposed time.' : 'We have asked Alice Fernadez to share their availability. You will be notified once they submit their preferred time slots.'}</span>
                             <Button className="mt-[24px] w-[300px] h-[42px]" onClick={() => { setIsSent(false); onOpenChange(false); }}>Return to Applicants List</Button>
                         </div>
                     </DialogHeader>

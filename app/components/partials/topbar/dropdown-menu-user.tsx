@@ -40,7 +40,7 @@ export function DropdownMenuUser({ trigger }: { trigger: ReactNode }) {
   const { theme, setTheme } = useTheme();
 
   const handleLanguage = (lang: Language) => {
-    changeLanguage(lang.code);
+    changeLanguage(lang);
   };
 
   const handleThemeToggle = (checked: boolean) => {
@@ -57,7 +57,7 @@ export function DropdownMenuUser({ trigger }: { trigger: ReactNode }) {
             <img
               className="w-9 h-9 rounded-full border border-border"
               src={toAbsoluteUrl(
-                session?.user.avatar || '/media/avatars/300-2.png',
+                session?.user?.image || '/media/avatars/300-2.png',
               )}
               alt="User avatar"
             />
@@ -66,13 +66,13 @@ export function DropdownMenuUser({ trigger }: { trigger: ReactNode }) {
                 href="/account/home/get-started"
                 className="text-sm text-mono hover:text-primary font-semibold"
               >
-                {session?.user.name || ''}
+                {session?.user?.name || ''}
               </Link>
               <Link
                 href="mailto:c.fisher@gmail.com"
                 className="text-xs text-muted-foreground hover:text-primary"
               >
-                {session?.user.email || ''}
+                {session?.user?.email || ''}
               </Link>
             </div>
           </div>

@@ -253,7 +253,9 @@ export const deleteAssessment = async (ids: number[]): Promise<{
     message: string;
     data: any;
 }> => {
-    const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/delete`, { ids });
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/delete`, {
+        data: { ids }
+    });
     return response.data;
 };
 

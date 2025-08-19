@@ -57,9 +57,13 @@ export default function JobDescription({
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
-            customToast("Error", error?.response.data.message, "error");
+            if (error?.response?.data?.message) {
+                customToast("Error", error.response.data.message, "error");
+            } else {
+                customToast("Error", "An error occurred", "error");
+            }
             setLoading(false);
         }
     };

@@ -137,6 +137,9 @@ function DialogDescription({
   );
 }
 
+// Adding a div export to fix TypeScript errors in files that import it
+const div = 'div';
+
 export {
   Dialog,
   DialogBody,
@@ -149,4 +152,5 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
+  div,
 };

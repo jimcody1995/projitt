@@ -166,7 +166,7 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
                                             <div className="flex gap-[6px]">
                                                 <User className="size-[16px] text-[#4b4b4b]" />
                                                 <div className="flex gap-[7px] flex-wrap">
-                                                    {event.interviewers_ids.map((interviewer, idx) => (
+                                                    {event.interviewers_ids.map((interviewer: number, idx: number) => (
                                                         <span key={idx} className="py-[3.75px] px-[6.25px] rounded-[5px] bg-[#ebebeb] text-[12px]/[12.5px] text-[#4b4b4b]">{interviewer}</span>
                                                     ))}
                                                 </div>

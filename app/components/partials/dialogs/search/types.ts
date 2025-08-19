@@ -1,4 +1,4 @@
-import { Avatars } from '@/partials/common/avatar-group';
+import { Avatars } from '@/app/components/partials/common/avatar-group';
 import { LucideIcon } from 'lucide-react';
 
 export interface SearchDocsItem {
@@ -36,12 +36,12 @@ export interface SearchUsersItem {
   email: string;
   label: string;
   color:
-    | 'success'
-    | 'destructive'
-    | 'primary'
-    | 'secondary'
-    | 'warning'
-    | 'info'
-    | null
-    | undefined;
+  | 'success'
+  | 'destructive'
+  | 'primary'
+  | 'secondary'
+  | 'warning'
+  | 'info'
+  | null
+  | undefined;
 }

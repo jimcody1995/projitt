@@ -48,8 +48,10 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
     const [applicantsData, setApplicantsData] = useState<any[]>(interviews);
-    const [selectedMode, setSelectedMode] = useState<number[]>([]);
+    const [selectedMode, setSelectedMode] = useState<string[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+    const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
+    const [nameFilter, setNameFilter] = useState<string>('');
     const { country } = useBasic()
     const filteredData = useMemo<any[]>(() => {
         return applicantsData.filter((item) => {
@@ -163,7 +165,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                         <p
                             className="text-[11px]/[14px] text-[#8f8f8f]"
                         >
-                            {country.find((item: any) => item.id === row.original.job?.country_id)?.name}
+                            {country && Array.isArray(country) && country.length > 0 ? (country.find((item: any) => item.id === row.original.job?.country_id) as any)?.name || '' : ''}
                         </p>
                     </div>
                 ),
@@ -415,7 +417,16 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                             </Button>
                         </div>
                     </div>
-                    {showFilter && <FilterTool selectedMode={selectedMode} selectedStatuses={selectedStatuses} setSelectedMode={setSelectedMode} setSelectedStatuses={setSelectedStatuses} />}
+                    {showFilter && <FilterTool
+                        selectedMode={selectedMode}
+                        selectedStatuses={selectedStatuses}
+                        selectedCountries={selectedCountries}
+                        nameFilter={nameFilter}
+                        setSelectedMode={setSelectedMode}
+                        setSelectedStatuses={setSelectedStatuses}
+                        setSelectedCountries={setSelectedCountries}
+                        setNameFilter={setNameFilter}
+                    />}
                     <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                         <> {filteredData.length === 0 ?
                             <NoData data-testid="no-data-message" /> : <>

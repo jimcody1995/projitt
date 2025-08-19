@@ -84,7 +84,7 @@ export default function Detail({ open, onOpenChange, selectedApplication, getDat
                                 </Button>
                             </div>
                             <div className="flex items-center gap-[10px]">
-                                <span className="text-[14px] text-[#626262]">{applicantDetails?.job?.title} ~ {country?.find((item: any) => item.id === applicantDetails?.job?.country_id)?.name}</span>
+                                <span className="text-[14px] text-[#626262]">{applicantDetails?.job?.title} ~ {country && Array.isArray(country) && country.length > 0 ? (country.find((item: any) => item.id === applicantDetails?.job?.country_id) as any)?.name || '' : ''}</span>
                                 <Button
                                     mode="icon"
                                     variant="outline"

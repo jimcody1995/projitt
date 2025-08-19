@@ -6,8 +6,12 @@ import * as pdfjsLib from 'pdfjs-dist';
 import 'pdfjs-dist/legacy/build/pdf.worker';
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
 
-export default function PdfViewer({ url }) {
-    const canvasRef = useRef(null);
+interface PdfViewerProps {
+    url: string;
+}
+
+export default function PdfViewer({ url }: PdfViewerProps) {
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,11 +24,15 @@ export default function PdfViewer({ url }) {
             const viewport = page.getViewport({ scale: 1 });
 
             const canvas = canvasRef.current;
+            if (!canvas) return;
+
             const context = canvas.getContext("2d");
+            if (!context) return;
+
             canvas.height = viewport.height;
             canvas.width = viewport.width;
 
-            await page.render({ canvasContext: context, viewport }).promise;
+            await page.render({ canvasContext: context, viewport, canvas }).promise;
             setLoading(false);
         };
 
