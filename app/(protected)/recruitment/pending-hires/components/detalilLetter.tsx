@@ -5,7 +5,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, CirclePlus, MoreVertical, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import moment from "moment";
+import { formatDate } from "@/lib/date-utils";
 import { Calendar } from "@/components/ui/calendar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
@@ -213,7 +213,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                             data-testid="start-date-picker-button"
                                         >
                                             <CalendarDays className="-ms-0.5" />
-                                            {startDate ? moment(startDate).format('DD/MM/YYYY') : <span>Pick a date</span>}
+                                            {startDate ? formatDate(startDate) : <span>Pick a date</span>}
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0" align="start" data-testid="start-date-calendar-popover" id="start-date-calendar-popover">
@@ -249,7 +249,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                             data-testid="offer-expiry-date-picker-button"
                                         >
                                             <CalendarDays className="-ms-0.5" />
-                                            {offerExpiryDate ? moment(offerExpiryDate).format('DD/MM/YYYY') : <span>Pick a date</span>}
+                                            {offerExpiryDate ? formatDate(offerExpiryDate) : <span>Pick a date</span>}
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0" align="start" data-testid="offer-expiry-calendar-popover" id="offer-expiry-calendar-popover">

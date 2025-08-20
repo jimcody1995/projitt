@@ -1,7 +1,7 @@
 'use client'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Link, Linkedin } from "lucide-react";
-import moment from "moment";
+import { formatMonthYear } from "@/lib/date-utils";
 import { useState } from "react";
 
 export default function ApplicationSummary({ applicantDetails }: { applicantDetails: any }) {
@@ -90,7 +90,7 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
                                         <p className="text-[16px]/[20px] font-medium text-[#4b4b4b]">{experience.job_title}</p>
                                         <p className="text-[14px]/[20px] font-medium text-[#4b4b4b]">{experience.company} ~ {experience.location}</p>
                                     </div>
-                                    <p className="text-[14px]/[20px] font-medium text-[#787878]">{moment(experience.from_date).format('MMM YYYY')} - {moment(experience.to_date).format('MMM YYYY')}</p>
+                                    <p className="text-[14px]/[20px] font-medium text-[#787878]">{formatMonthYear(experience.from_date)} - {formatMonthYear(experience.to_date)}</p>
                                 </div>
                                 <p className="mt-[12px] text-[13px]/[20px]">
                                     {experience.role_description}
@@ -126,7 +126,7 @@ export default function ApplicationSummary({ applicantDetails }: { applicantDeta
                                         <p className="text-[16px]/[20px] font-medium text-[#4b4b4b]">{certification.title}</p>
                                         <p className="text-[14px]/[20px] font-medium text-[#4b4b4b]">{certification.number}</p>
                                     </div>
-                                    <p className="text-[14px]/[20px] font-medium text-[#787878]">{moment(certification.issued_date).format('MMM YYYY')} - {moment(certification.expiration_date).format('MMM YYYY')}</p>
+                                    <p className="text-[14px]/[20px] font-medium text-[#787878]">{formatMonthYear(certification.issued_date)} - {formatMonthYear(certification.expiration_date)}</p>
                                 </div>
                             </div>
                         ))}

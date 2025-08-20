@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { JSX, useState } from 'react';
 import { getCompanySchema, CompanySchemaType } from '../forms/company-schema';
 import { Calendar } from '@/components/ui/calendar';
-import moment from 'moment';
+import { formatFullDate, formatTimeFrom24Hour } from '@/lib/date-utils';
 import { ArrowLeft, Calendar1, Clock4, Globe2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import TimezoneSelect from '@/components/common/timezone-select';
@@ -128,7 +128,7 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps): JSX.
                 <ArrowLeft onClick={() => setDate(undefined)} className="w-[15px]" />
               </button>
               <p className="text-[18px]/[24px] text-[#353535] font-semibold">
-                {moment(date?.[0]).format('dddd, MMMM D, YYYY')}
+                {formatFullDate(date?.[0])}
               </p>
             </div>
             <div className="flex flex-col gap-[10px] border-b-1 border-[#e9e9e9] pb-[16px]">
@@ -183,13 +183,13 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps): JSX.
                 <div className="flex gap-[10px]">
                   <Clock4 className="w-[20px] h-[20px] text-[#4b4b4b]" />
                   <p className="text-[16px]/[24px] text-[#4b4b4b] font-medium">
-                    {moment(time, 'HH:mm').format('hh:mm A')}
+                    {time ? formatTimeFrom24Hour(time) : ''}
                   </p>
                 </div>
                 <div className="flex gap-[10px]">
                   <img src="/images/icons/calendar.svg" alt="calendar" className="w-[20px] h-[20px]" />
                   <p className="text-[16px]/[24px] text-[#4b4b4b] font-medium">
-                    {moment(date?.[0]).format('dddd, MMMM D, YYYY')}
+                    {formatFullDate(date?.[0])}
                   </p>
                 </div>
                 <div className="flex gap-[10px]">
@@ -234,13 +234,13 @@ export default function DateTimePick({ step, setStep }: DateTimePickProps): JSX.
               <div className="flex gap-[10px]">
                 <Clock4 className="w-[24px] h-[24px]" />
                 <p className="text-[16px]/[24px] text-[#4b4b4b] font-medium">
-                  {moment(time, 'HH:mm').format('hh:mm A')}
+                  {time ? formatTimeFrom24Hour(time) : ''}
                 </p>
               </div>
               <div className="flex gap-[10px]">
                 <Calendar1 className="w-[24px] h-[24px]" />
                 <p className="text-[16px]/[24px] text-[#4b4b4b] font-medium">
-                  {moment(date?.[0]).format('dddd, MMMM D, YYYY')}
+                  {formatFullDate(date?.[0])}
                 </p>
               </div>
               <div className="flex gap-[10px]">

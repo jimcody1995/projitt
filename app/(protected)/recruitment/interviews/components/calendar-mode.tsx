@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import moment from 'moment';
+import { formatMonthYear, formatDateYYYYMMDD, utcToLocal, addMonth, subtractMonth, formatMonthAndDay } from '@/lib/date-utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar, EllipsisVertical, User, Video } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -12,24 +12,34 @@ import CancelInterview from './cancel-interview';
 // Placeholder data (replace with props or context as needed)
 
 function getDaysInMonth(year: number, month: number) {
-    const start = moment([year, month]);
-    const end = start.clone().endOf('month');
-    const days: moment.Moment[] = [];
-    const day = start.clone().startOf('week');
-    const lastDay = end.clone().endOf('week');
-    while (day.isBefore(lastDay)) {
-        days.push(day.clone());
-        day.add(1, 'day');
+    const start = new Date(year, month, 1);
+    const end = new Date(year, month + 1, 0);
+    const days: Date[] = [];
+
+    // Get the start of the week (Sunday) for the first day of the month
+    const firstDayOfWeek = new Date(start);
+    const dayOfWeek = firstDayOfWeek.getDay();
+    firstDayOfWeek.setDate(firstDayOfWeek.getDate() - dayOfWeek);
+
+    // Get the end of the week (Saturday) for the last day of the month
+    const lastDayOfWeek = new Date(end);
+    const lastDayOfWeekDay = lastDayOfWeek.getDay();
+    lastDayOfWeek.setDate(lastDayOfWeek.getDate() + (6 - lastDayOfWeekDay));
+
+    const currentDay = new Date(firstDayOfWeek);
+    while (currentDay <= lastDayOfWeek) {
+        days.push(new Date(currentDay));
+        currentDay.setDate(currentDay.getDate() + 1);
     }
     return days;
 }
 
 export default function CalendarMode({ interviews, setSelectedApplication }: { interviews: any[]; setSelectedApplication: (application: string | null) => void }) {
-    const [currentMonth, setCurrentMonth] = useState(moment());
+    const [currentMonth, setCurrentMonth] = useState(new Date());
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
-    const days = getDaysInMonth(currentMonth.year(), currentMonth.month());
-    const monthLabel = currentMonth.format('MMMM YYYY');
+    const days = getDaysInMonth(currentMonth.getFullYear(), currentMonth.getMonth());
+    const monthLabel = formatMonthYear(currentMonth);
 
     // Group interviews by date (YYYY-MM-DD)
     const [eventsByDate, setEventsByDate] = useState<Record<string, any[]>>({});
@@ -40,18 +50,18 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
             interviews.forEach((event: any) => {
                 // Debug: Log the original date and how it's being processed
                 console.log('Original date:', event.date);
-                console.log('Moment UTC:', moment.utc(event.date).format());
-                console.log('Moment local:', moment.utc(event.date).local().format());
-                console.log('Key generated:', moment.utc(event.date).local().format('YYYY-MM-DD'));
 
                 // Try different approaches to handle the date
                 let key;
                 if (event.date.includes('T00:00:00')) {
                     // If it's a date-only string (no time), parse it directly
-                    key = moment(event.date.split('T')[0]).format('YYYY-MM-DD');
+                    const dateOnly = event.date.split('T')[0];
+                    key = formatDateYYYYMMDD(new Date(dateOnly));
                 } else {
-                    // For datetime strings, use UTC parsing
-                    key = moment.utc(event.date).local().format('YYYY-MM-DD');
+                    // For datetime strings, use UTC parsing and convert to local
+                    const utcDate = new Date(event.date);
+                    const localDate = utcToLocal(utcDate);
+                    key = formatDateYYYYMMDD(localDate);
                 }
 
                 if (!eventsBy[key]) eventsBy[key] = [];
@@ -72,14 +82,14 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
                 <div className="flex gap-2">
                     <button
                         className="w-8 h-8 flex items-center justify-center rounded hover:bg-[#e9e9e9] cursor-pointer"
-                        onClick={() => setCurrentMonth(m => m.clone().subtract(1, 'month'))}
+                        onClick={() => setCurrentMonth(prev => subtractMonth(prev))}
                         aria-label="Previous Month"
                     >
                         {'<'}
                     </button>
                     <button
                         className="w-8 h-8 flex items-center justify-center rounded hover:bg-[#e9e9e9] cursor-pointer"
-                        onClick={() => setCurrentMonth(m => m.clone().add(1, 'month'))}
+                        onClick={() => setCurrentMonth(prev => addMonth(prev))}
                         aria-label="Next Month"
                     >
                         {'>'}
@@ -93,15 +103,15 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
             </div>
             <div className="grid grid-cols-7">
                 {days.map(day => {
-                    const key = day.format('YYYY-MM-DD');
-                    // console.log('Calendar day key:', key, 'for date:', day.format('YYYY-MM-DD HH:mm:ss'));
-                    const isCurrentMonth = day.month() === currentMonth.month();
+                    const key = formatDateYYYYMMDD(day);
+                    // console.log('Calendar day key:', key, 'for date:', formatDateYYYYMMDD(day));
+                    const isCurrentMonth = day.getMonth() === currentMonth.getMonth();
                     return (
                         <div
                             key={key}
                             className={`min-h-[128px]  p-1 relative border border-[#D3F0EC]`}
                         >
-                            <div className="text-[14px] font-medium text-center text-[#5D5555] mb-1">{isCurrentMonth ? day.date() : moment(day).format('MMM') + ' ' + day.date()}</div>
+                            <div className="text-[14px] font-medium text-center text-[#5D5555] mb-1">{isCurrentMonth ? day.getDate() : formatMonthAndDay(day)}</div>
                             {eventsByDate[key]?.map((event: any, idx: number) => (
                                 <Popover key={`${key}-${idx}`}>
                                     <PopoverTrigger asChild>

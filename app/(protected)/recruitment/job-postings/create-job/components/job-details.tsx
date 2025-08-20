@@ -30,7 +30,7 @@ import { Button } from "@/components/ui/button";
 import { CalendarDays } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
-import moment from "moment";
+import { formatDate } from "@/lib/date-utils";
 import TagInput from "@/components/ui/tag-input";
 import SuggestionInput from "@/components/ui/suggestion-input";
 import { useBasic } from "@/context/BasicContext";
@@ -325,7 +325,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                                 )}
                             >
                                 <CalendarDays className="-ms-0.5" />
-                                {jobData?.deadline ? moment(jobData?.deadline).format('DD/MM/YYYY') : <span>Pick a date</span>}
+                                {jobData?.deadline ? formatDate(jobData?.deadline) : <span>Pick a date</span>}
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">

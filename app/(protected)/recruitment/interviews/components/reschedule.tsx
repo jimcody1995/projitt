@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import moment from 'moment';
+import { formatDate } from '@/lib/date-utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarDays } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -40,7 +40,7 @@ export default function Reschedule({ open, setOpen }: { open: boolean, setOpen: 
                                 data-testid="reschedule-date-picker-button"
                             >
                                 <CalendarDays className="-ms-0.5" />
-                                {date ? moment(date).format('DD/MM/YYYY') : <span>Pick a date</span>}
+                                {date ? formatDate(date) : <span>Pick a date</span>}
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start" data-testid="reschedule-calendar-popover" id="reschedule-calendar-popover">

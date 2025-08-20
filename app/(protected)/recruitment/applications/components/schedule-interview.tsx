@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
-import moment from "moment";
+import { formatDateYYYYMMDD, formatTimeTo24Hour, formatDateWithComma } from '@/lib/date-utils';
 import { Calendar } from "@/components/ui/calendar";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -24,9 +24,10 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
     const [schedulingType, setSchedulingType] = useState<'propose_time' | 'request_availability'>('propose_time');
     const [mode, setMode] = useState<'google_meet' | 'zoom' | 'projitt_video_conference' | 'microsoft_team'>('zoom');
     const [range, setRange] = useState<{ from: Date | undefined; to: Date | undefined } | undefined>(undefined)
-    const [selectedHour, setSelectedHour] = useState<string | null>(moment().format("hh"));
-    const [selectedMinute, setSelectedMinute] = useState<string | null>(moment().format("mm"));
-    const [selectedAmPm, setSelectedAmPm] = useState<string | null>(moment().format("A"));
+    const now = new Date();
+    const [selectedHour, setSelectedHour] = useState<string | null>(now.getHours() % 12 === 0 ? '12' : (now.getHours() % 12).toString().padStart(2, '0'));
+    const [selectedMinute, setSelectedMinute] = useState<string | null>(now.getMinutes().toString().padStart(2, '0'));
+    const [selectedAmPm, setSelectedAmPm] = useState<string | null>(now.getHours() >= 12 ? 'PM' : 'AM');
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [availableDate, setAvailableDate] = useState<Array<{ from: Date; to: Date; hour: string; minute: string; amPm: string }>>([]);
     const [interviewers, setInterviewers] = useState<Array<{ id: string, name: string }>>([
@@ -60,8 +61,8 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                 message,
                 job_id: selectedApplication?.job_id,
                 applicant_id: selectedApplication?.applicant_id,
-                date: schedulingType === 'propose_time' ? moment(range?.from).format('YYYY-MM-DD') : undefined,
-                time: schedulingType === 'propose_time' ? moment(`${selectedHour}:${selectedMinute} ${selectedAmPm}`, 'hh:mm A').format('HH:mm') : undefined,
+                date: schedulingType === 'propose_time' ? formatDateYYYYMMDD(range?.from) : undefined,
+                time: schedulingType === 'propose_time' ? formatTimeTo24Hour(`${selectedHour}:${selectedMinute} ${selectedAmPm}`) : undefined,
             }
             await addInterview(payload);
             setIsSent(true)
@@ -154,7 +155,7 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                                 />
                                 <div className="flex gap-2 p-4 justify-center">
                                     {/* Hour Select */}
-                                    <Select defaultValue={moment().format("hh")} onValueChange={(value) => setSelectedHour(value)}>
+                                    <Select defaultValue={selectedHour || undefined} onValueChange={(value) => setSelectedHour(value)}>
                                         <SelectTrigger className="w-[100px]">
                                             <SelectValue placeholder="HH" />
                                         </SelectTrigger>
@@ -172,7 +173,7 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                                     </Select>
                                     <span className="text-[16px] flex items-center">:</span>
                                     {/* Minute Select */}
-                                    <Select defaultValue={moment().format("mm")} onValueChange={(value) => setSelectedMinute(value)}>
+                                    <Select defaultValue={selectedMinute || undefined} onValueChange={(value) => setSelectedMinute(value)}>
                                         <SelectTrigger className="w-[100px]">
                                             <SelectValue placeholder="MM" />
                                         </SelectTrigger>
@@ -188,7 +189,7 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                                         </SelectContent>
                                     </Select>
                                     {/* AM/PM Select */}
-                                    <Select defaultValue={moment().format("A")} onValueChange={(value) => setSelectedAmPm(value)}>
+                                    <Select defaultValue={selectedAmPm || undefined} onValueChange={(value) => setSelectedAmPm(value)}>
                                         <SelectTrigger className="w-[100px]">
                                             <SelectValue placeholder="AM/PM" />
                                         </SelectTrigger>
@@ -217,7 +218,7 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                         <div className="flex flex-col gap-[11px] mt-[11px] items-start">
                             {availableDate.map((date, index) => (
                                 <div key={index} className="flex gap-[8px] py-[6px] px-[10px] text-[#0d978b] rounded-[8px] bg-[#d6eeec]">
-                                    <span className="text-[14px]/[20px]">{moment(date.from).format('DD MMM YYYY')} {date.hour}:{date.minute} {date.amPm}</span>
+                                    <span className="text-[14px]/[20px]">{formatDateWithComma(date.from)} {date.hour}:{date.minute} {date.amPm}</span>
                                     <button onClick={() => {
                                         setAvailableDate(availableDate.filter((_, i) => i !== index));
                                     }}><X className="size-[16px]" /></button>

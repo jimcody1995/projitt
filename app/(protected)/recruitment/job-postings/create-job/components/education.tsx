@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarDays } from "lucide-react";
-import moment from "moment";
+import { formatDate } from "@/lib/date-utils";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -59,7 +59,7 @@ export default function Education() {
                                     data-test-id="certificate-issue-date"
                                 >
                                     <CalendarDays className="-ms-0.5" />
-                                    {moment(education.certificates.issueDate).format('DD/MM/YYYY')}
+                                    {formatDate(education.certificates.issueDate)}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0" align="start">
@@ -95,7 +95,7 @@ export default function Education() {
                                     data-test-id="certificate-expiration-date"
                                 >
                                     <CalendarDays className="-ms-0.5" />
-                                    {moment(education.certificates.expirationDate).format('DD/MM/YYYY')}
+                                    {formatDate(education.certificates.expirationDate)}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0" align="start">

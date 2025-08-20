@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
-import moment from "moment";
+import { formatDate } from "@/lib/date-utils";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -80,7 +80,7 @@ export default function WorkExperience() {
                                                 >
                                                     <CalendarDays className="-ms-0.5" />
                                                     {workExperience.workExperience[index].from
-                                                        ? moment(workExperience.workExperience[index].from).format('DD/MM/YYYY')
+                                                        ? formatDate(workExperience.workExperience[index].from)
                                                         : <span>Pick a date</span>}
                                                 </Button>
                                             </PopoverTrigger>
@@ -117,7 +117,7 @@ export default function WorkExperience() {
                                                 >
                                                     <CalendarDays className="-ms-0.5" />
                                                     {workExperience.workExperience[index].to
-                                                        ? moment(workExperience.workExperience[index].to).format('DD/MM/YYYY')
+                                                        ? formatDate(workExperience.workExperience[index].to)
                                                         : <span>Pick a date</span>}
                                                 </Button>
                                             </PopoverTrigger>
