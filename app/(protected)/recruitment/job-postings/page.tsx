@@ -567,20 +567,20 @@ export default function JobPostings() {
                         </Button>
                         <div className='flex h-[32px] bg-[#e9e9e9] rounded-[8px]'>
                             <div
-                                className={`flex items-center justify-center h-full w-[32px] cursor-pointer rounded-[8px] ${view === 'list' ? 'bg-[#0D978B]' : ''}`}
+                                className={`flex items-center justify-center h-full w-[32px] cursor-pointer rounded-[8px] transition-all duration-200 ease-in-out transform ${view === 'list' ? 'bg-[#0D978B] scale-105 shadow-md' : 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800'}`}
                                 data-testid="list-view-button"
                             >
                                 <LayoutList
-                                    className={`${view === 'list' ? 'text-white' : 'text-[#4b4b4b]'} size-[20px]`}
+                                    className={`${view === 'list' ? 'text-white' : 'text-[#4b4b4b]'} size-[20px] transition-all duration-200 ease-in-out ${view === 'list' ? 'scale-110' : 'scale-100'}`}
                                     onClick={() => setView('list')}
                                 />
                             </div>
                             <div
-                                className={`flex items-center justify-center h-full w-[32px] cursor-pointer rounded-[8px] ${view === 'grid' ? 'bg-[#0D978B]' : ''}`}
+                                className={`flex items-center justify-center h-full w-[32px] cursor-pointer rounded-[8px] transition-all duration-200 ease-in-out transform ${view === 'grid' ? 'bg-[#0D978B] scale-105 shadow-md' : 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800'}`}
                                 data-testid="grid-view-button"
                             >
                                 <LayoutGrid
-                                    className={`${view === 'grid' ? 'text-white' : 'text-[#4b4b4b]'} size-[20px]`}
+                                    className={`${view === 'grid' ? 'text-white' : 'text-[#4b4b4b]'} size-[20px] transition-all duration-200 ease-in-out ${view === 'grid' ? 'scale-110' : 'scale-100'}`}
                                     onClick={() => setView('grid')}
                                 />
                             </div>
