@@ -38,7 +38,7 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined);
  */
 export const SessionProvider = ({ children }: { children: ReactNode }): JSX.Element => {
     const [session, setSessionState] = useState<Session>({ token: null, authenticated: false });
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
 
@@ -55,39 +55,39 @@ export const SessionProvider = ({ children }: { children: ReactNode }): JSX.Elem
     ];
 
     useLayoutEffect(() => {
-        const loadSession = async () => {
-            setLoading(true);
-            const stored = localStorage.getItem("session");
-            const isPublicRoute = publicRoutes.includes(pathname);
+        // const loadSession = async () => {
+        //     setLoading(true);
+        //     const stored = localStorage.getItem("session");
+        //     const isPublicRoute = publicRoutes.includes(pathname);
 
-            if (stored) {
-                axios.defaults.headers.common["Authorization"] = `Bearer ${stored}`;
-                try {
-                    const token = await refreshToken(stored);
-                    setSessionState({ token: token.data.data.refresh_token, authenticated: true });
-                    localStorage.setItem("session", token.data.data.refresh_token);
-                    axios.defaults.headers.common["Authorization"] = `Bearer ${token.data.data.refresh_token}`;
-                    setTimeout(() => setLoading(false), 1000);
+        //     if (stored) {
+        //         axios.defaults.headers.common["Authorization"] = `Bearer ${stored}`;
+        //         try {
+        //             const token = await refreshToken(stored);
+        //             setSessionState({ token: token.data.data.refresh_token, authenticated: true });
+        //             localStorage.setItem("session", token.data.data.refresh_token);
+        //             axios.defaults.headers.common["Authorization"] = `Bearer ${token.data.data.refresh_token}`;
+        //             setTimeout(() => setLoading(false), 1000);
 
-                    if (isPublicRoute || pathname === "/signin") {
-                        router.replace('/');
-                    }
-                } catch (error) {
-                    console.log(error);
-                    localStorage.removeItem("session");
-                    setLoading(false);
-                    router.push('/signin');
-                }
-            } else {
-                setSessionState({ token: null, authenticated: false });
-                setTimeout(() => setLoading(false), 1000);
-                if (!isPublicRoute && pathname !== "/signin") {
-                    router.replace('/signin');
-                }
-            }
-        }
-        loadSession();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        //             if (isPublicRoute || pathname === "/signin") {
+        //                 router.replace('/');
+        //             }
+        //         } catch (error) {
+        //             console.log(error);
+        //             localStorage.removeItem("session");
+        //             setLoading(false);
+        //             router.push('/signin');
+        //         }
+        //     } else {
+        //         setSessionState({ token: null, authenticated: false });
+        //         setTimeout(() => setLoading(false), 1000);
+        //         if (!isPublicRoute && pathname !== "/signin") {
+        //             router.replace('/signin');
+        //         }
+        //     }
+        // }
+        // loadSession();
+
     }, []);
 
     /**

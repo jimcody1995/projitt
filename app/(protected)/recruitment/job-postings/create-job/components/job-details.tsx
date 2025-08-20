@@ -320,7 +320,7 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                                 variant="outline"
                                 id="date"
                                 className={cn(
-                                    'w-full h-[48px] data-[state=open]:border-primary',
+                                    'w-full h-[48px] data-[state=open]:border-primary rounded-[10px]',
                                     !date && 'text-muted-foreground',
                                 )}
                             >

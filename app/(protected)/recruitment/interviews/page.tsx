@@ -5,6 +5,7 @@ import CalendarMode from "./components/calendar-mode";
 import TableMode from "./components/table-mode";
 import Detail from "../applications/components/detail";
 import { getInterviews } from '@/api/interviews';
+import LoadingSpinner from '@/components/common/loading-spinner';
 
 /**
  * @description
@@ -18,6 +19,7 @@ export default function Interviews() {
     const [activeTab, setActiveTab] = useState<'calendar' | 'table'>('calendar');
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
     const [interviews, setInterviews] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
     /**
      * @description
      * This function is a callback for the `Detail` dialog's `onOpenChange` prop.
@@ -28,11 +30,14 @@ export default function Interviews() {
         setSelectedApplication(null);
     };
     const getData = async () => {
+        setLoading(true);
         try {
             const response = await getInterviews({});
             setInterviews(response.data);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
     useEffect(() => {
@@ -63,10 +68,13 @@ export default function Interviews() {
                 </div>
             </div>
         </div>
-        <div>
-            <div className="mt-[15px]" data-testid="interviews-content">
+        <div >
+            <div className="mt-[15px] relative" data-testid="interviews-content">
                 {interviews && activeTab === 'calendar' && <CalendarMode interviews={interviews} setSelectedApplication={setSelectedApplication} data-testid="calendar-mode-component" />}
-                {activeTab === 'table' && <TableMode interviews={interviews} setSelectedApplication={setSelectedApplication} data-testid="table-mode-component" />}
+                {activeTab === 'table' && <TableMode interviews={interviews} setSelectedApplication={setSelectedApplication} data-testid="table-mode-component" isLoading={loading} />}
+                <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center '>
+                    {loading && <LoadingSpinner content='Loading Interviews...' />}
+                </div>
             </div>
             <Detail
                 open={selectedApplication !== null}

@@ -67,8 +67,8 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
 
     return (
         <div className="bg-white rounded-[20px] overflow-hidden border border-[#E9E9E9]" >
-            <div className="flex gap-[30px] items-center py-[19px] px-[27px]">
-                <div className="text-[22px] font-bold">{monthLabel}</div>
+            <div className="flex gap-[10px] items-center py-[19px] px-[27px]">
+                <div className="text-[22px] font-bold w-[180px]">{monthLabel}</div>
                 <div className="flex gap-2">
                     <button
                         className="w-8 h-8 flex items-center justify-center rounded hover:bg-[#e9e9e9] cursor-pointer"

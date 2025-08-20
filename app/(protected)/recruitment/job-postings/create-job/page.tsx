@@ -447,7 +447,7 @@ export default function CreateJob(): JSX.Element {
                         <div className="flex sm:gap-[19px] sm:flex-row flex-col">
                             <Button
                                 variant="foreground"
-                                className="h-[42px] order-2 sm:order-1 font-semibold text-[14px]/[20px] text-[#4b4b4b]"
+                                className="h-[42px] order-3 sm:order-1 font-semibold text-[14px]/[20px] text-[#4b4b4b]"
                                 id="save-exit-button"
                                 data-testid="save-exit-button"
                                 onClick={handleSaveExit}
@@ -462,8 +462,13 @@ export default function CreateJob(): JSX.Element {
                                     'Save & Exit'
                                 )}
                             </Button>
+                            {currentStep !== 1 && (
+                                <Button variant="outline" className="order-2 sm:order-2 font-semibold text-[14px]/[20px] min-w-[82px] h-[42px]">
+                                    Back
+                                </Button>
+                            )}
                             <Button
-                                className="h-[42px] order-1 min-w-[82px] sm:order-2 font-semibold text-[14px]/[20px]"
+                                className="h-[42px] order-1 min-w-[82px] sm:order-3 font-semibold text-[14px]/[20px]"
                                 id="save-continue-button"
                                 data-testid="save-continue-button"
                                 onClick={handleContinue}
