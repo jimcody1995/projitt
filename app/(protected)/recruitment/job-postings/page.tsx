@@ -49,7 +49,7 @@ import CheckDialog from './components/checkDialog';
 import { NoData } from './components/noData';
 import { useRouter } from 'next/navigation';
 import { getJobPostings, duplicateJob } from '@/api/job-posting';
-import moment from 'moment';
+import { formatRelativeTime } from '@/lib/date-utils';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import { errorHandlers } from '@/utils/error-handler';
 
@@ -344,7 +344,7 @@ export default function JobPostings() {
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`due-${row.original.id}`}
                     >
-                        {new Date(row.original.deadline) > new Date() ? moment(row.original.deadline).fromNow() : 'Expired'}
+                        {new Date(row.original.deadline) > new Date() ? formatRelativeTime(row.original.deadline) : 'Expired'}
                     </span>
                 ),
                 size: 100,

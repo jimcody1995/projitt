@@ -1,6 +1,6 @@
 'use client'
 import parse from "html-react-parser";
-import moment from "moment";
+import { formatDateWithComma } from '@/lib/date-utils';
 
 export default function JobSummary({ selected }: { selected: any }) {
     console.log(selected);
@@ -39,7 +39,7 @@ export default function JobSummary({ selected }: { selected: any }) {
                 </div>
                 <div className="flex flex-col gap-[2px] text-warp">
                     <p className="text-[14px]/[20px] font-medium text-[#a5a5a5]">Deadline</p>
-                    <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">{moment(selected?.deadline).format('DD MMM YYYY')}</p>
+                    <p className="text-[14px]/[22px] font-medium text-[#4b4b4b]">{formatDateWithComma(selected?.deadline)}</p>
                 </div>
             </div>
             <div className="mt-[32px] md:w-[600px] w-full">

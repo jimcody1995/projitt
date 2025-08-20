@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, BriefcaseBusiness, CalendarDays, PieChart, Search } from "lucide-react";
-import moment from "moment";
+import { formatDate } from "@/lib/date-utils";
 
 /**
  * @description
@@ -111,7 +111,7 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
                                     data-test-id="certificate-issue-date"
                                 >
                                     <CalendarDays className="-ms-0.5" />
-                                    {moment(new Date()).format('DD/MM/YYYY')}
+                                    {formatDate(new Date())}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0" align="start">

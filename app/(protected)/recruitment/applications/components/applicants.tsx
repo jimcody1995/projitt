@@ -37,7 +37,7 @@ import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from '@/compon
 import CheckDialog from './checkDialog';
 import { NoData } from './noData';
 import { useRouter } from 'next/navigation';
-import moment from 'moment';
+import { formatDateWithComma } from '@/lib/date-utils';
 import Detail from './detail';
 import DialogContent, { Dialog, div, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
@@ -251,7 +251,7 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`applicants-${row.original.id}`}
                     >
-                        {moment(row.original.created_at).format('DD MMM, YYYY')}
+                        {formatDateWithComma(row.original.created_at)}
                     </span>
                 ),
                 enableSorting: true,

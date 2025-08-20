@@ -11,7 +11,7 @@ import {
     Row,
     useReactTable,
 } from '@tanstack/react-table';
-import moment from 'moment';
+import { formatDateWithComma, formatTimeFrom24Hour } from '@/lib/date-utils';
 import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
@@ -215,12 +215,12 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                             <p
                                 className="text-[14px]/[22px] text-[#4b4b4b]"
                             >
-                                {moment(row.original.updated_at).format('DD MMM, YYYY')}
+                                {formatDateWithComma(row.original.updated_at)}
                             </p>
                             <p
                                 className="text-[11px]/[14px] text-[#8f8f8f]"
                             >
-                                {moment(row.original.updated_at).format('HH:MM A')}
+                                {formatTimeFrom24Hour(row.original.updated_at)}
                             </p>
                         </div>
                     ),
