@@ -177,7 +177,7 @@ function AccordionMenuLabel({ children, className, ...props }: AccordionMenuLabe
       data-slot="accordion-menu-label"
       role="presentation"
       className={cn(
-        'px-2 py-1.5 text-xs font-medium text-muted-foreground',
+        'px-2 py-1.5 text-xs font-medium text-muted-foreground whitespace-nowrap',
         classNames?.label,
         className
       )}

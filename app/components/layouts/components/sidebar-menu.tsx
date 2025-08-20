@@ -63,7 +63,7 @@ export function SidebarMenu() {
         <AccordionMenuSub key={index} value={item.path || `root-${index}`}>
           <AccordionMenuSubTrigger className="text-[13px] font-medium">
             {item.icon && <item.icon data-slot="accordion-menu-icon" />}
-            <span data-slot="accordion-menu-title">{item.title}</span>
+            <span data-slot="accordion-menu-title" className="whitespace-nowrap">{item.title}</span>
           </AccordionMenuSubTrigger>
           <AccordionMenuSubContent
             type="single"
@@ -89,7 +89,7 @@ export function SidebarMenu() {
             className="flex items-center grow gap-2"
           >
             {item.icon && <item.icon data-slot="accordion-menu-icon" />}
-            <span data-slot="accordion-menu-title">{item.title}</span>
+            <span data-slot="accordion-menu-title" className="whitespace-nowrap">{item.title}</span>
           </Link>
         </AccordionMenuItem>
       );
@@ -107,7 +107,7 @@ export function SidebarMenu() {
         className="text-[13px] font-medium"
       >
         {item.icon && <item.icon data-slot="accordion-menu-icon" />}
-        <span data-slot="accordion-menu-title">{item.title}</span>
+        <span data-slot="accordion-menu-title" className="whitespace-nowrap">{item.title}</span>
         {item.disabled && (
           <Badge variant="secondary" size="sm" className="ms-auto me-[-10px]">
             Soon
@@ -152,7 +152,7 @@ export function SidebarMenu() {
                 </span>
               </span>
             ) : (
-              item.title
+              <span className="whitespace-nowrap">{item.title}</span>
             )}
           </AccordionMenuSubTrigger>
           <AccordionMenuSubContent
@@ -182,7 +182,7 @@ export function SidebarMenu() {
           className="text-[13px]"
         >
           <div className="relative">
-            <Link href={item.path || '#'} className="flex items-center h-full py-[10px]" prefetch>{item.title}</Link>
+            <Link href={item.path || '#'} className="flex items-center h-full py-[10px] whitespace-nowrap" prefetch>{item.title}</Link>
             <div className="absolute border-l border-[#ededed] border-b w-[10px] h-full top-[-14px] left-[-22px]"></div>
           </div>
         </AccordionMenuItem>
@@ -201,7 +201,7 @@ export function SidebarMenu() {
         value={`disabled-child-${level}-${index}`}
         className="text-[13px]"
       >
-        <span data-slot="accordion-menu-title">{item.title}</span>
+        <span data-slot="accordion-menu-title" className="whitespace-nowrap">{item.title}</span>
         {item.disabled && (
           <Badge variant="secondary" size="sm" className="ms-auto me-[-10px]">
             Soon
