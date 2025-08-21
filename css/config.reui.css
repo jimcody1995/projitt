@@ -1,3 +1,5 @@
+@plugin 'tailwindcss-animate';
+
 /** Colors **/
 :root {
   /** Base Colors **/
