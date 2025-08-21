@@ -200,3 +200,28 @@ export const formatTimeTo24Hour = (date: Date | string | null | undefined): stri
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return format(dateObj, 'HH:mm');
 };
+
+// Replace moment().isSameOrAfter(otherDate, 'day')
+export const isSameOrAfterDate = (date1: Date, date2: Date): boolean => {
+    return date1 >= date2;
+};
+
+// Replace moment().isBefore(otherDate, 'day')
+export const isBeforeDate = (date1: Date, date2: Date): boolean => {
+    return date1 < date2;
+};
+
+// Helper function to create a date from a date string (YYYY-MM-DD format)
+export const createDateFromString = (dateString: string): Date => {
+    return new Date(dateString);
+};
+
+// Helper function to get today's date at start of day
+export const getTodayStartOfDay = (): Date => {
+    return startOfDay(new Date());
+};
+
+// Helper function to get tomorrow's date at start of day
+export const getTomorrowStartOfDay = (): Date => {
+    return startOfDay(addDays(new Date(), 1));
+};

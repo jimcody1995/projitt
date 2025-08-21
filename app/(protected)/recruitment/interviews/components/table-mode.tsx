@@ -11,7 +11,15 @@ import {
     Row,
     useReactTable,
 } from '@tanstack/react-table';
-import { formatDateWithComma, formatTimeFrom24Hour } from '@/lib/date-utils';
+import {
+    formatDateWithComma,
+    getTodayStartOfDay,
+    getTomorrowStartOfDay,
+    createDateFromString,
+    isSameOrAfterDate,
+    isBeforeDate,
+    isSameDate
+} from '@/lib/date-utils';
 import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
@@ -35,7 +43,7 @@ import { useBasic } from "@/context/BasicContext";
  * It uses `@tanstack/react-table` for efficient data table management and provides unique `data-testid` attributes for UI test automation.
  */
 export default function TableMode({ setSelectedApplication, interviews }: { setSelectedApplication: (id: string) => void, interviews: any[] }) {
-    const [activeSection, setActiveSection] = useState<'upcoming' | 'interviews' | 'job-summary'>('upcoming');
+    const [activeSection, setActiveSection] = useState<'upcoming' | 'pending' | 'past'>('upcoming');
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -47,14 +55,43 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
     const [showFilter, setShowFilter] = useState(false);
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
-    const [applicantsData, setApplicantsData] = useState<any[]>(interviews);
     const [selectedMode, setSelectedMode] = useState<string[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
     const [nameFilter, setNameFilter] = useState<string>('');
     const { country } = useBasic()
+
+    // Categorize interviews by date
+    const categorizedInterviews = useMemo(() => {
+        const today = getTodayStartOfDay();
+        const tomorrow = getTomorrowStartOfDay();
+
+        return {
+            upcoming: interviews.filter(interview => {
+                // Parse date-only part to avoid timezone issues
+                const interviewDate = createDateFromString(interview.date.split('T')[0]);
+                return isSameOrAfterDate(interviewDate, tomorrow);
+            }),
+            pending: interviews.filter(interview => {
+                // Parse date-only part to avoid timezone issues
+                const interviewDate = createDateFromString(interview.date.split('T')[0]);
+                return isSameDate(interviewDate, today);
+            }),
+            past: interviews.filter(interview => {
+                // Parse date-only part to avoid timezone issues
+                const interviewDate = createDateFromString(interview.date.split('T')[0]);
+                return isBeforeDate(interviewDate, today);
+            })
+        };
+    }, [interviews]);
+
+    // Get data for current active section
+    const currentSectionData = useMemo(() => {
+        return categorizedInterviews[activeSection] || [];
+    }, [categorizedInterviews, activeSection]);
     const filteredData = useMemo<any[]>(() => {
-        return applicantsData.filter((item) => {
+        return currentSectionData.filter((item) => {
+            // Status filter
             const matchesStatus =
                 !selectedStatuses?.length ||
                 selectedStatuses.includes(
@@ -62,15 +99,31 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                     item.status.replace('bg-', '').slice(1),
                 );
 
+            // Mode filter
+            const matchesMode =
+                !selectedMode?.length ||
+                selectedMode.includes(item.mode || '');
+
+            // Country filter
+            const matchesCountry =
+                !selectedCountries?.length ||
+                selectedCountries.includes(item.job?.country_id || 0);
+
+            // Name filter
+            const matchesName =
+                !nameFilter ||
+                (item.applicant.first_name + " " + item.applicant.last_name).toLowerCase().includes(nameFilter.toLowerCase());
+
+            // Search filter
             const searchLower = (searchQuery || "").toLowerCase();
             const matchesSearch =
                 !searchQuery ||
-                item.job_title.toLowerCase().includes(searchLower) ||
-                (item.name || "").toLowerCase().includes(searchLower);
+                item.job?.title.toLowerCase().includes(searchLower) ||
+                (item.applicant.first_name + " " + item.applicant.last_name).toLowerCase().includes(searchLower);
 
-            return matchesSearch && matchesStatus;
+            return matchesSearch && matchesStatus && matchesMode && matchesCountry && matchesName;
         });
-    }, [searchQuery, selectedStatuses, applicantsData]);
+    }, [searchQuery, selectedStatuses, selectedMode, selectedCountries, nameFilter, currentSectionData]);
 
     const sortedData = useMemo<any[]>(() => {
         if (sorting.length === 0) return filteredData;
@@ -182,7 +235,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                         <p
                             className="text-[11px]/[14px] text-[#8f8f8f]"
                         >
-                            {country && Array.isArray(country) && country.length > 0 ? (country.find((item: any) => item.id === row.original.job?.country_id) as any)?.name || '' : ''}
+                            {country && Array.isArray(country) && country.length > 0 ? (country.find((item: any) => item.id === row.original.job?.country_id) as any)?.name || 'N/A' : 'N/A'}
                         </p>
                     </div>
                 ),
@@ -202,51 +255,63 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                         data-testid="state-header"
                     />
                 ),
-                cell: ({ row }: { row: any }) => (
-                    <span
-                        className="text-[14px] text-[#4b4b4b]"
-                        data-testid={`stage-${row.original.id}`}
-                    >
-                        {row.original.status}
-                    </span>
-                ),
+                cell: ({ row }: { row: any }) => {
+                    let badgeClass = "bg-muted text-foreground";
+                    if (row.original.status === "review") badgeClass = "bg-[#d6eeec] text-[#0D978B]";
+                    else if (row.original.status === "screen") badgeClass = "bg-[#fff3cd] text-[#856404]";
+                    else if (row.original.status === "test") badgeClass = "bg-[#d1ecf1] text-[#0c5460]";
+                    else if (row.original.status === "completed") badgeClass = "bg-[#d4edda] text-[#155724]";
+                    else if (row.original.status === "cancelled") badgeClass = "bg-[#f8d7da] text-[#721c24]";
+
+                    return (
+                        <span
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}`}
+                            data-testid={`status-badge-${row.original.id}`}
+                        >
+                            {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
+                        </span>
+                    );
+                },
                 enableSorting: true,
                 size: 90,
                 meta: {
                     headerClassName: '',
                 },
             },
-            ...(activeSection === "upcoming"
-                ? [{
-                    accessorKey: 'updated_at',
-                    header: ({ column }: { column: any }) => (
-                        <DataGridColumnHeader
-                            className='text-[14px] font-medium'
-                            title="Application Date"
-                            column={column}
-                            data-testid="applicants-header"
-                        />
-                    ),
-                    cell: ({ row }: { row: any }) => (
-                        <div data-testid={`job-detail-${row.original.id}`}>
+            {
+                accessorKey: 'date',
+                header: ({ column }: { column: any }) => (
+                    <DataGridColumnHeader
+                        className='text-[14px] font-medium'
+                        title="Interview Date"
+                        column={column}
+                        data-testid="interview-date-header"
+                    />
+                ),
+                cell: ({ row }: { row: any }) => {
+                    // Parse the date and treat it as a date-only value (ignore timezone conversion)
+                    const date = createDateFromString(row.original.date.split('T')[0]);
+
+                    return (
+                        <div data-testid={`interview-date-${row.original.id}`}>
                             <p
                                 className="text-[14px]/[22px] text-[#4b4b4b]"
                             >
-                                {formatDateWithComma(row.original.updated_at)}
+                                {formatDateWithComma(date)}
                             </p>
-                            <p
+                            {/* <p
                                 className="text-[11px]/[14px] text-[#8f8f8f]"
                             >
-                                {formatTimeFrom24Hour(row.original.updated_at)}
-                            </p>
+                                {formatTime24Hour(date)}
+                            </p> */}
                         </div>
-                    ),
-                    size: 130,
-                    meta: {
-                        headerClassName: '',
-                    },
-                }]
-                : []),
+                    );
+                },
+                size: 130,
+                meta: {
+                    headerClassName: '',
+                },
+            },
             {
                 accessorKey: 'mode',
                 header: ({ column }: { column: any }) => (
@@ -364,16 +429,17 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                 <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('upcoming')}
                     data-testid="upcoming-tab-button">
                     <p className='whitespace-nowrap'>Upcoming</p>
-                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
+                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.upcoming.length}</span>
                 </div>
-                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('interviews')}
+                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'pending' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('pending')}
                     data-testid="pending-tab-button">
                     <p className='whitespace-nowrap'>Pending</p>
-                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>12</span>
+                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.pending.length}</span>
                 </div>
-                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('job-summary')}
+                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'past' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('past')}
                     data-testid="past-tab-button">
                     <p className='whitespace-nowrap'>Past</p>
+                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.past.length}</span>
                 </div>
             </div>
             <div className='w-full mt-[22px]'>
@@ -392,7 +458,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                                 id="search-icon"
                             />
                             <Input
-                                placeholder="Search Job"
+                                placeholder="Search Interviews"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="ps-9 w-[243px] h-[42px]"
@@ -420,7 +486,10 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                                 data-testid="filter-button"
                                 id="filter-button"
                             >
-                                <ListFilter className='size-[20px]' />
+                                <ListFilter
+                                    className={`size-[20px] transition-transform duration-300 ease-in-out ${showFilter ? 'rotate-180' : 'rotate-0'
+                                        }`}
+                                />
                                 Filter
                             </Button>
                             <Button
@@ -434,21 +503,31 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                             </Button>
                         </div>
                     </div>
-                    {showFilter && <FilterTool
-                        selectedMode={selectedMode}
-                        selectedStatuses={selectedStatuses}
-                        selectedCountries={selectedCountries}
-                        nameFilter={nameFilter}
-                        setSelectedMode={setSelectedMode}
-                        setSelectedStatuses={setSelectedStatuses}
-                        setSelectedCountries={setSelectedCountries}
-                        setNameFilter={setNameFilter}
-                    />}
+                    <div
+                        className={`overflow-hidden transition-all duration-300 ease-in-out ${showFilter
+                            ? 'max-h-[500px] opacity-100 mt-4'
+                            : 'max-h-0 opacity-0 mt-0'
+                            }`}
+                    >
+                        <FilterTool
+                            selectedMode={selectedMode}
+                            selectedStatuses={selectedStatuses}
+                            selectedCountries={selectedCountries}
+                            nameFilter={nameFilter}
+                            setSelectedMode={setSelectedMode}
+                            setSelectedStatuses={setSelectedStatuses}
+                            setSelectedCountries={setSelectedCountries}
+                            setNameFilter={setNameFilter}
+                        />
+                    </div>
                     <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                         <> {filteredData.length === 0 ?
                             <NoData data-testid="no-data-message" /> : <>
                                 <div
-                                    className={`w-full overflow-x-auto ${showFilter ? 'h-[calc(100vh-480px)]' : 'h-[calc(100vh-430px)]'}`}
+                                    className={`w-full overflow-x-auto transition-all duration-300 ease-in-out ${showFilter
+                                        ? 'h-[calc(100vh-375px)]'
+                                        : 'h-[calc(100vh-375px)]'
+                                        }`}
                                     data-testid="list-view-container"
                                 >
                                     <DataGridTable />
