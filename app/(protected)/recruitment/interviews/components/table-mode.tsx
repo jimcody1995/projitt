@@ -78,10 +78,10 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
         const { id, desc } = sorting[0];
 
         return [...filteredData].sort((a, b) => {
-            let aValue: any = a[id];
-            let bValue: any = b[id];
+            let aValue: any = a?.[id];
+            let bValue: any = b?.[id];
 
-            // If sorting by department object, compare its name
+            // If sorting by name, compare first_name
             if (id === "name") {
                 aValue = a?.first_name ?? "";
                 bValue = b?.first_name ?? "";
@@ -91,8 +91,25 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                 bValue = b?.job?.title ?? "";
             }
 
-            // Ensure values are strings before localeCompare
-            return aValue.localeCompare(bValue, undefined, { sensitivity: "base" });
+            // Ensure values are strings and handle edge cases
+            aValue = String(aValue ?? "");
+            bValue = String(bValue ?? "");
+
+            // Additional safety check - if either value is still empty or undefined, handle gracefully
+            if (!aValue && !bValue) return 0;
+            if (!aValue) return desc ? -1 : 1;
+            if (!bValue) return desc ? 1 : -1;
+
+            try {
+                return desc
+                    ? bValue.localeCompare(aValue, undefined, { sensitivity: "base" }) // Descending
+                    : aValue.localeCompare(bValue, undefined, { sensitivity: "base" }); // Ascending
+            } catch {
+                // Fallback to simple string comparison if localeCompare fails
+                return desc
+                    ? bValue > aValue ? 1 : -1
+                    : aValue > bValue ? 1 : -1;
+            }
         });
     }, [sorting, filteredData]);
 
