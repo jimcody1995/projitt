@@ -402,6 +402,10 @@ export default function CreateJob(): JSX.Element {
         }
     };
 
+    const handleBack = () => {
+        setCurrentStep(currentStep - 1);
+    };
+
     /**
      * Handles transition to the next step with validation.
      * @returns void
@@ -463,7 +467,7 @@ export default function CreateJob(): JSX.Element {
                                 )}
                             </Button>
                             {currentStep !== 1 && (
-                                <Button variant="outline" className="order-2 sm:order-2 font-semibold text-[14px]/[20px] min-w-[82px] h-[42px]">
+                                <Button variant="outline" className="order-2 sm:order-2 font-semibold text-[14px]/[20px] min-w-[82px] h-[42px]" onClick={handleBack}>
                                     Back
                                 </Button>
                             )}
