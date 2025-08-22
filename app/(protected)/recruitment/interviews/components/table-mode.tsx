@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import {
     ColumnDef,
     getCoreRowModel,
@@ -60,6 +60,13 @@ export default function TableMode({ setSelectedApplication, interviews, loading 
     const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
     const [nameFilter, setNameFilter] = useState<string>('');
     const { country } = useBasic()
+
+    // Refs for tab elements to calculate positions
+    const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({
+        upcoming: null,
+        pending: null,
+        past: null
+    });
 
     // Categorize interviews by date
     const categorizedInterviews = useMemo(() => {
@@ -425,19 +432,42 @@ export default function TableMode({ setSelectedApplication, interviews, loading 
     }
     return (
         <div data-testid="table-mode-container">
-            <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
-                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('upcoming')}
-                    data-testid="upcoming-tab-button">
+            <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px] mt-[20px] w-full overflow-x-auto relative'>
+                {/* Sliding underline */}
+                <div
+                    className="absolute bottom-0 h-[2px] bg-[#0d978b] transition-all duration-300 ease-in-out"
+                    style={{
+                        left: tabRefs.current[activeSection]?.offsetLeft ?
+                            `${tabRefs.current[activeSection]!.offsetLeft - 15}px` : '0px',
+                        width: tabRefs.current[activeSection]?.offsetWidth ?
+                            `${tabRefs.current[activeSection]!.offsetWidth}px` : '0px'
+                    }}
+                />
+
+                <div
+                    ref={(el) => tabRefs.current.upcoming = el}
+                    className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
+                    onClick={() => setActiveSection('upcoming')}
+                    data-testid="upcoming-tab-button"
+                >
                     <p className='whitespace-nowrap'>Upcoming</p>
                     <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.upcoming.length}</span>
                 </div>
-                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'pending' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('pending')}
-                    data-testid="pending-tab-button">
+                <div
+                    ref={(el) => tabRefs.current.pending = el}
+                    className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'pending' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
+                    onClick={() => setActiveSection('pending')}
+                    data-testid="pending-tab-button"
+                >
                     <p className='whitespace-nowrap'>Pending</p>
                     <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.pending.length}</span>
                 </div>
-                <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'past' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('past')}
-                    data-testid="past-tab-button">
+                <div
+                    ref={(el) => tabRefs.current.past = el}
+                    className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'past' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
+                    onClick={() => setActiveSection('past')}
+                    data-testid="past-tab-button"
+                >
                     <p className='whitespace-nowrap'>Past</p>
                     <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.past.length}</span>
                 </div>
