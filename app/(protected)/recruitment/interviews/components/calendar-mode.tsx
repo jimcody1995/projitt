@@ -34,7 +34,7 @@ function getDaysInMonth(year: number, month: number) {
     return days;
 }
 
-export default function CalendarMode({ interviews, setSelectedApplication }: { interviews: any[]; setSelectedApplication: (application: string | null) => void }) {
+export default function CalendarMode({ interviews, loading }: { interviews: any[]; loading: boolean }) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
@@ -76,7 +76,7 @@ export default function CalendarMode({ interviews, setSelectedApplication }: { i
 
 
     return (
-        <div className="bg-white rounded-[20px] overflow-hidden border border-[#E9E9E9]" >
+        <div className={`bg-white rounded-[20px] overflow-hidden border border-[#E9E9E9] ${loading ? 'blur-[3px]' : ''}`} >
             <div className="flex gap-[10px] items-center py-[19px] px-[27px]">
                 <div className="text-[22px] font-bold w-[180px]">{monthLabel}</div>
                 <div className="flex gap-2">

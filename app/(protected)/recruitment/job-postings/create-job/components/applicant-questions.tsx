@@ -33,6 +33,7 @@ import Resume from './resume';
 import Education from './education';
 import { getJobDetails, addQuestionItem, editQuestionItem, editJobQuestions } from '@/api/job-posting';
 import { errorHandlers } from '@/utils/error-handler';
+import LoadingSpinner from '@/components/common/loading-spinner';
 export interface Question {
     id: string;
     title: string;
@@ -71,6 +72,7 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
         },
     ]);
     const [originalQuestions, setOriginalQuestions] = useState<Question[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const questionTypes = [
         { value: 'short-answer', label: 'Short answer' },
@@ -104,6 +106,7 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
             if (!jobId) return;
 
             try {
+                setLoading(true);
                 const response = await getJobDetails(jobId);
                 if (response.status === true && response.data.questions) {
                     const apiQuestions = response.data.questions;
@@ -134,9 +137,12 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
 
                     // Store original questions for comparison
                     setOriginalQuestions(transformedQuestions);
+                    setLoading(false);
                 }
             } catch (error) {
                 errorHandlers.custom(error, 'Error loading existing questions');
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -398,7 +404,10 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
                     <span className="text-[14px]/[16px] text-[#4b4b4b]">Set as Default</span>
                 </div> */}
             </div>
-            <div className='mt-[33px] '>
+            <div className='mt-[33px] relative'>
+                {loading && <div className="flex justify-center items-center h-full absolute top-0 left-0 w-full bg-white/50 z-50">
+                    <LoadingSpinner />
+                </div>}
                 <div className="min-h-screen w-full bg-white border border-[#e9e9e9] rounded-[12px] ">
                     <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  w-full overflow-x-auto'>
                         <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'resume' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('resume')}>

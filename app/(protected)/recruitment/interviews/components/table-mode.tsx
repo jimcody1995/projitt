@@ -42,7 +42,7 @@ import { useBasic } from "@/context/BasicContext";
  * The component also includes search functionality, a filter sidebar, and pagination.
  * It uses `@tanstack/react-table` for efficient data table management and provides unique `data-testid` attributes for UI test automation.
  */
-export default function TableMode({ setSelectedApplication, interviews }: { setSelectedApplication: (id: string) => void, interviews: any[] }) {
+export default function TableMode({ setSelectedApplication, interviews, loading }: { setSelectedApplication: (id: string) => void, interviews: any[], loading: boolean }) {
     const [activeSection, setActiveSection] = useState<'upcoming' | 'pending' | 'past'>('upcoming');
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -357,8 +357,8 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
 
     const table = useReactTable({
         columns: columns as ColumnDef<any, any>[],
-        data: filteredData,
-        pageCount: Math.ceil((filteredData?.length || 0) / pagination.pageSize),
+        data: sortedData,
+        pageCount: Math.ceil((sortedData?.length || 0) / pagination.pageSize),
         getRowId: (row: any) => row.id,
         state: {
             pagination,
@@ -446,7 +446,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                 <DataGrid
                     className='w-full'
                     table={table}
-                    recordCount={filteredData?.length || 0}
+                    recordCount={sortedData?.length || 0}
                     onRowClick={(row) => setSelectedApplication(row)}
                     data-testid="interviews-data-grid"
                 >
@@ -522,7 +522,7 @@ export default function TableMode({ setSelectedApplication, interviews }: { setS
                     </div>
                     <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                         <> {filteredData.length === 0 ?
-                            <NoData data-testid="no-data-message" /> : <>
+                            (!loading && <NoData data-testid="no-data-message" />) : <>
                                 <div
                                     className={`w-full overflow-x-auto transition-all duration-300 ease-in-out ${showFilter
                                         ? 'h-[calc(100vh-375px)]'

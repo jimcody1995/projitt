@@ -38,7 +38,7 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined);
  */
 export const SessionProvider = ({ children }: { children: ReactNode }): JSX.Element => {
     const [session, setSessionState] = useState<Session>({ token: null, authenticated: false });
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
 
@@ -87,7 +87,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }): JSX.Elem
             }
         }
         loadSession();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
     }, []);
 
     /**
