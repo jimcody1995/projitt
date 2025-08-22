@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button';
 import { BriefcaseBusiness, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, MapPin, MessageSquareMore, PieChart, Users } from 'lucide-react';
-import React, { JSX, useEffect, useState } from 'react';
+import React, { JSX, useEffect, useState, useRef } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import CheckDialog from '@/app/(protected)/recruitment/job-postings/components/checkDialog';
 import Applicants from './components/applicants';
@@ -29,8 +29,31 @@ export default function ApplicantJobPage() {
     const [applicantCount, setApplicantCount] = useState(0);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const [tabUnderlineStyle, setTabUnderlineStyle] = useState({ left: 0, width: 0 });
+    const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const params = useSearchParams();
     const router = useRouter();
+
+    // Function to update tab underline position
+    const updateTabUnderline = (section: 'applicants' | 'interviews' | 'job-summary') => {
+        const tabElement = tabRefs.current[section];
+        if (tabElement) {
+            const rect = tabElement.getBoundingClientRect();
+            const containerRect = tabElement.parentElement?.getBoundingClientRect();
+            if (containerRect) {
+                setTabUnderlineStyle({
+                    left: rect.left - containerRect.left,
+                    width: rect.width
+                });
+            }
+        }
+    };
+
+    // Update underline when activeSection changes
+    useEffect(() => {
+        updateTabUnderline(activeSection);
+    }, [activeSection]);
+
     // Extracted fetchJobs function
     const fetchJobs = async () => {
         try {
@@ -263,17 +286,38 @@ export default function ApplicantJobPage() {
                 </>
             )}
         </div>
-        <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto'>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'applicants' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('applicants')}>
+        <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto relative'>
+            {/* Animated tab underline */}
+            <div
+                className="absolute bottom-0 h-[2px] bg-[#0d978b] transition-all duration-300 ease-in-out"
+                style={{
+                    left: `${tabUnderlineStyle.left}px`,
+                    width: `${tabUnderlineStyle.width}px`
+                }}
+            />
+
+            <div
+                ref={(el) => tabRefs.current['applicants'] = el}
+                className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'applicants' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
+                onClick={() => setActiveSection('applicants')}
+            >
                 <Users className='size-[20px] ' />
                 <p className='whitespace-nowrap'>Applicants</p>
                 <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{applicantCount || 0}</span>
             </div>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('interviews')}>
+            <div
+                ref={(el) => tabRefs.current['interviews'] = el}
+                className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
+                onClick={() => setActiveSection('interviews')}
+            >
                 <MessageSquareMore className='size-[20px] ' />
                 <p className='whitespace-nowrap'>Interviews Stages</p>
             </div>
-            <div className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('job-summary')}>
+            <div
+                ref={(el) => tabRefs.current['job-summary'] = el}
+                className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
+                onClick={() => setActiveSection('job-summary')}
+            >
                 <BriefcaseBusiness className='size-[20px] ' />
                 <p className='whitespace-nowrap'>Job Summary</p>
             </div>
