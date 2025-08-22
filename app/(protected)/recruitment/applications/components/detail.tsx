@@ -1,7 +1,7 @@
 'use client'
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, CirclePlus, Loader2, Plus, Star, X } from "lucide-react";
 import ApplicationSummary from "./application-summary";
 import Resume from "./resume";
@@ -31,6 +31,10 @@ export default function Detail({ open, onOpenChange, selectedApplication, getDat
     const [loading, setLoading] = useState<boolean>(false);
     const { country } = useBasic();
     const [applicantDetails, setApplicantDetails] = useState<any>({});
+
+    // Add refs for tab elements and sliding underline
+    const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+    const underlineRef = useRef<HTMLDivElement>(null);
     const handleRejectApplication = async () => {
         try {
             setLoading(true);
@@ -61,6 +65,50 @@ export default function Detail({ open, onOpenChange, selectedApplication, getDat
             getApplicantDetails();
         }
     }, [selectedApplication]);
+
+    // Add effect to animate underline position
+    useEffect(() => {
+        if (underlineRef.current && tabRefs.current[activeSection]) {
+            const activeTab = tabRefs.current[activeSection];
+            if (activeTab) {
+                const rect = activeTab.getBoundingClientRect();
+                const containerRect = activeTab.parentElement?.getBoundingClientRect();
+                if (containerRect) {
+                    // Calculate position relative to the container
+                    const left = rect.left - containerRect.left;
+                    const width = rect.width;
+
+                    // Apply the positioning
+                    underlineRef.current.style.transform = `translateX(${left}px)`;
+                    underlineRef.current.style.width = `${width}px`;
+                }
+            }
+        }
+    }, [activeSection]);
+
+    // Initialize underline position on mount
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (underlineRef.current && tabRefs.current[activeSection]) {
+                const activeTab = tabRefs.current[activeSection];
+                if (activeTab) {
+                    const rect = activeTab.getBoundingClientRect();
+                    const containerRect = activeTab.parentElement?.getBoundingClientRect();
+                    if (containerRect) {
+                        // Calculate position relative to the container
+                        const left = rect.left - containerRect.left;
+                        const width = rect.width;
+
+                        // Apply the positioning
+                        underlineRef.current.style.transform = `translateX(${left}px)`;
+                        underlineRef.current.style.width = `${width}px`;
+                    }
+                }
+            }
+        }, 100); // Small delay to ensure DOM is ready
+
+        return () => clearTimeout(timer);
+    }, []);
     return (
         <div>
             <Sheet open={open} onOpenChange={onOpenChange}>
@@ -176,17 +224,44 @@ export default function Detail({ open, onOpenChange, selectedApplication, getDat
                             </DropdownMenu>
                         </div>
                     </div>
-                    <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  mt-[20px] w-full overflow-x-auto sm:h-[56px] h-[80px]'>
-                        <div className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center cursor-pointer ${(activeSection === 'stages' || activeSection === 'schedule-interview') ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('stages')}>
+                    <div className='border-b border-[#e9e9e9] pt-[9px] flex gap-[12px] mt-[20px] w-full overflow-x-auto sm:h-[56px] h-[80px] relative justify-center'>
+                        {/* Sliding underline */}
+                        <div
+                            ref={underlineRef}
+                            className="absolute bottom-0 h-[2px] bg-[#0d978b] transition-all duration-300 ease-in-out"
+                            style={{
+                                transform: 'translateX(0px)',
+                                width: '0px',
+                                left: '0px'
+                            }}
+                        />
+
+                        <div
+                            ref={(el) => { tabRefs.current['stages'] = el; }}
+                            className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center cursor-pointer ${(activeSection === 'stages' || activeSection === 'schedule-interview') ? 'text-[#0d978b]' : 'text-[#353535]'}`}
+                            onClick={() => setActiveSection('stages')}
+                        >
                             <p className='whitespace-nowrap'>Stages</p>
                         </div>
-                        <div className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center cursor-pointer ${activeSection === 'application-summary' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('application-summary')}>
+                        <div
+                            ref={(el) => { tabRefs.current['application-summary'] = el; }}
+                            className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center cursor-pointer ${activeSection === 'application-summary' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
+                            onClick={() => setActiveSection('application-summary')}
+                        >
                             <p className='whitespace-nowrap'>Application Summary</p>
                         </div>
-                        <div className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center cursor-pointer ${activeSection === 'resume' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('resume')}>
+                        <div
+                            ref={(el) => { tabRefs.current['resume'] = el; }}
+                            className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center cursor-pointer ${activeSection === 'resume' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
+                            onClick={() => setActiveSection('resume')}
+                        >
                             <p className='whitespace-nowrap'>Resume</p>
                         </div>
-                        <div className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center cursor-pointer ${activeSection === 'applicant-question' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('applicant-question')}>
+                        <div
+                            ref={(el) => { tabRefs.current['applicant-question'] = el; }}
+                            className={`py-[18px] px-[27.5px] text-[15px]/[20px] font-medium flex items-center cursor-pointer ${activeSection === 'applicant-question' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
+                            onClick={() => setActiveSection('applicant-question')}
+                        >
                             <p className='whitespace-nowrap'>Applicant Question</p>
                         </div>
                     </div>
