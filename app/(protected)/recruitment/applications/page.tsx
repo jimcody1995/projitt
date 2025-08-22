@@ -301,7 +301,7 @@ export default function ApplicantJobPage() {
             />
 
             <div
-                ref={(el) => tabRefs.current['applicants'] = el}
+                ref={(el) => { tabRefs.current['applicants'] = el; }}
                 className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'applicants' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
                 onClick={() => setActiveSection('applicants')}
             >
@@ -310,7 +310,7 @@ export default function ApplicantJobPage() {
                 <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{applicantCount || 0}</span>
             </div>
             <div
-                ref={(el) => tabRefs.current['interviews'] = el}
+                ref={(el) => { tabRefs.current['interviews'] = el; }}
                 className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'interviews' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
                 onClick={() => setActiveSection('interviews')}
             >
@@ -318,7 +318,7 @@ export default function ApplicantJobPage() {
                 <p className='whitespace-nowrap'>Interviews Stages</p>
             </div>
             <div
-                ref={(el) => tabRefs.current['job-summary'] = el}
+                ref={(el) => { tabRefs.current['job-summary'] = el; }}
                 className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'job-summary' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
                 onClick={() => setActiveSection('job-summary')}
             >

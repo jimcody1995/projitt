@@ -445,7 +445,7 @@ export default function TableMode({ setSelectedApplication, interviews, loading 
                 />
 
                 <div
-                    ref={(el) => tabRefs.current.upcoming = el}
+                    ref={(el) => { tabRefs.current.upcoming = el; }}
                     className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
                     onClick={() => setActiveSection('upcoming')}
                     data-testid="upcoming-tab-button"
@@ -454,7 +454,7 @@ export default function TableMode({ setSelectedApplication, interviews, loading 
                     <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.upcoming.length}</span>
                 </div>
                 <div
-                    ref={(el) => tabRefs.current.pending = el}
+                    ref={(el) => { tabRefs.current.pending = el; }}
                     className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'pending' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
                     onClick={() => setActiveSection('pending')}
                     data-testid="pending-tab-button"
@@ -463,7 +463,7 @@ export default function TableMode({ setSelectedApplication, interviews, loading 
                     <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.pending.length}</span>
                 </div>
                 <div
-                    ref={(el) => tabRefs.current.past = el}
+                    ref={(el) => { tabRefs.current.past = el; }}
                     className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'past' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
                     onClick={() => setActiveSection('past')}
                     data-testid="past-tab-button"
