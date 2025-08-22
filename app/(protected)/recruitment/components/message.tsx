@@ -4,8 +4,10 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useState, useRef } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 import ReactQuill from 'react-quill-new';
-import { Redo, Undo } from "lucide-react";
+import { Redo, Smile, Undo } from "lucide-react";
 
 /**
  * @description
@@ -19,7 +21,21 @@ import { Redo, Undo } from "lucide-react";
 export default function Message({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
     const [message, setMessage] = useState('');
     const quillRef = useRef<ReactQuill | null>(null);
-
+    const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+    /**
+        * Inserts emoji at cursor position in Quill editor
+        */
+    const insertEmoji = (emoji: { native: string }): void => {
+        const editor = quillRef.current?.getEditor();
+        if (editor) {
+            const range = editor.getSelection();
+            if (range) {
+                editor.insertText(range.index, emoji.native);
+                editor.setSelection(range.index + emoji.native.length);
+            }
+            setShowEmojiPicker(false);
+        }
+    };
     /**
      * @description
      * Performs an undo operation on the ReactQuill editor.
@@ -73,13 +89,13 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="mt-[16px]">
+                        <div className="mt-[16px] w-full">
                             <div
                                 id="custom-toolbar"
                                 data-testid="custom-toolbar"
-                                className="w-full flex justify-between flex-wrap"
+                                className="w-full flex justify-between flex-wrap !px-[16px] !py-[16px] bg-[#f9f9f9] w-full"
                             >
-                                <div className="flex sm:gap-[14px] items-center">
+                                <div className="flex sm:gap-[14px] items-center ">
                                     <button className="ql-bold" data-testid="bold-button" />
                                     <button className="ql-italic" data-testid="italic-button" />
                                     <button className="ql-underline" data-testid="underline-button" />
@@ -88,6 +104,14 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                                     <button className="ql-align" value="right" data-testid="align-right-button" />
                                     <button className="ql-align" value="justify" data-testid="align-justify-button" />
                                     <button className="ql-link" data-testid="link-button" />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                        className="flex items-center justify-center w-8 h-8 hover:bg-gray-100 rounded"
+                                        title="Insert emoji"
+                                    >
+                                        <Smile className="size-4 text-[#4b4b4b]" />
+                                    </button>
                                 </div>
                                 <div className="flex sm:gap-[14px] items-center">
                                     <button type="button" onClick={handleUndo} data-testid="undo-button">
@@ -98,6 +122,18 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                                     </button>
                                 </div>
                             </div>
+                            {showEmojiPicker && (
+                                <div className="absolute z-50 mt-2">
+                                    <Picker
+                                        data={data}
+                                        onEmojiSelect={insertEmoji}
+                                        theme="light"
+                                        set="native"
+                                        previewPosition="none"
+                                        skinTonePosition="none"
+                                    />
+                                </div>
+                            )}
 
                             <ReactQuill
                                 ref={quillRef}

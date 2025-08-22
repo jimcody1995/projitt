@@ -90,7 +90,7 @@ type JobDesciptionError = {
  */
 export default function CreateJob(): JSX.Element {
     const router = useRouter();
-    const [currentStep, setCurrentStep] = useState<number>(1);
+    const [currentStep, setCurrentStep] = useState<number>(2);
     const [jobData, setJobData] = useState<JobData>({
         title: '',
         department_id: '',
@@ -112,6 +112,7 @@ export default function CreateJob(): JSX.Element {
     const { skills, designation, setDesignation } = useBasic();
     const searchParams = useSearchParams();
     const applicantQuestionsRef = useRef<ApplicantQuestionsRef>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     /**
      * Load job details when editing an existing job
@@ -121,6 +122,7 @@ export default function CreateJob(): JSX.Element {
             const jobId = searchParams.get('id');
             if (jobId && currentStep === 1) {
                 try {
+                    setLoading(true);
                     const response = await getJobDetails(jobId);
                     if (response.status === true) {
                         const jobData = response.data;
@@ -155,8 +157,10 @@ export default function CreateJob(): JSX.Element {
                             description: jobData.description || ''
                         });
                     }
+                    setLoading(false)
                 } catch (error) {
                     errorHandlers.jobPosting(error);
+                    setLoading(false)
                 }
             }
         };
@@ -506,6 +510,7 @@ export default function CreateJob(): JSX.Element {
                         >
                             {currentStep === 1 && (
                                 <JobDetails
+                                    loading={loading}
                                     jobData={jobData}
                                     setJobData={setJobData}
                                     errors={errors}
@@ -514,6 +519,7 @@ export default function CreateJob(): JSX.Element {
                             )}
                             {currentStep === 2 && (
                                 <JobDescription
+                                    loading={loading}
                                     jobData={jobData}
                                     setJobData={setJobData}
                                     errors={descriptionError}

@@ -27,7 +27,7 @@ import {
     PopoverTrigger
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { formatDate } from "@/lib/date-utils";
@@ -35,6 +35,7 @@ import TagInput from "@/components/ui/tag-input";
 import SuggestionInput from "@/components/ui/suggestion-input";
 import { useBasic } from "@/context/BasicContext";
 import { errorHandlers } from "@/utils/error-handler";
+import LoadingSpinner from "@/components/common/loading-spinner";
 
 interface JobDetailsProps {
     jobData: any;
@@ -50,6 +51,7 @@ interface JobDetailsProps {
         country_id?: string;
     };
     triggerValidation?: boolean;
+    loading?: boolean;
 }
 
 /**
@@ -60,7 +62,7 @@ interface JobDetailsProps {
  * @param triggerValidation - optional flag to enable error messages
  * @returns JSX.Element
  */
-export default function JobDetails({ jobData, setJobData, errors = {}, triggerValidation = false }: JobDetailsProps): JSX.Element {
+export default function JobDetails({ jobData, setJobData, errors = {}, triggerValidation = false, loading = false }: JobDetailsProps): JSX.Element {
     const [locationType, setLocationType] = useState(jobData.location_type_id || 1);
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [selectedCountryName, setSelectedCountryName] = useState<string>('');
@@ -149,8 +151,11 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                     <p className="text-[14px]/[16px] text-[#1c1c1c]">AI Scoring</p>
                 </div>
             </div>
-            <div className="grid gap-[48px] xl:grid-cols-2 grid-cols-1 mt-[33px]">
 
+            <div className="grid gap-[48px] xl:grid-cols-2 grid-cols-1 mt-[33px] relative">
+                {loading && <div className="flex justify-center items-center h-full absolute top-0 left-0 w-full bg-white/50 z-50">
+                    <LoadingSpinner />
+                </div>}
                 {/* Each input section will be upgraded with ID + data-testid for automation */}
 
                 <div className="flex flex-col gap-[12px]">

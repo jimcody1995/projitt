@@ -1,7 +1,7 @@
-import { Label } from '@/components/ui/label';
+'use client'
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { ArrowDown, ChevronDown, ChevronUp, FileText, FileUp, X } from 'lucide-react';
+import { FileText, FileUp, X } from 'lucide-react';
 import React from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import 'pdfjs-dist/legacy/build/pdf.worker';

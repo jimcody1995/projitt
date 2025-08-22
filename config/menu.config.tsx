@@ -101,6 +101,11 @@ export const MENU_SIDEBAR: MenuConfig = [
     ],
   },
   {
+    title: 'Onboarding',
+    icon: UserRoundPlus,
+    path: '/onboarding'
+  },
+  {
     title: 'Talent Management',
     icon: Star,
     children: [

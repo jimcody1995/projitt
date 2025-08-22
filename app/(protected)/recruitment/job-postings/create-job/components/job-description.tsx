@@ -9,12 +9,10 @@
 import 'react-quill-new/dist/quill.snow.css';
 import ReactQuill from 'react-quill-new';
 import { useState, useRef, JSX } from 'react';
-import { CheckLine, Cloud, File, HardDrive, Link, Loader2, Redo, Undo } from 'lucide-react';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/components/ui/popover';
+import { CheckLine, Cloud, File, HardDrive, Link, Loader2, Redo, Undo, Smile } from 'lucide-react';
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
+
 import {
     Dialog,
     DialogContent,
@@ -27,14 +25,25 @@ import { uploadMedia } from '@/api/media';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import { customToast } from '@/components/common/toastr';
 
+interface JobDescriptionProps {
+    jobData: {
+        description?: string;
+        [key: string]: unknown;
+    };
+    setJobData: (data: Record<string, unknown>) => void;
+    errors?: Record<string, string>;
+    triggerValidation?: boolean;
+}
+
 export default function JobDescription({
     jobData,
     setJobData,
     errors = {},
     triggerValidation = false,
-}: any): JSX.Element {
+}: JobDescriptionProps): JSX.Element {
     const [files, setFiles] = useState<File[]>([]);
     const [selectedStyle, setSelectedStyle] = useState<string>('Formal');
+    const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
     const quillRef = useRef<ReactQuill | null>(null);
     const [loading, setLoading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -44,7 +53,7 @@ export default function JobDescription({
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
         const media = e.target.files;
         if (!media) return;
-        const formData: any = new FormData();
+        const formData = new FormData();
         formData.append('media', media[0]);
         setLoading(true);
         try {
@@ -57,10 +66,12 @@ export default function JobDescription({
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.log(error);
-            if (error?.response?.data?.message) {
-                customToast("Error", error.response.data.message, "error");
+            if (error && typeof error === 'object' && 'response' in error &&
+                error.response && typeof error.response === 'object' && 'data' in error.response &&
+                error.response.data && typeof error.response.data === 'object' && 'message' in error.response.data) {
+                customToast("Error", (error.response.data as { message: string }).message, "error");
             } else {
                 customToast("Error", "An error occurred", "error");
             }
@@ -75,6 +86,21 @@ export default function JobDescription({
         const updated = [...files];
         updated.splice(index, 1);
         setFiles(updated);
+    };
+
+    /**
+     * Inserts emoji at cursor position in Quill editor
+     */
+    const insertEmoji = (emoji: { native: string }): void => {
+        const editor = quillRef.current?.getEditor();
+        if (editor) {
+            const range = editor.getSelection();
+            if (range) {
+                editor.insertText(range.index, emoji.native);
+                editor.setSelection(range.index + emoji.native.length);
+            }
+            setShowEmojiPicker(false);
+        }
     };
 
     /**
@@ -117,7 +143,10 @@ export default function JobDescription({
                 Job Description
             </h1>
 
-            <div className="flex justify-between mt-[34px]">
+            <div className="flex justify-between mt-[34px] relative">
+                {loading && <div className="flex justify-center items-center h-full absolute top-0 left-0 w-full bg-white/50 z-50">
+                    <LoadingSpinner />
+                </div>}
                 <p
                     className="text-[#1c1c1c] text-[14px]/[16px]"
                     id="job-description-label"
@@ -217,7 +246,7 @@ export default function JobDescription({
                 <div
                     id="custom-toolbar"
                     data-testid="custom-toolbar"
-                    className="w-full flex justify-between flex-wrap"
+                    className="w-full flex justify-between flex-wrap !px-[16px] !py-[17px]"
                 >
                     <div className="flex sm:gap-[14px] items-center">
                         <button className="ql-bold" />
@@ -228,6 +257,14 @@ export default function JobDescription({
                         <button className="ql-align" value="right" />
                         <button className="ql-align" value="justify" />
                         <button className="ql-link" />
+                        <button
+                            type="button"
+                            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                            className="flex items-center justify-center w-8 h-8 hover:bg-gray-100 rounded"
+                            title="Insert emoji"
+                        >
+                            <Smile className="size-4 text-[#4b4b4b]" />
+                        </button>
                     </div>
                     <div className="flex sm:gap-[14px] items-center">
                         <button type="button" onClick={handleUndo} data-testid="undo-button">
@@ -238,6 +275,19 @@ export default function JobDescription({
                         </button>
                     </div>
                 </div>
+
+                {showEmojiPicker && (
+                    <div className="absolute z-50 mt-2">
+                        <Picker
+                            data={data}
+                            onEmojiSelect={insertEmoji}
+                            theme="light"
+                            set="native"
+                            previewPosition="none"
+                            skinTonePosition="none"
+                        />
+                    </div>
+                )}
 
                 <ReactQuill
                     ref={quillRef}
