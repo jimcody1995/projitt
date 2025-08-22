@@ -1,3 +1,5 @@
+'use client'
+
 import { ReactNode, RefObject, useCallback, useEffect, useRef } from 'react';
 
 type ScrollspyProps = {
@@ -48,6 +50,7 @@ export function Scrollspy({
   );
 
   const handleScroll = useCallback(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
     if (!anchorElementsRef.current || anchorElementsRef.current.length === 0) return;
     const scrollElement = targetRef?.current === document ? window : targetRef?.current;
     const scrollTop =
@@ -99,6 +102,7 @@ export function Scrollspy({
 
   const scrollTo = useCallback(
     (anchorElement: HTMLElement) => (event?: Event) => {
+      if (typeof window === 'undefined' || typeof document === 'undefined') return;
       if (event) event.preventDefault();
       const sectionId =
         anchorElement.getAttribute(`data-${dataAttribute}-anchor`)?.replace('#', '') || null;

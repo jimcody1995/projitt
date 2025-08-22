@@ -2,9 +2,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import * as pdfjsLib from 'pdfjs-dist';
-import 'pdfjs-dist/legacy/build/pdf.worker';
-pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
 
 interface PdfViewerProps {
     url: string;
@@ -16,27 +13,42 @@ export default function PdfViewer({ url }: PdfViewerProps) {
 
     useEffect(() => {
         const renderPDF = async () => {
-            const loadingTask = pdfjsLib.getDocument(url);
-            const pdf = await loadingTask.promise;
+            try {
+                // Dynamically import pdfjs-dist only when needed
+                const pdfjsLib = await import('pdfjs-dist');
 
-            // Load first page
-            const page = await pdf.getPage(1);
-            const viewport = page.getViewport({ scale: 1 });
+                // Set up worker
+                if (typeof window !== 'undefined') {
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
+                }
 
-            const canvas = canvasRef.current;
-            if (!canvas) return;
+                const loadingTask = pdfjsLib.getDocument(url);
+                const pdf = await loadingTask.promise;
 
-            const context = canvas.getContext("2d");
-            if (!context) return;
+                // Load first page
+                const page = await pdf.getPage(1);
+                const viewport = page.getViewport({ scale: 1 });
 
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
+                const canvas = canvasRef.current;
+                if (!canvas) return;
 
-            await page.render({ canvasContext: context, viewport, canvas }).promise;
-            setLoading(false);
+                const context = canvas.getContext("2d");
+                if (!context) return;
+
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                await page.render({ canvasContext: context, viewport, canvas }).promise;
+                setLoading(false);
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                setLoading(false);
+            }
         };
 
-        renderPDF();
+        if (url && typeof window !== 'undefined') {
+            renderPDF();
+        }
     }, [url]);
 
     return (

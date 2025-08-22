@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from "react";
-import Approved from "./components/approved";
-import Pending from "./components/pending";
-import Onboarding from "./components/onboarding";
+import dynamic from "next/dynamic";
+
+const Approved = dynamic(() => import('./components/approved'), { ssr: false });
+const Pending = dynamic(() => import('./components/pending'), { ssr: false });
+const Onboarding = dynamic(() => import('./components/onboarding'), { ssr: false });
 
 /**
  * @description

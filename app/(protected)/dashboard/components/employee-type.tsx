@@ -1,6 +1,8 @@
 import { UsersRound } from "lucide-react"
-import Chart from "react-apexcharts";
+import dynamic from 'next/dynamic';
 import ApexCharts from "apexcharts";
+
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function EmployeeType() {
     const totalEmployees = 180;

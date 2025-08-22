@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import CalendarMode from "./components/calendar-mode";
-import TableMode from "./components/table-mode";
-import Detail from "../applications/components/detail";
+import dynamic from 'next/dynamic';
+
+const CalendarMode = dynamic(() => import('./components/calendar-mode'), { ssr: false });
+const TableMode = dynamic(() => import('./components/table-mode'), { ssr: false });
+const Detail = dynamic(() => import('../applications/components/detail'), { ssr: false });
 import { getInterviews } from '@/api/interviews';
 import LoadingSpinner from '@/components/common/loading-spinner';
 

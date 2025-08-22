@@ -1,4 +1,8 @@
 'use client'
+
+// Force dynamic rendering to avoid SSR issues
+export const dynamic = 'force-dynamic';
+
 import { Button } from '@/components/ui/button';
 import { BriefcaseBusiness, ChevronDown, ChevronLeft, ChevronRight, EllipsisVertical, MapPin, MessageSquareMore, PieChart, Users } from 'lucide-react';
 import React, { JSX, useEffect, useState } from 'react';

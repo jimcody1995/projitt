@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog"; // Corrected import for DialogHeader, DialogTitle
 
 import { cn } from "@/lib/utils";
-import { Calendar } from '@/components/ui/calendar';
+import dynamic from 'next/dynamic';
+
+const Calendar = dynamic(() => import('@/components/ui/calendar').then(mod => ({ default: mod.Calendar })), { ssr: false });
 
 /**
  * @description

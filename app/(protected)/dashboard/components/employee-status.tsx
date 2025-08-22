@@ -1,5 +1,7 @@
-import Chart from "react-apexcharts";
+import dynamic from 'next/dynamic';
 import ApexCharts from "apexcharts";
+
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function EmployeeStatus() {
     const options: ApexCharts.ApexOptions = {

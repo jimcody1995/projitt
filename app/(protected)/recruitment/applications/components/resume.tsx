@@ -1,6 +1,14 @@
 'use client'
-import PdfViewer from "@/components/ui/pdf-viewer";
+import dynamic from 'next/dynamic';
 import { useState } from "react";
+
+// Dynamically import PdfViewer to avoid SSR issues
+const PdfViewer = dynamic(() => import("@/components/ui/pdf-viewer"), {
+    ssr: false,
+    loading: () => <div className="w-full h-64 bg-gray-100 animate-pulse flex items-center justify-center">
+        <span className="text-gray-500">Loading PDF viewer...</span>
+    </div>
+});
 
 
 export default function Resume({ applicantDetails }: { applicantDetails: any }) {

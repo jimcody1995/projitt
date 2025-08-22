@@ -40,6 +40,7 @@
     "react-quill-new": "^3.4.6",
     "react-resizable-panels": "^3.0.4",
     "react-select": "^5.10.1",
+    "recharts": "^3.1.2",
     "vaul": "^1.1.2"
   },
   "devDependencies": {

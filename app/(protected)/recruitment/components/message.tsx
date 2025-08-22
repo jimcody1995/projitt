@@ -6,7 +6,13 @@ import { useState, useRef } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import ReactQuill from 'react-quill-new';
+import dynamic from 'next/dynamic';
+
+// Dynamically import ReactQuill to avoid SSR issues
+const ReactQuill = dynamic(() => import('react-quill-new'), {
+    ssr: false,
+    loading: () => <div className="min-h-[120px] bg-gray-50 animate-pulse rounded border" />
+});
 import { Redo, Smile, Undo } from "lucide-react";
 
 /**
@@ -20,7 +26,7 @@ import { Redo, Smile, Undo } from "lucide-react";
  */
 export default function Message({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
     const [message, setMessage] = useState('');
-    const quillRef = useRef<ReactQuill | null>(null);
+    const quillRef = useRef<any>(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
     /**
         * Inserts emoji at cursor position in Quill editor
@@ -136,7 +142,6 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                             )}
 
                             <ReactQuill
-                                ref={quillRef}
                                 value={message || ''}
                                 onChange={(value) => setMessage(value)}
                                 placeholder="Enter the job description..."

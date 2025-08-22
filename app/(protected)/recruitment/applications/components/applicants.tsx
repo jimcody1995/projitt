@@ -40,8 +40,39 @@ import { useRouter } from 'next/navigation';
 import { formatDateWithComma } from '@/lib/date-utils';
 import Detail from './detail';
 import DialogContent, { Dialog, div, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import dynamic from 'next/dynamic';
+
+// Create a wrapper component for the progress bar to avoid SSR issues
+const ProgressCircle = dynamic(
+    () => import('react-circular-progressbar').then(mod => {
+        const { CircularProgressbar, buildStyles } = mod;
+        return {
+            default: ({ value, text }: { value: number; text: string }) => (
+                <CircularProgressbar
+                    value={value}
+                    text={text}
+                    strokeWidth={12}
+                    styles={buildStyles({
+                        textColor: "#159A94",
+                        pathColor: "#159A94",
+                        trailColor: "#e6f3f2",
+                        strokeLinecap: "round",
+                    })}
+                />
+            )
+        };
+    }),
+    { 
+        ssr: false, 
+        loading: () => <div className="w-full h-full animate-pulse bg-gray-200 rounded-full flex items-center justify-center">
+            <span className="text-sm text-gray-500">Loading...</span>
+        </div>
+    }
+);
+
+// Import the CSS for CircularProgressbar
 import "react-circular-progressbar/dist/styles.css";
+
 import Message from '../../components/message';
 import { getJobApplications } from '@/api/applications';
 import LoadingSpinner from '@/components/common/loading-spinner';
@@ -525,16 +556,9 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                     <DialogTitle />
                     <div className='flex flex-col items-center justify-center'>
                         <div className='w-[120px] h-[120px] mt-[28px]'>
-                            <CircularProgressbar
+                            <ProgressCircle 
                                 value={progress}
                                 text={`${progress}%`}
-                                strokeWidth={12}
-                                styles={buildStyles({
-                                    textColor: "#159A94",
-                                    pathColor: "#159A94",
-                                    trailColor: "#e6f3f2",
-                                    strokeLinecap: "round",
-                                })}
                             />
                         </div>
                         <p className='text-[16px]/[20px] mt-[20px] font-medium text-[#353535]'>[Data Type] Export in Progress</p>
