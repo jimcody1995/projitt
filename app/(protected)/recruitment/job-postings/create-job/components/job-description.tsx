@@ -69,8 +69,6 @@ export default function JobDescription({
     loading = false,
     disabled = false,
 }: JobDescriptionProps): JSX.Element {
-    const [files, setFiles] = useState<File[]>([]);
-    const [uploadedMediaIds, setUploadedMediaIds] = useState<number[]>([]);
     const [selectedStyle, setSelectedStyle] = useState<string>('Formal');
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
     const [fileUploading, setFileUploading] = useState(false);
@@ -89,8 +87,6 @@ export default function JobDescription({
             console.log(response);
             if (response.data?.status && response.data?.data?.[0]?.id) {
                 const mediaId = response.data.data[0].id;
-                setUploadedMediaIds(prev => [...prev, mediaId]);
-                setFiles([...files, ...Array.from(media)]);
 
                 // Update job data with new media
                 const newMedia = {
@@ -124,27 +120,7 @@ export default function JobDescription({
         }
     };
 
-    /**
-     * Removes file at given index
-     */
-    const removeFile = (index: number): void => {
-        const updated = [...files];
-        updated.splice(index, 1);
-        setFiles(updated);
 
-        // Also remove from uploaded media IDs if it exists
-        if (uploadedMediaIds[index]) {
-            const updatedMediaIds = [...uploadedMediaIds];
-            updatedMediaIds.splice(index, 1);
-            setUploadedMediaIds(updatedMediaIds);
-
-            // Update job data media array
-            setJobData((prev: JobData) => ({
-                ...prev,
-                media: prev.media?.filter((_, i) => i !== index) || []
-            }));
-        }
-    };
 
     /**
      * Inserts emoji at cursor position in Quill editor
@@ -388,66 +364,46 @@ export default function JobDescription({
                     disabled={disabled}
                 />
 
-                <div
-                    className="flex flex-wrap gap-2 ml-2 mt-[-55px] relative z-[10]"
-                    id="file-list"
-                    data-testid="job-description-file-list"
-                >
-                    {/* Display existing media from job data */}
-                    {jobData.media?.map((media, index) => (
-                        <div
-                            key={`media-${media.id}`}
-                            className="flex items-center min-w-[210px] justify-between border-[#e9e9e9] bg-[#FAFAFA] px-[16px] py-[12px] border rounded-[6.52px]"
-                            id={`job-description-media-${media.id}`}
-                            data-testid={`job-description-media-${media.id}`}
-                        >
-                            <div className="flex items-center">
-                                <File className="size-[16px] text-[#0d978b]" />
-                                <span className="text-sm truncate max-w-[200px] ml-[5px]">
-                                    {media.original_name}
-                                </span>
-                            </div>
-                            <button
-                                onClick={() => {
-                                    setJobData((prev: JobData) => ({
-                                        ...prev,
-                                        media: prev.media?.filter((_, i) => i !== index) || []
-                                    }));
-                                }}
-                                className="ml-2 text-[#4b4b4b] cursor-pointer"
-                                id={`remove-media-${media.id}`}
-                                data-testid={`remove-media-${media.id}`}
-                            >
-                                ×
-                            </button>
+                {/* Attachment container moved below HTML editor */}
+                {jobData.media && jobData.media.length > 0 && (
+                    <div
+                        className="flex flex-wrap gap-2 mt-4 p-4 border border-[#e9e9e9] rounded-[12px] bg-[#FAFAFA]"
+                        id="file-list"
+                        data-testid="job-description-file-list"
+                    >
+                        <div className="w-full mb-2">
+                            <h4 className="text-sm font-medium text-[#4b4b4b]">Attached Files:</h4>
                         </div>
-                    ))}
-
-                    {/* Display newly uploaded files */}
-                    {files.map((file, index) => (
-                        <div
-                            key={`file-${index}`}
-                            className="flex items-center min-w-[210px] justify-between border-[#e9e9e9] bg-[#FAFAFA] px-[16px] py-[12px] border rounded-[6.52px]"
-                            id={`job-description-file-${index}`}
-                            data-testid={`job-description-file-${index}`}
-                        >
-                            <div className="flex items-center">
-                                <File className="size-[16px] text-[#0d978b]" />
-                                <span className="text-sm truncate max-w-[200px] ml-[5px]">
-                                    {file.name}
-                                </span>
-                            </div>
-                            <button
-                                onClick={() => removeFile(index)}
-                                className="ml-2 text-[#4b4b4b] cursor-pointer"
-                                id={`remove-file-${index}`}
-                                data-testid={`remove-file-${index}`}
+                        {jobData.media?.map((media, index) => (
+                            <div
+                                key={`media-${media.id}`}
+                                className="flex items-center min-w-[210px] justify-between border-[#e9e9e9] bg-white px-[16px] py-[12px] border rounded-[6.52px] shadow-sm"
+                                id={`job-description-media-${media.id}`}
+                                data-testid={`job-description-media-${media.id}`}
                             >
-                                ×
-                            </button>
-                        </div>
-                    ))}
-                </div>
+                                <div className="flex items-center">
+                                    <File className="size-[16px] text-[#0d978b]" />
+                                    <span className="text-sm truncate max-w-[200px] ml-[5px]">
+                                        {media.original_name}
+                                    </span>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setJobData((prev: JobData) => ({
+                                            ...prev,
+                                            media: prev.media?.filter((_, i) => i !== index) || []
+                                        }));
+                                    }}
+                                    className="ml-2 text-[#4b4b4b] cursor-pointer hover:text-red-500 transition-colors"
+                                    id={`remove-media-${media.id}`}
+                                    data-testid={`remove-media-${media.id}`}
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
 
                 {loading ? (
                     <div className="flex justify-between items-center mt-[70px]">
@@ -459,8 +415,7 @@ export default function JobDescription({
                     </div>
                 ) : (
                     <div
-                        className={`flex justify-between items-center ${files.length > 0 ? 'mt-[20px]' : 'mt-[70px]'
-                            }`}
+                        className="flex justify-between items-center mt-6"
                     >
                         <Dialog>
                             <DialogTrigger asChild>

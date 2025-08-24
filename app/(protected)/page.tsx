@@ -1,3 +1,5 @@
+"use client";
+
 import {
     ArrowRight,
     ArrowUpRight,
@@ -8,6 +10,7 @@ import {
     UserRoundPlus,
 } from "lucide-react";
 import { JSX } from "react";
+import { useRouter } from "next/navigation";
 
 /**
  * Dashboard component displays various modules with features,
@@ -16,6 +19,12 @@ import { JSX } from "react";
  * @returns JSX.Element - The dashboard UI with module cards and feature lists.
  */
 export default function Dashboard(): JSX.Element {
+    const router = useRouter();
+
+    const handleRecruitmentClick = () => {
+        router.push("/recruitment/job-postings");
+    };
+
     const modules = [
         {
             title: "HR Management",
@@ -276,6 +285,7 @@ export default function Dashboard(): JSX.Element {
                                                     id={`arrow-right-button-${index}-${i}`}
                                                     data-testid={`arrow-right-button-${index}-${i}`}
                                                     type="button"
+                                                    onClick={feature.name === "Recruitment" ? handleRecruitmentClick : undefined}
                                                 >
                                                     <ArrowRight className="size-[18px] text-[#0D978B]" />
                                                 </button>
