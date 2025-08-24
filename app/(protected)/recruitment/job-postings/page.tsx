@@ -447,7 +447,7 @@ export default function JobPostings() {
                     align="end"
                     data-testid={`actions-menu-${row.original.id}`}
                 >
-                    {row.original.status === "draft" &&
+                    {/* row.original.status === "draft" && */
                         <div
                             className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                             data-testid={`edit-action-${row.original.id}`}

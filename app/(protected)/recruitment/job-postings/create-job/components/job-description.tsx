@@ -33,6 +33,14 @@ import { Skeleton } from '@/components/ui/skeleton';
 interface JobDescriptionProps {
     jobData: {
         description?: string;
+        media?: Array<{
+            id: number;
+            unique_name: string;
+            original_name: string;
+            extension: string;
+            size: string;
+            base_url: string;
+        }>;
         [key: string]: unknown;
     };
     setJobData: React.Dispatch<React.SetStateAction<any>>;
@@ -51,6 +59,7 @@ export default function JobDescription({
     disabled = false,
 }: JobDescriptionProps): JSX.Element {
     const [files, setFiles] = useState<File[]>([]);
+    const [uploadedMediaIds, setUploadedMediaIds] = useState<number[]>([]);
     const [selectedStyle, setSelectedStyle] = useState<string>('Formal');
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
     const [fileUploading, setFileUploading] = useState(false);
@@ -67,8 +76,25 @@ export default function JobDescription({
         try {
             const response = await uploadMedia(formData);
             console.log(response);
-            if (media) {
+            if (response.data?.status && response.data?.data?.[0]?.id) {
+                const mediaId = response.data.data[0].id;
+                setUploadedMediaIds(prev => [...prev, mediaId]);
                 setFiles([...files, ...Array.from(media)]);
+
+                // Update job data with new media
+                const newMedia = {
+                    id: mediaId,
+                    unique_name: response.data.data[0].unique_name,
+                    original_name: response.data.data[0].original_name,
+                    extension: response.data.data[0].extension,
+                    size: response.data.data[0].size,
+                    base_url: response.data.data[0].base_url
+                };
+
+                setJobData(prev => ({
+                    ...prev,
+                    media: [...(prev.media || []), newMedia]
+                }));
             }
             setFileUploading(false);
             if (fileInputRef.current) {
@@ -94,6 +120,19 @@ export default function JobDescription({
         const updated = [...files];
         updated.splice(index, 1);
         setFiles(updated);
+
+        // Also remove from uploaded media IDs if it exists
+        if (uploadedMediaIds[index]) {
+            const updatedMediaIds = [...uploadedMediaIds];
+            updatedMediaIds.splice(index, 1);
+            setUploadedMediaIds(updatedMediaIds);
+
+            // Update job data media array
+            setJobData(prev => ({
+                ...prev,
+                media: prev.media?.filter((_, i) => i !== index) || []
+            }));
+        }
     };
 
     /**
@@ -343,9 +382,40 @@ export default function JobDescription({
                     id="file-list"
                     data-testid="job-description-file-list"
                 >
+                    {/* Display existing media from job data */}
+                    {jobData.media?.map((media, index) => (
+                        <div
+                            key={`media-${media.id}`}
+                            className="flex items-center min-w-[210px] justify-between border-[#e9e9e9] bg-[#FAFAFA] px-[16px] py-[12px] border rounded-[6.52px]"
+                            id={`job-description-media-${media.id}`}
+                            data-testid={`job-description-media-${media.id}`}
+                        >
+                            <div className="flex items-center">
+                                <File className="size-[16px] text-[#0d978b]" />
+                                <span className="text-sm truncate max-w-[200px] ml-[5px]">
+                                    {media.original_name}
+                                </span>
+                            </div>
+                            <button
+                                onClick={() => {
+                                    setJobData(prev => ({
+                                        ...prev,
+                                        media: prev.media?.filter((_, i) => i !== index) || []
+                                    }));
+                                }}
+                                className="ml-2 text-[#4b4b4b] cursor-pointer"
+                                id={`remove-media-${media.id}`}
+                                data-testid={`remove-media-${media.id}`}
+                            >
+                                ×
+                            </button>
+                        </div>
+                    ))}
+
+                    {/* Display newly uploaded files */}
                     {files.map((file, index) => (
                         <div
-                            key={index}
+                            key={`file-${index}`}
                             className="flex items-center min-w-[210px] justify-between border-[#e9e9e9] bg-[#FAFAFA] px-[16px] py-[12px] border rounded-[6.52px]"
                             id={`job-description-file-${index}`}
                             data-testid={`job-description-file-${index}`}

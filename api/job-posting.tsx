@@ -149,3 +149,15 @@ export const unpublishAssessment = async (id: string) => {
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/unpublish`, { id });
     return response.data;
 }
+
+export const editJobMedia = async (data: {
+    id: string;
+    media_ids: number[];
+}): Promise<{
+    status: boolean;
+    message: string;
+    data: unknown;
+}> => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/edit-media`, data);
+    return response.data;
+}

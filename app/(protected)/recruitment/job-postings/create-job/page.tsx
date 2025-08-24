@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Publish from "./components/publish";
 import Completed from "./components/completed";
 import { addNewJobTitle, getDesignation } from "@/api/basic"
-import { addNewDetailJob, editJobDescription, editDetailJob, getJobDetails, publishJob } from "@/api/job-posting";
+import { addNewDetailJob, editJobDescription, editDetailJob, getJobDetails, publishJob, editJobMedia } from "@/api/job-posting";
 import { useBasic } from "@/context/BasicContext";
 import { errorHandlers } from "@/utils/error-handler";
 import { addMonth } from "@/lib/date-utils";
@@ -31,6 +31,14 @@ type JobData = {
     salary: string;
     deadline: Date;
     description: string;
+    media?: Array<{
+        id: number;
+        unique_name: string;
+        original_name: string;
+        extension: string;
+        size: string;
+        base_url: string;
+    }>;
 };
 
 /**
@@ -103,7 +111,8 @@ export default function CreateJob(): JSX.Element {
         country_id: '',
         salary: '',
         deadline: addMonth(new Date(), 1),
-        description: ''
+        description: '',
+        media: []
     });
 
     const [errors, setErrors] = useState<JobDetailsErrors>({});
@@ -157,7 +166,8 @@ export default function CreateJob(): JSX.Element {
                             country_id: jobData.country_id?.toString() || '',
                             salary: salary,
                             deadline: new Date(jobData.deadline),
-                            description: jobData.description || ''
+                            description: jobData.description || '',
+                            media: jobData.media || []
                         });
                     }
                     setLoading(false)
@@ -319,15 +329,27 @@ export default function CreateJob(): JSX.Element {
                     return;
                 }
                 try {
-                    const payload = {
+                    // Save job description
+                    const descriptionPayload = {
                         description: jobData.description,
                         id: searchParams.get('id'),
                     }
 
-                    const response = await editJobDescription(payload);
-                    console.log(response);
+                    const descriptionResponse = await editJobDescription(descriptionPayload);
+                    console.log(descriptionResponse);
 
-                    if (response.status === true) {
+                    // Save job media if there are media attachments
+                    if (jobData.media && jobData.media.length > 0) {
+                        const mediaPayload = {
+                            id: searchParams.get('id') || '',
+                            media_ids: jobData.media.map(media => media.id)
+                        };
+
+                        const mediaResponse = await editJobMedia(mediaPayload);
+                        console.log(mediaResponse);
+                    }
+
+                    if (descriptionResponse.status === true) {
                         if (shouldContinue) {
                             setCurrentStep(currentStep + 1);
                         } else {
