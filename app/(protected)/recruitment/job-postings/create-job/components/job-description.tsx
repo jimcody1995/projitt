@@ -31,7 +31,17 @@ import { customToast } from '@/components/common/toastr';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface JobData {
-    description?: string;
+    title: string;
+    department_id: string;
+    employment_type_id: string;
+    no_of_job_opening: string;
+    skill_ids: string[];
+    location_type_id: number;
+    state: string;
+    country_id?: string;
+    salary: string;
+    deadline: Date;
+    description: string;
     media?: Array<{
         id: number;
         unique_name: string;
@@ -40,7 +50,6 @@ interface JobData {
         size: string;
         base_url: string;
     }>;
-    [key: string]: unknown;
 }
 
 interface JobDescriptionProps {
