@@ -20,12 +20,14 @@ export default function SuggestionInput({
   value,
   onChange,
   suggestions = [],
-  placeholder = "Select Designation"
+  placeholder = "Select Designation",
+  disabled = false
 }: {
   value: string;
   onChange: (val: string) => void;
   suggestions: Suggestion[];
   placeholder?: string;
+  disabled?: boolean;
 }) {
   /**
    * Component state for input value and dropdown visibility.
@@ -57,6 +59,7 @@ export default function SuggestionInput({
    * Sets the selected name to the input and calls the parent `onChange` handler.
    */
   const handleSelect = (name: string) => {
+    if (disabled) return;
     setInputValue(name);
     onChange(name);
     setShowDropdown(false);
@@ -79,11 +82,14 @@ export default function SuggestionInput({
           value={inputValue}
           placeholder={placeholder}
           autoComplete="off"
-          onFocus={() => setShowDropdown(true)}
+          disabled={disabled}
+          onFocus={() => !disabled && setShowDropdown(true)}
           onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
           onChange={e => {
-            setInputValue(e.target.value);
-            onChange(e.target.value);
+            if (!disabled) {
+              setInputValue(e.target.value);
+              onChange(e.target.value);
+            }
           }}
         />
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -94,7 +100,7 @@ export default function SuggestionInput({
           )}
         </div>
       </div>
-      {showDropdown && filteredSuggestions.length > 0 && (
+      {showDropdown && !disabled && filteredSuggestions.length > 0 && (
         <div className="absolute left-0 top-full mt-1 z-50 w-full">
           <div className="relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-border bg-popover shadow-md shadow-black/5 text-secondary-foreground">
             <div className="p-1.5 max-h-48 overflow-y-auto">

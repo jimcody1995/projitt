@@ -20,11 +20,13 @@ export default function TagInput({
     setTags,
     suggestions = [],
     restrictToSuggestions = false,
+    disabled = false,
 }: {
     tags: string[];
     setTags: (tags: string[]) => void;
     suggestions?: Suggestion[];
     restrictToSuggestions?: boolean;
+    disabled?: boolean;
 }): React.ReactElement {
     const [inputValue, setInputValue] = useState("");
     const [showDropdown, setShowDropdown] = useState(false);
@@ -38,6 +40,8 @@ export default function TagInput({
      * - Shows error if restrictToSuggestions is true and input is not in suggestions.
      */
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+        if (disabled) return;
+
         if (e.key === "Enter" && inputValue.trim()) {
             e.preventDefault();
 
@@ -69,6 +73,7 @@ export default function TagInput({
      * @param index - The index of the tag to remove
      */
     const removeTag = (index: number): void => {
+        if (disabled) return;
         setTags(tags.filter((_, i) => i !== index));
     };
 
@@ -79,6 +84,7 @@ export default function TagInput({
 
     // Handle suggestion click
     const handleAddTag = (tag: string) => {
+        if (disabled) return;
         setTags([...tags, tag]);
         setInputValue("");
         setShowDropdown(false);
@@ -88,6 +94,7 @@ export default function TagInput({
 
     // Clear error when input changes
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (disabled) return;
         setInputValue(e.target.value);
         if (error) setError("");
     };
@@ -96,7 +103,7 @@ export default function TagInput({
         <div
             id="tag-input-wrapper"
             data-testid="tag-input-wrapper"
-            className="p-[16px] border border-[#bcbcbc] rounded-[10px] w-full flex flex-wrap gap-[10px] relative"
+            className={`p-[16px] border border-[#bcbcbc] rounded-[10px] w-full flex flex-wrap gap-[10px] relative ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
             {/* Render each tag with a remove button */}
             {tags.map((tag, index) => (
@@ -113,8 +120,9 @@ export default function TagInput({
                         id={`remove-tag-${index}`}
                         data-testid={`remove-tag-${index}`}
                         onClick={() => removeTag(index)}
-                        className="ml-2 focus:outline-none"
+                        className={`ml-2 focus:outline-none ${disabled ? 'cursor-not-allowed' : ''}`}
                         aria-label={`Remove ${tag}`}
+                        disabled={disabled}
                     >
                         ×
                     </button>
@@ -125,12 +133,13 @@ export default function TagInput({
             <input
                 id="tag-input-field"
                 data-testid="tag-input-field"
-                className={`flex-grow min-w-[100px] outline-none text-gray-700 ${error ? 'border-red-500' : ''}`}
+                className={`flex-grow min-w-[100px] outline-none text-gray-700 ${error ? 'border-red-500' : ''} ${disabled ? 'cursor-not-allowed' : ''}`}
                 type="text"
                 value={inputValue}
                 ref={inputRef}
                 autoComplete="off"
-                onFocus={() => setShowDropdown(true)}
+                disabled={disabled}
+                onFocus={() => !disabled && setShowDropdown(true)}
                 onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
@@ -146,7 +155,7 @@ export default function TagInput({
             )}
 
             {/* Suggestions dropdown */}
-            {showDropdown && filteredSuggestions.length > 0 && (
+            {showDropdown && !disabled && filteredSuggestions.length > 0 && (
                 <ul className="absolute left-0 top-full mt-1 z-10 bg-white border border-gray-200 w-full rounded shadow max-h-48 overflow-y-auto">
                     {filteredSuggestions.map((s: Suggestion) => (
                         <li
