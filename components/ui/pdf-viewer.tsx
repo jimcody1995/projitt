@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import LoadingSpinner from "../common/loading-spinner";
 
 interface PdfViewerProps {
     url: string;
@@ -19,7 +20,7 @@ export default function PdfViewer({ url }: PdfViewerProps) {
 
                 // Set up worker
                 if (typeof window !== 'undefined') {
-                    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
                 }
 
                 const loadingTask = pdfjsLib.getDocument(url);
@@ -53,7 +54,7 @@ export default function PdfViewer({ url }: PdfViewerProps) {
 
     return (
         <div className="w-full">
-            {loading && <p>Loading PDF...</p>}
+            {loading && <LoadingSpinner />}
             <canvas className="w-full" ref={canvasRef}></canvas>
         </div>
     );

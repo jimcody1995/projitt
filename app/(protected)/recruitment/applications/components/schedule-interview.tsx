@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CalendarDays } from "lucide-react";
-import { formatDateYYYYMMDD, formatTimeTo24Hour, formatDateWithComma } from '@/lib/date-utils';
+import { formatDateYYYYMMDD, formatDateWithComma } from '@/lib/date-utils';
 import { Calendar } from "@/components/ui/calendar";
 
 import { Checkbox } from "@/components/ui/checkbox";
@@ -61,8 +61,17 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                 message,
                 job_id: selectedApplication?.job_id,
                 applicant_id: selectedApplication?.applicant_id,
-                date: schedulingType === 'propose_time' ? formatDateYYYYMMDD(range?.from) : undefined,
-                time: schedulingType === 'propose_time' ? formatTimeTo24Hour(`${selectedHour}:${selectedMinute} ${selectedAmPm}`) : undefined,
+                date: schedulingType === 'propose_time' ? formatDateYYYYMMDD(range?.from) : formatDateYYYYMMDD(now),
+                time: schedulingType === 'propose_time' ? (() => {
+                    if (selectedHour && selectedMinute && selectedAmPm) {
+                        const hour = parseInt(selectedHour);
+                        const minute = parseInt(selectedMinute);
+                        const isPM = selectedAmPm === 'PM';
+                        const hour24 = isPM && hour !== 12 ? hour + 12 : (hour === 12 && selectedAmPm === 'AM' ? 0 : hour);
+                        return `${hour24.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                    }
+                    return '00:00';
+                })() : '00:00',
             }
             await addInterview(payload);
             setIsSent(true)

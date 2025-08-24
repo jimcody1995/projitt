@@ -6,7 +6,7 @@ import React from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import 'pdfjs-dist/legacy/build/pdf.worker';
 import { uploadMedia } from '@/api/media';
-pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
 /**
  * FileDropUpload is a file upload component that allows users to drag and drop
  * or click to select a file for upload. It shows file type icons based on MIME type,

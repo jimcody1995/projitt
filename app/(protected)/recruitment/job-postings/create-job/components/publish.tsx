@@ -8,75 +8,74 @@
  */
 
 import { Edit } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useEffect, useState } from "react";
+import { getJobDetails } from "@/api/job-posting";
+import { useSearchParams } from "next/navigation";
 
 interface PublishProps {
-    jobData?: Record<string, unknown>;
     onNavigateToStep?: (step: number) => void;
+    disabled?: boolean;
+}
+
+interface JobData {
+    title: string;
+    department: { name: string };
+    employment_type: { name: string };
+    no_of_job_opening: number;
+    skills: Array<{ name: string }>;
+    location_type: { name: string };
+    country: { name: string };
+    state: string;
+    salary_from: string;
+    salary_to: string;
+    deadline: string;
+    description: string;
+    questions: Array<{
+        question_name: string;
+        answer_type: string;
+        options?: string[];
+    }>;
 }
 
 /**
  * Renders the Publish component for reviewing job post details.
  */
-export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
-    // Default data if no jobData is provided
-    const defaultData = jobData || {
-        title: "Software Engineer",
-        department: { name: "Sales" },
-        employment_type: { name: "Full-time" },
-        no_of_job_opening: 3,
-        skills: [
-            { name: "Data Analysis" },
-            { name: "UI/UX" },
-            { name: "Prototyping" },
-            { name: "Wireframing" }
-        ],
-        location_type: { name: "Onsite" },
-        country: { name: "United States" },
-        state: "California",
-        salary_from: "5000",
-        salary_to: "6000",
-        deadline: "2025-06-10T00:00:00.000000Z",
-        description: "Senior Data Analyst Position Overview<br />We are seeking an experienced Senior Data Analyst to join our growing analytics team. The ideal candidate will transform complex data into actionable insights that drive business decisions.<br />Key Responsibilities:<br />Lead complex data analysis projects and develop comprehensive reporting solutions<br />Build and maintain advanced statistical models and data visualization dashboards<br />Collaborate with stakeholders to identify business needs and translate them into analytical solutions<br />Mentor junior analysts and promote best practices in data analysis<br />Design and implement data quality processes and validation procedures<br />Required Qualifications:<br />Bachelor&apos;s degree in Statistics, Mathematics, Computer Science, or related field<br />5+ years of experience in data analysis and visualization<br />Expert proficiency in SQL, Python, or R<br />Strong experience with BI tools (Tableau, Power BI, or similar)<br />Proven track record of delivering data-driven solutions",
-        questions: [
-            {
-                question_name: "Why are you interested in this role?",
-                answer_type: "short"
-            },
-            {
-                question_name: "Describe a recent challenge you solved at work.",
-                answer_type: "long_detail"
-            },
-            {
-                question_name: "What's your expected salary range for this role?",
-                answer_type: "long_detail"
-            },
-            {
-                question_name: "How soon can you start if hired?",
-                answer_type: "dropdown",
-                options: ["Immediately", "1–2 weeks", "1 month", "Other"]
-            },
-            {
-                question_name: "Have you worked in a team setting before?",
-                answer_type: "checkbox",
-                options: ["Yes", "No"]
+export default function Publish({ onNavigateToStep, disabled = false }: PublishProps) {
+    const searchParams = useSearchParams();
+    const [data, setData] = useState<JobData | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // Fetch job data when component mounts
+    useEffect(() => {
+        const fetchJobData = async () => {
+            const jobId = searchParams.get('id');
+            if (!jobId) {
+                setError('No job ID provided');
+                setLoading(false);
+                return;
             }
-        ]
-    };
-    const data = jobData || {
-        title: "",
-        department: { name: "" },
-        employment_type: { name: "" },
-        no_of_job_opening: 1,
-        skills: [],
-        location_type: { name: "" },
-        country: { name: "" },
-        state: "",
-        salary_from: "",
-        salary_to: "",
-        deadline: "",
-        description: "",
-        questions: []
-    };
+
+            try {
+                setLoading(true);
+                const response = await getJobDetails(jobId);
+
+                if (response.status === true && response.data) {
+                    setData(response.data);
+                } else {
+                    setError('Failed to load job data');
+                }
+            } catch (err) {
+                console.error('Error fetching job data:', err);
+                setError('Error loading job data');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchJobData();
+    }, [searchParams]);
 
     // Helper function to format date
     const formatDate = (dateString?: string) => {
@@ -127,7 +126,7 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
     };
 
     // Helper function to render options for dropdown/checkbox
-    const renderOptions = (question: Record<string, unknown>) => {
+    const renderOptions = (question: { answer_type: string; options?: string[] }) => {
         if (question.answer_type === "dropdown" || question.answer_type === "checkbox") {
             if (question.options && Array.isArray(question.options)) {
                 return question.options.join(", ");
@@ -135,6 +134,101 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
         }
         return "";
     };
+
+    // Skeleton components for loading state
+    const JobDetailsSkeleton = () => (
+        <div className="xl:w-[650px] w-full flex flex-col gap-[36px] mt-[50px]">
+            <div className="border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] p-[20px]">
+                <div className="flex justify-between">
+                    <Skeleton className="h-6 w-32" />
+                    <Skeleton className="h-7 w-7 rounded-[7px]" />
+                </div>
+                <div className="grid md:grid-cols-3 sm:grid-cols-2 mt-[12px] gap-[42px]">
+                    {Array.from({ length: 8 }).map((_, index) => (
+                        <div key={index} className="flex flex-col gap-2">
+                            <Skeleton className="h-5 w-20" />
+                            <Skeleton className="h-5 w-24" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
+    const JobDescriptionSkeleton = () => (
+        <div className="xl:w-[650px] w-full flex flex-col gap-[36px] mt-[50px]">
+            <div className="border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] p-[20px]">
+                <div className="flex justify-between">
+                    <Skeleton className="h-6 w-36" />
+                    <Skeleton className="h-7 w-7 rounded-[7px]" />
+                </div>
+                <div className="flex flex-col mt-[16px] gap-3">
+                    <Skeleton className="h-5 w-32" />
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-4 w-5/6" />
+                        <Skeleton className="h-4 w-2/3" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    const ApplicantQuestionsSkeleton = () => (
+        <div className="xl:w-[650px] w-full flex flex-col gap-[36px] mt-[50px]">
+            <div className="border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] p-[20px]">
+                <div className="flex justify-between">
+                    <Skeleton className="h-6 w-40" />
+                    <Skeleton className="h-7 w-7 rounded-[7px]" />
+                </div>
+                <div className="flex flex-col mt-[16px] gap-[14px]">
+                    {Array.from({ length: 3 }).map((_, index) => (
+                        <div key={index} className="space-y-2">
+                            <Skeleton className="h-5 w-64" />
+                            <Skeleton className="h-4 w-32" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+
+    // Show error state
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+                <div className="text-red-500 text-lg font-medium mb-4">{error}</div>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    Retry
+                </button>
+            </div>
+        );
+    }
+
+    // Show skeletons when loading
+    if (loading) {
+        return (
+            <div id="job-description-component" data-testid="job-description-component">
+                <Skeleton className="h-8 w-48 mb-12" />
+                <JobDetailsSkeleton />
+                <JobDescriptionSkeleton />
+                <ApplicantQuestionsSkeleton />
+            </div>
+        );
+    }
+
+    // Show message if no data
+    if (!data) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px]">
+                <div className="text-gray-500 text-lg">No job data available</div>
+            </div>
+        );
+    }
 
     return (
         <div
@@ -163,6 +257,7 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
                             id="edit-job-details"
                             data-testid="edit-job-details"
                             onClick={handleEditJobDetails}
+                            disabled={disabled}
                         >
                             <Edit className="size-[16px]" />
                         </button>
@@ -188,7 +283,7 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
                             <p className="text-[14px]/[22px] font-medium text-[#a5a5a5]">Skills</p>
                             <div>
                                 {data.skills && Array.isArray(data.skills) ? (
-                                    data.skills.map((skill: any, index: number) => (
+                                    data.skills.map((skill, index) => (
                                         <p key={index} className="text-[14px]/[22px] font-medium text-[#353535]">
                                             {skill.name}
                                         </p>
@@ -236,6 +331,7 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
                             id="edit-job-description"
                             data-testid="edit-job-description"
                             onClick={handleEditJobDescription}
+                            disabled={disabled}
                         >
                             <Edit className="size-[16px]" />
                         </button>
@@ -264,13 +360,14 @@ export default function Publish({ jobData, onNavigateToStep }: PublishProps) {
                             id="edit-applicant-questions"
                             data-testid="edit-applicant-questions"
                             onClick={handleEditApplicantQuestions}
+                            disabled={disabled}
                         >
                             <Edit className="size-[16px]" />
                         </button>
                     </div>
                     <div className="flex flex-col mt-[16px] gap-[14px]" id="applicant-questions" data-testid="applicant-questions">
                         {data.questions && Array.isArray(data.questions) ? (
-                            data.questions.map((question: any, index: number) => (
+                            data.questions.map((question, index) => (
                                 <div
                                     key={index}
                                     className="text-[14px]/[22px] font-medium text-[#353535]"

@@ -6,7 +6,7 @@
  * Users can dynamically add/remove/edit questions and their options. Suitable for form builders.
  */
 
-import React, { JSX, useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import {
     GripVertical,
     Plus,
@@ -33,7 +33,7 @@ import Resume from './resume';
 import Education from './education';
 import { getJobDetails, addQuestionItem, editQuestionItem, editJobQuestions } from '@/api/job-posting';
 import { errorHandlers } from '@/utils/error-handler';
-import LoadingSpinner from '@/components/common/loading-spinner';
+import { Skeleton } from '@/components/ui/skeleton';
 export interface Question {
     id: string;
     title: string;
@@ -51,6 +51,7 @@ interface Section {
 interface ApplicantQuestionsProps {
     jobId?: string;
     onSave?: (questions: Question[]) => void;
+    disabled?: boolean;
 }
 
 /**
@@ -60,7 +61,7 @@ export interface ApplicantQuestionsRef {
     saveQuestions: () => Promise<void>;
 }
 
-const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsProps>(({ jobId, onSave }, ref) => {
+const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsProps>(({ jobId, onSave, disabled = false }, ref) => {
     ApplicantQuestions.displayName = 'ApplicantQuestions';
     const [activeSection, setActiveSection] = useState<string | null>('1');
     const [editSectionTitle, setEditSectionTitle] = useState<string>('');
@@ -405,195 +406,224 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
                 </div> */}
             </div>
             <div className='mt-[33px] relative'>
-                {loading && <div className="flex justify-center items-center h-full absolute top-0 left-0 w-full bg-white/50 z-50">
-                    <LoadingSpinner />
-                </div>}
-                <div className="min-h-screen w-full bg-white border border-[#e9e9e9] rounded-[12px] ">
-                    <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  w-full overflow-x-auto'>
-                        <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'resume' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('resume')}>
-                            <FileText className='size-[20px] ' />
-                            {activeSection === 'resume' && <p className='whitespace-nowrap'>Resume</p>}
+                {loading && (
+                    <div className="min-h-screen w-full bg-white border border-[#e9e9e9] rounded-[12px]">
+                        <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px] w-full overflow-x-auto'>
+                            <Skeleton className="h-10 w-24" />
+                            <Skeleton className="h-10 w-32" />
+                            <Skeleton className="h-10 w-28" />
+                            <Skeleton className="h-10 w-36" />
                         </div>
-                        <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'work' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('work')}>
-                            <BriefcaseBusiness className='size-[20px] ' />
-                            {activeSection === 'work' && <p className='whitespace-nowrap'>Work Experience</p>}
+                        <div className="max-w-4xl mx-auto py-[31px] px-[25px] space-y-4">
+                            {Array.from({ length: 3 }).map((_, index) => (
+                                <div key={index} className="bg-[#F5F5F5] rounded-lg shadow-sm border border-[#e9e9e9] p-4">
+                                    <div className="flex items-start gap-4">
+                                        <Skeleton className="h-5 w-5 mt-2" />
+                                        <div className="flex-1 space-y-3">
+                                            <Skeleton className="h-12 w-full" />
+                                            <Skeleton className="h-12 w-48" />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'education' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('education')}>
-                            <BookOpenText className='size-[20px] ' />
-                            {activeSection === 'education' && <p className='whitespace-nowrap'>Education</p>}
-                        </div>
-                        {sections.map((section) => (
-                            <div className={`py-[8.5px] px-[6px]  text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === section.id ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} key={section.id} onClick={() => setActiveSection(section.id)}>
-                                <CircleQuestionMark className='size-[20px] ' />
-
-                                {editSectionTitle === section.id ? (
-                                    <input
-                                        type="text"
-                                        value={section.title}
-                                        onChange={(e) => {
-                                            const updatedSections = sections.map((s) =>
-                                                s.id === section.id ? { ...s, title: e.target.value } : s
-                                            );
-                                            setSections(updatedSections);
-                                        }}
-                                        onBlur={() => setEditSectionTitle('')}
-                                        className="ml-2 w-[100px]"
-                                    />
-                                ) : (
-                                    <p className='whitespace-nowrap' onDoubleClick={() => { setEditSectionTitle(section.id) }}>{section.title}</p>
-                                )}
+                    </div>
+                )}
+                {!loading && (
+                    <div className="min-h-screen w-full bg-white border border-[#e9e9e9] rounded-[12px] ">
+                        <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px]  w-full overflow-x-auto'>
+                            <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'resume' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('resume')}>
+                                <FileText className='size-[20px] ' />
+                                {activeSection === 'resume' && <p className='whitespace-nowrap'>Resume</p>}
                             </div>
-                        ))}
+                            <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'work' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('work')}>
+                                <BriefcaseBusiness className='size-[20px] ' />
+                                {activeSection === 'work' && <p className='whitespace-nowrap'>Work Experience</p>}
+                            </div>
+                            <div className={`py-[8.5px] px-[6px] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === 'education' ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} onClick={() => setActiveSection('education')}>
+                                <BookOpenText className='size-[20px] ' />
+                                {activeSection === 'education' && <p className='whitespace-nowrap'>Education</p>}
+                            </div>
+                            {sections.map((section) => (
+                                <div className={`py-[8.5px] px-[6px]  text-[14px] font-medium flex items-center gap-[8px] cursor-pointer ${activeSection === section.id ? 'text-[#0d978b] border-b-[2px] border-[#0d978b]' : 'text-[#353535]'}`} key={section.id} onClick={() => setActiveSection(section.id)}>
+                                    <CircleQuestionMark className='size-[20px] ' />
 
-                        {/* Tempary Remove the Add Section Button */}
-                        {/* <div className='py-[8.5px] px-[6px] text-[#353535] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer' onClick={addSection}>
+                                    {editSectionTitle === section.id ? (
+                                        <input
+                                            type="text"
+                                            value={section.title}
+                                            onChange={(e) => {
+                                                const updatedSections = sections.map((s) =>
+                                                    s.id === section.id ? { ...s, title: e.target.value } : s
+                                                );
+                                                setSections(updatedSections);
+                                            }}
+                                            onBlur={() => setEditSectionTitle('')}
+                                            className="ml-2 w-[100px]"
+                                        />
+                                    ) : (
+                                        <p className='whitespace-nowrap' onDoubleClick={() => { setEditSectionTitle(section.id) }}>{section.title}</p>
+                                    )}
+                                </div>
+                            ))}
+
+                            {/* Tempary Remove the Add Section Button */}
+                            {/* <div className='py-[8.5px] px-[6px] text-[#353535] text-[14px] font-medium flex items-center gap-[8px] cursor-pointer' onClick={addSection}>
                             <Plus className='size-[20px] text-[#353535]' />
                             <p className='whitespace-nowrap'>Add Section</p>
                         </div> */}
 
-                    </div>
-                    <div className="max-w-4xl mx-auto py-[31px] px-[25px]">
-                        {activeSection === 'resume' && (
-                            <div>
-                                <Resume />
-                            </div>
-                        )}
-                        {activeSection === 'work' && (
-                            <div>
-                                <WorkExperience />
-                            </div>
-                        )}
-                        {activeSection === 'education' && (
-                            <div>
-                                <Education />
-                            </div>
-                        )}
-                        {(activeSection !== 'resume' && activeSection !== 'work' && activeSection !== 'education') && sections.filter((section) => section.id === activeSection).map((section) => (
-                            <div key={section.id} className="mb-8">
-                                <div className="space-y-4">
-                                    {section.questions.map((question) => (
-                                        <div key={question.id} className="bg-[#F5F5F5] rounded-lg shadow-sm border border-[#e9e9e9] group hover:shadow-md transition-shadow">
-                                            <div className="">
-                                                <div className="flex items-start gap-4 py-[20px] px-[16px]">
-                                                    <button className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing">
-                                                        <GripVertical className="w-5 h-5" />
-                                                    </button>
-                                                    <div className='flex w-full items-start gap-4 sm:flex-row flex-col'>
-                                                        <div className="lg:flex-1 w-full">
-                                                            <Input
-                                                                type="text"
-                                                                value={question.title}
-                                                                onChange={(e) => updateQuestion(section.id, question.id, { title: e.target.value })}
-                                                                className="h-[48px]"
-                                                                placeholder="Question"
-                                                            />
-                                                        </div>
-                                                        <Select
-                                                            value={question.type}
-                                                            onValueChange={(e) => updateQuestion(section.id, question.id, {
-                                                                type: e as Question['type'],
-                                                                options: ['dropdown', 'checkbox'].includes(e) ? ['Option 1'] : undefined
-                                                            })}
-                                                        >
-                                                            <SelectTrigger className="h-[48px] lg:w-[200px] w-full">
-                                                                <SelectValue placeholder="Select a type" />
-                                                            </SelectTrigger>
-                                                            <SelectContent>
-                                                                {questionTypes.map((type) => (
-                                                                    <SelectItem key={type.value} value={type.value}>
-                                                                        {type.label}
-                                                                    </SelectItem>
-                                                                ))}
-                                                            </SelectContent>
-                                                        </Select>
-                                                    </div>
-                                                </div>
-                                                <div className='bg-white px-[20px] py-[16px]'>
-                                                    {/* Question Options for Dropdown/Checkbox */}
-                                                    {(question.type === 'dropdown' || question.type === 'checkbox') && (
-                                                        <div className="sm:ml-9 ml-0 space-y-3 mb-4">
-                                                            {question.options?.map((option, index) => (
-                                                                <div key={index} className="flex w-full items-center justify-between gap-3">
-                                                                    {question.type === 'dropdown' ? (
-                                                                        <div className="w-4 h-4 border-2 border-gray-300 rounded-full flex-shrink-0"></div>
-                                                                    ) : (
-                                                                        <div className="w-4 h-4 border-2 border-gray-300 rounded flex-shrink-0"></div>
-                                                                    )}
-                                                                    <input
-                                                                        type="text"
-                                                                        value={option}
-                                                                        onChange={(e) => updateOption(section.id, question.id, index, e.target.value)}
-                                                                        className="w-full bg-transparent border-b border-gray-200 py-1 focus:outline-none focus:border-teal-500"
-                                                                    />
-                                                                    {question.options && question.options.length > 1 && (
-                                                                        <button
-                                                                            onClick={() => removeOption(section.id, question.id, index)}
-                                                                            className="text-gray-400 hover:text-red-500 transition-colors"
-                                                                        >
-                                                                            <X className="w-4 h-4" />
-                                                                        </button>
-                                                                    )}
-                                                                </div>
-                                                            ))}
-                                                            <button
-                                                                onClick={() => addOption(section.id, question.id)}
-                                                                className=" text-[#0D978B] hover:text-[#0D978B]/80 text-[12px]/[20px]  flex items-center gap-[6px] cursor-pointer"
-                                                            >
-                                                                <Plus className="w-4 h-4 border rounded-full" />
-                                                                Add options
-                                                            </button>
-                                                        </div>
-                                                    )}
-
-                                                    {/* Question Footer */}
-                                                    <div className="flex items-center justify-between border-t border-[#d9d9d9] pt-[14px]">
-                                                        <div className="flex items-center gap-3">
-                                                            <label className="flex items-center gap-2 text-[12px]/[16px] text-[#4b4b4b]">
-                                                                <Switch
-                                                                    checked={question.required}
-                                                                    onCheckedChange={(checked) => updateQuestion(section.id, question.id, { required: checked })}
-                                                                    shape="square"
+                        </div>
+                        <div className="max-w-4xl mx-auto py-[31px] px-[25px]">
+                            {activeSection === 'resume' && (
+                                <div>
+                                    <Resume />
+                                </div>
+                            )}
+                            {activeSection === 'work' && (
+                                <div>
+                                    <WorkExperience />
+                                </div>
+                            )}
+                            {activeSection === 'education' && (
+                                <div>
+                                    <Education />
+                                </div>
+                            )}
+                            {(activeSection !== 'resume' && activeSection !== 'work' && activeSection !== 'education') && sections.filter((section) => section.id === activeSection).map((section) => (
+                                <div key={section.id} className="mb-8">
+                                    <div className="space-y-4">
+                                        {section.questions.map((question) => (
+                                            <div key={question.id} className="bg-[#F5F5F5] rounded-lg shadow-sm border border-[#e9e9e9] group hover:shadow-md transition-shadow">
+                                                <div className="">
+                                                    <div className="flex items-start gap-4 py-[20px] px-[16px]">
+                                                        <button className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing">
+                                                            <GripVertical className="w-5 h-5" />
+                                                        </button>
+                                                        <div className='flex w-full items-start gap-4 sm:flex-row flex-col'>
+                                                            <div className="lg:flex-1 w-full">
+                                                                <Input
+                                                                    type="text"
+                                                                    value={question.title}
+                                                                    onChange={(e) => updateQuestion(section.id, question.id, { title: e.target.value })}
+                                                                    className="h-[48px]"
+                                                                    placeholder="Question"
+                                                                    disabled={disabled}
                                                                 />
-                                                                Required
-                                                            </label>
+                                                            </div>
+                                                            <Select
+                                                                value={question.type}
+                                                                onValueChange={(e) => updateQuestion(section.id, question.id, {
+                                                                    type: e as Question['type'],
+                                                                    options: ['dropdown', 'checkbox'].includes(e) ? ['Option 1'] : undefined
+                                                                })}
+                                                                disabled={disabled}
+                                                            >
+                                                                <SelectTrigger className="h-[48px] lg:w-[200px] w-full" disabled={disabled}>
+                                                                    <SelectValue placeholder="Select a type" />
+                                                                </SelectTrigger>
+                                                                <SelectContent>
+                                                                    {questionTypes.map((type) => (
+                                                                        <SelectItem key={type.value} value={type.value}>
+                                                                            {type.label}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                                </SelectContent>
+                                                            </Select>
                                                         </div>
+                                                    </div>
+                                                    <div className='bg-white px-[20px] py-[16px]'>
+                                                        {/* Question Options for Dropdown/Checkbox */}
+                                                        {(question.type === 'dropdown' || question.type === 'checkbox') && (
+                                                            <div className="sm:ml-9 ml-0 space-y-3 mb-4">
+                                                                {question.options?.map((option, index) => (
+                                                                    <div key={index} className="flex w-full items-center justify-between gap-3">
+                                                                        {question.type === 'dropdown' ? (
+                                                                            <div className="w-4 h-4 border-2 border-gray-300 rounded-full flex-shrink-0"></div>
+                                                                        ) : (
+                                                                            <div className="w-4 h-4 border-2 border-gray-300 rounded flex-shrink-0"></div>
+                                                                        )}
+                                                                        <input
+                                                                            type="text"
+                                                                            value={option}
+                                                                            onChange={(e) => updateOption(section.id, question.id, index, e.target.value)}
+                                                                            className="w-full bg-transparent border-b border-gray-200 py-1 focus:outline-none focus:border-teal-500"
+                                                                            disabled={disabled}
+                                                                        />
+                                                                        {question.options && question.options.length > 1 && (
+                                                                            <button
+                                                                                onClick={() => removeOption(section.id, question.id, index)}
+                                                                                className="text-gray-400 hover:text-red-500 transition-colors"
+                                                                            >
+                                                                                <X className="w-4 h-4" />
+                                                                            </button>
+                                                                        )}
+                                                                    </div>
+                                                                ))}
+                                                                <button
+                                                                    onClick={() => addOption(section.id, question.id)}
+                                                                    className=" text-[#0D978B] hover:text-[#0D978B]/80 text-[12px]/[20px]  flex items-center gap-[6px] cursor-pointer"
+                                                                    disabled={disabled}
+                                                                >
+                                                                    <Plus className="w-4 h-4 border rounded-full" />
+                                                                    Add options
+                                                                </button>
+                                                            </div>
+                                                        )}
 
-                                                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                            <button
-                                                                onClick={() => duplicateQuestion(section.id, question.id)}
-                                                                className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
-                                                            >
-                                                                <Copy className="w-4 h-4" />
-                                                                Duplicate
-                                                            </button>
-                                                            <button
-                                                                onClick={() => deleteQuestion(section.id, question.id)}
-                                                                className="flex items-center gap-1 px-3 py-1 text-[#c30606] hover:bg-[#c30606]/10 rounded text-[12px]/[20px] transition-colors cursor-pointer"
-                                                            >
-                                                                <Trash2 className="w-4 h-4" />
-                                                                Delete
-                                                            </button>
+                                                        {/* Question Footer */}
+                                                        <div className="flex items-center justify-between border-t border-[#d9d9d9] pt-[14px]">
+                                                            <div className="flex items-center gap-3">
+                                                                <label className="flex items-center gap-2 text-[12px]/[16px] text-[#4b4b4b]">
+                                                                    <Switch
+                                                                        checked={question.required}
+                                                                        onCheckedChange={(checked) => updateQuestion(section.id, question.id, { required: checked })}
+                                                                        shape="square"
+                                                                        disabled={disabled}
+                                                                    />
+                                                                    Required
+                                                                </label>
+                                                            </div>
+
+                                                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                <button
+                                                                    onClick={() => duplicateQuestion(section.id, question.id)}
+                                                                    className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                                    disabled={disabled}
+                                                                >
+                                                                    <Copy className="w-4 h-4" />
+                                                                    Duplicate
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => deleteQuestion(section.id, question.id)}
+                                                                    className="flex items-center gap-1 px-3 py-1 text-[#c30606] hover:bg-[#c30606]/10 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                                    disabled={disabled}
+                                                                >
+                                                                    <Trash2 className="w-4 h-4" />
+                                                                    Delete
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))
-                                    }
+                                        ))
+                                        }
 
-                                    {/* Add New Question Button */}
-                                    <button
-                                        onClick={() => addQuestion(section.id)}
-                                        className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-teal-400 hover:text-teal-600 transition-colors flex items-center justify-center gap-2"
-                                    >
-                                        <Plus className="w-5 h-5" />
-                                        Create New Question
-                                    </button>
+                                        {/* Add New Question Button */}
+                                        <button
+                                            onClick={() => addQuestion(section.id)}
+                                            className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-teal-400 hover:text-teal-600 transition-colors flex items-center justify-center gap-2"
+                                        >
+                                            <Plus className="w-5 h-5" />
+                                            Create New Question
+                                        </button>
+                                    </div >
                                 </div >
-                            </div >
-                        ))}
+                            ))}
+                        </div >
                     </div >
-                </div >
+                )}
             </div >
         </div >
     );

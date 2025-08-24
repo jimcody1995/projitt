@@ -14,6 +14,7 @@ import { addNewJobTitle, getDesignation } from "@/api/basic"
 import { addNewDetailJob, editJobDescription, editDetailJob, getJobDetails, publishJob } from "@/api/job-posting";
 import { useBasic } from "@/context/BasicContext";
 import { errorHandlers } from "@/utils/error-handler";
+import { addMonth } from "@/lib/date-utils";
 
 /**
  * JobData type defines the structure of data related to a job posting.
@@ -101,14 +102,16 @@ export default function CreateJob(): JSX.Element {
         state: '',
         country_id: '',
         salary: '',
-        deadline: new Date(),
+        deadline: addMonth(new Date(), 1),
         description: ''
     });
-    const [publishJobData, setPublishJobData] = useState<any>(null);
+
     const [errors, setErrors] = useState<JobDetailsErrors>({});
     const [descriptionError, setDescriptionError] = useState<JobDesciptionError>({});
     const [triggerValidation, setTriggerValidation] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isSavingContinue, setIsSavingContinue] = useState<boolean>(false);
+    const [isSavingExit, setIsSavingExit] = useState<boolean>(false);
     const { skills, designation, setDesignation } = useBasic();
     const searchParams = useSearchParams();
     const applicantQuestionsRef = useRef<ApplicantQuestionsRef>(null);
@@ -168,26 +171,7 @@ export default function CreateJob(): JSX.Element {
         loadJobDetails();
     }, [searchParams, currentStep, setJobData]);
 
-    /**
-     * Load job data for publish step
-     */
-    useEffect(() => {
-        const loadPublishJobData = async () => {
-            const jobId = searchParams.get('id');
-            if (jobId && currentStep === 5) {
-                try {
-                    const response = await getJobDetails(jobId);
-                    if (response.status === true) {
-                        setPublishJobData(response.data);
-                    }
-                } catch (error) {
-                    errorHandlers.jobPosting(error);
-                }
-            }
-        };
 
-        loadPublishJobData();
-    }, [searchParams, currentStep]);
 
     /**
      * Validates the job details step.
@@ -381,24 +365,25 @@ export default function CreateJob(): JSX.Element {
             }
 
             if (currentStep === 5) {
-                try {
-                    const response = await publishJob(searchParams.get('id') || '');
-                    if (response.data.status) {
-                        if (shouldContinue) {
+                if (shouldContinue) {
+                    // Only publish if continuing to next step
+                    try {
+                        const response = await publishJob(searchParams.get('id') || '');
+                        if (response.data.status) {
                             setCurrentStep(currentStep + 1);
                         } else {
-                            router.push('/recruitment/job-postings');
+                            errorHandlers.jobPosting(response.data.message);
+                            setIsLoading(false);
+                            return;
                         }
-                    }
-                    else {
-                        errorHandlers.jobPosting(response.data.message);
+                    } catch (error) {
+                        errorHandlers.jobPosting(error);
                         setIsLoading(false);
                         return;
                     }
-                } catch (error) {
-                    errorHandlers.jobPosting(error);
-                    setIsLoading(false);
-                    return;
+                } else {
+                    // If saving and exiting, just redirect without publishing
+                    router.push('/recruitment/job-postings');
                 }
             }
         } finally {
@@ -415,7 +400,12 @@ export default function CreateJob(): JSX.Element {
      * @returns void
      */
     const handleContinue = async (): Promise<void> => {
-        await handleStepOperation(true);
+        setIsSavingContinue(true);
+        try {
+            await handleStepOperation(true);
+        } finally {
+            setIsSavingContinue(false);
+        }
     };
 
     /**
@@ -423,7 +413,12 @@ export default function CreateJob(): JSX.Element {
      * @returns void
      */
     const handleSaveExit = async (): Promise<void> => {
-        await handleStepOperation(false);
+        setIsSavingExit(true);
+        try {
+            await handleStepOperation(false);
+        } finally {
+            setIsSavingExit(false);
+        }
     };
 
     return (
@@ -459,9 +454,9 @@ export default function CreateJob(): JSX.Element {
                                 id="save-exit-button"
                                 data-testid="save-exit-button"
                                 onClick={handleSaveExit}
-                                disabled={isLoading}
+                                disabled={isLoading || isSavingContinue || isSavingExit}
                             >
-                                {isLoading ? (
+                                {isSavingExit ? (
                                     <div className="flex items-center gap-2">
                                         <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
                                         Saving...
@@ -471,7 +466,12 @@ export default function CreateJob(): JSX.Element {
                                 )}
                             </Button>
                             {currentStep !== 1 && (
-                                <Button variant="outline" className="order-2 sm:order-2 font-semibold text-[14px]/[20px] min-w-[82px] h-[42px]" onClick={handleBack}>
+                                <Button
+                                    variant="outline"
+                                    className="order-2 sm:order-2 font-semibold text-[14px]/[20px] min-w-[82px] h-[42px]"
+                                    onClick={handleBack}
+                                    disabled={isLoading || isSavingContinue || isSavingExit}
+                                >
                                     Back
                                 </Button>
                             )}
@@ -480,9 +480,9 @@ export default function CreateJob(): JSX.Element {
                                 id="save-continue-button"
                                 data-testid="save-continue-button"
                                 onClick={handleContinue}
-                                disabled={isLoading}
+                                disabled={isLoading || isSavingContinue || isSavingExit}
                             >
-                                {isLoading ? (
+                                {isSavingContinue ? (
                                     <div className="flex items-center gap-2">
                                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                         {currentStep === 5 ? 'Publishing...' : 'Saving...'}
@@ -515,6 +515,7 @@ export default function CreateJob(): JSX.Element {
                                     setJobData={setJobData}
                                     errors={errors}
                                     triggerValidation={triggerValidation}
+                                    disabled={isLoading || isSavingContinue || isSavingExit}
                                 />
                             )}
                             {currentStep === 2 && (
@@ -524,11 +525,12 @@ export default function CreateJob(): JSX.Element {
                                     setJobData={setJobData}
                                     errors={descriptionError}
                                     triggerValidation={triggerValidation}
+                                    disabled={isLoading || isSavingContinue || isSavingExit}
                                 />
                             )}
-                            {currentStep === 3 && <ApplicantQuestions ref={applicantQuestionsRef} jobId={searchParams.get('id') || undefined} />}
-                            {currentStep === 4 && <HiringPipeline />}
-                            {currentStep === 5 && <Publish jobData={publishJobData} onNavigateToStep={setCurrentStep} />}
+                            {currentStep === 3 && <ApplicantQuestions ref={applicantQuestionsRef} jobId={searchParams.get('id') || undefined} disabled={isLoading || isSavingContinue || isSavingExit} />}
+                            {currentStep === 4 && <HiringPipeline disabled={isLoading || isSavingContinue || isSavingExit} />}
+                            {currentStep === 5 && <Publish onNavigateToStep={setCurrentStep} disabled={isLoading || isSavingContinue || isSavingExit} />}
                         </div>
                     </div>
                 </div>

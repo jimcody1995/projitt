@@ -215,6 +215,14 @@ export default function Assessment() {
                     {status === "open" && (
                         <>
                             <div
+                                id={`edit-action-${row}`}
+                                className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                data-testid={`edit-action-${row}`}
+                                onClick={() => router.push(`/recruitment/assessments/create-assessment?id=${row}`)}
+                            >
+                                Edit
+                            </div>
+                            <div
                                 id={`close-action-${row}`}
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 data-testid={`close-action-${row}`}
@@ -236,6 +244,14 @@ export default function Assessment() {
                     {/* Closed status menu items */}
                     {status === "closed" && (
                         <>
+                            <div
+                                id={`edit-action-${row}`}
+                                className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                                data-testid={`edit-action-${row}`}
+                                onClick={() => router.push(`/recruitment/assessments/create-assessment?id=${row}`)}
+                            >
+                                Edit
+                            </div>
                             <div
                                 id={`open-action-${row}`}
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"

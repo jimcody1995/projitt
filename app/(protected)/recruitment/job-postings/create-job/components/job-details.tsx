@@ -27,7 +27,7 @@ import {
     PopoverTrigger
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, Loader2 } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { formatDate } from "@/lib/date-utils";
@@ -35,7 +35,7 @@ import TagInput from "@/components/ui/tag-input";
 import SuggestionInput from "@/components/ui/suggestion-input";
 import { useBasic } from "@/context/BasicContext";
 import { errorHandlers } from "@/utils/error-handler";
-import LoadingSpinner from "@/components/common/loading-spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface JobDetailsProps {
     jobData: any;
@@ -52,6 +52,7 @@ interface JobDetailsProps {
     };
     triggerValidation?: boolean;
     loading?: boolean;
+    disabled?: boolean;
 }
 
 /**
@@ -62,7 +63,7 @@ interface JobDetailsProps {
  * @param triggerValidation - optional flag to enable error messages
  * @returns JSX.Element
  */
-export default function JobDetails({ jobData, setJobData, errors = {}, triggerValidation = false, loading = false }: JobDetailsProps): JSX.Element {
+export default function JobDetails({ jobData, setJobData, errors = {}, triggerValidation = false, loading = false, disabled = false }: JobDetailsProps): JSX.Element {
     const [locationType, setLocationType] = useState(jobData.location_type_id || 1);
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [selectedCountryName, setSelectedCountryName] = useState<string>('');
@@ -153,198 +154,255 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
             </div>
 
             <div className="grid gap-[48px] xl:grid-cols-2 grid-cols-1 mt-[33px] relative">
-                {loading && <div className="flex justify-center items-center h-full absolute top-0 left-0 w-full bg-white/50 z-50">
-                    <LoadingSpinner />
-                </div>}
-                {/* Each input section will be upgraded with ID + data-testid for automation */}
+                {loading && (
+                    <>
+                        <div className="flex flex-col gap-[12px]">
+                            <Skeleton className="h-5 w-20" />
+                            <Skeleton className="h-12 w-full" />
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <Skeleton className="h-5 w-24" />
+                            <Skeleton className="h-12 w-full" />
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <Skeleton className="h-5 w-28" />
+                            <Skeleton className="h-12 w-full" />
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <Skeleton className="h-5 w-32" />
+                            <Skeleton className="h-12 w-full" />
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <div>
+                                <Skeleton className="h-5 w-16" />
+                                <Skeleton className="h-4 w-64 mt-1" />
+                            </div>
+                            <Skeleton className="h-12 w-full" />
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <div>
+                                <Skeleton className="h-5 w-24" />
+                                <Skeleton className="h-4 w-80 mt-1" />
+                            </div>
+                            <div className="flex gap-[32px]">
+                                <div className="flex gap-[6px]">
+                                    <Skeleton className="h-4 w-4" />
+                                    <Skeleton className="h-5 w-16" />
+                                </div>
+                                <div className="flex gap-[6px]">
+                                    <Skeleton className="h-4 w-4" />
+                                    <Skeleton className="h-5 w-16" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <Skeleton className="h-5 w-20" />
+                            <Skeleton className="h-12 w-full" />
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <Skeleton className="h-5 w-16" />
+                            <Skeleton className="h-12 w-full" />
+                        </div>
+                    </>
+                )}
+                {!loading && (
+                    <>
+                        {/* Each input section will be upgraded with ID + data-testid for automation */}
 
-                <div className="flex flex-col gap-[12px]">
-                    <p className="text-[14px]/[16px] text-[#1c1c1c]">Job Title *</p>
-                    <SuggestionInput
-                        placeholder="e.g Sales Representative"
-                        value={jobData?.title || ""}
-                        onChange={val => setJobData({ ...jobData, title: val })}
-                        suggestions={designation}
-                    />
-                    {triggerValidation && errors.title && (
-                        <span className="text-red-500 text-xs">{errors.title}</span>
-                    )}
-                </div>
-
-                <div className="flex flex-col gap-[12px]">
-                    <p className="text-[14px]/[16px] text-[#1c1c1c]">Department *</p>
-                    <Select
-                        key={`department-${jobData?.department_id}`}
-                        defaultValue="sales"
-                        value={jobData?.department_id?.toString() || ""}
-                        onValueChange={(e) => setJobData({ ...jobData, department_id: e })}
-                    >
-                        <SelectTrigger
-                            className="h-[48px]"
-                            id="job-details-department"
-                            data-testid="job-details-department"
-                        >
-                            <SelectValue placeholder="Select a department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {(department || [])?.map((department: any) => (
-                                <SelectItem key={department.id} value={department.id.toString()}>{department.name}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    {triggerValidation && errors.department_id && <span className="text-red-500 text-xs ">{errors.department_id}</span>}
-                </div>
-                <div className="flex flex-col gap-[12px]">
-                    <p className="text-[14px]/[16px] text-[#1c1c1c]">Employment Type*</p>
-                    <Select key={`employment-${jobData?.employment_type_id}`} defaultValue="full-time" value={jobData?.employment_type_id?.toString() || ""} onValueChange={(e) => setJobData({ ...jobData, employment_type_id: e })}>
-                        <SelectTrigger className="h-[48px]">
-                            <SelectValue placeholder="Select a department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {(employmentType || [])?.map((employmentType: any) => (
-                                <SelectItem key={employmentType.id} value={employmentType.id.toString()}>{employmentType.name}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    {triggerValidation && errors.employment_type_id && <span className="text-red-500 text-xs ">{errors.employment_type_id}</span>}
-                </div>
-                <div className="flex flex-col gap-[12px]">
-                    <p className="text-[14px]/[16px] text-[#1c1c1c]">No. of Openings*</p>
-                    <Select defaultValue="1" value={jobData?.no_of_job_opening} onValueChange={(e) => setJobData({ ...jobData, no_of_job_opening: e })}>
-                        <SelectTrigger className="h-[48px]">
-                            <SelectValue placeholder="Select a department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="1">1</SelectItem>
-                            <SelectItem value="2">2</SelectItem>
-                            <SelectItem value="3">3</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    {triggerValidation && errors.no_of_job_opening && <span className="text-red-500 text-xs ">{errors.no_of_job_opening}</span>}
-                </div>
-                <div className="flex flex-col gap-[12px]">
-                    <div>
-                        <p className="text-[14px]/[16px] text-[#1c1c1c]">Skills*</p>
-                        <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Add 3–6 skills to help AI match stronger applicants. </p>
-                    </div>
-                    <TagInput tags={jobData?.skill_ids} setTags={(tags) => setJobData({ ...jobData, skill_ids: tags })} suggestions={skills} restrictToSuggestions={true} />
-                    {triggerValidation && errors.skill_ids && <span className="text-red-500 text-xs ">{errors.skill_ids}</span>}
-                </div>
-                <div className="flex flex-col gap-[12px]">
-                    <div>
-                        <p className="text-[14px]/[16px] text-[#1c1c1c]">Location Type*</p>
-                        <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Choose based on where the role is performed not where the company is based.</p>
-                    </div>
-                    <div>
-                        <RadioGroup className="flex gap-[32px]" defaultValue={locationType.toString()} onValueChange={(e) => setLocationType(Number(e))}>
-                            <div className="flex gap-[6px]">
-                                <RadioGroupItem value="1" id="onsite" />
-                                <Label htmlFor="onsite" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 1 ? 'text-[#0d978b]' : '')}>
-                                    Onsite
-                                </Label>
-                            </div>
-                            <div className="flex gap-[6px]">
-                                <RadioGroupItem value="2" id="hybrid" />
-                                <Label htmlFor="hybrid" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 2 ? 'text-[#0d978b]' : '')}>
-                                    Hybrid
-                                </Label>
-                            </div>
-                            <div className="flex gap-[6px]">
-                                <RadioGroupItem value="3" id="remote" />
-                                <Label htmlFor="remote" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 3 ? 'text-[#0d978b]' : '')}>
-                                    Remote
-                                </Label>
-                            </div>
-                        </RadioGroup>
-                        {triggerValidation && errors.location_type_id && <span className="text-red-500 text-xs ">{errors.location_type_id}</span>}
-                        {(locationType === 1 || locationType === 2) && <div className="flex flex-col gap-[10px] mt-[10px]">
-                            <Select value={jobData.country_id?.toString() || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })}>
-                                <SelectTrigger className="h-[48px]">
-                                    <SelectValue placeholder="Select Country" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {(country || [])?.map((country: any) => (
-                                        <SelectItem key={country.id} value={country.id.toString()}>{country.name}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {triggerValidation && errors.country_id && <span className="text-red-500 text-xs ">{errors.country_id}</span>}
-                            <Select value={jobData.state || ''} onValueChange={val => setJobData({ ...jobData, state: val })}>
-                                <SelectTrigger className="h-[48px]">
-                                    <SelectValue placeholder={isLoadingStates ? "Loading states..." : "Select State"} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {isLoadingStates ? (
-                                        <SelectItem value=" " disabled>Loading states...</SelectItem>
-                                    ) : countryStates.length > 0 ? (
-                                        countryStates.map((state: any, index: number) => (
-                                            <SelectItem key={index} value={state.name}>{state.name}</SelectItem> // state_code: GA, NA, IL
-                                        ))
-                                    ) : (
-                                        <SelectItem value=" " disabled>No states available</SelectItem>
-                                    )}
-                                </SelectContent>
-                            </Select>
-                            {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
-                        </div>}
-                        {locationType === 3 && <div className="flex flex-col gap-[12px] mt-[10px]">
-                            <Select value={jobData.country_id?.toString() || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })}>
-                                <SelectTrigger className="h-[48px]">
-                                    <SelectValue placeholder="Select Country" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {(country || [])?.map((country: any) => (
-                                        <SelectItem key={country.id} value={country.id.toString()}>{country.name}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            {triggerValidation && errors.country_id && <span className="text-red-500 text-xs ">{errors.country_id}</span>}
-                            <div className="flex items-center gap-[8px]">
-                                <input type="checkbox" placeholder="Remote (Global)" className="h-[14px] accent-[#0d978b]" />
-                                <p className="text-[14px]/[20px] text-[#4b4b4b]">Remote (Global)</p>
-                            </div>
-                        </div>}
-                    </div>
-                </div>
-                <div className="flex flex-col gap-[12px]">
-                    <div>
-                        <p className="text-[14px]/[16px] text-[#1c1c1c]">Salary <span className="text-[#787878]">(optional)</span></p>
-                        <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Adding a range boosts visibility by up to 40%. If unsure, give your best estimate. </p>
-                    </div>
-                    <Input className="h-[48px]" placeholder="e.g $150,000-$200,000 p.a" value={jobData?.salary} onChange={(e) => setJobData({ ...jobData, salary: e.target.value })} />
-                </div>
-                <div className="flex flex-col gap-[12px]">
-                    <div>
-                        <p className="text-[14px]/[16px] text-[#1c1c1c]">Deadline <span className="text-[#787878]">(optional)</span></p>
-                        <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Set a deadline to reflect urgency. </p>
-                    </div>
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button
-                                mode="input"
-                                variant="outline"
-                                id="date"
-                                className={cn(
-                                    'w-full h-[48px] data-[state=open]:border-primary rounded-[10px]',
-                                    !date && 'text-muted-foreground',
-                                )}
-                            >
-                                <CalendarDays className="-ms-0.5" />
-                                {jobData?.deadline ? formatDate(jobData?.deadline) : <span>Pick a date</span>}
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                                initialFocus
-                                mode="single" // Single date selection
-                                defaultMonth={jobData?.deadline}
-                                selected={jobData?.deadline}
-                                onSelect={(e) => setJobData({ ...jobData, deadline: e })}
-                                numberOfMonths={1}
+                        <div className="flex flex-col gap-[12px]">
+                            <p className="text-[14px]/[16px] text-[#1c1c1c]">Job Title *</p>
+                            <SuggestionInput
+                                placeholder="e.g Sales Representative"
+                                value={jobData?.title || ""}
+                                onChange={val => setJobData({ ...jobData, title: val })}
+                                suggestions={designation}
+                                disabled={disabled}
                             />
-                        </PopoverContent>
-                    </Popover>
-                </div>
+                            {triggerValidation && errors.title && (
+                                <span className="text-red-500 text-xs">{errors.title}</span>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col gap-[12px]">
+                            <p className="text-[14px]/[16px] text-[#1c1c1c]">Department *</p>
+                            <Select
+                                key={`department-${jobData?.department_id}`}
+                                defaultValue="sales"
+                                value={jobData?.department_id?.toString() || ""}
+                                onValueChange={(e) => setJobData({ ...jobData, department_id: e })}
+                                disabled={disabled}
+                            >
+                                <SelectTrigger
+                                    className="h-[48px]"
+                                    id="job-details-department"
+                                    data-testid="job-details-department"
+                                    disabled={disabled}
+                                >
+                                    <SelectValue placeholder="Select a department" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {(department || [])?.map((department: any) => (
+                                        <SelectItem key={department.id} value={department.id.toString()}>{department.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {triggerValidation && errors.department_id && <span className="text-red-500 text-xs ">{errors.department_id}</span>}
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <p className="text-[14px]/[16px] text-[#1c1c1c]">Employment Type*</p>
+                            <Select key={`employment-${jobData?.employment_type_id}`} defaultValue="full-time" value={jobData?.employment_type_id?.toString() || ""} onValueChange={(e) => setJobData({ ...jobData, employment_type_id: e })} disabled={disabled}>
+                                <SelectTrigger className="h-[48px]" disabled={disabled}>
+                                    <SelectValue placeholder="Select a department" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {(employmentType || [])?.map((employmentType: any) => (
+                                        <SelectItem key={employmentType.id} value={employmentType.id.toString()}>{employmentType.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {triggerValidation && errors.employment_type_id && <span className="text-red-500 text-xs ">{errors.employment_type_id}</span>}
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <p className="text-[14px]/[16px] text-[#1c1c1c]">No. of Openings*</p>
+                            <Select defaultValue="1" value={jobData?.no_of_job_opening} onValueChange={(e) => setJobData({ ...jobData, no_of_job_opening: e })} disabled={disabled}>
+                                <SelectTrigger className="h-[48px]" disabled={disabled}>
+                                    <SelectValue placeholder="Select a department" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="1">1</SelectItem>
+                                    <SelectItem value="2">2</SelectItem>
+                                    <SelectItem value="3">3</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            {triggerValidation && errors.no_of_job_opening && <span className="text-red-500 text-xs ">{errors.no_of_job_opening}</span>}
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <div>
+                                <p className="text-[14px]/[16px] text-[#1c1c1c]">Skills*</p>
+                                <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Add 3–6 skills to help AI match stronger applicants. </p>
+                            </div>
+                            <TagInput tags={jobData?.skill_ids} setTags={(tags) => setJobData({ ...jobData, skill_ids: tags })} suggestions={skills} restrictToSuggestions={true} disabled={disabled} />
+                            {triggerValidation && errors.skill_ids && <span className="text-red-500 text-xs ">{errors.skill_ids}</span>}
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <div>
+                                <p className="text-[14px]/[16px] text-[#1c1c1c]">Location Type*</p>
+                                <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Choose based on where the role is performed not where the company is based.</p>
+                            </div>
+                            <div>
+                                <RadioGroup className="flex gap-[32px]" defaultValue={locationType.toString()} onValueChange={(e) => setLocationType(Number(e))} disabled={disabled}>
+                                    <div className="flex gap-[6px]">
+                                        <RadioGroupItem value="1" id="onsite" disabled={disabled} />
+                                        <Label htmlFor="onsite" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 1 ? 'text-[#0d978b]' : '')}>
+                                            Onsite
+                                        </Label>
+                                    </div>
+                                    <div className="flex gap-[6px]">
+                                        <RadioGroupItem value="2" id="hybrid" disabled={disabled} />
+                                        <Label htmlFor="hybrid" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 2 ? 'text-[#0d978b]' : '')}>
+                                            Hybrid
+                                        </Label>
+                                    </div>
+                                    <div className="flex gap-[6px]">
+                                        <RadioGroupItem value="3" id="remote" disabled={disabled} />
+                                        <Label htmlFor="remote" variant="secondary" className={'text-[14px]/[20px] ' + (locationType === 3 ? 'text-[#0d978b]' : '')}>
+                                            Remote
+                                        </Label>
+                                    </div>
+                                </RadioGroup>
+                                {triggerValidation && errors.location_type_id && <span className="text-red-500 text-xs ">{errors.location_type_id}</span>}
+                                {(locationType === 1 || locationType === 2) && <div className="flex flex-col gap-[10px] mt-[10px]">
+                                    <Select value={jobData.country_id?.toString() || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })} disabled={disabled}>
+                                        <SelectTrigger className="h-[48px]" disabled={disabled}>
+                                            <SelectValue placeholder="Select Country" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {(country || [])?.map((country: any) => (
+                                                <SelectItem key={country.id} value={country.id.toString()}>{country.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {triggerValidation && errors.country_id && <span className="text-red-500 text-xs ">{errors.country_id}</span>}
+                                    <Select value={jobData.state || ''} onValueChange={val => setJobData({ ...jobData, state: val })} disabled={disabled}>
+                                        <SelectTrigger className="h-[48px]" disabled={disabled}>
+                                            <SelectValue placeholder={isLoadingStates ? "Loading states..." : "Select State"} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {isLoadingStates ? (
+                                                <SelectItem value=" " disabled>Loading states...</SelectItem>
+                                            ) : countryStates.length > 0 ? (
+                                                countryStates.map((state: any, index: number) => (
+                                                    <SelectItem key={index} value={state.name}>{state.name}</SelectItem> // state_code: GA, NA, IL
+                                                ))
+                                            ) : (
+                                                <SelectItem value=" " disabled>No states available</SelectItem>
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                    {triggerValidation && errors.state && <span className="text-red-500 text-xs ">{errors.state}</span>}
+                                </div>}
+                                {locationType === 3 && <div className="flex flex-col gap-[12px] mt-[10px]">
+                                    <Select value={jobData.country_id?.toString() || ''} onValueChange={val => setJobData({ ...jobData, country_id: val })} disabled={disabled}>
+                                        <SelectTrigger className="h-[48px]" disabled={disabled}>
+                                            <SelectValue placeholder="Select Country" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {(country || [])?.map((country: any) => (
+                                                <SelectItem key={country.id} value={country.id.toString()}>{country.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {triggerValidation && errors.country_id && <span className="text-red-500 text-xs ">{errors.country_id}</span>}
+                                    <div className="flex items-center gap-[8px]">
+                                        <input type="checkbox" placeholder="Remote (Global)" className="h-[14px] accent-[#0d978b]" disabled={disabled} />
+                                        <p className="text-[14px]/[20px] text-[#4b4b4b]">Remote (Global)</p>
+                                    </div>
+                                </div>}
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <div>
+                                <p className="text-[14px]/[16px] text-[#1c1c1c]">Salary <span className="text-[#787878]">(optional)</span></p>
+                                <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Adding a range boosts visibility by up to 40%. If unsure, give your best estimate. </p>
+                            </div>
+                            <Input className="h-[48px]" placeholder="e.g $150,000-$200,000 p.a" value={jobData?.salary} onChange={(e) => setJobData({ ...jobData, salary: e.target.value })} disabled={disabled} />
+                        </div>
+                        <div className="flex flex-col gap-[12px]">
+                            <div>
+                                <p className="text-[14px]/[16px] text-[#1c1c1c]">Deadline <span className="text-[#787878]">(optional)</span></p>
+                                <p className="text-[12px]/[20px] text-[#8f8f8f] mt-[4px]">Set a deadline to reflect urgency. </p>
+                            </div>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        mode="input"
+                                        variant="outline"
+                                        id="date"
+                                        className={cn(
+                                            'w-full h-[48px] data-[state=open]:border-primary rounded-[10px]',
+                                            !date && 'text-muted-foreground',
+                                        )}
+                                        disabled={disabled}
+                                    >
+                                        <CalendarDays className="-ms-0.5" />
+                                        {jobData?.deadline ? formatDate(jobData?.deadline) : <span>Pick a date</span>}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        initialFocus
+                                        mode="single" // Single date selection
+                                        defaultMonth={jobData?.deadline}
+                                        selected={jobData?.deadline}
+                                        onSelect={(e) => setJobData({ ...jobData, deadline: e })}
+                                        numberOfMonths={1}
+                                        disabled={disabled}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                    </>
+                )}
             </div>
         </div >
     );

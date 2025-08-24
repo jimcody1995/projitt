@@ -9,7 +9,7 @@ import { useState } from "react";
  * HiringPipeline manages the creation and editing of a hiring process pipeline.
  * Users can import templates, start from scratch, add/edit/remove stages, and define stage types and tests.
  */
-export default function HiringPipeline() {
+export default function HiringPipeline({ disabled = false }: { disabled?: boolean }) {
     const [pipeline, setPipeLine] = useState<any[]>([])
     const [selectedStep, setSelectedStep] = useState<number | null>(null);
     const [state, setState] = useState('main')
@@ -61,21 +61,21 @@ export default function HiringPipeline() {
             <div className='mt-[33px] border border-[#e9e9e9] rounded-[12px] bg-[#fafafa] min-h-[700px] h-auto flex xl:flex-row flex-col items-stretch w-full'>
                 {state === 'main' && pipeline.length === 0 && (
                     <div className="flex w-full flex-col items-center justify-center gap-[16px]" data-test-id="empty-state-buttons">
-                        <Button variant="outline" className="text-[#053834]" onClick={() => { setState('template') }} data-test-id="import-template-btn">Import Teamplate</Button>
-                        <Button variant="outline" className="text-[#053834]" onClick={startFromScratch} data-test-id="start-from-scratch-btn">Start From Scratch</Button>
+                        <Button variant="outline" className="text-[#053834]" onClick={() => { setState('template') }} data-test-id="import-template-btn" disabled={disabled}>Import Teamplate</Button>
+                        <Button variant="outline" className="text-[#053834]" onClick={startFromScratch} data-test-id="start-from-scratch-btn" disabled={disabled}>Start From Scratch</Button>
                     </div>
                 )}
                 {state === 'template' && pipeline.length === 0 && (
                     <div className="flex w-full flex-col items-center justify-center gap-[16px] px-[20px]" data-test-id="import-template-panel">
                         <div className="sm:w-auto w-full">
                             <div className="flex items-center gap-[12px] mb-[26px]">
-                                <button className="w-[24px] h-[24px] rounded-full flex items-center justify-center cursor-pointer bg-white border border-[#e9e9e9]" onClick={() => setState('main')} data-test-id="back-to-main-btn">
+                                <button className="w-[24px] h-[24px] rounded-full flex items-center justify-center cursor-pointer bg-white border border-[#e9e9e9]" onClick={() => setState('main')} data-test-id="back-to-main-btn" disabled={disabled}>
                                     <ArrowLeft className="size-[16px]" />
                                 </button>
                                 <p className="text-[14px]/[20px] text-[#053834] font-medium">Import Template</p>
                             </div>
-                            <Select>
-                                <SelectTrigger className="h-[48px] sm:w-[360px] w-full" data-test-id="template-select-trigger">
+                            <Select disabled={disabled}>
+                                <SelectTrigger className="h-[48px] sm:w-[360px] w-full" data-test-id="template-select-trigger" disabled={disabled}>
                                     <SelectValue placeholder="Select a template" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -89,7 +89,7 @@ export default function HiringPipeline() {
                 {pipeline.length > 0 && (
                     <>
                         <div className="flex-1 p-[22px] lg:order-2 order-1" data-test-id="pipeline-stages-list">
-                            <button className="cursor-pointer text-[#787878] text-[14px]/[20px]" data-test-id="clear-pipeline-btn">Clear</button>
+                            <button className="cursor-pointer text-[#787878] text-[14px]/[20px]" data-test-id="clear-pipeline-btn" disabled={disabled}>Clear</button>
                             <div className="flex justify-center mt-[20px]">
                                 <div>
                                     {pipeline.map((item, index) => (

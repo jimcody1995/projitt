@@ -71,6 +71,7 @@ export default function JobPostings() {
         pageSize: 10,
     });
     const [sorting, setSorting] = useState<SortingState>([
+        { id: 'id', desc: false },
         { id: 'title', desc: false },
     ]);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -117,6 +118,13 @@ export default function JobPostings() {
             let aValue: any = a[id];
             let bValue: any = b[id];
 
+            // If sorting by JobId, compare numerically
+            if (id === "id") {
+                aValue = Number(aValue) || 0;
+                bValue = Number(bValue) || 0;
+                return desc ? bValue - aValue : aValue - bValue;
+            }
+
             // If sorting by department object, compare its name
             if (id === "department") {
                 aValue = aValue?.name ?? "";
@@ -126,7 +134,6 @@ export default function JobPostings() {
                 aValue = aValue?.name ?? "";
                 bValue = bValue?.name ?? "";
             }
-
 
             // Ensure values are strings before localeCompare
             aValue = String(aValue ?? "");
@@ -201,6 +208,30 @@ export default function JobPostings() {
                 size: 46,
                 meta: {
                     cellClassName: '',
+                },
+            },
+            {
+                accessorKey: 'id',
+                header: ({ column }) => (
+                    <DataGridColumnHeader
+                        className='text-[14px] font-medium'
+                        title="Job ID"
+                        column={column}
+                        data-testid="job-id-header"
+                    />
+                ),
+                cell: ({ row }) => (
+                    <span
+                        className="text-[14px] text-[#4b4b4b] font-mono"
+                        data-testid={`job-id-${row.original.id}`}
+                    >
+                        #{row.original.id}
+                    </span>
+                ),
+                enableSorting: true,
+                size: 100,
+                meta: {
+                    headerClassName: '',
                 },
             },
             {
@@ -649,15 +680,23 @@ export default function JobPostings() {
                                             data-testid={`job-card-${item.id}`}
                                         >
                                             <div className='w-full flex justify-between'>
-                                                <span
-                                                    className='text-[12px]/[22px] px-[8px] text-[#4B4B4B] bg-[#f9f9f9] rounded-[29px] flex items-center gap-[4px]'
-                                                    data-testid={`department-badge-${item.id}`}
-                                                >
-                                                    {item.department.name === 'Data' && <PieChart className='text-[#00D47D] size-[16px]' />}
-                                                    {item.department.name === 'Design' && <PenTool className='text-[#FFB547] size-[16px] rotate-[270deg]' />}
-                                                    {item.department.name !== 'Data' && item.department.name !== 'Design' && <BriefcaseBusiness className='text-[#00D47D] size-[16px]' />}
-                                                    {item.department.name}
-                                                </span>
+                                                <div className='flex flex-col gap-[4px]'>
+                                                    <span
+                                                        className='text-[10px]/[14px] text-[#787878] font-mono'
+                                                        data-testid={`job-id-grid-${item.id}`}
+                                                    >
+                                                        Job ID: #{item.id}
+                                                    </span>
+                                                    <span
+                                                        className='text-[12px]/[22px] px-[8px] text-[#4B4B4B] bg-[#f9f9f9] rounded-[29px] flex items-center gap-[4px]'
+                                                        data-testid={`department-badge-${item.id}`}
+                                                    >
+                                                        {item.department.name === 'Data' && <PieChart className='text-[#00D47D] size-[16px]' />}
+                                                        {item.department.name === 'Design' && <PenTool className='text-[#FFB547] size-[16px] rotate-[270deg]' />}
+                                                        {item.department.name !== 'Data' && item.department.name !== 'Design' && <BriefcaseBusiness className='text-[#00D47D] size-[16px]' />}
+                                                        {item.department.name}
+                                                    </span>
+                                                </div>
                                                 <div className='flex gap-[14px]'>
                                                     <Button
                                                         variant="ghost"
