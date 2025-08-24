@@ -30,20 +30,22 @@ import { uploadMedia } from '@/api/media';
 import { customToast } from '@/components/common/toastr';
 import { Skeleton } from '@/components/ui/skeleton';
 
+interface JobData {
+    description?: string;
+    media?: Array<{
+        id: number;
+        unique_name: string;
+        original_name: string;
+        extension: string;
+        size: string;
+        base_url: string;
+    }>;
+    [key: string]: unknown;
+}
+
 interface JobDescriptionProps {
-    jobData: {
-        description?: string;
-        media?: Array<{
-            id: number;
-            unique_name: string;
-            original_name: string;
-            extension: string;
-            size: string;
-            base_url: string;
-        }>;
-        [key: string]: unknown;
-    };
-    setJobData: React.Dispatch<React.SetStateAction<any>>;
+    jobData: JobData;
+    setJobData: React.Dispatch<React.SetStateAction<JobData>>;
     errors?: Record<string, string>;
     triggerValidation?: boolean;
     loading?: boolean;
@@ -91,7 +93,7 @@ export default function JobDescription({
                     base_url: response.data.data[0].base_url
                 };
 
-                setJobData(prev => ({
+                setJobData((prev: JobData) => ({
                     ...prev,
                     media: [...(prev.media || []), newMedia]
                 }));
@@ -128,7 +130,7 @@ export default function JobDescription({
             setUploadedMediaIds(updatedMediaIds);
 
             // Update job data media array
-            setJobData(prev => ({
+            setJobData((prev: JobData) => ({
                 ...prev,
                 media: prev.media?.filter((_, i) => i !== index) || []
             }));
@@ -398,7 +400,7 @@ export default function JobDescription({
                             </div>
                             <button
                                 onClick={() => {
-                                    setJobData(prev => ({
+                                    setJobData((prev: JobData) => ({
                                         ...prev,
                                         media: prev.media?.filter((_, i) => i !== index) || []
                                     }));
