@@ -75,6 +75,62 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
     const [originalQuestions, setOriginalQuestions] = useState<Question[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
+    /**
+     * Handles drag start event for question reordering
+     */
+    const handleDragStart = (e: React.DragEvent, questionId: string) => {
+        e.dataTransfer.setData('text/plain', questionId);
+        (e.currentTarget as HTMLElement).style.opacity = '0.5';
+    };
+
+    /**
+     * Handles drag over event
+     */
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+    };
+
+    /**
+     * Handles drop event to reorder questions
+     */
+    const handleDrop = (e: React.DragEvent, dropQuestionId: string, sectionId: string) => {
+        e.preventDefault();
+        const dragQuestionId = e.dataTransfer.getData('text/plain');
+
+        if (dragQuestionId === dropQuestionId) return;
+
+        const section = sections.find(s => s.id === sectionId);
+        if (!section) return;
+
+        const newQuestions = [...section.questions];
+        const dragIndex = newQuestions.findIndex(q => q.id === dragQuestionId);
+        const dropIndex = newQuestions.findIndex(q => q.id === dropQuestionId);
+
+        if (dragIndex === -1 || dropIndex === -1) return;
+
+        const [draggedQuestion] = newQuestions.splice(dragIndex, 1);
+        newQuestions.splice(dropIndex, 0, draggedQuestion);
+
+        const updatedSections = sections.map(s =>
+            s.id === sectionId ? { ...s, questions: newQuestions } : s
+        );
+
+        setSections(updatedSections);
+
+        // Reset opacity
+        const draggedElement = document.querySelector(`[data-drag-question="${dragQuestionId}"]`) as HTMLElement;
+        if (draggedElement) {
+            draggedElement.style.opacity = '1';
+        }
+    };
+
+    /**
+     * Handles drag end event
+     */
+    const handleDragEnd = (e: React.DragEvent) => {
+        (e.currentTarget as HTMLElement).style.opacity = '1';
+    };
+
     const questionTypes = [
         { value: 'short-answer', label: 'Short answer' },
         { value: 'paragraph', label: 'Paragraph' },
@@ -150,15 +206,7 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
         loadExistingQuestions();
     }, [jobId]);
 
-    /** Adds a new question section */
-    const addSection = (): void => {
-        const newSection: Section = {
-            id: Date.now().toString(),
-            title: `Applicant Question ${sections.length + 1}`,
-            questions: [],
-        };
-        setSections([...sections, newSection]);
-    };
+
 
     /** Adds a new default question to a section */
     const addQuestion = (sectionId: string): void => {
@@ -494,12 +542,21 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
                                 <div key={section.id} className="mb-8">
                                     <div className="space-y-4">
                                         {section.questions.map((question) => (
-                                            <div key={question.id} className="bg-[#F5F5F5] rounded-lg shadow-sm border border-[#e9e9e9] group hover:shadow-md transition-shadow">
+                                            <div
+                                                key={question.id}
+                                                className="bg-[#F5F5F5] rounded-lg shadow-sm border border-[#e9e9e9] group hover:shadow-md transition-shadow cursor-move"
+                                                data-drag-question={question.id}
+                                                draggable
+                                                onDragStart={(e) => handleDragStart(e, question.id)}
+                                                onDragOver={handleDragOver}
+                                                onDrop={(e) => handleDrop(e, question.id, section.id)}
+                                                onDragEnd={handleDragEnd}
+                                            >
                                                 <div className="">
                                                     <div className="flex items-start gap-4 py-[20px] px-[16px]">
-                                                        <button className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing">
+                                                        <div className="mt-2 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing">
                                                             <GripVertical className="w-5 h-5" />
-                                                        </button>
+                                                        </div>
                                                         <div className='flex w-full items-start gap-4 sm:flex-row flex-col'>
                                                             <div className="lg:flex-1 w-full">
                                                                 <Input
