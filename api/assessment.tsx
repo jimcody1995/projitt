@@ -268,3 +268,39 @@ export const changeAssessmentStatus = async (ids: number[], status: 'draft' | 'o
     const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/change-status`, { ids, status });
     return response.data;
 };
+
+// Get all psychometric questions with filters
+export const getAllPsychometricQuestions = async (): Promise<{
+    status: boolean;
+    message: string;
+    data: Array<{
+        id: number;
+        question_name: string;
+        answer_type: string;
+        options: string[] | null;
+        is_required: boolean;
+        tags: string[];
+    }>;
+}> => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/question/list-with-filters`);
+    return response.data;
+};
+
+// Get all coding questions with filters
+export const getAllCodingQuestions = async (): Promise<{
+    status: boolean;
+    message: string;
+    data: Array<{
+        id: number;
+        title: string;
+        description: string;
+        language: string[];
+        total_point: number;
+        time_limit: number;
+        created_at: string;
+        updated_at: string;
+    }>;
+}> => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/question/coding/list-with-filters`);
+    return response.data;
+};

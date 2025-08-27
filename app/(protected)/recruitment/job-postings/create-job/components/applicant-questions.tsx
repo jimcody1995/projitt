@@ -17,6 +17,7 @@ import {
     BriefcaseBusiness,
     CircleQuestionMark,
     BookOpenText,
+    Search,
 } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
@@ -84,11 +85,24 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
         tags: string[];
     }>>([]);
     const [loadingExistingQuestions, setLoadingExistingQuestions] = useState<boolean>(false);
-    const [currentQuestionType, setCurrentQuestionType] = useState<string>('');
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const [currentQuestionContext, setCurrentQuestionContext] = useState<{
         sectionId: string;
         questionId: string;
     } | null>(null);
+
+    // Filter questions based on search query
+    const filteredQuestions = existingQuestions.filter(question => {
+        if (!searchQuery.trim()) return true;
+
+        const query = searchQuery.toLowerCase();
+        return (
+            question.question_name.toLowerCase().includes(query) ||
+            question.answer_type.toLowerCase().includes(query) ||
+            (question.options && question.options.some(option => option.toLowerCase().includes(query))) ||
+            question.tags.some(tag => tag.toLowerCase().includes(query))
+        );
+    });
 
     /**
      * Handles drag start event for question reordering
@@ -167,7 +181,7 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
      * Opens the load existing questions dialog
      */
     const openLoadExistingDialog = (questionType: string, sectionId: string, questionId: string) => {
-        setCurrentQuestionType(questionType);
+        setSearchQuery(''); // Clear search when opening dialog
         setShowLoadExistingDialog(true);
         loadExistingQuestionsFromAPI();
         // Store the current question context for replacement
@@ -766,7 +780,7 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
                     <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-2xl border border-gray-200">
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-gray-900">
-                                Load Existing Questions - {currentQuestionType}
+                                Load Existing Questions
                             </h3>
                             <button
                                 onClick={() => setShowLoadExistingDialog(false)}
@@ -777,9 +791,34 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
                         </div>
 
                         <div className="mb-4">
-                            <p className="text-sm text-gray-600">
-                                Select an existing question to replace the current one. Only questions of type &quot;{currentQuestionType}&quot; are shown.
+                            <p className="text-sm text-gray-600 mb-3">
+                                Select an existing question to replace the current one. All available questions are shown.
                             </p>
+                            <div className="relative">
+                                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                    <Search className="w-4 h-4" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search questions..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0d978b] focus:border-transparent"
+                                />
+                                {searchQuery && (
+                                    <button
+                                        onClick={() => setSearchQuery('')}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                )}
+                            </div>
+                            {searchQuery && (
+                                <p className="text-xs text-gray-500 mt-2">
+                                    Found {filteredQuestions.length} question{filteredQuestions.length !== 1 ? 's' : ''} matching &quot;{searchQuery}&quot;
+                                </p>
+                            )}
                         </div>
 
                         {loadingExistingQuestions ? (
@@ -788,49 +827,47 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
                             </div>
                         ) : (
                             <div className="max-h-96 overflow-y-auto">
-                                {existingQuestions
-                                    .filter(q => mapAnswerTypeToComponentType(q.answer_type) === currentQuestionType)
-                                    .map((question) => (
-                                        <div
-                                            key={question.id}
-                                            className="p-3 border border-gray-200 rounded-lg mb-2 hover:bg-gray-50 cursor-pointer"
-                                            onClick={() => {
-                                                if (currentQuestionContext) {
-                                                    replaceWithExistingQuestion(question, currentQuestionContext.sectionId, currentQuestionContext.questionId);
-                                                }
-                                            }}
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex-1">
-                                                    <p className="font-medium text-gray-900">{question.question_name}</p>
+                                {filteredQuestions.map((question) => (
+                                    <div
+                                        key={question.id}
+                                        className="p-3 border border-gray-200 rounded-lg mb-2 hover:bg-gray-50 cursor-pointer"
+                                        onClick={() => {
+                                            if (currentQuestionContext) {
+                                                replaceWithExistingQuestion(question, currentQuestionContext.sectionId, currentQuestionContext.questionId);
+                                            }
+                                        }}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex-1">
+                                                <p className="font-medium text-gray-900">{question.question_name}</p>
+                                                <p className="text-sm text-gray-500">
+                                                    Type: {mapAnswerTypeToComponentType(question.answer_type)} |
+                                                    Required: {question.is_required ? 'Yes' : 'No'}
+                                                </p>
+                                                {question.options && question.options.length > 0 && (
                                                     <p className="text-sm text-gray-500">
-                                                        Type: {mapAnswerTypeToComponentType(question.answer_type)} |
-                                                        Required: {question.is_required ? 'Yes' : 'No'}
+                                                        Options: {question.options.join(', ')}
                                                     </p>
-                                                    {question.options && question.options.length > 0 && (
-                                                        <p className="text-sm text-gray-500">
-                                                            Options: {question.options.join(', ')}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        if (currentQuestionContext) {
-                                                            replaceWithExistingQuestion(question, currentQuestionContext.sectionId, currentQuestionContext.questionId);
-                                                        }
-                                                    }}
-                                                    className="ml-2 px-3 py-1 bg-[#0d978b] text-white rounded text-sm hover:bg-[#0d978b]/80"
-                                                >
-                                                    Use This
-                                                </button>
+                                                )}
                                             </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (currentQuestionContext) {
+                                                        replaceWithExistingQuestion(question, currentQuestionContext.sectionId, currentQuestionContext.questionId);
+                                                    }
+                                                }}
+                                                className="ml-2 px-3 py-1 bg-[#0d978b] text-white rounded text-sm hover:bg-[#0d978b]/80"
+                                            >
+                                                Use This
+                                            </button>
                                         </div>
-                                    ))}
+                                    </div>
+                                ))}
 
-                                {existingQuestions.filter(q => mapAnswerTypeToComponentType(q.answer_type) === currentQuestionType).length === 0 && (
+                                {filteredQuestions.length === 0 && (
                                     <div className="text-center py-8 text-gray-500">
-                                        No existing questions found for type &quot;{currentQuestionType}&quot;
+                                        {searchQuery ? `No questions found matching "${searchQuery}"` : 'No existing questions found.'}
                                     </div>
                                 )}
                             </div>

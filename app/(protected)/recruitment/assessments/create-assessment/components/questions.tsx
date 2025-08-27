@@ -7,6 +7,8 @@ import {
     X,
     CircleQuestionMark,
     CirclePlus,
+    FileText,
+    Search,
 } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
@@ -23,7 +25,7 @@ import TagInput from '@/components/ui/tag-input';
 import { errorHandlers } from '@/utils/error-handler';
 import { LoadingSpinner } from '@/components/common/loading-spinner';
 
-import { getAssessmentDetails, addQuestionItem, editQuestionItem, getQuestionDetails, addCodingQuestionItem, editCodingQuestionItem } from '@/api/assessment';
+import { getAssessmentDetails, addQuestionItem, editQuestionItem, getQuestionDetails, addCodingQuestionItem, editCodingQuestionItem, getAllPsychometricQuestions, getAllCodingQuestions } from '@/api/assessment';
 
 export interface Question {
     id: string;
@@ -103,7 +105,9 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
     const [isLoadingQuestions, setIsLoadingQuestions] = useState<boolean>(false);
 
     // Map API answer_type to component type
-    const mapAnswerTypeToComponentType = (answerType: string): Question['type'] => {
+    const mapAnswerTypeToComponentType = (answerType: string | undefined): Question['type'] => {
+        if (!answerType) return 'short-answer';
+
         switch (answerType) {
             case 'short':
                 return 'short-answer';
@@ -214,6 +218,25 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
 
 
     const [codingData, setCodingData] = useState<CodingSection[]>([]);
+    const [showLoadExistingDialog, setShowLoadExistingDialog] = useState<boolean>(false);
+    const [existingQuestions, setExistingQuestions] = useState<Array<{
+        id: number;
+        question_name?: string;
+        title?: string;
+        answer_type?: string;
+        options?: string[] | null;
+        is_required?: boolean;
+        language?: string[];
+        total_point?: number;
+        time_limit?: number;
+    }>>([]);
+    const [loadingExistingQuestions, setLoadingExistingQuestions] = useState<boolean>(false);
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [currentQuestionContext, setCurrentQuestionContext] = useState<{
+        sectionId: string;
+        questionId: string;
+        isCoding: boolean;
+    } | null>(null);
 
     const questionTypes = [
         { value: 'short-answer', label: 'Short answer' },
@@ -222,6 +245,27 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
         { value: 'checkbox', label: 'Checkbox' },
         { value: 'file-upload', label: 'File Upload' },
     ];
+
+    // Filter questions based on search query
+    const filteredQuestions = existingQuestions.filter(question => {
+        if (!searchQuery.trim()) return true;
+
+        const query = searchQuery.toLowerCase();
+        if (currentQuestionContext?.isCoding) {
+            // Search in coding questions
+            return (
+                (question.title?.toLowerCase().includes(query) || false) ||
+                (question.language?.some(lang => lang.toLowerCase().includes(query)) || false)
+            );
+        } else {
+            // Search in psychometric questions
+            return (
+                (question.question_name?.toLowerCase().includes(query) || false) ||
+                (question.answer_type?.toLowerCase().includes(query) || false) ||
+                (question.options?.some(option => option.toLowerCase().includes(query)) || false)
+            );
+        }
+    });
 
 
     /**
@@ -637,6 +681,79 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
         return processedQuestions;
     };
 
+    /** Loads existing questions from API based on assessment type */
+    const loadExistingQuestionsFromAPI = async (isCoding: boolean) => {
+        try {
+            setLoadingExistingQuestions(true);
+            if (isCoding) {
+                const response = await getAllCodingQuestions();
+                if (response.status === true && response.data) {
+                    setExistingQuestions(response.data);
+                }
+            } else {
+                const response = await getAllPsychometricQuestions();
+                if (response.status === true && response.data) {
+                    setExistingQuestions(response.data);
+                }
+            }
+        } catch (error) {
+            errorHandlers.custom(error, 'Error loading existing questions');
+        } finally {
+            setLoadingExistingQuestions(false);
+        }
+    };
+
+    /** Opens the load existing questions dialog */
+    const openLoadExistingDialog = (sectionId: string, questionId: string, isCoding: boolean) => {
+        setCurrentQuestionContext({ sectionId, questionId, isCoding });
+        setSearchQuery(''); // Clear search when opening dialog
+        setShowLoadExistingDialog(true);
+        loadExistingQuestionsFromAPI(isCoding);
+    };
+
+    /** Replaces current question with existing question */
+    const replaceWithExistingQuestion = (existingQuestion: {
+        id: number;
+        question_name?: string;
+        title?: string;
+        answer_type?: string;
+        options?: string[] | null;
+        is_required?: boolean;
+        language?: string[];
+        total_point?: number;
+        time_limit?: number;
+    }, sectionId: string, questionId: string, isCoding: boolean) => {
+        if (isCoding) {
+            // Handle coding question replacement
+            if (existingQuestion.title && existingQuestion.total_point !== undefined && existingQuestion.time_limit !== undefined) {
+                const updatedQuestion: CodingSection = {
+                    id: questionId, // Keep the same ID to maintain the question in the section
+                    title: existingQuestion.title,
+                    instructions: '', // Coding questions don't have description in the list API
+                    language: existingQuestion.language || [],
+                    totalPoint: existingQuestion.total_point.toString(),
+                    limit: existingQuestion.time_limit.toString(),
+                    autoGradeWithAI: false,
+                };
+                updateQuestionForCoding(questionId, updatedQuestion);
+            }
+        } else {
+            // Handle psychometric question replacement
+            if (existingQuestion.question_name && existingQuestion.answer_type && existingQuestion.is_required !== undefined) {
+                const mappedType = mapAnswerTypeToComponentType(existingQuestion.answer_type);
+                const updatedQuestion: Question = {
+                    id: questionId, // Keep the same ID to maintain the question in the section
+                    title: existingQuestion.question_name,
+                    type: mappedType,
+                    required: existingQuestion.is_required,
+                    options: existingQuestion.options || undefined,
+                };
+                updateQuestion(sectionId, questionId, updatedQuestion);
+            }
+        }
+        setShowLoadExistingDialog(false);
+    };
+
     /** Maps component type to API answer type */
     const mapComponentTypeToAnswerType = (type: Question['type']): string => {
         switch (type) {
@@ -844,6 +961,15 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
 
                                                                     <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                                         <button
+                                                                            onClick={() => openLoadExistingDialog(section.id, question.id, false)}
+                                                                            className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                                            data-testid={`load-existing-button-${question.id}`}
+                                                                            title="Load existing question"
+                                                                        >
+                                                                            <FileText className="w-4 h-4" />
+                                                                            Load Existing
+                                                                        </button>
+                                                                        <button
                                                                             onClick={() => duplicateQuestion(section.id, question.id)}
                                                                             className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
                                                                             data-testid={`duplicate-question-button-${question.id}`}
@@ -891,7 +1017,7 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
                                     {codingData.length === 0 ? (
                                         <div className="text-center py-8 text-gray-500">
                                             <p>No coding questions added yet.</p>
-                                            <p className="text-sm mt-2">Click "Add New Question" to get started.</p>
+                                            <p className="text-sm mt-2">Click &quot;Add New Question&quot; to get started.</p>
                                         </div>
                                     ) : (
                                         codingData.map((question) => (
@@ -988,6 +1114,15 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
 
                                                             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                                 <button
+                                                                    onClick={() => openLoadExistingDialog('', question.id, true)}
+                                                                    className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                                    data-testid={`load-existing-coding-button-${question.id}`}
+                                                                    title="Load existing question"
+                                                                >
+                                                                    <FileText className="w-4 h-4" />
+                                                                    Load Existing
+                                                                </button>
+                                                                <button
                                                                     onClick={() => duplicateQuestionForCoding(question.id)}
                                                                     className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
                                                                     data-testid={`duplicate-coding-button-${question.id}`}
@@ -1016,6 +1151,119 @@ const Questions = forwardRef<QuestionsRef, QuestionsProps>(({
                     )}
                 </div>
             </div >
+
+            {/* Load Existing Questions Dialog */}
+            {showLoadExistingDialog && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-2xl border border-gray-200">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                                Load Existing Questions - {currentQuestionContext?.isCoding ? 'Coding' : 'Psychometric'}
+                            </h3>
+                            <button
+                                onClick={() => setShowLoadExistingDialog(false)}
+                                className="text-gray-400 hover:text-gray-600"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <div className="mb-4">
+                            <p className="text-sm text-gray-600 mb-3">
+                                Select an existing question to replace the current one.
+                            </p>
+                            <div className="relative">
+                                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                    <Search className="w-4 h-4" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search questions..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0d978b] focus:border-transparent"
+                                />
+                                {searchQuery && (
+                                    <button
+                                        onClick={() => setSearchQuery('')}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                )}
+                            </div>
+                            {searchQuery && (
+                                <p className="text-xs text-gray-500 mt-2">
+                                    Found {filteredQuestions.length} question{filteredQuestions.length !== 1 ? 's' : ''} matching &quot;{searchQuery}&quot;
+                                </p>
+                            )}
+                        </div>
+
+                        {loadingExistingQuestions ? (
+                            <div className="flex items-center justify-center py-8">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0d978b]"></div>
+                            </div>
+                        ) : (
+                            <div className="max-h-96 overflow-y-auto">
+                                {filteredQuestions.map((question) => (
+                                    <div
+                                        key={question.id}
+                                        className="p-3 border border-gray-200 rounded-lg mb-2 hover:bg-gray-50 cursor-pointer"
+                                        onClick={() => {
+                                            if (currentQuestionContext) {
+                                                replaceWithExistingQuestion(question, currentQuestionContext.sectionId || '', currentQuestionContext.questionId, currentQuestionContext.isCoding);
+                                            }
+                                        }}
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex-1">
+                                                <p className="font-medium text-gray-900">
+                                                    {currentQuestionContext?.isCoding ? (question.title || 'Untitled') : (question.question_name || 'Untitled')}
+                                                </p>
+                                                {!currentQuestionContext?.isCoding && (
+                                                    <p className="text-sm text-gray-500">
+                                                        Type: {mapAnswerTypeToComponentType(question.answer_type)} |
+                                                        Required: {question.is_required !== undefined ? (question.is_required ? 'Yes' : 'No') : 'Unknown'}
+                                                    </p>
+                                                )}
+                                                {currentQuestionContext?.isCoding && (
+                                                    <p className="text-sm text-gray-500">
+                                                        Languages: {question.language?.join(', ') || 'None'} |
+                                                        Points: {question.total_point !== undefined ? question.total_point : 'Unknown'} |
+                                                        Time Limit: {question.time_limit !== undefined ? question.time_limit : 'Unknown'}s
+                                                    </p>
+                                                )}
+                                                {!currentQuestionContext?.isCoding && question.options && question.options.length > 0 && (
+                                                    <p className="text-sm text-gray-500">
+                                                        Options: {question.options.filter(Boolean).join(', ')}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (currentQuestionContext) {
+                                                        replaceWithExistingQuestion(question, currentQuestionContext.sectionId || '', currentQuestionContext.questionId, currentQuestionContext.isCoding);
+                                                    }
+                                                }}
+                                                className="ml-2 px-3 py-1 bg-[#0d978b] text-white rounded text-sm hover:bg-[#0d978b]/80"
+                                            >
+                                                Use This
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {filteredQuestions.length === 0 && (
+                                    <div className="text-center py-8 text-gray-500">
+                                        {searchQuery ? `No questions found matching "${searchQuery}"` : 'No existing questions found.'}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </>
     );
 });
