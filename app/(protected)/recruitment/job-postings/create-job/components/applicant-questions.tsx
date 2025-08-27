@@ -31,7 +31,7 @@ import { Switch } from '@/components/ui/switch';
 import WorkExperience from './work-experience';
 import Resume from './resume';
 import Education from './education';
-import { getJobDetails, addQuestionItem, editQuestionItem, editJobQuestions } from '@/api/job-posting';
+import { getJobDetails, addQuestionItem, editQuestionItem, editJobQuestions, getAllQuestions } from '@/api/job-posting';
 import { errorHandlers } from '@/utils/error-handler';
 import { Skeleton } from '@/components/ui/skeleton';
 export interface Question {
@@ -74,6 +74,21 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
     ]);
     const [originalQuestions, setOriginalQuestions] = useState<Question[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [showLoadExistingDialog, setShowLoadExistingDialog] = useState<boolean>(false);
+    const [existingQuestions, setExistingQuestions] = useState<Array<{
+        id: number;
+        question_name: string;
+        answer_type: string;
+        options: string[] | null;
+        is_required: boolean;
+        tags: string[];
+    }>>([]);
+    const [loadingExistingQuestions, setLoadingExistingQuestions] = useState<boolean>(false);
+    const [currentQuestionType, setCurrentQuestionType] = useState<string>('');
+    const [currentQuestionContext, setCurrentQuestionContext] = useState<{
+        sectionId: string;
+        questionId: string;
+    } | null>(null);
 
     /**
      * Handles drag start event for question reordering
@@ -129,6 +144,59 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
      */
     const handleDragEnd = (e: React.DragEvent) => {
         (e.currentTarget as HTMLElement).style.opacity = '1';
+    };
+
+    /**
+     * Loads existing questions from API
+     */
+    const loadExistingQuestionsFromAPI = async () => {
+        try {
+            setLoadingExistingQuestions(true);
+            const response = await getAllQuestions();
+            if (response.status === true && response.data) {
+                setExistingQuestions(response.data);
+            }
+        } catch (error) {
+            errorHandlers.custom(error, 'Error loading existing questions');
+        } finally {
+            setLoadingExistingQuestions(false);
+        }
+    };
+
+    /**
+     * Opens the load existing questions dialog
+     */
+    const openLoadExistingDialog = (questionType: string, sectionId: string, questionId: string) => {
+        setCurrentQuestionType(questionType);
+        setShowLoadExistingDialog(true);
+        loadExistingQuestionsFromAPI();
+        // Store the current question context for replacement
+        setCurrentQuestionContext({ sectionId, questionId });
+    };
+
+    /**
+     * Replaces current question with existing question
+     */
+    const replaceWithExistingQuestion = (existingQuestion: {
+        id: number;
+        question_name: string;
+        answer_type: string;
+        options: string[] | null;
+        is_required: boolean;
+        tags: string[];
+    }, sectionId: string, questionId: string) => {
+        const mappedType = mapAnswerTypeToComponentType(existingQuestion.answer_type);
+
+        const updatedQuestion: Question = {
+            id: questionId, // Keep the same ID to maintain the question in the section
+            title: existingQuestion.question_name,
+            type: mappedType,
+            required: existingQuestion.is_required,
+            options: existingQuestion.options || undefined,
+        };
+
+        updateQuestion(sectionId, questionId, updatedQuestion);
+        setShowLoadExistingDialog(false);
     };
 
     const questionTypes = [
@@ -644,6 +712,15 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
 
                                                             <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                                 <button
+                                                                    onClick={() => openLoadExistingDialog(question.type, section.id, question.id)}
+                                                                    className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
+                                                                    disabled={disabled}
+                                                                    title="Load existing question"
+                                                                >
+                                                                    <FileText className="w-4 h-4" />
+                                                                    Load Existing
+                                                                </button>
+                                                                <button
                                                                     onClick={() => duplicateQuestion(section.id, question.id)}
                                                                     className="flex items-center gap-1 px-3 py-1 text-gray-600 hover:bg-gray-50 rounded text-[12px]/[20px] transition-colors cursor-pointer"
                                                                     disabled={disabled}
@@ -682,6 +759,85 @@ const ApplicantQuestions = forwardRef<ApplicantQuestionsRef, ApplicantQuestionsP
                     </div >
                 )}
             </div >
+
+            {/* Load Existing Questions Dialog */}
+            {showLoadExistingDialog && (
+                <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-2xl border border-gray-200">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                                Load Existing Questions - {currentQuestionType}
+                            </h3>
+                            <button
+                                onClick={() => setShowLoadExistingDialog(false)}
+                                className="text-gray-400 hover:text-gray-600"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <div className="mb-4">
+                            <p className="text-sm text-gray-600">
+                                Select an existing question to replace the current one. Only questions of type &quot;{currentQuestionType}&quot; are shown.
+                            </p>
+                        </div>
+
+                        {loadingExistingQuestions ? (
+                            <div className="flex items-center justify-center py-8">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0d978b]"></div>
+                            </div>
+                        ) : (
+                            <div className="max-h-96 overflow-y-auto">
+                                {existingQuestions
+                                    .filter(q => mapAnswerTypeToComponentType(q.answer_type) === currentQuestionType)
+                                    .map((question) => (
+                                        <div
+                                            key={question.id}
+                                            className="p-3 border border-gray-200 rounded-lg mb-2 hover:bg-gray-50 cursor-pointer"
+                                            onClick={() => {
+                                                if (currentQuestionContext) {
+                                                    replaceWithExistingQuestion(question, currentQuestionContext.sectionId, currentQuestionContext.questionId);
+                                                }
+                                            }}
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex-1">
+                                                    <p className="font-medium text-gray-900">{question.question_name}</p>
+                                                    <p className="text-sm text-gray-500">
+                                                        Type: {mapAnswerTypeToComponentType(question.answer_type)} |
+                                                        Required: {question.is_required ? 'Yes' : 'No'}
+                                                    </p>
+                                                    {question.options && question.options.length > 0 && (
+                                                        <p className="text-sm text-gray-500">
+                                                            Options: {question.options.join(', ')}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        if (currentQuestionContext) {
+                                                            replaceWithExistingQuestion(question, currentQuestionContext.sectionId, currentQuestionContext.questionId);
+                                                        }
+                                                    }}
+                                                    className="ml-2 px-3 py-1 bg-[#0d978b] text-white rounded text-sm hover:bg-[#0d978b]/80"
+                                                >
+                                                    Use This
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+
+                                {existingQuestions.filter(q => mapAnswerTypeToComponentType(q.answer_type) === currentQuestionType).length === 0 && (
+                                    <div className="text-center py-8 text-gray-500">
+                                        No existing questions found for type &quot;{currentQuestionType}&quot;
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </div >
     );
 });

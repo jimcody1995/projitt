@@ -114,6 +114,23 @@ export const editJobQuestions = async (data: {
     return response.data;
 }
 
+// Get all questions with filters
+export const getAllQuestions = async (): Promise<{
+    status: boolean;
+    message: string;
+    data: Array<{
+        id: number;
+        question_name: string;
+        answer_type: string;
+        options: string[] | null;
+        is_required: boolean;
+        tags: string[];
+    }>;
+}> => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/question/list-with-filters`);
+    return response.data;
+}
+
 
 export const getAssessments = async () => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/assessment/list-with-filters`);
