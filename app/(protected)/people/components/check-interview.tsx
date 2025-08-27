@@ -12,16 +12,15 @@ import { Info } from "lucide-react";
  * It provides a visual cue with an `Info` icon to indicate that the user is about to perform a significant action.
  * Unique `data-testid` and `id` attributes have been added to the buttons and main dialog content to support UI test automation.
  */
-export default function CancelInterview({ open, setOpen }: { open: boolean, setOpen: (open: boolean) => void }) {
+export default function CheckInterview({ open, setOpen, message }: { open: boolean, setOpen: (open: boolean) => void, message: string }) {
     return <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent close={false} className="max-w-[383px]" data-testid="cancel-interview-dialog">
+        <DialogContent close={false} className="max-w-[284px] p-[27px]" data-testid="cancel-interview-dialog">
             <div className="flex flex-col items-center justify-center">
-                <div className="w-[40px] h-[40px] rounded-full bg-[#C3060626] flex items-center justify-center">
-                    <Info className="size-[20px] text-[#c30606]" />
+                <div className="w-[40px] h-[40px] rounded-full bg-[#D6EEEC] flex items-center justify-center">
+                    <Info className="size-[20px] text-[#0d978b]" />
                 </div>
-                <p className="mt-[18px] text-[16px]/[20px] font-semibold text-[#353535]" data-testid="dialog-title">Cancel Interview</p>
-                <p className="text-[14px]/[20px] text-[#787878] mt-[4px]" data-testid="dialog-message">Are you sure you want to cancel this interview?</p>
-                <div className="w-full flex gap-[12px] mt-[24px]">
+                <p className="text-[14px]/[20px] text-[#353535] mt-[18px]" data-testid="dialog-message">{message}</p>
+                <div className="w-full flex gap-[12px] mt-[18px]">
                     <Button
                         variant="outline"
                         className="w-full"
@@ -29,7 +28,7 @@ export default function CancelInterview({ open, setOpen }: { open: boolean, setO
                         data-testid="no-go-back-button"
                         id="no-go-back-button"
                     >
-                        No, Go Back
+                        Cancel
                     </Button>
                     <Button
                         className="w-full"
@@ -37,7 +36,7 @@ export default function CancelInterview({ open, setOpen }: { open: boolean, setO
                         data-testid="yes-cancel-button"
                         id="yes-cancel-button"
                     >
-                        Yes, Cancel Interview
+                        Yes, Confirm
                     </Button>
                 </div>
             </div>

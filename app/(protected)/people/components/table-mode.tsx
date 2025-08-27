@@ -30,9 +30,8 @@ import { Input } from "@/components/ui/input";
 import { FilterTool } from "./filter";
 import { NoData } from "./no-data";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
-import Reschedule from "./reschedule";
-import CancelInterview from "./cancel-interview";
-import { useBasic } from "@/context/BasicContext";
+import CheckInterview from "./check-interview";
+import Suspend from "./suspend";
 
 /**
  * @description
@@ -42,7 +41,7 @@ import { useBasic } from "@/context/BasicContext";
  * The component also includes search functionality, a filter sidebar, and pagination.
  * It uses `@tanstack/react-table` for efficient data table management and provides unique `data-testid` attributes for UI test automation.
  */
-export default function TableMode({ setSelectedApplication, data, loading }: { setSelectedApplication: (id: string) => void, data: any[], loading: boolean }) {
+export default function TableMode({ setSelectedApplication, data, loading }: { setSelectedApplication: (application: any) => void, data: any[], loading: boolean }) {
     const [activeSection, setActiveSection] = useState<'active' | 'onboarding' | 'offboarding' | 'suspended'>('suspended');
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -53,7 +52,7 @@ export default function TableMode({ setSelectedApplication, data, loading }: { s
     ]);
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilter, setShowFilter] = useState(false);
-    const [rescheduleOpen, setRescheduleOpen] = useState(false);
+    const [suspendOpen, setSuspendOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
     const [selectedMode, setSelectedMode] = useState<string[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
@@ -61,6 +60,7 @@ export default function TableMode({ setSelectedApplication, data, loading }: { s
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [nameFilter, setNameFilter] = useState<string>('');
     const [selectedRows, setSelectedRows] = useState<string[]>([]);
+    const [message, setMessage] = useState<string>('');
 
     // Refs for tab elements to calculate positions
     const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({
@@ -395,23 +395,36 @@ export default function TableMode({ setSelectedApplication, data, loading }: { s
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`reschedule-action-${row.original.id}`}
-                        onClick={e => { e.stopPropagation(); setRescheduleOpen(true); }}
                     >
-                        Reschedule
+                        View Profile
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`cancel-interview-action-${row.original.id}`}
                         onClick={e => { e.stopPropagation(); setCancelOpen(true); }}
                     >
-                        Cancel Interview
+                        Send Message
+                    </div>
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        data-testid={`no-show-action-${row.original.id}`}
+                        onClick={e => { e.stopPropagation(); setMessage("Unsuspend Alice Fernadez") }}
+                    >
+                        Unsuspend
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`no-show-action-${row.original.id}`}
                         onClick={e => e.stopPropagation()}
                     >
-                        Mark as No-show
+                        Terminate / Offboard
+                    </div>
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        data-testid={`no-show-action-${row.original.id}`}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        Delete
                     </div>
                 </DropdownMenuContent>
             </DropdownMenu >
@@ -485,6 +498,7 @@ export default function TableMode({ setSelectedApplication, data, loading }: { s
                     table={table}
                     recordCount={data?.length || 0}
                     data-testid="data-data-grid"
+                    onRowClick={(row) => { setSelectedApplication(row.original); setSuspendOpen(true); }}
                 >
                     <div className="flex items-center justify-between sm:flex-row flex-col gap-[10px]">
                         <div className="relative">
@@ -571,13 +585,11 @@ export default function TableMode({ setSelectedApplication, data, loading }: { s
                                 <DataGridPagination data-testid="pagination-controls" className="mt-[25px]" />
                             </>
                         }
-
-
                         </>
                     </div>
                 </DataGrid>
-                <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
-                <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
+                <Suspend open={suspendOpen} onOpenChange={setSuspendOpen} setMessage={setMessage} />
+                <CheckInterview open={message.length > 0} setOpen={() => setMessage('')} message={message} />
             </div>
         </div>
     );

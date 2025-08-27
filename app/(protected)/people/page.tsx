@@ -5,6 +5,7 @@ import TableMode from './components/table-mode';
 import { getInterviews } from '@/api/interviews';
 import { ChevronDown, Diamond } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 /**
  * @description
@@ -47,6 +48,7 @@ export default function People() {
         }
     ]);
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
     /**
      * @description
      * This function is a callback for the `Detail` dialog's `onOpenChange` prop.
@@ -64,7 +66,7 @@ export default function People() {
                 <ChevronDown className='size-[20px] text-[#0d978b]' />
             </div>
             <div className='flex gap-[16px]'>
-                <Button variant='outline' className='h-[42px] text-[14px]/[22px] font-medium text-[#053834] border-[#053834]'>
+                <Button variant='outline' className='h-[42px] text-[14px]/[22px] font-medium text-[#053834] border-[#053834]' onClick={() => router.push('/people/org-chart')}>
                     <Diamond className='size-[18px] ' />
                     <span className='text-[14px]/[20px] font-semibold'>Org Chart</span>
                 </Button>
