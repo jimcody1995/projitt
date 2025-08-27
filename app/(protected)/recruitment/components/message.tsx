@@ -99,7 +99,7 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                             <div
                                 id="custom-toolbar"
                                 data-testid="custom-toolbar"
-                                className="w-full flex justify-between flex-wrap !px-[16px] !py-[16px] bg-[#f9f9f9] w-full"
+                                className="w-full flex justify-between flex-wrap !px-[16px] !py-[16px] bg-[#f9f9f9]"
                             >
                                 <div className="flex sm:gap-[14px] items-center ">
                                     <button className="ql-bold" data-testid="bold-button" />
@@ -110,8 +110,8 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                                     <button className="ql-align" value="right" data-testid="align-right-button" />
                                     <button className="ql-align" value="justify" data-testid="align-justify-button" />
                                     <button className="ql-link" data-testid="link-button" />
-                                    <button className="ql-list" value="ordered" title="Ordered List" />
-                                    <button className="ql-list" value="bullet" title="Unordered List" />
+                                    <button className="ql-list" value="ordered" title="Ordered List" data-testid="ordered-list-button" />
+                                    <button className="ql-list" value="bullet" title="Unordered List" data-testid="unordered-list-button" />
                                     <button
                                         type="button"
                                         onClick={() => setShowEmojiPicker(!showEmojiPicker)}

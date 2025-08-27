@@ -306,8 +306,8 @@ export default function JobDescription({
                         <button className="ql-align" value="right" />
                         <button className="ql-align" value="justify" />
                         <button className="ql-link" />
-                        <button className="ql-list" value="ordered" title="Ordered List" />
-                        <button className="ql-list" value="bullet" title="Unordered List" />
+                        <button className="ql-list" value="ordered" data-testid="ordered-list-button" />
+                        <button className="ql-list" value="bullet" data-testid="unordered-list-button" />
                         <button
                             type="button"
                             onClick={() => setShowEmojiPicker(!showEmojiPicker)}

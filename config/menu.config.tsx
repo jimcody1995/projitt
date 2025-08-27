@@ -72,6 +72,7 @@ export const MENU_SIDEBAR: MenuConfig = [
   {
     title: 'People',
     icon: Users,
+    path: '/people',
   },
   {
     title: 'Communication',
