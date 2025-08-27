@@ -73,6 +73,8 @@ export default function JobDescription({
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
     const [fileUploading, setFileUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const quillRef = useRef<any>(null);
+
     /**
      * Handles file input changes
      */
@@ -126,25 +128,33 @@ export default function JobDescription({
      * Inserts emoji at cursor position in Quill editor
      */
     const insertEmoji = (emoji: { native: string }): void => {
-        // TODO: Re-implement when ref is available
-        setJobData({ ...jobData, description: (jobData.description || '') + emoji.native });
-        setShowEmojiPicker(false);
+        const editor = quillRef.current?.getEditor();
+        if (editor) {
+            const range = editor.getSelection();
+            if (range) {
+                editor.insertText(range.index, emoji.native);
+                editor.setSelection(range.index + emoji.native.length);
+            }
+            setShowEmojiPicker(false);
+        }
     };
 
     /**
      * Performs undo operation on Quill editor
      */
     const handleUndo = (): void => {
-        // TODO: Re-implement when ref is available
-        console.log('Undo functionality temporarily disabled');
+        const editor = quillRef.current?.getEditor();
+        editor?.history.undo();
     };
 
     /**
-     * Performs redo operation on Quill editor
+     * @description
+     * Performs a redo operation on the ReactQuill editor.
+     * It accesses the editor instance via the `quillRef` and calls the `redo()` method on the history module.
      */
     const handleRedo = (): void => {
-        // TODO: Re-implement when ref is available
-        console.log('Redo functionality temporarily disabled');
+        const editor = quillRef.current?.getEditor();
+        editor?.history.redo();
     };
 
     const modules = {
@@ -290,11 +300,14 @@ export default function JobDescription({
                         <button className="ql-bold" />
                         <button className="ql-italic" />
                         <button className="ql-underline" />
+
                         <button className="ql-align" value="" />
                         <button className="ql-align" value="center" />
                         <button className="ql-align" value="right" />
                         <button className="ql-align" value="justify" />
                         <button className="ql-link" />
+                        <button className="ql-list" value="ordered" title="Ordered List" />
+                        <button className="ql-list" value="bullet" title="Unordered List" />
                         <button
                             type="button"
                             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
@@ -331,6 +344,7 @@ export default function JobDescription({
                     <Skeleton className="w-full h-[400px] rounded-[12px]" />
                 ) : (
                     <ReactQuill
+                        ref={quillRef}
                         value={jobData.description || ''}
                         onChange={(value) => setJobData({ ...jobData, description: value })}
                         placeholder="Enter the job description..."

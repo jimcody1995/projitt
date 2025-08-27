@@ -110,6 +110,8 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                                     <button className="ql-align" value="right" data-testid="align-right-button" />
                                     <button className="ql-align" value="justify" data-testid="align-justify-button" />
                                     <button className="ql-link" data-testid="link-button" />
+                                    <button className="ql-list" value="ordered" title="Ordered List" />
+                                    <button className="ql-list" value="bullet" title="Unordered List" />
                                     <button
                                         type="button"
                                         onClick={() => setShowEmojiPicker(!showEmojiPicker)}
@@ -142,6 +144,7 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                             )}
 
                             <ReactQuill
+                                ref={quillRef}
                                 value={message || ''}
                                 onChange={(value) => setMessage(value)}
                                 placeholder="Enter the job description..."
