@@ -16,7 +16,6 @@ import { useRouter } from 'next/navigation';
  * Unique `data-testid` attributes have been added to all key interactive elements for UI test automation.
  */
 export default function People() {
-    const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
     const [data, setData] = useState<any[]>([
         {
             id: 1,
@@ -79,7 +78,7 @@ export default function People() {
 
         <div >
             <div className="mt-[15px] relative" data-testid="interviews-content">
-                <TableMode data={data} setSelectedApplication={setSelectedApplication} data-testid="table-mode-component" loading={loading} />
+                <TableMode />
             </div>
         </div>
     </div>
