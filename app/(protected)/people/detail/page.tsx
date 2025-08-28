@@ -28,6 +28,7 @@ export default function Detail() {
         },
         {
             label: 'Document',
+            value: 'document',
             icon: File
         },
         {

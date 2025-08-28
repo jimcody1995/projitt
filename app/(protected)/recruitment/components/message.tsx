@@ -13,6 +13,7 @@ const ReactQuill = dynamic(() => import('react-quill-new'), {
     ssr: false,
     loading: () => <div className="min-h-[120px] bg-gray-50 animate-pulse rounded border" />
 });
+
 import { Redo, Smile, Undo } from "lucide-react";
 
 /**
@@ -26,18 +27,24 @@ import { Redo, Smile, Undo } from "lucide-react";
  */
 export default function Message({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
     const [message, setMessage] = useState('');
-    const quillRef = useRef<any>(null);
+    const quillRef = useRef<HTMLDivElement | null>(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
     /**
         * Inserts emoji at cursor position in Quill editor
         */
     const insertEmoji = (emoji: { native: string }): void => {
-        const editor = quillRef.current?.getEditor();
-        if (editor) {
-            const range = editor.getSelection();
-            if (range) {
-                editor.insertText(range.index, emoji.native);
-                editor.setSelection(range.index + emoji.native.length);
+        // Access the ReactQuill editor through the DOM
+        const quillEditor = quillRef.current?.querySelector('.ql-editor') as HTMLElement;
+        if (quillEditor) {
+            const selection = window.getSelection();
+            if (selection && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const textNode = document.createTextNode(emoji.native);
+                range.insertNode(textNode);
+                range.setStartAfter(textNode);
+                range.setEndAfter(textNode);
+                selection.removeAllRanges();
+                selection.addRange(range);
             }
             setShowEmojiPicker(false);
         }
@@ -48,8 +55,12 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
      * It accesses the editor instance via the `quillRef` and calls the `undo()` method on the history module.
      */
     const handleUndo = (): void => {
-        const editor = quillRef.current?.getEditor();
-        editor?.history.undo();
+        // Access the ReactQuill editor through the DOM
+        const quillEditor = quillRef.current?.querySelector('.ql-editor') as HTMLElement;
+        if (quillEditor) {
+            // Use document.execCommand for undo (fallback approach)
+            document.execCommand('undo');
+        }
     };
 
     /**
@@ -58,8 +69,12 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
      * It accesses the editor instance via the `quillRef` and calls the `redo()` method on the history module.
      */
     const handleRedo = (): void => {
-        const editor = quillRef.current?.getEditor();
-        editor?.history.redo();
+        // Access the ReactQuill editor through the DOM
+        const quillEditor = quillRef.current?.querySelector('.ql-editor') as HTMLElement;
+        if (quillEditor) {
+            // Use document.execCommand for redo (fallback approach)
+            document.execCommand('redo');
+        }
     };
 
     const modules = {
@@ -143,17 +158,18 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                                 </div>
                             )}
 
-                            <ReactQuill
-                                ref={quillRef}
-                                value={message || ''}
-                                onChange={(value) => setMessage(value)}
-                                placeholder="Enter the job description..."
-                                theme="snow"
-                                modules={modules}
-                                className="w-full h-[400px] rounded-[12px]"
-                                id="job-description-editor"
-                                data-testid="job-description-editor"
-                            />
+                            <div ref={quillRef}>
+                                <ReactQuill
+                                    value={message || ''}
+                                    onChange={(value) => setMessage(value)}
+                                    placeholder="Enter the job description..."
+                                    theme="snow"
+                                    modules={modules}
+                                    className="w-full h-[400px] rounded-[12px]"
+                                    id="job-description-editor"
+                                    data-testid="job-description-editor"
+                                />
+                            </div>
                         </div>
                         <div className="flex justify-between pt-[26px] ">
                             <div className="flex gap-[10px] items-center">

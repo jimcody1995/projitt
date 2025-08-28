@@ -18,8 +18,7 @@ import { cn } from "@/lib/utils";
 interface DetailProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    selectedApplication: any | null;
-    getData: () => void;
+    setMessage: (message: string) => void;
 }
 
 export default function Suspend({ open, onOpenChange, setMessage }: DetailProps) {

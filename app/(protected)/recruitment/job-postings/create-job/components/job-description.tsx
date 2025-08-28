@@ -73,7 +73,7 @@ export default function JobDescription({
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
     const [fileUploading, setFileUploading] = useState(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const quillRef = useRef<any>(null);
+    const quillRef = useRef<HTMLDivElement | null>(null);
 
     /**
      * Handles file input changes
@@ -128,12 +128,18 @@ export default function JobDescription({
      * Inserts emoji at cursor position in Quill editor
      */
     const insertEmoji = (emoji: { native: string }): void => {
-        const editor = quillRef.current?.getEditor();
-        if (editor) {
-            const range = editor.getSelection();
-            if (range) {
-                editor.insertText(range.index, emoji.native);
-                editor.setSelection(range.index + emoji.native.length);
+        // Access the ReactQuill editor through the DOM
+        const quillEditor = quillRef.current?.querySelector('.ql-editor') as HTMLElement;
+        if (quillEditor) {
+            const selection = window.getSelection();
+            if (selection && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const textNode = document.createTextNode(emoji.native);
+                range.insertNode(textNode);
+                range.setStartAfter(textNode);
+                range.setEndAfter(textNode);
+                selection.removeAllRanges();
+                selection.addRange(range);
             }
             setShowEmojiPicker(false);
         }
@@ -143,18 +149,26 @@ export default function JobDescription({
      * Performs undo operation on Quill editor
      */
     const handleUndo = (): void => {
-        const editor = quillRef.current?.getEditor();
-        editor?.history.undo();
+        // Access the ReactQuill editor through the DOM
+        const quillEditor = quillRef.current?.querySelector('.ql-editor') as HTMLElement;
+        if (quillEditor) {
+            // Use document.execCommand for undo (fallback approach)
+            document.execCommand('undo');
+        }
     };
 
     /**
      * @description
      * Performs a redo operation on the ReactQuill editor.
-     * It accesses the editor instance via the `quillRef` and calls the `redo()` method on the history module.
+     * It accesses the editor instance via the DOM and uses document.execCommand for redo.
      */
     const handleRedo = (): void => {
-        const editor = quillRef.current?.getEditor();
-        editor?.history.redo();
+        // Access the ReactQuill editor through the DOM
+        const quillEditor = quillRef.current?.querySelector('.ql-editor') as HTMLElement;
+        if (quillEditor) {
+            // Use document.execCommand for redo (fallback approach)
+            document.execCommand('redo');
+        }
     };
 
     const modules = {
@@ -343,18 +357,19 @@ export default function JobDescription({
                 {loading ? (
                     <Skeleton className="w-full h-[400px] rounded-[12px]" />
                 ) : (
-                    <ReactQuill
-                        ref={quillRef}
-                        value={jobData.description || ''}
-                        onChange={(value) => setJobData({ ...jobData, description: value })}
-                        placeholder="Enter the job description..."
-                        theme="snow"
-                        modules={modules}
-                        className="w-full h-[400px] rounded-[12px]"
-                        id="job-description-editor"
-                        data-testid="job-description-editor"
-                        readOnly={disabled}
-                    />
+                    <div ref={quillRef}>
+                        <ReactQuill
+                            value={jobData.description || ''}
+                            onChange={(value) => setJobData({ ...jobData, description: value })}
+                            placeholder="Enter the job description..."
+                            theme="snow"
+                            modules={modules}
+                            className="w-full h-[400px] rounded-[12px]"
+                            id="job-description-editor"
+                            data-testid="job-description-editor"
+                            readOnly={disabled}
+                        />
+                    </div>
                 )}
 
                 {triggerValidation && errors.description && (
