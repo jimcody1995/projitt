@@ -77,6 +77,7 @@ export default function OffboardingTable() {
         completed: 35
     }
     ]);
+    const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilter, setShowFilter] = useState(false);
     const [suspendOpen, setSuspendOpen] = useState(false);

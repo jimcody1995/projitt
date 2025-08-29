@@ -49,15 +49,6 @@ export default function People() {
     const [loading, setLoading] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState<any>(null);
     const router = useRouter();
-    /**
-     * @description
-     * This function is a callback for the `Detail` dialog's `onOpenChange` prop.
-     * When the dialog is closed, this function resets the `selectedApplication` state to `null`,
-     * which in turn closes the dialog.
-     */
-    const handleOpenChange = (open: boolean) => {
-        setSelectedApplication(null);
-    };
 
     return <div className='px-[8px] py-[6px]'>
         <div className="flex justify-between w-full sm:flex-row flex-col items-start gap-[10px]">

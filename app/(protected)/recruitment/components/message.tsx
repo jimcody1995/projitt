@@ -13,6 +13,7 @@ const ReactQuill = dynamic(() => import('react-quill-new'), {
     ssr: false,
     loading: () => <div className="min-h-[120px] bg-gray-50 animate-pulse rounded border" />
 });
+
 import { Redo, Smile, Undo } from "lucide-react";
 
 /**
@@ -26,6 +27,7 @@ import { Redo, Smile, Undo } from "lucide-react";
  */
 export default function Message({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
     const [message, setMessage] = useState('');
+    const quillRef = useRef<HTMLDivElement | null>(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
 
     /**
@@ -34,7 +36,21 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
     const insertEmoji = (emoji: { native: string }): void => {
         // Since we can't access the editor directly without ref, we'll append to the message
         setMessage(prev => prev + emoji.native);
-        setShowEmojiPicker(false);
+        // Access the ReactQuill editor through the DOM
+        const quillEditor = quillRef.current?.querySelector('.ql-editor') as HTMLElement;
+        if (quillEditor) {
+            const selection = window.getSelection();
+            if (selection && selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const textNode = document.createTextNode(emoji.native);
+                range.insertNode(textNode);
+                range.setStartAfter(textNode);
+                range.setEndAfter(textNode);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            setShowEmojiPicker(false);
+        }
     };
 
     /**
@@ -45,6 +61,12 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
     const handleUndo = (): void => {
         // Simplified undo - in a real implementation, you might want to use a different approach
         console.log('Undo functionality would be implemented here');
+        // Access the ReactQuill editor through the DOM
+        const quillEditor = quillRef.current?.querySelector('.ql-editor') as HTMLElement;
+        if (quillEditor) {
+            // Use document.execCommand for undo (fallback approach)
+            document.execCommand('undo');
+        }
     };
 
     /**
@@ -55,6 +77,12 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
     const handleRedo = (): void => {
         // Simplified redo - in a real implementation, you might want to use a different approach
         console.log('Redo functionality would be implemented here');
+        // Access the ReactQuill editor through the DOM
+        const quillEditor = quillRef.current?.querySelector('.ql-editor') as HTMLElement;
+        if (quillEditor) {
+            // Use document.execCommand for redo (fallback approach)
+            document.execCommand('redo');
+        }
     };
 
     const modules = {
@@ -138,16 +166,18 @@ export default function Message({ open, onOpenChange }: { open: boolean; onOpenC
                                 </div>
                             )}
 
-                            <ReactQuill
-                                value={message || ''}
-                                onChange={(value) => setMessage(value)}
-                                placeholder="Enter the job description..."
-                                theme="snow"
-                                modules={modules}
-                                className="w-full h-[400px] rounded-[12px]"
-                                id="job-description-editor"
-                                data-testid="job-description-editor"
-                            />
+                            <div ref={quillRef}>
+                                <ReactQuill
+                                    value={message || ''}
+                                    onChange={(value) => setMessage(value)}
+                                    placeholder="Enter the job description..."
+                                    theme="snow"
+                                    modules={modules}
+                                    className="w-full h-[400px] rounded-[12px]"
+                                    id="job-description-editor"
+                                    data-testid="job-description-editor"
+                                />
+                            </div>
                         </div>
                         <div className="flex justify-between pt-[26px] ">
                             <div className="flex gap-[10px] items-center">
