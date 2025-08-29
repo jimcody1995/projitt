@@ -28,6 +28,7 @@ export default function Detail() {
         },
         {
             label: 'Document',
+            value: 'document',
             icon: File
         },
         {
@@ -111,8 +112,6 @@ export default function Detail() {
                             </div>
                         ))
                     }
-
-
                 </div>
             </div>
             <div className="mt-[27px]">

@@ -6,7 +6,7 @@ export default function Forms() {
             <div className="bg-[#EEF3F2] pt-[24px] pl-[24px] pb-[20px]">
                 <p className="text-[15px]/[20px] font-medium text-[#787878] uppercase">Personal Information</p>
             </div>
-            <div className="bg-white p-[28px] pb-[56px] grid grid-cols-4 gap-x-[32px] gap-y-[36px]">
+            <div className="bg-white p-[28px] pb-[56px] grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-[32px] gap-y-[36px]">
                 <div className="flex flex-col gap-[4px]">
                     <p className="text-[14px]/[22px] text-[#4B4B4B]" >Full Name</p>
                     <p className="text-[14px]/[22px] text-[#4B4B4B] font-semibold">Alice Fernadez</p>
@@ -53,7 +53,7 @@ export default function Forms() {
             <div className="bg-[#EEF3F2] pt-[24px] pl-[24px] pb-[20px]">
                 <p className="text-[15px]/[20px] font-medium text-[#787878] uppercase">PAYROLL</p>
             </div>
-            <div className="bg-white p-[28px] pb-[56px] grid grid-cols-4 gap-x-[32px] gap-y-[36px]">
+            <div className="bg-white p-[28px] pb-[56px] grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-[32px] gap-y-[36px]">
                 <div className="flex flex-col gap-[4px]">
                     <p className="text-[14px]/[22px] text-[#4B4B4B]" >Payment Method</p>
                     <p className="text-[14px]/[22px] text-[#4B4B4B] font-semibold">Bank Transfer</p>
@@ -100,7 +100,7 @@ export default function Forms() {
             <div className="bg-[#EEF3F2] pt-[24px] pl-[24px] pb-[20px]">
                 <p className="text-[15px]/[20px] font-medium text-[#787878] uppercase">Tax</p>
             </div>
-            <div className="bg-white p-[28px] pb-[56px] grid grid-cols-4 gap-x-[32px] gap-y-[36px]">
+            <div className="bg-white p-[28px] pb-[56px] grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-x-[32px] gap-y-[36px]">
                 <div className="flex flex-col gap-[4px]">
                     <p className="text-[14px]/[22px] text-[#4B4B4B]" >Taxpayer ID/TIN</p>
                     <p className="text-[14px]/[22px] text-[#4B4B4B] font-semibold">1232249218</p>
@@ -123,7 +123,7 @@ export default function Forms() {
             <div className="bg-[#EEF3F2] pt-[24px] pl-[24px] pb-[20px]">
                 <p className="text-[15px]/[20px] font-medium text-[#787878] uppercase">BENEFITS ENROLLED</p>
             </div>
-            <div className="bg-white grid grid-cols-2 gap-x-[149px]  p-[28px] pb-[40px]">
+            <div className="bg-white grid md:grid-cols-2 grid-cols-1 gap-x-[149px] gap-y-[28px]  p-[28px] pb-[40px]">
                 <div className="flex flex-col gap-[28px] w-full">
                     <div className="flex justify-between items-center">
                         <p className="text-[14px]/[22px] text-[#4B4B4B] font-semibold">401K</p>

@@ -47,6 +47,7 @@ export default function People() {
         }
     ]);
     const [loading, setLoading] = useState(false);
+    const [selectedApplication, setSelectedApplication] = useState<any>(null);
     const router = useRouter();
     /**
      * @description

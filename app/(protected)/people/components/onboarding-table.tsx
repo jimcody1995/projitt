@@ -37,6 +37,7 @@ export default function OnboardingTable() {
         { id: 'lastSession', desc: true },
     ]);
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState<any[]>([{
         id: 1,
         name: 'John Doe',

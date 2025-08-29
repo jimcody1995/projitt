@@ -42,6 +42,7 @@ export default function SuspendedTable() {
         { id: 'lastSession', desc: true },
     ]);
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState<any[]>([{
         id: 1,
         employee_id: '123456',

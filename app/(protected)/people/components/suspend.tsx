@@ -1,30 +1,33 @@
 'use client'
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, useRef } from "react";
-import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, CirclePlus, Loader2, Plus, Star, X } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import DialogContent, { Dialog, div, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useState } from "react";
+import { CalendarDays, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { getApplicationInfo, rejectApplication } from "@/api/applications";
-import { customToast } from "@/components/common/toastr";
-import { useBasic } from "@/context/BasicContext";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import moment from "moment";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import Message from "../../recruitment/components/message";
 
 interface DetailProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    selectedApplication: any | null;
-    getData: () => void;
+    setMessage: (message: string) => void;
 }
 
 export default function Suspend({ open, onOpenChange, setMessage }: DetailProps) {
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+    const [preview, setPreview] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
 
-    // Add refs for tab elements and sliding underline
+    const handleDateChange = (date: Date | undefined) => {
+        setSelectedDate(date);
+    };
+
     return (
         <div>
             <Sheet open={open} onOpenChange={onOpenChange}>
@@ -36,7 +39,6 @@ export default function Suspend({ open, onOpenChange, setMessage }: DetailProps)
                                 <p className="text-[14px]/[16px] text-[#626262]">Senior Data Analyst ~ United States</p>
                             </div>
                             <Button
-                                mode="icon"
                                 variant="outline"
                                 onClick={() => onOpenChange(false)}
                             >
@@ -71,7 +73,6 @@ export default function Suspend({ open, onOpenChange, setMessage }: DetailProps)
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
-                                    mode="input"
                                     variant="outline"
                                     id="date"
                                     className={cn(
@@ -79,16 +80,22 @@ export default function Suspend({ open, onOpenChange, setMessage }: DetailProps)
                                     )}
                                 >
                                     <CalendarDays className="-ms-0.5" />
-                                    <span className="text-[14px]/[24px] text-[#8f8f8f]">Pick a date</span>
+                                    {selectedDate ? moment(selectedDate).format('MMM DD, YYYY') : 'Pick a date'}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent>
-                                <Calendar />
+                                <Calendar
+                                    mode="single"
+                                    defaultMonth={selectedDate || new Date()}
+                                    selected={selectedDate}
+                                    onSelect={handleDateChange}
+                                    numberOfMonths={1}
+                                />
                             </PopoverContent>
                         </Popover>
                         <div className="flex justify-between items-center mt-[20px] w-full">
                             <p className="text-[14px]/[16px] text-[#000]">Notify Employee</p>
-                            <Switch shape="square" className="w-[52px] h-[28px]" />
+                            <Switch className="w-[52px] h-[28px]" />
                         </div>
                         <Label className="text-[14px]/[24px] text-[#8f8f8f] mt-[22px]">Select Email Template</Label>
                         <Select defaultValue="offer-letter">
@@ -100,12 +107,47 @@ export default function Suspend({ open, onOpenChange, setMessage }: DetailProps)
                                 <SelectItem value="termination-letter">Termination Letter</SelectItem>
                             </SelectContent>
                         </Select>
-                        <button className="text-[14px]/[24px] text-[#0d978b] underline mt-[8px]">Preview/Edit Email</button>
+                        <button className="text-[14px]/[24px] text-[#0d978b] underline mt-[8px] cursor-pointer" onClick={() => setPreview(true)}>Preview/Edit Email</button>
                         <Button className="w-[150px] h-[42px] mt-[57px]" onClick={() => setMessage("Confirm Suspension")}>Suspend</Button>
                     </div>
-
-                </SheetContent >
-            </Sheet >
-        </div >
+                </SheetContent>
+            </Sheet>
+            <Dialog open={preview} onOpenChange={setPreview}>
+                <DialogContent className="md:max-w-[830px] w-full">
+                    <DialogTitle></DialogTitle>
+                    <div>
+                        <div className="flex justify-between">
+                            <p className="text-[22px]/[30px] font-medium text-[#1c1c1c]"> Offer Letter Template</p>
+                            <div className="flex flex-col gap-[4px] items-end">
+                                <span className="text-[12px]/[20px] text-[#0d978b] bg-[#d6eeec] px-[12px] py-[2px] rounded-[4px]">Offer Letter</span>
+                                <span className="text-[12px]/[20px] text-[#626262]">Default</span>
+                            </div>
+                        </div>
+                        <div className="w-full border border-[#e9e9e9] mt-[28px] rounded-[12px] h-[600px]">
+                            <div className="p-[24px] bg-[#f9f9f9] w-full">
+                                <p className="text-[18px]/[24px] font-medium text-[#1c1c1c]">Message Title</p>
+                            </div>
+                            <div className="p-[33px]">
+                                Hello,
+                                Hello,
+                                Hello,
+                                Hello,
+                                Hello,
+                                Hello,
+                                Hello,
+                            </div>
+                        </div>
+                        <div className="flex justify-end gap-[16px] pt-[28px] ">
+                            <Button variant="outline" className="h-[42px]" onClick={() => setPreview(false)}>Go Back</Button>
+                            <Button className="h-[42px]" onClick={() => setIsEdit(true)}>Edit Message</Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+            <Message
+                open={isEdit}
+                onOpenChange={setIsEdit}
+            />
+        </div>
     );
 }

@@ -30,7 +30,7 @@ export default function Profile() {
                 </div>
             </div>
         </div>
-        <div className="mt-[33px] w-full rounded-[20px] h-[124px] bg-white border border-[#e9e9e9] py-[23px] px-[28px] flex justify-between items-center">
+        <div className="mt-[33px] w-full rounded-[20px]  bg-white border border-[#e9e9e9] py-[23px] px-[28px] flex justify-between items-center">
             <div className=" flex gap-[17px] items-center">
                 <div className="w-[60px] h-[60px] rounded-full bg-[#D6EEEC] flex items-center justify-center">
                     <p className="text-[17px]/[31px] text-[#053834]">CF</p>
