@@ -85,7 +85,6 @@ export default function SuspendedTable() {
         status: 'Active',
         date: '2024-01-01'
     }]);
-    const [loading, setLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilter, setShowFilter] = useState(false);
     const [suspendOpen, setSuspendOpen] = useState(false);
