@@ -1,5 +1,7 @@
 // import OrgChart from "@dabeng/react-orgchart";
 'use client';
+import { Button } from "@/components/ui/button";
+import { MoreVertical } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -55,6 +57,7 @@ export default function OrgChartComponent() {
     const [connections, setConnections] = useState<Connection[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [mindmapName, setMindmapName] = useState("");
+    const [selectedId, setSelectedId] = useState<string | null>(null);
     useEffect(() => {
         // Initial fetch - replace with API call
         async function fetchInit() {
@@ -71,8 +74,8 @@ export default function OrgChartComponent() {
         const rootNode: NodeType = {
             id: "root",
             parent: null,
-            x: 50,
-            y: 300,
+            x: 600,
+            y: 50,
             type: "plus",
         };
         setNodes([rootNode]);
@@ -91,8 +94,8 @@ export default function OrgChartComponent() {
         const newNode: NodeType = {
             id: Date.now().toString(),
             parent: "root",
-            x: 50,
-            y: 300,
+            x: 600,
+            y: 50,
             mindmapname: mindmapName,
         };
         setNodes((prev) => [...prev.filter((n) => n.id !== "root"), newNode]);
@@ -107,14 +110,16 @@ export default function OrgChartComponent() {
         const newNode: NodeType = {
             id: Date.now().toString(),
             parent: parentId,
-            x: parent.x + 300,
-            y: parent.y + 60,
-            firstname: "Name",
-            lastname: "Surname",
+            x: parent.x + 60,
+            y: parent.y + 200,
+            mindmapname: mindmapName,
         };
 
         setNodes((prev) => [...prev, newNode]);
         setConnections((prev) => [...prev, { from: parentId, to: newNode.id }]);
+        setModalOpen(false);
+        setMindmapName("");
+        setSelectedId(null);
     };
 
     const deleteNode = (id: string) => {
@@ -145,8 +150,8 @@ export default function OrgChartComponent() {
                         const from = nodes.find((n) => n.id === conn.from);
                         const to = nodes.find((n) => n.id === conn.to);
                         if (!from || !to) return null;
-                        const d = `M ${from.x + 50} ${from.y + 20} C ${from.x + 100} ${from.y}, ${to.x - 100
-                            } ${to.y}, ${to.x} ${to.y + 20}`;
+                        const d = `M ${from.x + 124} ${from.y + 60} C ${from.x + 124} ${from.y + 150}, ${to.x + 150
+                            } ${to.y - 100}, ${to.x + 150} ${to.y + 50}`;
                         return <path key={i} d={d} stroke="#888" fill="none" strokeWidth="2" />;
                     })}
                 </svg>
@@ -154,43 +159,41 @@ export default function OrgChartComponent() {
                 {nodes.map((node) => (
                     <div
                         key={node.id}
-                        className="absolute bg-white p-2 rounded-lg shadow flex items-center gap-2 cursor-grab"
+                        className="absolute bg-white p-2 rounded-lg shadow flex items-center gap-2 cursor-grab w-[248px] justify-center"
                         style={{ left: node.x, top: node.y }}
                         draggable
                         onDragEnd={(e) => onDrag(e, node)}
                     >
                         {node.type === "plus" ? (
                             <button
-                                className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                                className="bg-green-500 text-white rounded-full  px-[10px]"
                                 onClick={() => setModalOpen(true)}
                             >
                                 +
                             </button>
                         ) : (
                             <>
-                                <img
-                                    src={`https://i.pravatar.cc/40?img=${parseInt(node.id) % 50}`}
-                                    alt="avatar"
-                                    className="w-8 h-8 rounded-full"
-                                />
-                                <div className="name">
-                                    {node.mindmapname || `${node.firstname} ${node.lastname}`}
+                                <div className="flex items-center gap-2 justify-between w-full">
+                                    <div className="flex items-center gap-2">
+                                        <img
+                                            src={`https://i.pravatar.cc/40?img=${parseInt(node.id) % 50}`}
+                                            alt="avatar"
+                                            className="w-[40px] h-[40px] rounded-full"
+                                        />
+                                        <div className="flex flex-col gap-1">
+                                            <p className="text-[14px]/[22px] font-medium">{node.mindmapname || `${node.firstname} ${node.lastname}`}</p>
+                                            <p className="text-[12px]/[18px] font-medium text-[#787878]">CEO & Founder</p>
+                                            <p className="text-[12px]/[18px] font-medium text-[#787878]">Chicago Office</p>
+                                        </div>
+                                    </div>
+                                    <button><MoreVertical className="size-[20px]" /></button>
                                 </div>
-                                {node.mindmapname ? (
-                                    <button
-                                        className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                                        onClick={() => addChild(node.id)}
-                                    >
-                                        +
-                                    </button>
-                                ) : (
-                                    <button
-                                        className="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                                        onClick={() => deleteNode(node.id)}
-                                    >
-                                        ×
-                                    </button>
-                                )}
+                                <button
+                                    className="cursor-pointer bg-green-500 text-white rounded-full flex w-[15px] h-[15px] items-center justify-center absolute right-[calc(50%-10px)] bottom-[-10px] "
+                                    onClick={() => { setModalOpen(true); setSelectedId(node.id) }}
+                                >
+                                    +
+                                </button>
                             </>
                         )}
                     </div>
@@ -199,14 +202,14 @@ export default function OrgChartComponent() {
                 {modalOpen &&
                     createPortal(
                         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                            <div className="bg-white p-6 rounded shadow relative">
+                            <div className="bg-white p-6 rounded shadow relative flex flex-col gap-4">
                                 <button
-                                    className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
+                                    className="absolute top-3 right-4 text-gray-500 hover:text-red-500"
                                     onClick={() => setModalOpen(false)}
                                 >
                                     ×
                                 </button>
-                                <h1 className="text-lg font-semibold">Give your map a name</h1>
+                                <h1 className="text-lg font-semibold">Give a name</h1>
                                 <input
                                     type="text"
                                     value={mindmapName}
@@ -214,19 +217,17 @@ export default function OrgChartComponent() {
                                     placeholder="New Map"
                                     className="border w-60 p-2 mt-4 rounded"
                                 />
-                                <button
+                                <Button
                                     disabled={!mindmapName}
-                                    onClick={createMindmap}
-                                    className={`mt-4 w-full h-10 rounded-full ${mindmapName ? "bg-green-600 text-white" : "bg-gray-200"
-                                        }`}
+                                    onClick={() => !selectedId ? createMindmap() : addChild(selectedId as string)}
                                 >
                                     Save
-                                </button>
+                                </Button>
                             </div>
                         </div>,
                         document.body
                     )}
             </div>
         </div>
-    </div>;
+    </div >;
 }
