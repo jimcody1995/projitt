@@ -38,7 +38,6 @@ export default function OffboardingTable() {
         { id: 'lastSession', desc: true },
     ]);
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
     const [data, setData] = useState<any[]>([{
         id: 1,
         employee_id: '123456',
@@ -87,7 +86,6 @@ export default function OffboardingTable() {
     const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [nameFilter, setNameFilter] = useState<string>('');
-    const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [message, setMessage] = useState<string>('');
 
     const filteredData = useMemo<any[]>(() => {

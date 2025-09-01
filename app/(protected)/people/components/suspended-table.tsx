@@ -42,7 +42,6 @@ export default function SuspendedTable() {
         { id: 'lastSession', desc: true },
     ]);
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
     const [data, setData] = useState<any[]>([{
         id: 1,
         employee_id: '123456',
@@ -90,49 +89,24 @@ export default function SuspendedTable() {
     const [showFilter, setShowFilter] = useState(false);
     const [suspendOpen, setSuspendOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
-    const [selectedMode, setSelectedMode] = useState<string[]>([]);
-    const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
-    const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-    const [nameFilter, setNameFilter] = useState<string>('');
-    const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [message, setMessage] = useState<string>('');
 
     const filteredData = useMemo<any[]>(() => {
         return data.filter((item) => {
-            // Status filter
-            const matchesStatus =
-                !selectedStatuses?.length ||
-                selectedStatuses.includes(
-                    item.status.replace('bg-', '').charAt(0).toUpperCase() +
-                    item.status.replace('bg-', '').slice(1),
-                );
-
-            // Mode filter
-            const matchesMode =
-                !selectedMode?.length ||
-                selectedMode.includes(item.mode || '');
-
-            // Country filter
-            const matchesCountry =
-                !selectedCountries?.length ||
-                selectedCountries.includes(item.job?.country_id || 0);
-
-            // Name filter
-            const matchesName =
-                !nameFilter ||
-                (item.applicant.first_name + " " + item.applicant.last_name).toLowerCase().includes(nameFilter.toLowerCase());
-
-            // Search filter
+            const matchesType =
+                !selectedTypes?.length ||
+                selectedTypes.includes(item.employment_type || '');
             const searchLower = (searchQuery || "").toLowerCase();
             const matchesSearch =
                 !searchQuery ||
-                item.job?.title.toLowerCase().includes(searchLower) ||
-                (item.applicant.first_name + " " + item.applicant.last_name).toLowerCase().includes(searchLower);
+                (item?.name || "").toLowerCase().includes(searchLower) ||
+                (item?.employment_type || "").toLowerCase().includes(searchLower);
 
-            return matchesSearch && matchesStatus && matchesMode && matchesCountry && matchesName;
+            return matchesType && matchesSearch;
         });
-    }, [searchQuery, selectedStatuses, selectedMode, selectedCountries, nameFilter, data]);
+    }, [searchQuery, selectedTypes, data]);
 
     const sortedData = useMemo<any[]>(() => {
         if (sorting.length === 0) return filteredData;
@@ -145,8 +119,8 @@ export default function SuspendedTable() {
 
             // If sorting by name, compare first_name
             if (id === "name") {
-                aValue = a?.first_name ?? "";
-                bValue = b?.first_name ?? "";
+                aValue = a?.name ?? "";
+                bValue = b?.name ?? "";
             }
             if (id === "job-detail") {
                 aValue = a?.job?.title ?? "";
@@ -490,14 +464,8 @@ export default function SuspendedTable() {
                         }`}
                 >
                     <FilterTool
-                        selectedMode={selectedMode}
-                        selectedStatuses={selectedStatuses}
-                        selectedCountries={selectedCountries}
-                        nameFilter={nameFilter}
-                        setSelectedMode={setSelectedMode}
-                        setSelectedStatuses={setSelectedStatuses}
-                        setSelectedCountries={setSelectedCountries}
-                        setNameFilter={setNameFilter}
+                        selectedTypes={selectedTypes}
+                        setSelectedTypes={setSelectedTypes}
                     />
                 </div>
                 <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>

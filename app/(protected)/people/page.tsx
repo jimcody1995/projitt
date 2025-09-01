@@ -6,6 +6,8 @@ import { getInterviews } from '@/api/interviews';
 import { ChevronDown, Diamond } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 /**
  * @description
@@ -61,10 +63,37 @@ export default function People() {
                     <Diamond className='size-[18px] ' />
                     <span className='text-[14px]/[20px] font-semibold'>Org Chart</span>
                 </Button>
-                <Button className='h-[42px] text-[14px]/[22px] font-medium '>
-                    Add Employee
-                    <ChevronDown className='size-[18px] ' />
-                </Button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button className='h-[42px] text-[14px]/[22px] font-medium '>
+                            Add Employee
+                            <ChevronDown className='size-[18px] ' />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                        side="bottom"
+                        align="end"
+                        data-testid={`actions-menu`}
+                    >
+
+                        <div
+                            className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                            data-testid={`view-applicants-action`}
+                        // onClick={() => setSelectedApplication(row.original.id)}
+                        >
+                            Add New Employee
+                        </div>
+                        <div
+                            className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                            data-testid={`view-applicants-action`}
+                            onClick={() => router.push('/people/bulk-import')}
+                        >
+                            Bulk Import
+                        </div>
+
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
             </div>
         </div>
 

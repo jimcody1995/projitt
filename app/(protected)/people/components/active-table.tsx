@@ -35,12 +35,9 @@ import { FilterTool } from './filter';
 import { SelectedDialog } from './selectedDialog';
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
 import CheckDialog from './checkDialog';
-import { NoData } from './noData';
-import { useRouter } from 'next/navigation';
-import { formatDateWithComma } from '@/lib/date-utils';
-import Detail from './detail';
-import DialogContent, { Dialog, div, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import dynamic from 'next/dynamic';
+import { NoData } from '../../recruitment/applications/components/noData';
+import DialogContent, { Dialog, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
 
 // Create a wrapper component for the progress bar to avoid SSR issues
 const ProgressCircle = dynamic(
@@ -73,10 +70,11 @@ const ProgressCircle = dynamic(
 // Import the CSS for CircularProgressbar
 import "react-circular-progressbar/dist/styles.css";
 
-import Message from '../../components/message';
-import { getJobApplications } from '@/api/applications';
+import Message from '../../recruitment/components/message';
 import LoadingSpinner from '@/components/common/loading-spinner';
-export default function Applicants({ id, setApplicantCount }: { id: string, setApplicantCount: (count: number) => void }) {
+import dynamic from 'next/dynamic';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+export default function ActiveTable() {
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -88,34 +86,68 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [showFilter, setShowFilter] = useState(false);
-    const [selectedApplication, setSelectedApplication] = useState<any>(null);
     const [progress, setProgress] = useState(0);
-    const [applicantsData, setApplicantsData] = useState<any[]>([]);
-    const [selectedAIScoring, setSelectedAIScoring] = useState<number[]>([]);
-    const [selectedShortListed, setSelectedShortListed] = useState<string>("");
-    const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+    const [isAddToTeam, setIsAddToTeam] = useState(false);
+    const [isAssignManager, setIsAssignManager] = useState(false);
+    const [employeesData, setEmployeesData] = useState<any[]>([{
+        id: 1,
+        employee_id: '123456',
+        name: 'John Doe',
+        job: {
+            title: 'Software Engineer',
+            country: 'United States'
+        },
+        department: 'IT',
+        employment_type: 'full-time',
+        startDate: new Date(),
+        completed: 35
+    },
+    {
+        id: 2,
+        employee_id: '123456',
+        name: 'John Doe',
+        job: {
+            title: 'Software Engineer',
+            country: 'United States'
+        },
+        department: 'IT',
+        employment_type: 'part-time',
+        startDate: new Date(),
+        completed: 35
+    },
+
+    {
+        id: 3,
+        employee_id: '123456',
+        name: 'John Doe',
+        job: {
+            title: 'Software Engineer',
+            country: 'United States'
+        },
+        department: 'IT',
+        employment_type: 'freelance',
+        startDate: new Date(),
+        completed: 35
+    }
+    ]);
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [isMessage, setIsMessage] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const filteredData = useMemo<any[]>(() => {
-        return applicantsData.filter((item) => {
-            const matchesStatus =
-                !selectedStatuses?.length ||
-                selectedStatuses.includes(
-                    item.status.replace('bg-', '').charAt(0).toUpperCase() +
-                    item.status.replace('bg-', '').slice(1),
-                );
+        return employeesData.filter((item) => {
+            const matchesType =
+                !selectedTypes?.length ||
+                selectedTypes.includes(item.employment_type || '');
 
             const searchLower = (searchQuery || "").toLowerCase();
             const matchesSearch =
                 !searchQuery ||
-                (item?.first_name || "").toLowerCase().includes(searchLower) ||
-                (item?.last_name || "").toLowerCase().includes(searchLower) ||
-                `${(item?.first_name || "")} ${(item?.last_name || "")}`.toLowerCase().includes(searchLower) ||
-                (item?.status || "").toLowerCase().includes(searchLower);
+                (item?.name || "").toLowerCase().includes(searchLower) ||
+                (item?.employment_type || "").toLowerCase().includes(searchLower);
 
-            return matchesSearch && matchesStatus;
+            return matchesSearch && matchesType;
         });
-    }, [searchQuery, selectedStatuses, applicantsData]);
+    }, [searchQuery, selectedTypes, employeesData]);
 
     const sortedData = useMemo<any[]>(() => {
         if (sorting.length === 0) return filteredData;
@@ -128,8 +160,8 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
 
             // If sorting by name, compare first_name
             if (id === "name") {
-                aValue = a?.first_name ?? "";
-                bValue = b?.first_name ?? "";
+                aValue = a?.name ?? "";
+                bValue = b?.name ?? "";
             }
 
             // Ensure values are strings and handle edge cases
@@ -154,32 +186,19 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
         });
     }, [sorting, filteredData]);
 
-    const getData = async () => {
-        try {
-            setLoading(true);
-            if (!id || id === 'undefined' || id === 'null') {
-                setApplicantsData([]);
-                setApplicantCount(0);
-                setLoading(false);
-                return;
-            }
-            const response = await getJobApplications(id);
-            setApplicantsData(response.data || []);
-            setApplicantCount(response.data?.length || 0);
-            setLoading(false);
-        } catch (error) {
-            console.log(error);
-            setApplicantsData([]);
-            setApplicantCount(0);
-            setLoading(false);
-        }
-    }
-
-    useEffect(() => {
-        getData();
-    }, [id]);
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+    const employmentType = [{
+        item: 'full-time',
+        label: 'Full Time'
+    }, {
+        item: 'part-time',
+        label: 'Part Time'
+    }, {
+        item: 'freelance',
+        label: 'Freelance'
+    }]
 
     const handleExport = () => {
         if (intervalRef.current) clearInterval(intervalRef.current);
@@ -209,21 +228,21 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                 },
             },
             {
-                accessorKey: 'applicant_id',
+                accessorKey: 'employee_id',
                 header: ({ column }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
-                        title="Application ID"
+                        title="Employee ID"
                         column={column}
-                        data-testid="application-id-header"
+                        data-testid="employee-id-header"
                     />
                 ),
                 cell: ({ row }) => (
                     <span
                         className="text-[14px] text-[#4b4b4b] "
-                        data-testid={`application-id-${row.original.id}`}
+                        data-testid={`employee-id-${row.original.id}`}
                     >
-                        {row.original.applicant_id}
+                        {row.original.employee_id}
                     </span>
                 ),
                 enableSorting: true,
@@ -243,12 +262,17 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                     />
                 ),
                 cell: ({ row }) => (
-                    <span
-                        className="text-[14px] text-[#4b4b4b]"
+                    <div
+                        className="text-[14px] text-[#4b4b4b] flex items-center gap-[8px]"
                         data-testid={`name-${row.original.id}`}
                     >
-                        {row.original.first_name + " " + row.original.last_name}
-                    </span>
+                        <div className="w-[28px] h-[28px] rounded-full bg-[#d6eeec] text-[#0D978B] flex items-center justify-center">
+                            CF
+                        </div>
+                        <p className="text-[14px]/[22px]">
+                            {row.original.name}
+                        </p>
+                    </div>
                 ),
                 enableSorting: true,
                 size: 140,
@@ -257,46 +281,28 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                 },
             },
             {
-                accessorKey: 'ai_score',
-                header: ({ column }) => (
+                accessorKey: 'job-detail',
+                header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
-                        title="AI Score"
+                        title="Job Details"
                         column={column}
-                        data-testid="ai-score-header"
+                        data-testid="job-detail-header"
                     />
                 ),
-                cell: ({ row }) => (
-                    <span
-                        className={`text-[14px] ${row.original.ai_score >= 80 ? 'text-[#0D978B]' : row.original.ai_score >= 80 ? 'text-[#FFC107]' : row.original.ai_score >= 50 ? 'text-[#BE5E00]' : 'text-[#C30606]'}`}
-                        data-testid={`ai-score-${row.original.id}`}
-                    >
-                        {row.original.ai_score}%
-                    </span>
-                ),
-                enableSorting: false,
-                size: 90,
-                meta: {
-                    headerClassName: '',
-                },
-            },
-            {
-                accessorKey: 'created_at',
-                header: ({ column }) => (
-                    <DataGridColumnHeader
-                        className='text-[14px] font-medium'
-                        title="Application Date"
-                        column={column}
-                        data-testid="applicants-header"
-                    />
-                ),
-                cell: ({ row }) => (
-                    <span
-                        className="text-[14px] text-[#4b4b4b]"
-                        data-testid={`applicants-${row.original.id}`}
-                    >
-                        {formatDateWithComma(row.original.created_at)}
-                    </span>
+                cell: ({ row }: { row: any }) => (
+                    <div data-testid={`job-detail-${row.original.id}`}>
+                        <p
+                            className="text-[14px]/[22px] text-[#4b4b4b]"
+                        >
+                            {row.original.job?.title}
+                        </p>
+                        <p
+                            className="text-[11px]/[14px] text-[#8f8f8f]"
+                        >
+                            {row.original.job?.country}
+                        </p>
+                    </div>
                 ),
                 enableSorting: true,
                 size: 120,
@@ -305,32 +311,50 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                 },
             },
             {
-                accessorKey: 'status',
-                header: ({ column }) => (
+                accessorKey: 'department',
+                header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
-                        title="Job Status"
+                        title="Department"
                         column={column}
-                        data-testid="status-header"
+                        data-testid="department-header"
                     />
                 ),
-                cell: ({ row }) => {
-                    let badgeClass = "bg-muted text-foreground";
-                    if (row.original.status === "interview") badgeClass = "bg-[#ffdfc0] text-[#BE5E00]";
-                    else if (row.original.status === "new") badgeClass = "bg-[#d6eeec] text-[#0D978B]";
-                    else if (row.original.status === "hired") badgeClass = "bg-[#0d978b] text-white";
-                    else if (row.original.status === "rejected") badgeClass = "bg-[#C3060626] text-[#C30606]";
+                cell: ({ row }: { row: any }) => {
                     return (
                         <span
-                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}`}
-                            data-testid={`status-badge-${row.original.id}`}
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs `}
+                            data-testid={`department-badge-${row.original.id}`}
                         >
-                            {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
+                            {row.original.department}
                         </span>
                     );
                 },
                 enableSorting: true,
-                size: 140,
+                size: 90,
+                meta: {
+                    headerClassName: '',
+                },
+            },
+            {
+                accessorKey: 'employment-type',
+                header: ({ column }: { column: any }) => (
+                    <DataGridColumnHeader
+                        className='text-[14px] font-medium'
+                        title="Employment Type"
+                        column={column}
+                        data-testid="employment-type-header"
+                    />
+                ),
+                cell: ({ row }: { row: any }) => (
+                    <span
+                        className="text-[14px] text-[#4b4b4b]"
+                        data-testid={`employment-type-${row.original.id}`}
+                    >
+                        {employmentType.find((item) => item.item === row.original.employment_type)?.label}
+                    </span>
+                ),
+                size: 120,
                 meta: {
                     headerClassName: '',
                 },
@@ -354,10 +378,6 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
     }, [rowSelection]);
 
 
-
-    const handleOpenChange = (open: boolean) => {
-        setSelectedApplication(null);
-    };
 
     const table = useReactTable({
         columns: columns as ColumnDef<any, any>[],
@@ -413,7 +433,38 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                             e.stopPropagation();
                         }}
                     >
-                        View Applicants
+                        View Profile
+                    </div>
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        data-testid={`assign-manager-action-${row.original.id}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsAssignManager(true);
+                        }}
+                    >
+                        Assign Manager
+                    </div>
+
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        data-testid={`add-to-team-action-${row.original.id}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsAddToTeam(true);
+                        }}
+                    >
+                        Add to Team
+                    </div>
+
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        data-testid={`duplicate-action-${row.original.id}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
+                    >
+                        Send Message
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
@@ -422,9 +473,17 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                             e.stopPropagation();
                         }}
                     >
-                        Duplicate
+                        Suspend
                     </div>
-
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        data-testid={`duplicate-action-${row.original.id}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
+                    >
+                        Terminate / Offboard
+                    </div>
                     <CheckDialog
                         action="delete"
                         trigger={
@@ -451,7 +510,6 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                 className='w-full'
                 table={table}
                 recordCount={sortedData?.length || 0}
-                onRowClick={(row) => setSelectedApplication({ ...row, job_id: id })}
                 data-testid="job-postings-grid"
             >
                 <div className="flex items-center justify-between sm:flex-row flex-col gap-[20px]">
@@ -509,26 +567,23 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                         }`}
                 >
                     <FilterTool
-                        selectedAIScoring={selectedAIScoring}
-                        selectedShortListed={selectedShortListed}
-                        selectedStatuses={selectedStatuses}
-                        setSelectedAIScoring={setSelectedAIScoring}
-                        setSelectedShortListed={setSelectedShortListed}
-                        setSelectedStatuses={setSelectedStatuses}
+                        selectedTypes={selectedTypes}
+                        setSelectedTypes={setSelectedTypes}
                     />
                 </div>
-                {loading ? <LoadingSpinner content='Loading Applicants' /> : <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
+                {loading ? <LoadingSpinner content='Loading Employees' /> : <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     <> {sortedData.length === 0 ?
                         <NoData data-testid="no-data-message" /> : <>
                             {selectedRows.length > 0 &&
                                 <SelectedDialog
-                                    getData={getData}
                                     selectedRows={selectedRows}
                                     totalCount={sortedData?.length}
                                     allData={sortedData}
                                     setSelectedRows={setSelectedRows}
                                     setRowSelection={setRowSelection}
                                     setIsMessage={setIsMessage}
+                                    setIsAssignManager={setIsAssignManager}
+                                    setIsAddToTeam={setIsAddToTeam}
                                     data-testid="selected-dialog"
                                 />
                             }
@@ -545,12 +600,7 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                     </>
                 </div>}
             </DataGrid>
-            <Detail
-                open={selectedApplication !== null}
-                onOpenChange={handleOpenChange}
-                selectedApplication={selectedApplication}
-                getData={getData}
-            />
+
             <Dialog open={progress > 0 && progress < 100}>
                 <DialogContent className='max-w-[313px]' close={false}>
                     <DialogTitle />
@@ -570,6 +620,49 @@ export default function Applicants({ id, setApplicantCount }: { id: string, setA
                 open={isMessage}
                 onOpenChange={setIsMessage}
             />
+            <Dialog open={isAddToTeam} onOpenChange={setIsAddToTeam}>
+                <DialogContent className='max-w-[505px]' close={false}>
+                    <DialogTitle></DialogTitle>
+                    <div>
+                        <p className='text-[18px]/[22px] font-medium text-[#353535]'>Add to Team</p>
+                        <Select>
+                            <SelectTrigger className='mt-[16px] h-[48px]'>
+                                <SelectValue placeholder="Select a team" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="team1">Team 1</SelectItem>
+                                <SelectItem value="team2">Team 2</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <div className='flex gap-[20px] mt-[22px]'>
+                            <Button variant="outline" className='w-full' onClick={() => setIsAddToTeam(false)}>Cancel</Button>
+                            <Button className='w-full'>Add to Team</Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+            <Dialog open={isAssignManager} onOpenChange={setIsAssignManager}>
+                <DialogContent className='max-w-[505px]' close={false}>
+                    <DialogTitle></DialogTitle>
+                    <div>
+                        <p className='text-[18px]/[22px] font-medium text-[#353535]'>Assign Manager</p>
+                        <p className='text-[14px]/[18px] text-[#787878] mt-[5px]'>Assigning a Manager links an employee to a direct supervisor responsible for their reviews and approvals, replacing any existing manager (if any). </p>
+                        <Select>
+                            <SelectTrigger className='mt-[16px] h-[48px]'>
+                                <SelectValue placeholder="Select Manager" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="manager1">Manager 1</SelectItem>
+                                <SelectItem value="manager2">Manager 2</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <div className='flex gap-[20px] mt-[22px]'>
+                            <Button variant="outline" className='w-full' onClick={() => setIsAssignManager(false)}>Cancel</Button>
+                            <Button className='w-full'>Assign</Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
 
     );

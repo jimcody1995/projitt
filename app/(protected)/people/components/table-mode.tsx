@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import SuspendedTable from "./suspended-table";
 import { Search } from "lucide-react";
 import OnboardingTable from "./onboarding-table";
 import OffboardingTable from "./offboarding-table";
+import ActiveTable from "./active-table";
 
 /**
  * @description
@@ -86,6 +87,7 @@ export default function TableMode() {
                     />
                 </div>
             </div>
+            {activeSection === 'active' && <ActiveTable />}
             {activeSection === 'suspended' && <SuspendedTable />}
             {activeSection === 'onboarding' && <OnboardingTable />}
             {activeSection === 'offboarding' && <OffboardingTable />}
