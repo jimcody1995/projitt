@@ -91,6 +91,7 @@ export default function SuspendedTable() {
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [message, setMessage] = useState<string>('');
+    const [loading, setLoading] = useState(false);
 
     const filteredData = useMemo<any[]>(() => {
         return data.filter((item) => {

@@ -37,6 +37,7 @@ export default function OffboardingTable() {
     const [sorting, setSorting] = useState<SortingState>([
         { id: 'lastSession', desc: true },
     ]);
+    const [loading, setLoading] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
     const [data, setData] = useState<any[]>([{
         id: 1,
