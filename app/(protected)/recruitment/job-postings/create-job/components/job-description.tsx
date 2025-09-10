@@ -8,9 +8,10 @@
 
 import 'react-quill-new/dist/quill.snow.css';
 import dynamic from 'next/dynamic';
-import { useState, useRef, JSX } from 'react';
-import { CheckLine, Cloud, File, HardDrive, Link, Loader2, Redo, Undo, Smile } from 'lucide-react';
+import { useState, useRef, JSX, useEffect } from 'react';
+import { CheckLine, Cloud, File, HardDrive, Link, Loader2, Redo, Undo, Smile, ChevronLeft } from 'lucide-react';
 import data from '@emoji-mart/data';
+import { ChevronRight } from 'lucide-react';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), {
     ssr: false,
@@ -26,9 +27,10 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { uploadMedia } from '@/api/media';
+import { getFileFromServer, uploadMedia } from '@/api/media';
 import { customToast } from '@/components/common/toastr';
 import { Skeleton } from '@/components/ui/skeleton';
+import LoadingSpinner from '@/components/common/loading-spinner';
 
 interface JobData {
     title: string;
@@ -72,9 +74,13 @@ export default function JobDescription({
     const [selectedStyle, setSelectedStyle] = useState<string>('Formal');
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
     const [fileUploading, setFileUploading] = useState(false);
+    const [page, setPage] = useState<number>(1);
+    const [totalPgae, setTotalPgae] = useState<number>(1);
+    const [files, setFiles] = useState<any[]>([]);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const quillRef = useRef<HTMLDivElement | null>(null);
-
+    const [isSelectFileFromServer, setIsSelectFileFromServer] = useState<boolean>(false);
+    const [filesLoading, setFilesLoading] = useState<boolean>(false);
     /**
      * Handles file input changes
      */
@@ -117,7 +123,20 @@ export default function JobDescription({
         }
     };
 
+    useEffect(() => {
+        handleGetFileFromServer();
+    }, [page]);
 
+    const handleGetFileFromServer = async (): Promise<void> => {
+        setFiles([]);
+        setFilesLoading(true);
+        const response = await getFileFromServer(page);
+        if (response.data?.status && response.data?.data) {
+            setFiles(response.data.data.data);
+            setTotalPgae(response.data.data.last_page);
+        }
+        setFilesLoading(false);
+    }
 
     /**
      * Inserts emoji at cursor position in Quill editor
@@ -467,10 +486,31 @@ export default function JobDescription({
                                         <HardDrive className="size-[25px] text-[#0d978b]" />
                                         <span className="text-[14px]/[20px] text-[#4b4b4b]">{fileUploading ? <><Loader2 className="size-[20px] animate-spin" /></> : 'From Local'}</span>
                                     </button>
-                                    <button className='flex flex-col w-full items-center gap-[10px] border-[#717171] border-dashed border rounded-[6.52px] py-[10px] hover:border-[#0d978b] hover:bg-[#dcfffc] cursor-pointer' onClick={() => { }}>
+                                    <button className='flex flex-col w-full items-center gap-[10px] border-[#717171] border-dashed border rounded-[6.52px] py-[10px] hover:border-[#0d978b] hover:bg-[#dcfffc] cursor-pointer' onClick={() => { setIsSelectFileFromServer(true) }}>
                                         <Cloud className="size-[25px] text-[#0d978b]" />
                                         <span className="text-[14px]/[20px] text-[#4b4b4b]">From Server</span>
                                     </button>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+
+                        <Dialog open={isSelectFileFromServer} onOpenChange={setIsSelectFileFromServer}>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Select File from the server</DialogTitle>
+                                </DialogHeader>
+                                <div className='flex flex-col gap-[10px] w-full mt-[10px]'>
+                                    {filesLoading ? <LoadingSpinner content='Loading files...' /> : files.map((file) => (
+                                        <div key={file.id} className='flex items-center gap-[10px] cursor-pointer border border-[#e9e9e9] rounded-[6.52px] px-[10px] py-[5px] hover:border-[#0d978b] hover:bg-[#dcfffc]' onClick={() => { setJobData((prev: JobData) => ({ ...prev, media: [...(prev.media || []), file] })); setIsSelectFileFromServer(false) }}>
+                                            <File className="size-[16px] text-[#0d978b]" />
+                                            <span>{file.original_name}</span>
+                                        </div>
+                                    ))}
+                                    <div className='flex justify-center gap-[10px] items-center mt-[10px]'>
+                                        <Button variant='outline' onClick={() => { setPage(page - 1) }} disabled={page === 1}><ChevronLeft className="size-[16px]" /></Button>
+                                        <Button variant='outline'>Page {page} of {totalPgae}</Button>
+                                        <Button variant='outline' onClick={() => { setPage(page + 1) }} disabled={page === totalPgae}><ChevronRight className="size-[16px]" /></Button>
+                                    </div>
                                 </div>
                             </DialogContent>
                         </Dialog>
