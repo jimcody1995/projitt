@@ -1,11 +1,12 @@
 'use client'
+import React from "react";
 import { Button } from "@/components/ui/button";
 import FileDropUpload from "./file-drop-upload";
 interface FileWithUrl {
     name: string;
     url: string;
 }
-export default function SelectFile({ setFile, file, setCurrentStep }: { setFile: (file: File | null) => void, file: File | FileWithUrl | null, setCurrentStep: (step: number) => void }) {
+export default function SelectFile({ setFile, file, setCurrentStep }: { setFile: React.Dispatch<React.SetStateAction<File | FileWithUrl | null>>, file: File | FileWithUrl | null, setCurrentStep: (step: number) => void }) {
     return (
         <div className="md:w-[555px] w-full">
             <p className="text-[20px]/[30px] font-semibold text-[#1c1c1c]">Select File</p>
