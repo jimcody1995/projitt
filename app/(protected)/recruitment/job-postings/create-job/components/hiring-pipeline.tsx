@@ -191,100 +191,102 @@ export default function HiringPipeline({ disabled = false }: { disabled?: boolea
                                 </div>
                             </div>
                         </div>
-                        <Dialog>
-                            <DialogContent>
-                                <p className="text-[14px]/[22px] text-black">Add Stage</p>
-                                <div>
-                                    <p className="text-[12px]/[16px] text-[#1c1c1c]">Stage Name</p>
-                                    <EditableSelect
-                                        value={pipeline[selectedStep].title}
-                                        onValueChange={(value) => {
-                                            const newPipeline = [...pipeline];
-                                            newPipeline[selectedStep].title = value;
-                                            setPipeLine(newPipeline);
-                                        }}
-                                        options={[
-                                            { value: "Application Review", label: "Application Review" },
-                                            { value: "Phone Screening", label: "Phone Screening" },
-                                            { value: "Technical Interview", label: "Technical Interview" },
-                                            { value: "Final Interview", label: "Final Interview" },
-                                            { value: "Reference Check", label: "Reference Check" },
-                                            { value: "Offer", label: "Offer" },
-                                            { value: "Hired", label: "Hired" },
-                                        ]}
-                                        placeholder="Enter stage name"
-                                        searchPlaceholder="Search stage names..."
-                                        allowCustom={true}
-                                        customPlaceholder="Enter custom stage name..."
-                                        dataTestId="stage-name-editable-select"
-                                    />
+                        {selectedStep !== null && (
+                            <Dialog>
+                                <DialogContent>
+                                    <p className="text-[14px]/[22px] text-black">Add Stage</p>
+                                    <div>
+                                        <p className="text-[12px]/[16px] text-[#1c1c1c]">Stage Name</p>
+                                        <EditableSelect
+                                            value={pipeline[selectedStep].title}
+                                            onValueChange={(value) => {
+                                                const newPipeline = [...pipeline];
+                                                newPipeline[selectedStep].title = value;
+                                                setPipeLine(newPipeline);
+                                            }}
+                                            options={[
+                                                { value: "Application Review", label: "Application Review" },
+                                                { value: "Phone Screening", label: "Phone Screening" },
+                                                { value: "Technical Interview", label: "Technical Interview" },
+                                                { value: "Final Interview", label: "Final Interview" },
+                                                { value: "Reference Check", label: "Reference Check" },
+                                                { value: "Offer", label: "Offer" },
+                                                { value: "Hired", label: "Hired" },
+                                            ]}
+                                            placeholder="Enter stage name"
+                                            searchPlaceholder="Search stage names..."
+                                            allowCustom={true}
+                                            customPlaceholder="Enter custom stage name..."
+                                            dataTestId="stage-name-editable-select"
+                                        />
 
-                                    <p className="text-[12px]/[16px] text-[#1c1c1c] mt-[18px]">Type</p>
-                                    <Select
-                                        value={pipeline[selectedStep].type}
-                                        onValueChange={(value) => {
-                                            const newPipeline = [...pipeline];
-                                            newPipeline[selectedStep].type = value;
-                                            setPipeLine(newPipeline);
-                                        }}
-                                    >
-                                        <SelectTrigger data-test-id="stage-type-select-trigger">
-                                            <SelectValue placeholder="Select a type" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="live-interview">Live Interview</SelectItem>
-                                            <SelectItem value="psychometric-test">Psychometric Test</SelectItem>
-                                            <SelectItem value="coding-interview">Coding Interview</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <p className="text-[12px]/[16px] text-[#1c1c1c] mt-[18px]">Sub Type</p>
-                                    <Select
-                                        value={pipeline[selectedStep].test}
-                                        onValueChange={(value) => {
-                                            const newPipeline = [...pipeline];
-                                            newPipeline[selectedStep].test = value;
-                                            setPipeLine(newPipeline);
-                                        }}
-                                    >
-                                        <SelectTrigger data-test-id="stage-test-select-trigger">
-                                            <SelectValue placeholder="Select a sub type" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {pipeline[selectedStep].type === "live-interview" && (
-                                                <>
-                                                    <SelectItem value="screening-interview">Screening Interview</SelectItem>
-                                                    <SelectItem value="behavioral-interview">Behavioral Interview</SelectItem>
-                                                    <SelectItem value="situational-interview">Situational Interview</SelectItem>
-                                                    <SelectItem value="panel-interview">Panel Interview</SelectItem>
-                                                    <SelectItem value="one-on-one-interview">One-on-One Interview</SelectItem>
-                                                </>
-                                            )}
-                                            {pipeline[selectedStep].type === "psychometric-test" && (
-                                                <>
-                                                    <SelectItem value="cultural-fit">Cultural Fit</SelectItem>
-                                                    <SelectItem value="psychometric-assessment">Psychometric Assessment</SelectItem>
-                                                    <SelectItem value="personality-test">Personality Test</SelectItem>
-                                                    <SelectItem value="aptitude-test">Aptitude Test</SelectItem>
-                                                    <SelectItem value="emotional-intelligence">Emotional Intelligence</SelectItem>
-                                                </>
-                                            )}
-                                            {pipeline[selectedStep].type === "coding-interview" && (
-                                                <>
-                                                    <SelectItem value="coding-assessment">Coding Assessment</SelectItem>
-                                                    <SelectItem value="technical-test">Technical Test</SelectItem>
-                                                    <SelectItem value="algorithm-challenge">Algorithm Challenge</SelectItem>
-                                                    <SelectItem value="system-design">System Design</SelectItem>
-                                                    <SelectItem value="code-review">Code Review</SelectItem>
-                                                </>
-                                            )}
-                                            {!pipeline[selectedStep].type && (
-                                                <SelectItem value="" disabled>Please select a type first</SelectItem>
-                                            )}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </DialogContent>
-                        </Dialog>
+                                        <p className="text-[12px]/[16px] text-[#1c1c1c] mt-[18px]">Type</p>
+                                        <Select
+                                            value={pipeline[selectedStep].type}
+                                            onValueChange={(value) => {
+                                                const newPipeline = [...pipeline];
+                                                newPipeline[selectedStep].type = value;
+                                                setPipeLine(newPipeline);
+                                            }}
+                                        >
+                                            <SelectTrigger data-test-id="stage-type-select-trigger">
+                                                <SelectValue placeholder="Select a type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="live-interview">Live Interview</SelectItem>
+                                                <SelectItem value="psychometric-test">Psychometric Test</SelectItem>
+                                                <SelectItem value="coding-interview">Coding Interview</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <p className="text-[12px]/[16px] text-[#1c1c1c] mt-[18px]">Sub Type</p>
+                                        <Select
+                                            value={pipeline[selectedStep].test}
+                                            onValueChange={(value) => {
+                                                const newPipeline = [...pipeline];
+                                                newPipeline[selectedStep].test = value;
+                                                setPipeLine(newPipeline);
+                                            }}
+                                        >
+                                            <SelectTrigger data-test-id="stage-test-select-trigger">
+                                                <SelectValue placeholder="Select a sub type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {pipeline[selectedStep].type === "live-interview" && (
+                                                    <>
+                                                        <SelectItem value="screening-interview">Screening Interview</SelectItem>
+                                                        <SelectItem value="behavioral-interview">Behavioral Interview</SelectItem>
+                                                        <SelectItem value="situational-interview">Situational Interview</SelectItem>
+                                                        <SelectItem value="panel-interview">Panel Interview</SelectItem>
+                                                        <SelectItem value="one-on-one-interview">One-on-One Interview</SelectItem>
+                                                    </>
+                                                )}
+                                                {pipeline[selectedStep].type === "psychometric-test" && (
+                                                    <>
+                                                        <SelectItem value="cultural-fit">Cultural Fit</SelectItem>
+                                                        <SelectItem value="psychometric-assessment">Psychometric Assessment</SelectItem>
+                                                        <SelectItem value="personality-test">Personality Test</SelectItem>
+                                                        <SelectItem value="aptitude-test">Aptitude Test</SelectItem>
+                                                        <SelectItem value="emotional-intelligence">Emotional Intelligence</SelectItem>
+                                                    </>
+                                                )}
+                                                {pipeline[selectedStep].type === "coding-interview" && (
+                                                    <>
+                                                        <SelectItem value="coding-assessment">Coding Assessment</SelectItem>
+                                                        <SelectItem value="technical-test">Technical Test</SelectItem>
+                                                        <SelectItem value="algorithm-challenge">Algorithm Challenge</SelectItem>
+                                                        <SelectItem value="system-design">System Design</SelectItem>
+                                                        <SelectItem value="code-review">Code Review</SelectItem>
+                                                    </>
+                                                )}
+                                                {!pipeline[selectedStep].type && (
+                                                    <SelectItem value="" disabled>Please select a type first</SelectItem>
+                                                )}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        )}
                         {selectedStep !== null && (
                             <div className="xl:w-[273px] w-full lg:order-2 order-1 bg-white border-l border-[#e9e9e9] py-[27px] px-[20px]" data-test-id="stage-details-panel">
                                 <p className="text-[14px]/[22px] text-black">Stage Details</p>
