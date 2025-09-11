@@ -79,7 +79,7 @@ export default function People() {
                         <div
                             className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                             data-testid={`view-applicants-action`}
-                        // onClick={() => setSelectedApplication(row.original.id)}
+                            onClick={() => router.push('/people/new-employee')}
                         >
                             Add New Employee
                         </div>

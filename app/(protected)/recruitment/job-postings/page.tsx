@@ -321,7 +321,7 @@ export default function JobPostings() {
                         className="text-[14px] text-[#4b4b4b]"
                         data-testid={`applicants-${row.original.id}`}
                     >
-                        {row.original.applicants}
+                        {row.original.applicant_count}
                     </span>
                 ),
                 enableSorting: false,
