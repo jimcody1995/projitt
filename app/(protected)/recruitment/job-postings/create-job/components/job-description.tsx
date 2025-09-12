@@ -403,7 +403,7 @@ export default function JobDescription({
                             placeholder="Enter the job description..."
                             theme="snow"
                             modules={modules}
-                            className="w-full h-[400px] rounded-[12px]"
+                            className="w-full h-[400px]"
                             id="job-description-editor"
                             data-testid="job-description-editor"
                             readOnly={disabled}
