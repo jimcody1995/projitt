@@ -50,7 +50,7 @@ export default function CalendarMode({ interviews, loading, getData }: { intervi
         const eventsBy: Record<string, any[]> = {};
         console.log(interviews);
         if (interviews?.length > 0) {
-            interviews.forEach((event: any) => {
+            interviews.filter((event: any) => event.status !== 'cancel').forEach((event: any) => {
                 // Debug: Log the original date and how it's being processed
                 console.log('Original date:', event.date);
 
