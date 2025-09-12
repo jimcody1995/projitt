@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { formatMonthYear, formatDateYYYYMMDD, utcToLocal, addMonth, subtractMonth, formatMonthAndDay } from '@/lib/date-utils';
+import { formatMonthYear, formatDateYYYYMMDD, addMonth, subtractMonth, formatMonthAndDay } from '@/lib/date-utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar, EllipsisVertical, User, Video } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 
 import Reschedule from './reschedule';
 import CancelInterview from './cancel-interview';
+import moment from 'moment';
 
 // Placeholder data (replace with props or context as needed)
 
@@ -52,17 +53,7 @@ export default function CalendarMode({ interviews, loading }: { interviews: any[
                 console.log('Original date:', event.date);
 
                 // Try different approaches to handle the date
-                let key;
-                if (event.date.includes('T00:00:00')) {
-                    // If it's a date-only string (no time), parse it directly
-                    const dateOnly = event.date.split('T')[0];
-                    key = formatDateYYYYMMDD(new Date(dateOnly));
-                } else {
-                    // For datetime strings, use UTC parsing and convert to local
-                    const utcDate = new Date(event.date);
-                    const localDate = utcToLocal(utcDate);
-                    key = formatDateYYYYMMDD(localDate);
-                }
+                const key = moment(event.date).format('YYYY-MM-DD');
 
                 if (!eventsBy[key]) eventsBy[key] = [];
                 eventsBy[key].push(event);

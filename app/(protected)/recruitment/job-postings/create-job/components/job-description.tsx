@@ -31,6 +31,7 @@ import { getFileFromServer, uploadMedia } from '@/api/media';
 import { customToast } from '@/components/common/toastr';
 import { Skeleton } from '@/components/ui/skeleton';
 import LoadingSpinner from '@/components/common/loading-spinner';
+import { getDescription } from '@/api/job-posting';
 
 interface JobData {
     title: string;
@@ -81,6 +82,7 @@ export default function JobDescription({
     const quillRef = useRef<HTMLDivElement | null>(null);
     const [isSelectFileFromServer, setIsSelectFileFromServer] = useState<boolean>(false);
     const [filesLoading, setFilesLoading] = useState<boolean>(false);
+    const [loadingDescription, setLoadingDescription] = useState<boolean>(false);
     /**
      * Handles file input changes
      */
@@ -136,6 +138,26 @@ export default function JobDescription({
             setTotalPgae(response.data.data.last_page);
         }
         setFilesLoading(false);
+    }
+
+    useEffect(() => {
+        handleGetLastDescription();
+    }, []);
+
+    const handleGetLastDescription = async (): Promise<void> => {
+        setLoadingDescription(true)
+        try {
+            const response = await getDescription();
+            if (response.data?.status && response.data?.data) {
+                setJobData((prev: JobData) => ({ ...prev, description: response.data.data }));
+            }
+        } catch (error) {
+            console.error('Error getting last description:', error);
+            customToast('Error', 'Error getting last description. Please try again.', 'error');
+        }
+        finally {
+            setLoadingDescription(false)
+        }
     }
 
     /**
@@ -371,7 +393,7 @@ export default function JobDescription({
                     </div>
                 )}
 
-                {loading ? (
+                {loading || loadingDescription ? (
                     <Skeleton className="w-full h-[400px] rounded-[12px]" />
                 ) : (
                     <div ref={quillRef}>

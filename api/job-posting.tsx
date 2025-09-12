@@ -50,6 +50,31 @@ export const changeJobStatusMultiple = async (ids: string[], status: string) => 
     return response.data;
 }
 
+export const addStageApi = async (stageName: string, type: number, subType: number, jobId: number | null) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/stage-add`, { name: stageName, type_id: type, sub_type_id: subType, job_id: jobId });
+    return response.data;
+}
+
+export const removeStageApi = async (id: number) => {
+    const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/stage-delete`, { data: { ids: [id] } });
+    return response.data;
+}
+
+export const getDescription = async () => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/intellisense-search`);
+    return response.data;
+}
+
+export const getPipeline = async (jobId: number) => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/stage`, { params: { job_id: jobId } });
+    return response.data;
+}
+
+export const savePipelineApi = async (jobId: number, pipeline: any) => {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/job/stage-change-order`, { job_id: jobId, order: pipeline });
+    return response.data;
+}
+
 // Question management APIs
 export const addQuestionItem = async (data: {
     question_name: string;

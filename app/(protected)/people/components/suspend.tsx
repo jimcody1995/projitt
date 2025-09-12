@@ -76,14 +76,14 @@ export default function Suspend({ open, onOpenChange, setMessage }: DetailProps)
                                     variant="outline"
                                     id="date"
                                     className={cn(
-                                        'w-full h-[48px] data-[state=open]:border-primary rounded-[10px] border-[#bcbcbc]',
+                                        'w-full flex justify-start h-[48px] data-[state=open]:border-primary rounded-[10px] border-[#bcbcbc]',
                                     )}
                                 >
                                     <CalendarDays className="-ms-0.5" />
                                     {selectedDate ? moment(selectedDate).format('MMM DD, YYYY') : 'Pick a date'}
                                 </Button>
                             </PopoverTrigger>
-                            <PopoverContent>
+                            <PopoverContent className="w-auto p-0">
                                 <Calendar
                                     mode="single"
                                     defaultMonth={selectedDate || new Date()}

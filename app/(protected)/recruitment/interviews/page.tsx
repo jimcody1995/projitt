@@ -73,7 +73,7 @@ export default function Interviews() {
         <div >
             <div className="mt-[15px] relative" data-testid="interviews-content">
                 {interviews && activeTab === 'calendar' && <CalendarMode interviews={interviews} loading={loading} />}
-                {activeTab === 'table' && <TableMode interviews={interviews} setSelectedApplication={setSelectedApplication} data-testid="table-mode-component" loading={loading} />}
+                {activeTab === 'table' && <TableMode getData={getData} interviews={interviews} setSelectedApplication={setSelectedApplication} data-testid="table-mode-component" loading={loading} />}
                 {loading && (
                     <div className='absolute top-0 left-0 w-full h-full min-h-[500px] flex items-center justify-center '>
                         <LoadingSpinner content='Loading Interviews...' />

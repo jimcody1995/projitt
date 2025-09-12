@@ -1,8 +1,11 @@
 'use client';
 
+import { cancelInterviewApi } from "@/api/interviews";
+import { customToast } from "@/components/common/toastr";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Info } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 /**
  * @description
@@ -12,7 +15,23 @@ import { Info } from "lucide-react";
  * It provides a visual cue with an `Info` icon to indicate that the user is about to perform a significant action.
  * Unique `data-testid` and `id` attributes have been added to the buttons and main dialog content to support UI test automation.
  */
-export default function CancelInterview({ open, setOpen }: { open: boolean, setOpen: (open: boolean) => void }) {
+export default function CancelInterview({ getData, open, setOpen, selectedCancel }: { getData: () => void, open: boolean, setOpen: (open: boolean) => void, selectedCancel: any }) {
+    const [loading, setLoading] = useState(false);
+    const cancelInterview = async () => {
+        setLoading(true);
+        try {
+            await cancelInterviewApi({ id: selectedCancel, status: 'cancel' });
+            customToast('Success', 'Interview cancelled successfully', 'success');
+            setOpen(false);
+            getData();
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+            customToast('Error', errorMessage, 'error');
+        }
+        finally {
+            setLoading(false);
+        }
+    }
     return <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent close={false} className="max-w-[383px]" data-testid="cancel-interview-dialog">
             <div className="flex flex-col items-center justify-center">
@@ -28,16 +47,20 @@ export default function CancelInterview({ open, setOpen }: { open: boolean, setO
                         onClick={() => setOpen(false)}
                         data-testid="no-go-back-button"
                         id="no-go-back-button"
+                        disabled={loading}
                     >
                         No, Go Back
                     </Button>
                     <Button
                         className="w-full"
-                        onClick={() => setOpen(false)}
+                        onClick={() => {
+                            cancelInterview();
+                        }}
                         data-testid="yes-cancel-button"
                         id="yes-cancel-button"
+                        disabled={loading}
                     >
-                        Yes, Cancel Interview
+                        {loading ? <Loader2 className="size-[16px] animate-spin" /> : "Yes, Cancel Interview"}
                     </Button>
                 </div>
             </div>

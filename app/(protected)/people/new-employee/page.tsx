@@ -31,7 +31,7 @@ export default function NewEmployee() {
     return (
         <div className="w-full h-full">
             <div>
-                <div className="flex w-full justify-between items-center px-[8px] py-[6px]">
+                <div className="flex w-full sm:flex-row flex-col gap-[20px] justify-between items-center px-[8px] py-[6px]">
                     <div className="flex flex-col gap-[4px]">
                         <p className="text-[12px]/[20px] text-[#A5A5A5]">Employeee <span className="text-[#0d978b]">/ Add New Employee</span></p>
                         <p className="text-[24px]/[30px] font-semibold text-[#353535]">Add New Employee</p>

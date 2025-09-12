@@ -33,6 +33,7 @@ import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import Reschedule from "./reschedule";
 import CancelInterview from "./cancel-interview";
 import { useBasic } from "@/context/BasicContext";
+import moment from "moment";
 
 /**
  * @description
@@ -42,7 +43,7 @@ import { useBasic } from "@/context/BasicContext";
  * The component also includes search functionality, a filter sidebar, and pagination.
  * It uses `@tanstack/react-table` for efficient data table management and provides unique `data-testid` attributes for UI test automation.
  */
-export default function TableMode({ setSelectedApplication, interviews, loading }: { setSelectedApplication: (id: string) => void, interviews: any[], loading: boolean }) {
+export default function TableMode({ getData, setSelectedApplication, interviews, loading }: { getData: () => void, setSelectedApplication: (id: string) => void, interviews: any[], loading: boolean }) {
     const [activeSection, setActiveSection] = useState<'upcoming' | 'pending' | 'past'>('upcoming');
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -58,6 +59,8 @@ export default function TableMode({ setSelectedApplication, interviews, loading 
     const [selectedMode, setSelectedMode] = useState<string[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
+    const [selectedReschedule, setSelectedReschedule] = useState<any>(null);
+    const [selectedCancel, setSelectedCancel] = useState<any>(null);
     const [nameFilter, setNameFilter] = useState<string>('');
     const { country } = useBasic()
 
@@ -76,17 +79,17 @@ export default function TableMode({ setSelectedApplication, interviews, loading 
         return {
             upcoming: interviews.filter(interview => {
                 // Parse date-only part to avoid timezone issues
-                const interviewDate = createDateFromString(interview.date.split('T')[0]);
+                const interviewDate = createDateFromString(moment(interview.date).format('YYYY-MM-DD'));
                 return isSameOrAfterDate(interviewDate, tomorrow);
             }),
             pending: interviews.filter(interview => {
                 // Parse date-only part to avoid timezone issues
-                const interviewDate = createDateFromString(interview.date.split('T')[0]);
+                const interviewDate = createDateFromString(moment(interview.date).format('YYYY-MM-DD'));
                 return isSameDate(interviewDate, today);
             }),
             past: interviews.filter(interview => {
                 // Parse date-only part to avoid timezone issues
-                const interviewDate = createDateFromString(interview.date.split('T')[0]);
+                const interviewDate = createDateFromString(moment(interview.date).format('YYYY-MM-DD'));
                 return isBeforeDate(interviewDate, today);
             })
         };
@@ -297,14 +300,14 @@ export default function TableMode({ setSelectedApplication, interviews, loading 
                 ),
                 cell: ({ row }: { row: any }) => {
                     // Parse the date and treat it as a date-only value (ignore timezone conversion)
-                    const date = createDateFromString(row.original.date.split('T')[0]);
+
 
                     return (
                         <div data-testid={`interview-date-${row.original.id}`}>
                             <p
                                 className="text-[14px]/[22px] text-[#4b4b4b]"
                             >
-                                {formatDateWithComma(date)}
+                                {formatDateWithComma(moment(row.original.date).format('YYYY-MM-DD'))}
                             </p>
                             {/* <p
                                 className="text-[11px]/[14px] text-[#8f8f8f]"
@@ -408,14 +411,16 @@ export default function TableMode({ setSelectedApplication, interviews, loading 
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`reschedule-action-${row.original.id}`}
-                        onClick={e => { e.stopPropagation(); setRescheduleOpen(true); }}
+                        onClick={e => {
+                            e.stopPropagation(); setRescheduleOpen(true); setSelectedReschedule(row.original); console.log(row.original);
+                        }}
                     >
                         Reschedule
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`cancel-interview-action-${row.original.id}`}
-                        onClick={e => { e.stopPropagation(); setCancelOpen(true); }}
+                        onClick={e => { e.stopPropagation(); setSelectedCancel(row.original.id); setCancelOpen(true); }}
                     >
                         Cancel Interview
                     </div>
@@ -570,8 +575,8 @@ export default function TableMode({ setSelectedApplication, interviews, loading 
                         </>
                     </div>
                 </DataGrid>
-                <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
-                <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
+                <Reschedule getData={getData} open={rescheduleOpen} setOpen={setRescheduleOpen} selectedReschedule={selectedReschedule} />
+                <CancelInterview getData={getData} open={cancelOpen} setOpen={setCancelOpen} selectedCancel={selectedCancel} />
             </div>
         </div>
     );

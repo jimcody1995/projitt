@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Publish from "./components/publish";
 import Completed from "./components/completed";
 import { addNewJobTitle, getDesignation } from "@/api/basic"
-import { addNewDetailJob, editJobDescription, editDetailJob, getJobDetails, publishJob, editJobMedia } from "@/api/job-posting";
+import { addNewDetailJob, editJobDescription, editDetailJob, getJobDetails, publishJob, editJobMedia, savePipelineApi } from "@/api/job-posting";
 import { useBasic } from "@/context/BasicContext";
 import { errorHandlers } from "@/utils/error-handler";
 import { addMonth } from "@/lib/date-utils";
@@ -99,7 +99,7 @@ type JobDesciptionError = {
  */
 export default function CreateJob(): JSX.Element {
     const router = useRouter();
-    const [currentStep, setCurrentStep] = useState<number>(4);
+    const [currentStep, setCurrentStep] = useState<number>(1);
     const [jobData, setJobData] = useState<JobData>({
         title: '',
         department_id: '',
@@ -125,7 +125,7 @@ export default function CreateJob(): JSX.Element {
     const searchParams = useSearchParams();
     const applicantQuestionsRef = useRef<ApplicantQuestionsRef>(null);
     const [loading, setLoading] = useState<boolean>(false);
-
+    const [order, setOrder] = useState<any>([]);
     /**
      * Load job details when editing an existing job
      */
@@ -380,6 +380,7 @@ export default function CreateJob(): JSX.Element {
 
             if (currentStep === 4) {
                 if (shouldContinue) {
+                    await savePipeline(order);
                     setCurrentStep(currentStep + 1);
                 } else {
                     router.push('/recruitment/job-postings');
@@ -416,6 +417,22 @@ export default function CreateJob(): JSX.Element {
     const handleBack = () => {
         setCurrentStep(currentStep - 1);
     };
+
+    const savePipeline = async (order: any) => {
+        setIsLoading(true);
+        try {
+            const response = await savePipelineApi(searchParams.get('id') || 0, order);
+            console.log(response);
+        }
+        catch (error) {
+            errorHandlers.jobPosting(error);
+            setIsLoading(false);
+            return;
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
 
     /**
      * Handles transition to the next step with validation.
@@ -551,7 +568,7 @@ export default function CreateJob(): JSX.Element {
                                 />
                             )}
                             {currentStep === 3 && <ApplicantQuestions ref={applicantQuestionsRef} jobId={searchParams.get('id') || undefined} disabled={isLoading || isSavingContinue || isSavingExit} />}
-                            {currentStep === 4 && <HiringPipeline disabled={isLoading || isSavingContinue || isSavingExit} />}
+                            {currentStep === 4 && <HiringPipeline setOrder={setOrder} disabled={isLoading || isSavingContinue || isSavingExit} jobId={searchParams.get('id') || undefined} />}
                             {currentStep === 5 && <Publish onNavigateToStep={setCurrentStep} disabled={isLoading || isSavingContinue || isSavingExit} />}
                         </div>
                     </div>
