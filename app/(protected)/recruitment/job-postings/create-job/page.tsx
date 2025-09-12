@@ -421,7 +421,7 @@ export default function CreateJob(): JSX.Element {
     const savePipeline = async (order: any) => {
         setIsLoading(true);
         try {
-            const response = await savePipelineApi(searchParams.get('id') || 0, order);
+            const response = await savePipelineApi(Number(searchParams.get('id')) || 0, order);
             console.log(response);
         }
         catch (error) {
@@ -568,7 +568,7 @@ export default function CreateJob(): JSX.Element {
                                 />
                             )}
                             {currentStep === 3 && <ApplicantQuestions ref={applicantQuestionsRef} jobId={searchParams.get('id') || undefined} disabled={isLoading || isSavingContinue || isSavingExit} />}
-                            {currentStep === 4 && <HiringPipeline setOrder={setOrder} disabled={isLoading || isSavingContinue || isSavingExit} jobId={searchParams.get('id') || undefined} />}
+                            {currentStep === 4 && <HiringPipeline setOrder={setOrder} disabled={isLoading || isSavingContinue || isSavingExit} jobId={searchParams.get('id') ? Number(searchParams.get('id')) : null} />}
                             {currentStep === 5 && <Publish onNavigateToStep={setCurrentStep} disabled={isLoading || isSavingContinue || isSavingExit} />}
                         </div>
                     </div>

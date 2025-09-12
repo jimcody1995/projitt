@@ -51,7 +51,7 @@ export default function Reschedule({ getData, open, setOpen, selectedReschedule 
 
     useEffect(() => {
         setDate(selectedReschedule ? new Date(selectedReschedule.date) : null);
-        setTime(selectedReschedule?.time.slice(0, 5) || '09:00');
+        setTime(selectedReschedule?.time?.slice(0, 5) || '09:00');
     }, [selectedReschedule]);
 
     const reschedule = async () => {

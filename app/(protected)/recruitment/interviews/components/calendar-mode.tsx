@@ -35,10 +35,12 @@ function getDaysInMonth(year: number, month: number) {
     return days;
 }
 
-export default function CalendarMode({ interviews, loading }: { interviews: any[]; loading: boolean }) {
+export default function CalendarMode({ interviews, loading, getData }: { interviews: any[]; loading: boolean; getData: () => void }) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
+    const [selectedReschedule, setSelectedReschedule] = useState<any>(null);
+    const [selectedCancel, setSelectedCancel] = useState<any>(null);
     const days = getDaysInMonth(currentMonth.getFullYear(), currentMonth.getMonth());
     const monthLabel = formatMonthYear(currentMonth);
 
@@ -135,13 +137,19 @@ export default function CalendarMode({ interviews, loading }: { interviews: any[
                                                 >
                                                     <div
                                                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                                                        onClick={() => setRescheduleOpen(true)}
+                                                        onClick={() => {
+                                                            setSelectedReschedule(event);
+                                                            setRescheduleOpen(true);
+                                                        }}
                                                     >
                                                         Reschedule
                                                     </div>
                                                     <div
                                                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                                                        onClick={() => setCancelOpen(true)}
+                                                        onClick={() => {
+                                                            setSelectedCancel(event.id);
+                                                            setCancelOpen(true);
+                                                        }}
                                                     >
                                                         Cancel Interview
                                                     </div>
@@ -180,8 +188,18 @@ export default function CalendarMode({ interviews, loading }: { interviews: any[
                     );
                 })}
             </div>
-            <Reschedule open={rescheduleOpen} setOpen={setRescheduleOpen} />
-            <CancelInterview open={cancelOpen} setOpen={setCancelOpen} />
+            <Reschedule
+                open={rescheduleOpen}
+                setOpen={setRescheduleOpen}
+                selectedReschedule={selectedReschedule}
+                getData={getData}
+            />
+            <CancelInterview
+                open={cancelOpen}
+                setOpen={setCancelOpen}
+                selectedCancel={selectedCancel}
+                getData={getData}
+            />
         </div >
     );
 }
