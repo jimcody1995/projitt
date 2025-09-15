@@ -74,7 +74,9 @@ import Message from '../../recruitment/components/message';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import dynamic from 'next/dynamic';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useRouter } from 'next/navigation';
 export default function ActiveTable() {
+    const router = useRouter();
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -431,6 +433,7 @@ export default function ActiveTable() {
                         // onClick={() => setSelectedApplication(row.original.id)}
                         onClick={(e) => {
                             e.stopPropagation();
+                            router.push(`/people/profile?id=${row.original.id}`);
                         }}
                     >
                         View Profile

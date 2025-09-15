@@ -3,6 +3,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Banknote, ChevronDown, ChevronLeft, ChevronRight, Clock, File, LogOut, User, Users } from "lucide-react";
 import { useRef, useState } from "react";
 import Offboarding from "./components/offboarding";
+import PersonalInfomation from "./components/personalInfomation";
+import Documents from "./components/documents";
+import LeaveAttendence from "./components/leave-attendence";
+import TalentManagement from "./components/talent-management";
+import TaxPayroll from "./components/tax-payroll";
 
 export default function Detail() {
     const [activeSection, setActiveSection] = useState<'offboarding' | 'personal-information' | 'document' | 'leave-attendance' | 'talent-management' | 'tax-payroll'>('offboarding');
@@ -116,6 +121,11 @@ export default function Detail() {
             </div>
             <div className="mt-[27px]">
                 {activeSection === 'offboarding' && <Offboarding />}
+                {activeSection === 'personal-information' && <PersonalInfomation />}
+                {activeSection === 'document' && <Documents />}
+                {activeSection === 'leave-attendance' && <LeaveAttendence />}
+                {activeSection === 'talent-management' && <TalentManagement />}
+                {activeSection === 'tax-payroll' && <TaxPayroll />}
             </div>
         </div>
     </div>;
