@@ -177,25 +177,25 @@ export const DepartmentDialog = ({
 };
 
 // Individual dialog components for easier use
-export const CreateDepartmentDialog = ({ children, onConfirm }: { children: React.ReactNode; onConfirm: (data: { name: string }) => void }) => (
+export const CreateDepartmentDialog = ({ children, onConfirm }: { children: React.ReactNode; onConfirm: (data?: { name: string }) => void }) => (
     <DepartmentDialog type="create" onConfirm={onConfirm}>
         {children}
     </DepartmentDialog>
 );
 
-export const RenameDepartmentDialog = ({ children, departmentName, onConfirm }: { children: React.ReactNode; departmentName: string; onConfirm: (data: { name: string }) => void }) => (
+export const RenameDepartmentDialog = ({ children, departmentName, onConfirm }: { children: React.ReactNode; departmentName: string; onConfirm: (data?: { name: string }) => void }) => (
     <DepartmentDialog type="rename" departmentName={departmentName} onConfirm={onConfirm}>
         {children}
     </DepartmentDialog>
 );
 
-export const DeleteDepartmentDialog = ({ children, onConfirm }: { children: React.ReactNode; onConfirm: () => void }) => (
+export const DeleteDepartmentDialog = ({ children, onConfirm }: { children: React.ReactNode; onConfirm: (data?: { name: string }) => void }) => (
     <DepartmentDialog type="delete" onConfirm={onConfirm}>
         {children}
     </DepartmentDialog>
 );
 
-export const MergeDepartmentDialog = ({ children, mergeDepartments, onConfirm }: { children: React.ReactNode; mergeDepartments: string[]; onConfirm: (data: { name: string }) => void }) => (
+export const MergeDepartmentDialog = ({ children, mergeDepartments, onConfirm }: { children: React.ReactNode; mergeDepartments: string[]; onConfirm: (data?: { name: string }) => void }) => (
     <DepartmentDialog type="merge" mergeDepartments={mergeDepartments} onConfirm={onConfirm}>
         {children}
     </DepartmentDialog>

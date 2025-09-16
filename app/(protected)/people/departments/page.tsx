@@ -131,13 +131,21 @@ export default function DepartmentsPage() {
     }, []);
 
     // Dialog handlers
-    const handleCreateDepartment = useCallback(async (data: { name: string }) => {
+    const handleCreateDepartment = useCallback(async (data?: { name: string }) => {
+        if (!data?.name) {
+            console.error('Department name is required for creation');
+            return;
+        }
         console.log('Creating department:', data.name);
         // TODO: Implement create department API call
         getData();
     }, [getData]);
 
-    const handleRenameDepartment = useCallback(async (data: { name: string }) => {
+    const handleRenameDepartment = useCallback(async (data?: { name: string }) => {
+        if (!data?.name) {
+            console.error('Department name is required for renaming');
+            return;
+        }
         console.log('Renaming department to:', data.name);
         // TODO: Implement rename department API call
         getData();
@@ -149,7 +157,11 @@ export default function DepartmentsPage() {
         getData();
     }, [getData]);
 
-    const handleMergeDepartment = useCallback(async (data: { name: string }) => {
+    const handleMergeDepartment = useCallback(async (data?: { name: string }) => {
+        if (!data?.name) {
+            console.error('Department name is required for merging');
+            return;
+        }
         console.log('Merging departments to:', data.name);
         // TODO: Implement merge department API call
         getData();

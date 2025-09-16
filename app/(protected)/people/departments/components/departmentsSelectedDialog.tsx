@@ -45,7 +45,12 @@ export const DepartmentsSelectedDialog = ({
     // Check if any operation is in progress
     const isAnyLoading = mergeLoading || deleteLoading || exportLoading;
 
-    const handleMergeDepartments = async (data: { name: string }) => {
+    const handleMergeDepartments = async (data?: { name: string }) => {
+        if (!data?.name) {
+            customToast("Error", "Department name is required", "error");
+            return;
+        }
+
         setMergeLoading(true);
         try {
             // TODO: Implement merge departments API call
