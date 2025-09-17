@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { X, Download } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
@@ -14,16 +14,20 @@ interface PaystubSheetProps {
         bank: string;
         paymentMethod: string;
         earnings: {
-            baseSalary: string;
-            allowance: string;
-            overtime: string;
-            total: string;
+            standardPay: { hours: string; rate: string; current: string; ytd: string };
+            overtimePay: { hours: string; rate: string; current: string; ytd: string };
+            holidayPay: { hours: string; rate: string; current: string; ytd: string };
+            basicPay: { hours: string; rate: string; current: string; ytd: string };
+            commissionBonus: { hours: string; rate: string; current: string; ytd: string };
+            total: { current: string; ytd: string };
         };
         deductions: {
-            payeTax: string;
-            healthInsurance: string;
-            retirement401k: string;
-            total: string;
+            payeTax: { current: string; ytd: string };
+            nationalInsurance: { current: string; ytd: string };
+            studentLoan: { current: string; ytd: string };
+            pension: { current: string; ytd: string };
+            unionFees: { current: string; ytd: string };
+            total: { current: string; ytd: string };
         };
         netPay: {
             amount: string;
@@ -32,7 +36,7 @@ interface PaystubSheetProps {
     };
 }
 
-export default function PaystubSheet({ isOpen, onClose, paystubData }: PaystubSheetProps) {
+export default function PaystubSheet({ isOpen, onClose }: PaystubSheetProps) {
     // Default paystub data
     const defaultPaystubData = {
         payPeriod: 'May 1 - May 31, 2025',
@@ -40,19 +44,23 @@ export default function PaystubSheet({ isOpen, onClose, paystubData }: PaystubSh
         bank: 'Wells Fargo - 1232249218',
         paymentMethod: 'Direct Deposit',
         earnings: {
-            baseSalary: '$15,000.00',
-            allowance: '$1,500.00',
-            overtime: '$1,500.00',
-            total: '$18,000.00'
+            standardPay: { hours: '40', rate: '12.50', current: '500.00', ytd: '500.00' },
+            overtimePay: { hours: '5', rate: '18.75', current: '93.75', ytd: '93.75' },
+            holidayPay: { hours: '8', rate: '12.50', current: '100.00', ytd: '100.00' },
+            basicPay: { hours: '', rate: '', current: '1,740.00', ytd: '1,740.00' },
+            commissionBonus: { hours: '', rate: '', current: '600.00', ytd: '600.00' },
+            total: { current: '3,033.75', ytd: '3,033.75' }
         },
         deductions: {
-            payeTax: '$200.00',
-            healthInsurance: '$500.00',
-            retirement401k: '$300.00',
-            total: '$1,000.00'
+            payeTax: { current: '250.00', ytd: '250.00' },
+            nationalInsurance: { current: '55.00', ytd: '55.00' },
+            studentLoan: { current: '30.00', ytd: '30.00' },
+            pension: { current: '50.00', ytd: '50.00' },
+            unionFees: { current: '5.00', ytd: '5.00' },
+            total: { current: '390.00', ytd: '390.00' }
         },
         netPay: {
-            amount: '$18,000.00',
+            amount: '$2,643.75',
             deliveryInfo: 'Delivered via Direct Deposit on June 1, 2025'
         }
     };
@@ -100,22 +108,68 @@ export default function PaystubSheet({ isOpen, onClose, paystubData }: PaystubSh
                     {/* Earnings Section */}
                     <div className="space-y-[3px]">
                         <h3 className="text-[14px]/[26px] font-medium text-[#4b4b4b]">EARNINGS</h3>
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center py-[13px] px-[16px] border-b border-[#e9e9e9]">
-                                <span className="text-[#4b4b4b]">Base Salary</span>
-                                <span className="font-medium text-[#4b4b4b]">{data.earnings.baseSalary}</span>
+                        <div className="border border-[#e9e9e9] rounded-lg overflow-hidden">
+                            {/* Header */}
+                            <div className="grid grid-cols-5 bg-gray-50 py-3 px-4 text-[12px] font-medium text-[#4b4b4b] border-b border-[#e9e9e9]">
+                                <div>Description</div>
+                                <div className="text-center">Hours</div>
+                                <div className="text-center">Rate</div>
+                                <div className="text-center">Current ($)</div>
+                                <div className="text-center">YTD ($)</div>
                             </div>
-                            <div className="flex justify-between items-center py-[13px] px-[16px] border-b border-[#e9e9e9]">
-                                <span className="text-[#4b4b4b]">Allowance</span>
-                                <span className="font-medium text-[#4b4b4b]">{data.earnings.allowance}</span>
+
+                            {/* Standard Pay */}
+                            <div className="grid grid-cols-5 py-3 px-4 text-[12px] border-b border-[#e9e9e9]">
+                                <div className="text-[#4b4b4b]">Standard Pay</div>
+                                <div className="text-center text-[#4b4b4b]">{data.earnings.standardPay.hours}</div>
+                                <div className="text-center text-[#4b4b4b]">{data.earnings.standardPay.rate}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.earnings.standardPay.current}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.earnings.standardPay.ytd}</div>
                             </div>
-                            <div className="flex justify-between items-center py-[13px] px-[16px] border-b border-[#e9e9e9]">
-                                <span className="text-[#4b4b4b]">Overtime</span>
-                                <span className="font-medium text-[#4b4b4b]">{data.earnings.overtime}</span>
+
+                            {/* Overtime Pay */}
+                            <div className="grid grid-cols-5 py-3 px-4 text-[12px] border-b border-[#e9e9e9]">
+                                <div className="text-[#4b4b4b]">Overtime Pay</div>
+                                <div className="text-center text-[#4b4b4b]">{data.earnings.overtimePay.hours}</div>
+                                <div className="text-center text-[#4b4b4b]">{data.earnings.overtimePay.rate}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.earnings.overtimePay.current}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.earnings.overtimePay.ytd}</div>
                             </div>
-                            <div className="flex justify-between items-center py-[13px] px-[16px]  border-b border-[#e9e9e9]">
-                                <span className="font-semibold text-[#0D978B]">Total</span>
-                                <span className="font-bold text-[#0D978B] text-lg">{data.earnings.total}</span>
+
+                            {/* Holiday Pay */}
+                            <div className="grid grid-cols-5 py-3 px-4 text-[12px] border-b border-[#e9e9e9]">
+                                <div className="text-[#4b4b4b]">Holiday Pay</div>
+                                <div className="text-center text-[#4b4b4b]">{data.earnings.holidayPay.hours}</div>
+                                <div className="text-center text-[#4b4b4b]">{data.earnings.holidayPay.rate}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.earnings.holidayPay.current}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.earnings.holidayPay.ytd}</div>
+                            </div>
+
+                            {/* Basic Pay */}
+                            <div className="grid grid-cols-5 py-3 px-4 text-[12px] border-b border-[#e9e9e9]">
+                                <div className="text-[#4b4b4b]">Basic Pay</div>
+                                <div className="text-center text-[#4b4b4b]">{data.earnings.basicPay.hours}</div>
+                                <div className="text-center text-[#4b4b4b]">{data.earnings.basicPay.rate}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.earnings.basicPay.current}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.earnings.basicPay.ytd}</div>
+                            </div>
+
+                            {/* Commission and Bonus */}
+                            <div className="grid grid-cols-5 py-3 px-4 text-[12px] border-b border-[#e9e9e9]">
+                                <div className="text-[#4b4b4b]">Commission and Bonus</div>
+                                <div className="text-center text-[#4b4b4b]">{data.earnings.commissionBonus.hours}</div>
+                                <div className="text-center text-[#4b4b4b]">{data.earnings.commissionBonus.rate}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.earnings.commissionBonus.current}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.earnings.commissionBonus.ytd}</div>
+                            </div>
+
+                            {/* Total */}
+                            <div className="grid grid-cols-5 py-3 px-4 text-[12px] bg-gray-50">
+                                <div className="font-semibold text-[#0D978B]">Total</div>
+                                <div></div>
+                                <div></div>
+                                <div className="text-center font-bold text-[#0D978B]">{data.earnings.total.current}</div>
+                                <div className="text-center font-bold text-[#0D978B]">{data.earnings.total.ytd}</div>
                             </div>
                         </div>
                     </div>
@@ -123,22 +177,54 @@ export default function PaystubSheet({ isOpen, onClose, paystubData }: PaystubSh
                     {/* Deductions Section */}
                     <div className="space-y-3">
                         <h3 className="text-[14px]/[26px] font-medium text-[#4b4b4b]">DEDUCTIONS</h3>
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center py-[13px] px-[16px] border-b border-[#e9e9e9]">
-                                <span className="text-[#4b4b4b]">PAYE Tax</span>
-                                <span className="font-medium text-gray-800">{data.deductions.payeTax}</span>
+                        <div className="border border-[#e9e9e9] rounded-lg overflow-hidden">
+                            {/* Header */}
+                            <div className="grid grid-cols-3 bg-gray-50 py-3 px-4 text-[12px] font-medium text-[#4b4b4b] border-b border-[#e9e9e9]">
+                                <div>Description</div>
+                                <div className="text-center">Current ($)</div>
+                                <div className="text-center">YTD ($)</div>
                             </div>
-                            <div className="flex justify-between items-center py-[13px] px-[16px] border-b border-[#e9e9e9]">
-                                <span className="text-[#4b4b4b]">Health Insurance</span>
-                                <span className="font-medium text-[#4b4b4b]">{data.deductions.healthInsurance}</span>
+
+                            {/* PAYE Tax */}
+                            <div className="grid grid-cols-3 py-3 px-4 text-[12px] border-b border-[#e9e9e9]">
+                                <div className="text-[#4b4b4b]">PAYE Tax</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.deductions.payeTax.current}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.deductions.payeTax.ytd}</div>
                             </div>
-                            <div className="flex justify-between items-center py-[13px] px-[16px] border-b border-[#e9e9e9]">
-                                <span className="text-[#4b4b4b]">401k</span>
-                                <span className="font-medium text-[#4b4b4b]">{data.deductions.retirement401k}</span>
+
+                            {/* National Insurance */}
+                            <div className="grid grid-cols-3 py-3 px-4 text-[12px] border-b border-[#e9e9e9]">
+                                <div className="text-[#4b4b4b]">National Insurance</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.deductions.nationalInsurance.current}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.deductions.nationalInsurance.ytd}</div>
                             </div>
-                            <div className="flex justify-between items-center py-[13px] px-[16px] border-b border-[#e9e9e9]">
-                                <span className="font-semibold text-[#c30606]">Total</span>
-                                <span className="font-bold text-[#c30606] text-lg">{data.deductions.total}</span>
+
+                            {/* Student Loan Repayment */}
+                            <div className="grid grid-cols-3 py-3 px-4 text-[12px] border-b border-[#e9e9e9]">
+                                <div className="text-[#4b4b4b]">Student Loan Repayment</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.deductions.studentLoan.current}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.deductions.studentLoan.ytd}</div>
+                            </div>
+
+                            {/* Pension */}
+                            <div className="grid grid-cols-3 py-3 px-4 text-[12px] border-b border-[#e9e9e9]">
+                                <div className="text-[#4b4b4b]">Pension</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.deductions.pension.current}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.deductions.pension.ytd}</div>
+                            </div>
+
+                            {/* Union Fees */}
+                            <div className="grid grid-cols-3 py-3 px-4 text-[12px] border-b border-[#e9e9e9]">
+                                <div className="text-[#4b4b4b]">Union Fees</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.deductions.unionFees.current}</div>
+                                <div className="text-center font-medium text-[#4b4b4b]">{data.deductions.unionFees.ytd}</div>
+                            </div>
+
+                            {/* Total */}
+                            <div className="grid grid-cols-3 py-3 px-4 text-[12px] bg-gray-50">
+                                <div className="font-semibold text-[#c30606]">Total</div>
+                                <div className="text-center font-bold text-[#c30606]">{data.deductions.total.current}</div>
+                                <div className="text-center font-bold text-[#c30606]">{data.deductions.total.ytd}</div>
                             </div>
                         </div>
                     </div>

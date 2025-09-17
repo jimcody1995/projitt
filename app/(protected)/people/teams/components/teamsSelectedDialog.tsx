@@ -2,7 +2,7 @@
 import { customToast } from "@/components/common/toastr";
 import { Download, Loader2, Trash2, GitMerge } from "lucide-react";
 import { JSX, useState } from "react";
-import { MergeDepartmentDialog } from "./departmentDialogs";
+import { MergeTeamsDialog } from "./teamsDialogs";
 
 interface DepartmentData {
     id: number;
@@ -23,7 +23,7 @@ interface DepartmentData {
  * @param {Function} props.getData - Function to refresh data.
  * @returns JSX.Element - The UI for the selection dialog with action buttons.
  */
-export const DepartmentsSelectedDialog = ({
+export const TeamsSelectedDialog = ({
     selectedRows,
     totalCount,
     setSelectedRows,
@@ -45,17 +45,12 @@ export const DepartmentsSelectedDialog = ({
     // Check if any operation is in progress
     const isAnyLoading = mergeLoading || deleteLoading || exportLoading;
 
-    const handleMergeDepartments = async (data?: { name: string }) => {
-        if (!data?.name) {
-            customToast("Error", "Please enter a department name", "error");
-            return;
-        }
-
+    const handleMergeDepartments = async (data: { name: string }) => {
         setMergeLoading(true);
         try {
             // TODO: Implement merge departments API call
-            console.log('Merging departments to:', data.name);
-            customToast("Success", "Departments merged successfully", "success");
+            console.log('Merging teams to:', data.name);
+            customToast("Success", "Teams merged successfully", "success");
             setSelectedRows([]);
             setRowSelection({});
             getData();
@@ -71,8 +66,8 @@ export const DepartmentsSelectedDialog = ({
         setDeleteLoading(true);
         try {
             // TODO: Implement delete departments API call
-            console.log('Deleting departments:', selectedRows);
-            customToast("Success", "Departments deleted successfully", "success");
+            console.log('Deleting teams:', selectedRows);
+            customToast("Success", "Teams deleted successfully", "success");
             setSelectedRows([]);
             setRowSelection({});
             getData();
@@ -99,8 +94,8 @@ export const DepartmentsSelectedDialog = ({
 
             // Define the headers we want to export with readable names
             const headers = [
-                { key: 'id', label: 'Department ID' },
-                { key: 'name', label: 'Department Name' },
+                { key: 'id', label: 'Team ID' },
+                { key: 'name', label: 'Team Name' },
                 { key: 'employeeCount', label: 'Number of Employees' }
             ];
 
@@ -138,7 +133,7 @@ export const DepartmentsSelectedDialog = ({
 
             const a = document.createElement("a");
             a.setAttribute("href", url);
-            a.setAttribute("download", `departments-${dateTimeString}.csv`);
+            a.setAttribute("download", `teams-${dateTimeString}.csv`);
             a.click();
 
             customToast("Success", "CSV exported successfully", "success");
@@ -152,13 +147,13 @@ export const DepartmentsSelectedDialog = ({
     return (
         <div
             className="w-full flex justify-center items-center absolute sm:bottom-[45px] bottom-[160px] z-[1000] px-[40px] left-0 right-0"
-            id="departments-selected-dialog-container"
-            data-testid="departments-selected-dialog-container"
+            id="teams-selected-dialog-container"
+            data-testid="teams-selected-dialog-container"
         >
             <div
                 className="bg-[#053834] px-[20px] py-[12px] sm:w-[670px] w-full rounded-[12px] flex sm:flex-row flex-col sm:justify-between items-center shadow-lg"
-                id="departments-selected-dialog-content"
-                data-testid="departments-selected-dialog-content"
+                id="teams-selected-dialog-content"
+                data-testid="teams-selected-dialog-content"
             >
                 <div className="flex items-center" id="selection-info" data-testid="selection-info">
                     <div
@@ -190,8 +185,8 @@ export const DepartmentsSelectedDialog = ({
 
                 </div>
                 <div className="flex items-center" id="action-buttons" data-testid="action-buttons">
-                    <MergeDepartmentDialog
-                        mergeDepartments={allData.filter(dept => selectedRows.includes(dept.id.toString())).map(dept => dept.name)}
+                    <MergeTeamsDialog
+                        mergeTeams={allData.filter(dept => selectedRows.includes(dept.id.toString())).map(dept => dept.name)}
                         onConfirm={handleMergeDepartments}
                     >
                         <button
@@ -204,7 +199,7 @@ export const DepartmentsSelectedDialog = ({
                             {mergeLoading ? <Loader2 className="size-[16px] animate-spin" /> : <GitMerge className="size-[16px]" />}
                             Merge
                         </button>
-                    </MergeDepartmentDialog>
+                    </MergeTeamsDialog>
                     <button
                         className="cursor-pointer text-[15px]/[20px] pl-[16px] text-white py-[4px] border-r border-[#626262] px-[16px] flex items-center gap-[6px] hover:bg-[#0a2d2a] transition-colors rounded"
                         id="delete-button"

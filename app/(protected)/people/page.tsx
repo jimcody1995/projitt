@@ -54,10 +54,56 @@ export default function People() {
 
     return <div className='px-[8px] py-[6px]'>
         <div className="flex justify-between w-full sm:flex-row flex-col items-start gap-[10px]">
-            <div className='flex items-center gap-[10px]'>
-                <p className="text-[24px]/[30px] font-semibold text-[#0d978b]">Employee</p>
-                <ChevronDown className='size-[20px] text-[#0d978b]' />
-            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <div className='flex items-center gap-[10px] cursor-pointer'>
+                        <p className="text-[24px]/[30px] font-semibold text-[#0d978b]">Employee</p>
+                        <ChevronDown className='size-[20px] text-[#0d978b]' />
+                    </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                    side="bottom"
+                    align="end"
+                    className='w-[164px]'
+                >
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            router.push('/people');
+                        }}
+                    >
+                        Employees
+                    </div>
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            router.push('/people/departments');
+                        }}
+                    >
+                        Department
+                    </div>
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            router.push('/people/teams');
+                        }}
+                    >
+                        Teams
+                    </div>
+                    <div
+                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            router.push('/people/job-titles');
+                        }}
+                    >
+                        Job TItles
+                    </div>
+                </DropdownMenuContent>
+            </DropdownMenu>
             <div className='flex gap-[16px]'>
                 <Button variant='outline' className='h-[42px] text-[14px]/[22px] font-medium text-[#053834] border-[#053834]' onClick={() => router.push('/people/org-chart')}>
                     <Diamond className='size-[18px] ' />

@@ -12,6 +12,7 @@ import { ThemeProvider } from '@/providers/theme-provider';
 import { SessionProvider } from '@/context/SessionContext';
 import { BasicContextProvider } from '@/context/BasicContext';
 import 'react-quill-new/dist/quill.snow.css';
+import '@/app/globals.css';
 
 const Inter = localFont({
   src: [

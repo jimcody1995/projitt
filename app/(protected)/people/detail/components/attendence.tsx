@@ -78,7 +78,6 @@ export default function Attendence() {
                 </div>
             </div>
 
-            {/* Attendance Table */}
             <div >
                 <div className="overflow-x-auto">
                     <table className="w-full">

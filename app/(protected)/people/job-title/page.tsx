@@ -31,13 +31,13 @@ import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from '@/compon
 import { NoData } from '../../recruitment/applications/components/noData';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import { ChevronDown } from "lucide-react";
-import { DepartmentsSelectedDialog } from './components/departmentsSelectedDialog';
-import { CreateDepartmentSheet } from './components/createDepartmentSheet';
-import { CreateDepartmentDialog, RenameDepartmentDialog, DeleteDepartmentDialog, MergeDepartmentDialog } from './components/departmentDialogs';
+import { TeamsSelectedDialog } from './components/teamsSelectedDialog';
+import { CreateJobTitleSheet } from './components/createTeamsSheet';
+import { CreateTeamsDialog, RenameTeamsDialog, DeleteTeamsDialog, MergeTeamsDialog } from './components/teamsDialogs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-export default function DepartmentsPage() {
+export default function TeamsPage() {
     const router = useRouter();
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -50,41 +50,32 @@ export default function DepartmentsPage() {
     const [showFilter, setShowFilter] = useState(false);
     const [loading] = useState(false);
     // Sample departments data
-    const [departmentsData] = useState<Array<{ id: number; name: string; employeeCount: number }>>([
+    const [teamsData] = useState<Array<{ id: number; team_id: string; name: string; department: string; employeeCount: number }>>([
         {
             id: 1,
+            team_id: 'team-1',
             name: 'Data',
+            department: 'Data',
             employeeCount: 120
         },
         {
             id: 2,
+            team_id: 'team-2',
+            department: 'Design',
             name: 'Design',
             employeeCount: 56
         },
         {
             id: 3,
+            team_id: 'team-3',
+            department: 'Managerial',
             name: 'Managerial',
             employeeCount: 45
         },
-        {
-            id: 4,
-            name: 'Security',
-            employeeCount: 23
-        },
-        {
-            id: 5,
-            name: 'Accounting',
-            employeeCount: 43
-        },
-        {
-            id: 6,
-            name: 'Data',
-            employeeCount: 68
-        }
     ]);
 
-    const filteredData = useMemo<Array<{ id: number; name: string; employeeCount: number }>>(() => {
-        return departmentsData.filter((item) => {
+    const filteredData = useMemo<Array<{ id: number; department: string; name: string; employeeCount: number }>>(() => {
+        return teamsData.filter((item) => {
             const searchLower = (searchQuery || "").toLowerCase();
             const matchesSearch =
                 !searchQuery ||
@@ -92,9 +83,9 @@ export default function DepartmentsPage() {
 
             return matchesSearch;
         });
-    }, [searchQuery, departmentsData]);
+    }, [searchQuery, teamsData]);
 
-    const sortedData = useMemo<Array<{ id: number; name: string; employeeCount: number }>>(() => {
+    const sortedData = useMemo<Array<{ id: number; department: string; name: string; employeeCount: number }>>(() => {
         if (sorting.length === 0) return filteredData;
 
         const { id, desc } = sorting[0];
@@ -102,6 +93,11 @@ export default function DepartmentsPage() {
         return [...filteredData].sort((a, b) => {
             let aValue: string | number = a?.[id as keyof typeof a];
             let bValue: string | number = b?.[id as keyof typeof b];
+
+            if (id === "department") {
+                aValue = a?.department ?? "";
+                bValue = b?.department ?? "";
+            }
 
             if (id === "name") {
                 aValue = a?.name ?? "";
@@ -129,47 +125,43 @@ export default function DepartmentsPage() {
 
     const getData = useCallback(() => {
         // TODO: Implement data fetching logic
-        console.log('Refreshing departments data...');
+        console.log('Refreshing teams data...');
     }, []);
 
     // Dialog handlers
-    const handleCreateDepartment = useCallback(async (data?: { name: string }) => {
+    const handleCreateTeams = useCallback(async (data?: { name: string }) => {
         if (!data?.name) {
-            customToast("Error", "Please enter a department name", "error");
+            customToast("Error", "Please enter a team name", "error");
             return;
         }
-        console.log('Creating department:', data.name);
+        console.log('Creating team:', data.name);
         // TODO: Implement create department API call
-        getData();
     }, [getData]);
 
-    const handleRenameDepartment = useCallback(async (data?: { name: string }) => {
+    const handleRenameTeams = useCallback(async (data?: { name: string }) => {
         if (!data?.name) {
-            customToast("Error", "Please enter a department name", "error");
+            customToast("Error", "Please enter a team name", "error");
             return;
         }
-        console.log('Renaming department to:', data.name);
+        console.log('Renaming team to:', data.name);
         // TODO: Implement rename department API call
-        getData();
     }, [getData]);
 
-    const handleDeleteDepartment = useCallback(async () => {
-        console.log('Deleting department');
+    const handleDeleteTeams = useCallback(async () => {
+        console.log('Deleting team');
         // TODO: Implement delete department API call
-        getData();
     }, [getData]);
 
-    const handleMergeDepartment = useCallback(async (data?: { name: string }) => {
+    const handleMergeTeams = useCallback(async (data?: { name: string }) => {
         if (!data?.name) {
-            customToast("Error", "Please enter a department name", "error");
+            customToast("Error", "Please enter a team name", "error");
             return;
         }
-        console.log('Merging departments to:', data.name);
+        console.log('Merging teams to:', data.name);
         // TODO: Implement merge department API call
-        getData();
     }, [getData]);
 
-    const columns = useMemo<ColumnDef<{ id: number; name: string; employeeCount: number }>[]>(
+    const columns = useMemo<ColumnDef<{ id: number; department: string; name: string; employeeCount: number }>[]>(
         () => [
             {
                 id: 'select',
@@ -183,6 +175,7 @@ export default function DepartmentsPage() {
                     cellClassName: '',
                 },
             },
+
             {
                 accessorKey: 'name',
                 header: ({ column }) => (
@@ -203,6 +196,30 @@ export default function DepartmentsPage() {
                 ),
                 enableSorting: true,
                 size: 200,
+                meta: {
+                    headerClassName: '',
+                },
+            },
+            {
+                accessorKey: 'department',
+                header: ({ column }) => (
+                    <DataGridColumnHeader
+                        className='text-[14px] font-medium'
+                        title="Department"
+                        column={column}
+                        data-testid="department-header"
+                    />
+                ),
+                cell: ({ row }) => (
+                    <span
+                        className="text-[14px] text-[#4b4b4b]"
+                        data-testid={`department-${row.original.id}`}
+                    >
+                        {row.original.department}
+                    </span>
+                ),
+                enableSorting: true,
+                size: 150,
                 meta: {
                     headerClassName: '',
                 },
@@ -252,23 +269,21 @@ export default function DepartmentsPage() {
                                 align="end"
                                 data-testid={`actions-menu-${row.original.id}`}
                             >
-                                <RenameDepartmentDialog
+                                <RenameTeamsDialog
                                     departmentName={row.original.name}
-                                    onConfirm={handleRenameDepartment}
+                                    onConfirm={handleRenameTeams}
                                 >
                                     <div
                                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                         data-testid={`edit-action-${row.original.id}`}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                        }}
+
                                     >
                                         Rename
                                     </div>
-                                </RenameDepartmentDialog>
-                                <MergeDepartmentDialog
-                                    mergeDepartments={[row.original.name, 'Design']}
-                                    onConfirm={handleMergeDepartment}
+                                </RenameTeamsDialog>
+                                <MergeTeamsDialog
+                                    mergeTeams={[row.original.name, 'Design']}
+                                    onConfirm={handleMergeTeams}
                                 >
                                     <div
                                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
@@ -277,10 +292,10 @@ export default function DepartmentsPage() {
                                             e.stopPropagation();
                                         }}
                                     >
-                                        Merge
+                                        Merge Teams
                                     </div>
-                                </MergeDepartmentDialog>
-                                <DeleteDepartmentDialog onConfirm={handleDeleteDepartment}>
+                                </MergeTeamsDialog>
+                                <DeleteTeamsDialog onConfirm={handleDeleteTeams}>
                                     <div
                                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px] text-red-600"
                                         data-testid={`delete-action-${row.original.id}`}
@@ -290,7 +305,7 @@ export default function DepartmentsPage() {
                                     >
                                         Delete
                                     </div>
-                                </DeleteDepartmentDialog>
+                                </DeleteTeamsDialog>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     );
@@ -302,7 +317,7 @@ export default function DepartmentsPage() {
                 },
             },
         ],
-        [handleDeleteDepartment, handleMergeDepartment, handleRenameDepartment],
+        [handleDeleteTeams, handleMergeTeams, handleRenameTeams],
     );
 
     useEffect(() => {
@@ -310,10 +325,10 @@ export default function DepartmentsPage() {
     }, [rowSelection]);
 
     const table = useReactTable({
-        columns: columns as ColumnDef<{ id: number; name: string; employeeCount: number }, { id: number; name: string; employeeCount: number }>[],
+        columns: columns as ColumnDef<{ id: number; department: string; name: string; employeeCount: number }, { id: number; department: string; name: string; employeeCount: number }>[],
         data: sortedData,
         pageCount: Math.ceil((sortedData?.length || 0) / pagination.pageSize),
-        getRowId: (row: { id: number; name: string; employeeCount: number }) => row.id.toString(),
+        getRowId: (row: { id: number; department: string; name: string; employeeCount: number }) => row.id.toString(),
         state: {
             pagination,
             sorting,
@@ -334,7 +349,7 @@ export default function DepartmentsPage() {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <div className='flex items-center gap-[10px] cursor-pointer'>
-                                <p className="text-[24px]/[30px] font-semibold text-[#0d978b]">Departments</p>
+                                <p className="text-[24px]/[30px] font-semibold text-[#0d978b]">Job Title</p>
                                 <ChevronDown className='size-[20px] text-[#0d978b]' />
                             </div>
                         </DropdownMenuTrigger>
@@ -374,18 +389,18 @@ export default function DepartmentsPage() {
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    router.push('/people/job-titles');
+                                    router.push('/people/job-title');
                                 }}
                             >
-                                Job TItles
+                                Job Title
                             </div>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <p className='text-[12px]/[14px] font-medium text-[#a5a5a5]'>Manage your companies departments</p>
+                    <p className='text-[12px]/[14px] font-medium text-[#a5a5a5]'>Manage your companies job titles</p>
                 </div>
 
                 <div className='flex gap-[16px] sm:flex-row flex-col w-full justify-end'>
-                    <CreateDepartmentSheet>
+                    <CreateJobTitleSheet>
                         <Button variant='outline' className='h-[42px] sm:w-auto w-full text-[14px]/[22px] font-medium text-[#053834] border-[#053834]'>
                             <Image
                                 src="/images/icons/ai-line.png"
@@ -397,13 +412,13 @@ export default function DepartmentsPage() {
                             />
                             <span className='text-[14px]/[20px] font-semibold text-[#0d978b]'>Create With AI</span>
                         </Button>
-                    </CreateDepartmentSheet>
-                    <CreateDepartmentDialog onConfirm={handleCreateDepartment}>
+                    </CreateJobTitleSheet>
+                    <CreateTeamsDialog onConfirm={handleCreateTeams}>
                         <Button className='h-[42px] sm:w-auto w-full text-[14px]/[22px] font-medium'>
-                            Add Department
+                            Create Job Title
                             <ChevronDown className='size-[18px]' />
                         </Button>
-                    </CreateDepartmentDialog>
+                    </CreateTeamsDialog>
                 </div>
             </div >
 
@@ -414,7 +429,7 @@ export default function DepartmentsPage() {
                     recordCount={sortedData?.length || 0}
                     data-testid="departments-grid"
                     onRowClick={(row) => {
-                        router.push(`/people/departments/data?id=${row.id}`);
+                        router.push(`/people/job-title/data?id=${row.id}`);
                     }}
                 >
                     <div className="flex items-center justify-between sm:flex-row flex-col gap-[20px]">
@@ -424,7 +439,7 @@ export default function DepartmentsPage() {
                                 data-testid="search-icon"
                             />
                             <Input
-                                placeholder="Search Departments"
+                                placeholder="Search Job Title"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="ps-9 sm:w-[243px] w-full h-[42px]"
@@ -455,21 +470,21 @@ export default function DepartmentsPage() {
                         </div> */}
                     </div>
 
-                    {loading ? <LoadingSpinner content='Loading Departments' /> :
+                    {loading ? <LoadingSpinner content='Loading Job Title' /> :
                         <div className='mt-[24px] w-full rounded-[12px] overflow-hidden '>
                             {sortedData.length === 0 ? (
                                 <NoData data-testid="no-data-message" />
                             ) : (
                                 <>
                                     {selectedRows.length > 0 && (
-                                        <DepartmentsSelectedDialog
+                                        <TeamsSelectedDialog
                                             getData={getData}
                                             selectedRows={selectedRows}
                                             totalCount={sortedData?.length || 0}
                                             allData={sortedData}
                                             setSelectedRows={setSelectedRows}
                                             setRowSelection={setRowSelection}
-                                            data-testid="departments-selected-dialog"
+                                            data-testid="job-title-selected-dialog"
                                         />
                                     )}
                                     <div

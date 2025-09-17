@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import {
     ColumnDef,
     getCoreRowModel,
@@ -65,10 +65,10 @@ export default function TableMode({ getData, setSelectedApplication, interviews,
     const { country } = useBasic()
 
     // Refs for tab elements to calculate positions
-    const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({
-        upcoming: null,
-        pending: null,
-        past: null
+    const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+    const [indicatorStyle, setIndicatorStyle] = useState({
+        left: 0,
+        width: 0
     });
 
     // Categorize interviews by date
@@ -94,6 +94,22 @@ export default function TableMode({ getData, setSelectedApplication, interviews,
             })
         };
     }, [interviews]);
+
+    // Update indicator position when active section changes
+    useEffect(() => {
+        const activeTab = tabRefs.current[activeSection];
+        if (activeTab) {
+            const container = activeTab.parentElement;
+            if (container) {
+                const containerRect = container.getBoundingClientRect();
+                const tabRect = activeTab.getBoundingClientRect();
+                setIndicatorStyle({
+                    left: tabRect.left - containerRect.left,
+                    width: tabRect.width
+                });
+            }
+        }
+    }, [activeSection]);
 
     // Get data for current active section
     const currentSectionData = useMemo(() => {
@@ -439,42 +455,42 @@ export default function TableMode({ getData, setSelectedApplication, interviews,
         <div data-testid="table-mode-container">
             <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex gap-[12px] mt-[20px] w-full overflow-x-auto relative'>
                 {/* Sliding underline */}
-                <div
-                    className="absolute bottom-0 h-[2px] bg-[#0d978b] transition-all duration-300 ease-in-out"
-                    style={{
-                        left: tabRefs.current[activeSection]?.offsetLeft ?
-                            `${tabRefs.current[activeSection]!.offsetLeft - 15}px` : '0px',
-                        width: tabRefs.current[activeSection]?.offsetWidth ?
-                            `${tabRefs.current[activeSection]!.offsetWidth}px` : '0px'
-                    }}
-                />
+                <div className="flex items-center gap-[12px] relative">
+                    <div
+                        className="absolute bottom-0 h-[2px] bg-[#0d978b] transition-all duration-300 ease-in-out"
+                        style={{
+                            left: `${indicatorStyle.left}px`,
+                            width: `${indicatorStyle.width}px`
+                        }}
+                    />
 
-                <div
-                    ref={(el) => { tabRefs.current.upcoming = el; }}
-                    className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'upcoming' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
-                    onClick={() => setActiveSection('upcoming')}
-                    data-testid="upcoming-tab-button"
-                >
-                    <p className='whitespace-nowrap'>Upcoming</p>
-                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.upcoming.length}</span>
-                </div>
-                <div
-                    ref={(el) => { tabRefs.current.pending = el; }}
-                    className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'pending' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
-                    onClick={() => setActiveSection('pending')}
-                    data-testid="pending-tab-button"
-                >
-                    <p className='whitespace-nowrap'>Pending</p>
-                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.pending.length}</span>
-                </div>
-                <div
-                    ref={(el) => { tabRefs.current.past = el; }}
-                    className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer ${activeSection === 'past' ? 'text-[#0d978b]' : 'text-[#353535]'}`}
-                    onClick={() => setActiveSection('past')}
-                    data-testid="past-tab-button"
-                >
-                    <p className='whitespace-nowrap'>Past</p>
-                    <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.past.length}</span>
+                    <div
+                        ref={(el) => { tabRefs.current.upcoming = el; }}
+                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer transition-colors duration-200 ${activeSection === 'upcoming' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
+                        onClick={() => setActiveSection('upcoming')}
+                        data-testid="upcoming-tab-button"
+                    >
+                        <p className='whitespace-nowrap'>Upcoming</p>
+                        <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.upcoming.length}</span>
+                    </div>
+                    <div
+                        ref={(el) => { tabRefs.current.pending = el; }}
+                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer transition-colors duration-200 ${activeSection === 'pending' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
+                        onClick={() => setActiveSection('pending')}
+                        data-testid="pending-tab-button"
+                    >
+                        <p className='whitespace-nowrap'>Pending</p>
+                        <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.pending.length}</span>
+                    </div>
+                    <div
+                        ref={(el) => { tabRefs.current.past = el; }}
+                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer transition-colors duration-200 ${activeSection === 'past' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
+                        onClick={() => setActiveSection('past')}
+                        data-testid="past-tab-button"
+                    >
+                        <p className='whitespace-nowrap'>Past</p>
+                        <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]'>{categorizedInterviews.past.length}</span>
+                    </div>
                 </div>
             </div>
             <div className='w-full mt-[22px]'>

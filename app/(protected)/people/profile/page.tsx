@@ -1,24 +1,42 @@
 'use client';
 
 import { Briefcase, PieChart } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Offer from "./components/offer";
 import Forms from "./components/forms";
 import Traning from "./components/traning";
 import Checklist from "./components/checklist";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
+    const router = useRouter();
     const [activeSection, setActiveSection] = useState<'offer' | 'forms' | 'training' | 'checklist'>('offer');
-    const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({
-        offer: null,
-        forms: null,
-        training: null,
-        checklist: null
+    const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+    const [indicatorStyle, setIndicatorStyle] = useState({
+        left: 0,
+        width: 0
     });
+
+    // Update indicator position when active section changes
+    useEffect(() => {
+        const activeTab = tabRefs.current[activeSection];
+        if (activeTab) {
+            const container = activeTab.parentElement;
+            if (container) {
+                const containerRect = container.getBoundingClientRect();
+                const tabRect = activeTab.getBoundingClientRect();
+                setIndicatorStyle({
+                    left: tabRect.left - containerRect.left,
+                    width: tabRect.width
+                });
+            }
+        }
+    }, [activeSection]);
+
     return <div>
         <div className="flex w-full justify-between items-center px-[8px] py-[6px]">
             <div className="flex flex-col gap-[4px]">
-                <p className="text-[12px]/[20px] text-[#A5A5A5]">Onboarding <span className="text-[#0d978b]">/ Profile</span></p>
+                <p className="text-[12px]/[20px] text-[#A5A5A5]"><span className="cursor-pointer " onClick={() => router.push('/people')}>Onboarding</span> <span className="text-[#0d978b]">/ Profile</span></p>
                 <p className="text-[24px]/[30px] font-semibold text-[#353535]">Profile</p>
             </div>
             <div className="w-[129px] h-[42px] rounded-[8px] bg-[#D6EEEC] overflow-hidden relative flex itmes-center justify-center">
@@ -58,46 +76,44 @@ export default function Profile() {
         </div>
         <div className='border-b  border-[#e9e9e9] pl-[15px] pt-[9px] flex mt-[27px] w-full overflow-x-auto relative justify-between items-center'>
             {/* Sliding underline */}
-            <div className="flex items-center gap-[12px]">
+            <div className="flex items-center gap-[12px] relative">
                 <div
                     className="absolute bottom-0 h-[2px] bg-[#0d978b] transition-all duration-300 ease-in-out"
                     style={{
-                        left: tabRefs.current[activeSection]?.offsetLeft ?
-                            `${tabRefs.current[activeSection]!.offsetLeft - 15}px` : '0px',
-                        width: tabRefs.current[activeSection]?.offsetWidth ?
-                            `${tabRefs.current[activeSection]!.offsetWidth}px` : '0px'
+                        left: `${indicatorStyle.left}px`,
+                        width: `${indicatorStyle.width}px`
                     }}
                 />
 
                 <div
-                    ref={(el) => { tabRefs.current.active = el; }}
-                    className={`py-[18px] px-[52px] text-[15px]/[20px] font-medium  cursor-pointer ${activeSection === 'offer' ? 'text-[#0d978b] border-b-2 border-[#0d978b]' : 'text-[#353535]'}`}
+                    ref={(el) => { tabRefs.current.offer = el; }}
+                    className={`py-[18px] px-[52px] text-[15px]/[20px] font-medium cursor-pointer transition-colors duration-200 ${activeSection === 'offer' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
                     onClick={() => setActiveSection('offer')}
-                    data-testid="upcoming-tab-button"
+                    data-testid="offer-tab-button"
                 >
                     <p className='whitespace-nowrap text-center'>Offer & Documents</p>
                 </div>
                 <div
-                    ref={(el) => { tabRefs.current.onboarding = el; }}
-                    className={`py-[18px] px-[52px] text-[15px]/[20px] font-medium cursor-pointer ${activeSection === 'forms' ? 'text-[#0d978b] border-b-2 border-[#0d978b]' : 'text-[#353535]'}`}
+                    ref={(el) => { tabRefs.current.forms = el; }}
+                    className={`py-[18px] px-[52px] text-[15px]/[20px] font-medium cursor-pointer transition-colors duration-200 ${activeSection === 'forms' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
                     onClick={() => setActiveSection('forms')}
-                    data-testid="pending-tab-button"
+                    data-testid="forms-tab-button"
                 >
                     <p className='whitespace-nowrap text-center'>Forms & Personal Info</p>
                 </div>
                 <div
-                    ref={(el) => { tabRefs.current.offboarding = el; }}
-                    className={`py-[18px] px-[52px] text-[15px]/[20px] font-medium  cursor-pointer ${activeSection === 'training' ? 'text-[#0d978b] border-b-2 border-[#0d978b]' : 'text-[#353535]'}`}
+                    ref={(el) => { tabRefs.current.training = el; }}
+                    className={`py-[18px] px-[52px] text-[15px]/[20px] font-medium cursor-pointer transition-colors duration-200 ${activeSection === 'training' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
                     onClick={() => setActiveSection('training')}
-                    data-testid="past-tab-button"
+                    data-testid="training-tab-button"
                 >
                     <p className='whitespace-nowrap text-center'>Training </p>
                 </div>
                 <div
-                    ref={(el) => { tabRefs.current.past = el; }}
-                    className={`py-[18px] px-[52px] text-[15px]/[20px] font-medium cursor-pointer ${activeSection === 'checklist' ? 'text-[#0d978b] border-b-2 border-[#0d978b]' : 'text-[#353535]'}`}
+                    ref={(el) => { tabRefs.current.checklist = el; }}
+                    className={`py-[18px] px-[52px] text-[15px]/[20px] font-medium cursor-pointer transition-colors duration-200 ${activeSection === 'checklist' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
                     onClick={() => setActiveSection('checklist')}
-                    data-testid="past-tab-button"
+                    data-testid="checklist-tab-button"
                 >
                     <p className='whitespace-nowrap text-center'>Checklist</p>
                 </div>

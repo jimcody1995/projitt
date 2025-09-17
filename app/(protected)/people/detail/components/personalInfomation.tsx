@@ -2,8 +2,8 @@ import { BookMinus, BriefcaseBusiness, Edit, User } from "lucide-react";
 
 export default function PersonalInfomation() {
     return <div>
-        <div className="w-full flex gap-[24px]">
-            <div className="w-[428px] flex flex-col gap-[24px]">
+        <div className="w-full flex md:flex-row flex-col gap-[24px]">
+            <div className="md:w-[428px] w-full flex flex-col gap-[24px]">
                 <div className="w-full rounded-[12px] bg-white border border-[#e9e9e9] p-[20px] pb-[39px]">
                     <div className="flex justify-between">
                         <div className="flex items-center gap-[6px]">
@@ -21,7 +21,7 @@ export default function PersonalInfomation() {
 
                     <div className="mt-[24px]">
                         <div className="flex flex-col gap-[16px] mt-[24px]">
-                            <div className="flex">
+                            <div className="flex md:flex-row flex-col gap-[16px]">
                                 <div className="w-[60%] flex flex-col gap-[4px]">
                                     <p className="text-[12px]/[18px] text-[#8f8f8f]">Email address</p>
                                     <p className="text-[12px]/[22px] font-medium text-[#0d978b]">alicefernadez@gmail.com</p>
@@ -32,7 +32,7 @@ export default function PersonalInfomation() {
                                 </div>
                             </div>
                             <div className="w-full h-[1px] bg-[#e9e9e9]"></div>
-                            <div className="flex flex-col gap-[4px]">
+                            <div className="flex md:flex-row flex-col gap-[16px]">
                                 <p className="text-[12px]/[18px] text-[#8f8f8f]">Residential Addresss</p>
                                 <p className="text-[12px]/[22px] font-medium text-[#1c1c1c]">8502 Preston Rd. Inglewood, Maine 98380</p>
                             </div>

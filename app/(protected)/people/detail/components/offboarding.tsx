@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 
 export default function Offboarding() {
     return <div>
-        <Button className="h-[42px] w-[312px]">
+        <Button className="h-[42px] sm:w-[312px] w-full">
             Complete Offboarding
         </Button>
         <div className="md:w-[635px] w-full p-[16px] bg-white rounded-[12px] mt-[38px] border border-[#e9e9e9] flex flex-col gap-[12px]">

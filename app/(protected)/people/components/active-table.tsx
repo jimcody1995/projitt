@@ -433,7 +433,7 @@ export default function ActiveTable() {
                         // onClick={() => setSelectedApplication(row.original.id)}
                         onClick={(e) => {
                             e.stopPropagation();
-                            router.push(`/people/profile?id=${row.original.id}`);
+                            router.push(`/people/detail?id=${row.original.id}`);
                         }}
                     >
                         View Profile

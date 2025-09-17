@@ -7,10 +7,11 @@ import Compensation from "./components/compensation";
 import Onboarding from "./components/onboarding";
 import Finalize from "./components/finalize";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function NewEmployee() {
     const [currentStep, setCurrentStep] = useState(1);
-
+    const router = useRouter();
     const renderStepContent = () => {
         switch (currentStep) {
             case 1:
@@ -33,7 +34,7 @@ export default function NewEmployee() {
             <div>
                 <div className="flex w-full sm:flex-row flex-col gap-[20px] justify-between items-center px-[8px] py-[6px]">
                     <div className="flex flex-col gap-[4px]">
-                        <p className="text-[12px]/[20px] text-[#A5A5A5]">Employeee <span className="text-[#0d978b]">/ Add New Employee</span></p>
+                        <p className="text-[12px]/[20px] text-[#A5A5A5]"><span className="cursor-pointer " onClick={() => router.push('/people')}>Employeee</span> <span className="text-[#0d978b]">/ Add New Employee</span></p>
                         <p className="text-[24px]/[30px] font-semibold text-[#353535]">Add New Employee</p>
                     </div>
                     <div className="flex gap-[10px]">

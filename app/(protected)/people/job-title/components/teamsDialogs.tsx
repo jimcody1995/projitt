@@ -4,30 +4,27 @@ import { AlertTriangle } from "lucide-react";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { customToast } from "@/components/common/toastr";
 
-interface DepartmentDialogProps {
+interface TeamsDialogProps {
     children: React.ReactNode;
     type: 'create' | 'rename' | 'delete' | 'merge';
     departmentName?: string;
-    mergeDepartments?: string[];
-    onConfirm: (data?: { name: string }) => void;
+    mergeTeams?: string[];
+    onConfirm: (data: { name: string }) => void;
 }
 
-export const DepartmentDialog = ({
+export const TeamsDialog = ({
     children,
     type,
     departmentName = '',
-    mergeDepartments = [],
+    mergeTeams = [],
     onConfirm
-}: DepartmentDialogProps): JSX.Element => {
+}: TeamsDialogProps): JSX.Element => {
     const [open, setOpen] = useState(false);
     const [inputValue, setInputValue] = useState(departmentName);
     const [loading, setLoading] = useState(false);
@@ -36,28 +33,30 @@ export const DepartmentDialog = ({
         if (type === 'delete') {
             setLoading(true);
             try {
-                await onConfirm();
-                customToast("Success", "Department deleted successfully", "success");
+                await onConfirm({ name: inputValue.trim() });
+                customToast("Success", "Team deleted successfully", "success");
                 setOpen(false);
             } catch (error) {
-                customToast("Error", "Failed to delete department", "error");
+                console.error(error);
+                customToast("Error", "Failed to delete team", "error");
             } finally {
                 setLoading(false);
             }
         } else {
             if (!inputValue.trim()) {
-                customToast("Error", "Please enter a department name", "error");
+                customToast("Error", "Please enter a team name", "error");
                 return;
             }
 
             setLoading(true);
             try {
                 await onConfirm({ name: inputValue.trim() });
-                customToast("Success", `Department ${type === 'create' ? 'created' : type === 'rename' ? 'renamed' : 'merged'} successfully`, "success");
+                customToast("Success", `Team ${type === 'create' ? 'created' : type === 'rename' ? 'renamed' : 'merged'} successfully`, "success");
                 setOpen(false);
                 setInputValue('');
             } catch (error) {
-                customToast("Error", `Failed to ${type} department`, "error");
+                console.error(error);
+                customToast("Error", `Failed to ${type} team`, "error");
             } finally {
                 setLoading(false);
             }
@@ -66,24 +65,24 @@ export const DepartmentDialog = ({
 
     const handleCancel = () => {
         setOpen(false);
-        setInputValue(departmentName);
+        setInputValue(departmentName || '');
     };
 
     const getDialogContent = () => {
         switch (type) {
             case 'create':
                 return {
-                    title: "Create Department",
-                    description: "Enter a name for the new department.",
-                    placeholder: "Enter Department Name",
+                    title: "Create Team",
+                    description: "Enter a name for the new team.",
+                    placeholder: "Enter Team Name",
                     confirmText: "Save",
                     confirmVariant: "default" as const,
                     showInput: true
                 };
             case 'rename':
                 return {
-                    title: "Rename Department",
-                    placeholder: "Enter Department Name",
+                    title: "Rename Team",
+                    placeholder: "Enter Team Name",
                     confirmText: "Save",
                     confirmVariant: "default" as const,
                     showInput: true
@@ -99,9 +98,9 @@ export const DepartmentDialog = ({
                 };
             case 'merge':
                 return {
-                    title: "Merge Department",
-                    description: `Merge ${mergeDepartments.join(' and ')} Department`,
-                    placeholder: "Enter New Department Name",
+                    title: "Merge Team",
+                    description: `Merge ${mergeTeams.join(' and ')} Team`,
+                    placeholder: "Enter New Team Name",
                     confirmText: "Save",
                     confirmVariant: "default" as const,
                     showInput: true
@@ -122,7 +121,9 @@ export const DepartmentDialog = ({
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+            <DialogTrigger asChild onClick={(e) => {
+                e.stopPropagation();
+            }}>
                 {children}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]" close={false}>
@@ -183,26 +184,26 @@ export const DepartmentDialog = ({
 };
 
 // Individual dialog components for easier use
-export const CreateDepartmentDialog = ({ children, onConfirm }: { children: React.ReactNode; onConfirm: (data?: { name: string }) => void }) => (
-    <DepartmentDialog type="create" onConfirm={onConfirm}>
+export const CreateTeamsDialog = ({ children, onConfirm }: { children: React.ReactNode; onConfirm: (data?: { name: string }) => void }) => (
+    <TeamsDialog type="create" onConfirm={onConfirm}>
         {children}
-    </DepartmentDialog>
+    </TeamsDialog>
 );
 
-export const RenameDepartmentDialog = ({ children, departmentName, onConfirm }: { children: React.ReactNode; departmentName: string; onConfirm: (data?: { name: string }) => void }) => (
-    <DepartmentDialog type="rename" departmentName={departmentName} onConfirm={onConfirm}>
+export const RenameTeamsDialog = ({ children, departmentName, onConfirm }: { children: React.ReactNode; departmentName: string; onConfirm: (data: { name: string }) => void }) => (
+    <TeamsDialog type="rename" departmentName={departmentName} onConfirm={onConfirm}>
         {children}
-    </DepartmentDialog>
+    </TeamsDialog>
 );
 
-export const DeleteDepartmentDialog = ({ children, onConfirm }: { children: React.ReactNode; onConfirm: () => void }) => (
-    <DepartmentDialog type="delete" onConfirm={onConfirm}>
+export const DeleteTeamsDialog = ({ children, onConfirm }: { children: React.ReactNode; onConfirm: () => void }) => (
+    <TeamsDialog type="delete" onConfirm={onConfirm}>
         {children}
-    </DepartmentDialog>
+    </TeamsDialog>
 );
 
-export const MergeDepartmentDialog = ({ children, mergeDepartments, onConfirm }: { children: React.ReactNode; mergeDepartments: string[]; onConfirm: (data?: { name: string }) => void }) => (
-    <DepartmentDialog type="merge" mergeDepartments={mergeDepartments} onConfirm={onConfirm}>
+export const MergeTeamsDialog = ({ children, mergeTeams, onConfirm }: { children: React.ReactNode; mergeTeams: string[]; onConfirm: (data: { name: string }) => void }) => (
+    <TeamsDialog type="merge" mergeTeams={mergeTeams} onConfirm={onConfirm}>
         {children}
-    </DepartmentDialog>
+    </TeamsDialog>
 );

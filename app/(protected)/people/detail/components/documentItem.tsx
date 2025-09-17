@@ -10,7 +10,7 @@ export default function DocumentItem({
     url: string;
 }) {
     return (
-        <div className="w-[254px] rounded-[16px] overflow-hidden border border-[#E9E9E9]">
+        <div className="sm:w-[254px] w-full rounded-[16px] overflow-hidden border border-[#E9E9E9]">
             <div id="pdf-view" className="h-[180px] w-full overflow-hidden bg-[#f0f0f0]">
                 <PdfViewer url={url} />
             </div>

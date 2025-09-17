@@ -17,7 +17,7 @@ export default function LeaveAttendence() {
     return (
         <div className="w-full flex flex-col items-start">
             {/* Tab Navigation */}
-            <div className="w-full justify-between flex">
+            <div className="w-full md:justify-between items-start flex md:flex-row flex-col gap-[10px]">
                 <div className="flex items-center gap-0 mb-6 bg-[#e9e9e9] rounded-lg cursor-pointer">
                     <button
                         onClick={() => setActiveTab('attendance')}

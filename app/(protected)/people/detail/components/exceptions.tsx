@@ -109,7 +109,6 @@ export default function Exceptions() {
 
     return (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden w-full">
-            {/* Exceptions Table */}
             <div>
                 <div className="overflow-x-auto">
                     <table className="w-full">

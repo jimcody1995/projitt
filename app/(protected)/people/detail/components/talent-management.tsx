@@ -65,7 +65,7 @@ export default function TalentManagement() {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-end gap-4">
+            <div className="flex justify-end gap-4 md:flex-row flex-col">
                 <Button variant="outline" className="border-[#053834] text-[#053834] hover:bg-green-50">
                     Add to Promotion/Succession
                 </Button>
@@ -74,7 +74,7 @@ export default function TalentManagement() {
                 </Button>
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 grid grid-cols-4 gap-y-4 gap-x-8">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-y-4 gap-x-8">
                 <div>
                     <p className="text-sm text-gray-500">Status</p>
                     <div className="flex items-center mt-1">
@@ -119,8 +119,8 @@ export default function TalentManagement() {
             </div>
 
             <div className="space-y-4">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                    <table className="min-w-full divide-y divide-gray-200">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200 ">
                         <thead className="bg-[#EEF3F2]">
                             <tr>
                                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

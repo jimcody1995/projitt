@@ -131,7 +131,7 @@ export default function TaxPayroll() {
                     <h2 className="text-lg font-semibold text-gray-800">Payment Information</h2>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+                <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-5 gap-6">
                     <div>
                         <p className="text-sm text-gray-500 mb-1">Payment Method</p>
                         <p className="font-medium text-gray-800">{paymentInfo.paymentMethod}</p>
@@ -168,7 +168,7 @@ export default function TaxPayroll() {
             </div>
 
             {/* Payment History Table */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-[#EEF3F2]">
                         <tr>

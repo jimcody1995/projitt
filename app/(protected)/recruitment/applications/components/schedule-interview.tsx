@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import DialogContent, { Dialog, div, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { addInterview } from "@/api/interviews";
 import { customToast } from "@/components/common/toastr";
+import { Input } from "@/components/ui/input";
 
 interface ScheduleInterviewProps {
     setActive: (section: 'stages' | 'application-summary' | 'resume' | 'applicant-question' | 'schedule-interview') => void;
@@ -132,6 +133,10 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                                 </SelectItem>
                             </SelectContent>
                         </Select>
+                    </div>
+                    <div>
+                        <p className="text-[14px]/[16px] text-[#1c1c1c]">Meeting Link</p>
+                        <Input className="mt-[12px] h-[48px]" placeholder="Enter meeting link" />
                     </div>
                     {schedulingType === 'propose_time' && <div>
                         <p className="text-[14px]/[16px] text-[#1c1c1c]">Select Available Date & Time</p>

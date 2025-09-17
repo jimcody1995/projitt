@@ -39,8 +39,8 @@ export default function Documents() {
 
     return (
         <div>
-            <div className="w-full flex justify-between">
-                <div className="relative w-[229px]">
+            <div className="w-full flex justify-between md:flex-row flex-col gap-[10px]">
+                <div className="relative md:w-[229px] w-full">
                     <Search
                         className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"
                         data-testid="search-icon"

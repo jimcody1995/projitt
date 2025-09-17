@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import SuspendedTable from "./suspended-table";
 import { Search } from "lucide-react";
@@ -18,57 +18,70 @@ import ActiveTable from "./active-table";
  */
 export default function TableMode() {
     const [activeSection, setActiveSection] = useState<'active' | 'onboarding' | 'offboarding' | 'suspended'>('suspended');
-    const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({
-        active: null,
-        onboarding: null,
-        offboarding: null,
-        suspended: null
+    const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+    const [indicatorStyle, setIndicatorStyle] = useState({
+        left: 0,
+        width: 0
     });
+
+    // Update indicator position when active section changes
+    useEffect(() => {
+        const activeTab = tabRefs.current[activeSection];
+        if (activeTab) {
+            const container = activeTab.parentElement;
+            if (container) {
+                const containerRect = container.getBoundingClientRect();
+                const tabRect = activeTab.getBoundingClientRect();
+                setIndicatorStyle({
+                    left: tabRect.left - containerRect.left,
+                    width: tabRect.width
+                });
+            }
+        }
+    }, [activeSection]);
 
     return (
         <div data-testid="table-mode-container">
             <div className='border-b border-[#e9e9e9] pl-[15px] pt-[9px] flex mt-[20px] w-full overflow-x-auto relative justify-between items-center'>
                 {/* Sliding underline */}
-                <div className="flex items-center gap-[12px]">
+                <div className="flex items-center gap-[12px] relative">
                     <div
                         className="absolute bottom-0 h-[2px] bg-[#0d978b] transition-all duration-300 ease-in-out"
                         style={{
-                            left: tabRefs.current[activeSection]?.offsetLeft ?
-                                `${tabRefs.current[activeSection]!.offsetLeft - 15}px` : '0px',
-                            width: tabRefs.current[activeSection]?.offsetWidth ?
-                                `${tabRefs.current[activeSection]!.offsetWidth}px` : '0px'
+                            left: `${indicatorStyle.left}px`,
+                            width: `${indicatorStyle.width}px`
                         }}
                     />
 
                     <div
                         ref={(el) => { tabRefs.current.active = el; }}
-                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium  cursor-pointer ${activeSection === 'active' ? 'text-[#0d978b] border-b-2 border-[#0d978b]' : 'text-[#353535]'}`}
+                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium cursor-pointer transition-colors duration-200 ${activeSection === 'active' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
                         onClick={() => setActiveSection('active')}
-                        data-testid="upcoming-tab-button"
+                        data-testid="active-tab-button"
                     >
                         <p className='whitespace-nowrap text-center'>Active</p>
                     </div>
                     <div
                         ref={(el) => { tabRefs.current.onboarding = el; }}
-                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium cursor-pointer ${activeSection === 'onboarding' ? 'text-[#0d978b] border-b-2 border-[#0d978b]' : 'text-[#353535]'}`}
+                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium cursor-pointer transition-colors duration-200 ${activeSection === 'onboarding' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
                         onClick={() => setActiveSection('onboarding')}
-                        data-testid="pending-tab-button"
+                        data-testid="onboarding-tab-button"
                     >
                         <p className='whitespace-nowrap text-center'>Onboarding</p>
                     </div>
                     <div
                         ref={(el) => { tabRefs.current.offboarding = el; }}
-                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium  cursor-pointer ${activeSection === 'offboarding' ? 'text-[#0d978b] border-b-2 border-[#0d978b]' : 'text-[#353535]'}`}
+                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium cursor-pointer transition-colors duration-200 ${activeSection === 'offboarding' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
                         onClick={() => setActiveSection('offboarding')}
-                        data-testid="past-tab-button"
+                        data-testid="offboarding-tab-button"
                     >
                         <p className='whitespace-nowrap text-center'>Offboarding</p>
                     </div>
                     <div
-                        ref={(el) => { tabRefs.current.past = el; }}
-                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium cursor-pointer ${activeSection === 'suspended' ? 'text-[#0d978b] border-b-2 border-[#0d978b]' : 'text-[#353535]'}`}
+                        ref={(el) => { tabRefs.current.suspended = el; }}
+                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium cursor-pointer transition-colors duration-200 ${activeSection === 'suspended' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
                         onClick={() => setActiveSection('suspended')}
-                        data-testid="past-tab-button"
+                        data-testid="suspended-tab-button"
                     >
                         <p className='whitespace-nowrap text-center'>Suspended</p>
                     </div>
