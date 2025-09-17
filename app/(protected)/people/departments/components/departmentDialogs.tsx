@@ -195,7 +195,7 @@ export const RenameDepartmentDialog = ({ children, departmentName, onConfirm }: 
     </DepartmentDialog>
 );
 
-export const DeleteDepartmentDialog = ({ children, onConfirm }: { children: React.ReactNode; onConfirm: () => void }) => (
+export const DeleteDepartmentDialog = ({ children, onConfirm }: { children: React.ReactNode; onConfirm: (data?: { name: string }) => void }) => (
     <DepartmentDialog type="delete" onConfirm={onConfirm}>
         {children}
     </DepartmentDialog>
