@@ -81,6 +81,7 @@ export const MENU_SIDEBAR: MenuConfig = [
   {
     title: 'Company',
     icon: Settings,
+    path: '/company',
   },
   {
     heading: 'HR Management',
@@ -132,6 +133,7 @@ export const MENU_SIDEBAR: MenuConfig = [
   {
     title: 'HR Settings',
     icon: UserCog,
+    path: '/hr-settings',
   },
   {
     title: 'Report & Analytics',

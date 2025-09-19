@@ -1,5 +1,5 @@
 'use client'
-import { JSX, useState } from "react";
+import { JSX, useState, useEffect } from "react";
 import { X, Search } from "lucide-react";
 import {
     Sheet,
@@ -11,38 +11,44 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { customToast } from "@/components/common/toastr";
+import { Textarea } from "@/components/ui/textarea";
+import { addTeam, getEmployees } from "@/api/employee";
 
 interface Employee {
-    id: string;
-    name: string;
-    title: string;
-    initials: string;
+    id: number;
+    first_name: string;
+    last_name: string;
+    job_title?: string;
     selected: boolean;
 }
 
 interface CreateTeamSheetProps {
     children: React.ReactNode;
+    onTeamCreated?: () => void;
 }
 
-export const CreateTeamSheet = ({ children }: CreateTeamSheetProps): JSX.Element => {
+export const CreateTeamSheet = ({ children, onTeamCreated }: CreateTeamSheetProps): JSX.Element => {
     const [open, setOpen] = useState(false);
     const [teamName, setTeamName] = useState("");
+    const [description, setDescription] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const [employees, setEmployees] = useState<Employee[]>([
-        { id: '1', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: true },
-        { id: '2', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: true },
-        { id: '3', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: true },
-        { id: '4', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: true },
-        { id: '5', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: true },
-        { id: '6', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: false },
-        { id: '7', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: false },
-        { id: '8', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: false },
-        { id: '9', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: false },
-        { id: '10', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: false },
-        { id: '11', name: 'Alice Fernandez', title: 'Senior Data Analyst', initials: 'AF', selected: false },
-    ]);
+        { id: 1, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+        { id: 2, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+        { id: 3, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+        { id: 4, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+        { id: 5, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+        { id: 6, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+        { id: 7, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+        { id: 8, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+        { id: 9, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+        { id: 10, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+        { id: 11, first_name: 'Alice', last_name: 'Fernandez', job_title: 'Senior Data Analyst', selected: false },
+    ])
+    const [loading, setLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleEmployeeToggle = (employeeId: string) => {
+    const handleEmployeeToggle = (employeeId: number) => {
         setEmployees(prev =>
             prev.map(emp =>
                 emp.id === employeeId
@@ -52,29 +58,90 @@ export const CreateTeamSheet = ({ children }: CreateTeamSheetProps): JSX.Element
         );
     };
 
+    // Fetch employees when component mounts
+    // useEffect(() => {
+    //     const fetchEmployees = async () => {
+    //         setLoading(true);
+    //         try {
+    //             const response = await getEmployees();
+    //             if (response.status) {
+    //                 const employeesWithSelection = response.data.map((emp: any) => ({
+    //                     id: emp.id,
+    //                     first_name: emp.first_name,
+    //                     last_name: emp.last_name,
+    //                     job_title: emp.job_title?.name || 'No Title',
+    //                     selected: false
+    //                 }));
+    //                 setEmployees(employeesWithSelection);
+    //             }
+    //         } catch (error) {
+    //             customToast("Error", "Failed to fetch employees", "error");
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
 
-    const handleSave = () => {
+    //     if (open) {
+    //         fetchEmployees();
+    //     }
+    // }, [open]);
+
+
+    const handleSave = async () => {
         if (!teamName.trim()) {
             customToast("Error", "Please enter a team name", "error");
             return;
         }
+
         const selectedEmployees = employees.filter(emp => emp.selected);
-        console.log('Creating team:', { teamName, selectedEmployees });
-        customToast("Success", `Team "${teamName}" created with ${selectedEmployees.length} employees`, "success");
-        setOpen(false);
-        setTeamName("");
-        setSearchQuery("");
+        if (selectedEmployees.length === 0) {
+            customToast("Error", "Please select at least one employee", "error");
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            const teamData = {
+                name: teamName,
+                description: description,
+                user_ids: [3, 7, 12]
+            };
+
+            const response = await addTeam(teamData);
+
+            if (response.status) {
+                customToast("Success", `Team "${teamName}" created successfully`, "success");
+                setOpen(false);
+                setTeamName("");
+                setDescription("");
+                setSearchQuery("");
+                setEmployees(prev => prev.map(emp => ({ ...emp, selected: false })));
+                // Call the callback to refresh teams data
+                onTeamCreated?.();
+            } else {
+                customToast("Error", response.message || "Failed to create team", "error");
+            }
+        } catch (error: any) {
+            customToast("Error", error.response?.data?.message || "Failed to create team. Please try again.", "error");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const handleCancel = () => {
         setOpen(false);
         setTeamName("");
+        setDescription("");
         setSearchQuery("");
+        setEmployees(prev => prev.map(emp => ({ ...emp, selected: false })));
     };
 
-    const filteredEmployees = employees.filter(emp =>
-        emp.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredEmployees = employees.filter(emp => {
+        const fullName = `${emp.first_name} ${emp.last_name}`.toLowerCase();
+        const jobTitle = emp.job_title?.toLowerCase() || '';
+        const searchLower = searchQuery.toLowerCase();
+        return fullName.includes(searchLower) || jobTitle.includes(searchLower);
+    });
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -113,7 +180,18 @@ export const CreateTeamSheet = ({ children }: CreateTeamSheetProps): JSX.Element
                                     className="w-full h-[48px]"
                                 />
                             </div>
-
+                            <div className="space-y-[10px]">
+                                <label className="text-[14px]/[20px] font-medium text-[#4b4b4b]">
+                                    Description
+                                </label>
+                                <Textarea
+                                    placeholder="Enter Description"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    rows={2}
+                                    className="w-full"
+                                />
+                            </div>
                             {/* Select Employees Section */}
                             <div className="space-y-2">
                                 <label className="text-[14px]/[20px] font-medium text-[#4b4b4b]">
@@ -131,29 +209,46 @@ export const CreateTeamSheet = ({ children }: CreateTeamSheetProps): JSX.Element
 
                                 {/* Employee List */}
                                 <div className="overflow-y-auto space-y-1 border border-[#bcbcbc] rounded-[12px] py-[8px]">
-                                    {filteredEmployees.map((employee) => (
-                                        <div
-                                            key={employee.id}
-                                            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                                        >
-                                            <Checkbox
-                                                id={`employee-${employee.id}`}
-                                                checked={employee.selected}
-                                                onCheckedChange={() => handleEmployeeToggle(employee.id)}
-                                            />
-                                            <div className="w-8 h-8 bg-[#D6EEEC] rounded-full flex items-center justify-center text-[#053834] text-sm font-medium">
-                                                {employee.initials}
-                                            </div>
-                                            <div className="flex-1">
-                                                <div className="text-[14px]/[22px] font-medium text-[#353535]">
-                                                    {employee.name}
-                                                </div>
-                                                <div className="text-[11px]/[14px] text-[#8F8F8F]">
-                                                    {employee.title}
-                                                </div>
+                                    {loading ? (
+                                        <div className="flex items-center justify-center py-8">
+                                            <div className="text-[14px] text-[#8F8F8F]">Loading employees...</div>
+                                        </div>
+                                    ) : filteredEmployees.length === 0 ? (
+                                        <div className="flex items-center justify-center py-8">
+                                            <div className="text-[14px] text-[#8F8F8F]">
+                                                {searchQuery ? 'No employees found matching your search.' : 'No employees available.'}
                                             </div>
                                         </div>
-                                    ))}
+                                    ) : (
+                                        filteredEmployees.map((employee) => {
+                                            const initials = `${employee.first_name.charAt(0)}${employee.last_name.charAt(0)}`.toUpperCase();
+                                            const fullName = `${employee.first_name} ${employee.last_name}`;
+
+                                            return (
+                                                <div
+                                                    key={employee.id}
+                                                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                                                >
+                                                    <Checkbox
+                                                        id={`employee-${employee.id}`}
+                                                        checked={employee.selected}
+                                                        onCheckedChange={() => handleEmployeeToggle(employee.id)}
+                                                    />
+                                                    <div className="w-8 h-8 bg-[#D6EEEC] rounded-full flex items-center justify-center text-[#053834] text-sm font-medium">
+                                                        {initials}
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <div className="text-[14px]/[22px] font-medium text-[#353535]">
+                                                            {fullName}
+                                                        </div>
+                                                        <div className="text-[11px]/[14px] text-[#8F8F8F]">
+                                                            {employee.job_title}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -170,9 +265,10 @@ export const CreateTeamSheet = ({ children }: CreateTeamSheetProps): JSX.Element
                         </Button>
                         <Button
                             onClick={handleSave}
-                            className="px-6  text-white"
+                            className="px-6 text-white"
+                            disabled={isSubmitting}
                         >
-                            Save
+                            {isSubmitting ? 'Creating...' : 'Save'}
                         </Button>
                     </div>
                 </div>
