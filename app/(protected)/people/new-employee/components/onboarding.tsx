@@ -1,40 +1,71 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getDataForBasic } from '@/api/master';
 
-export default function Onboarding() {
-    const [onboardingChecklist, setOnboardingChecklist] = useState({
-        uploadId: true,
-        personalInfo: true,
-        bankTax: true,
-        training: true,
-        benefits: true
-    });
+interface OnboardingProps {
+    employeeId: string | null;
+    onFormDataChange?: (data: any) => void;
+    onValidation?: (validationFn: () => boolean) => void;
+}
 
-    const [benefits, setBenefits] = useState({
-        healthBenefit1: true,
-        healthBenefit2: true,
-        retirement401k: true
-    });
-
+export default function Onboarding({ employeeId, onFormDataChange, onValidation }: OnboardingProps) {
+    const [onboardingChecklist, setOnboardingChecklist] = useState<any[]>([]);
+    const [benefits, setBenefits] = useState<any[]>([]);
     const [trainingPath, setTrainingPath] = useState('New Employee Onboarding Videos');
+    const [selectedChecklistIds, setSelectedChecklistIds] = useState<number[]>([]);
+    const [selectedBenefitIds, setSelectedBenefitIds] = useState<number[]>([]);
 
-    const handleOnboardingChecklistChange = (item: string, checked: boolean) => {
-        setOnboardingChecklist(prev => ({
-            ...prev,
-            [item]: checked
-        }));
+    const handleOnboardingChecklistChange = (itemId: number, checked: boolean) => {
+        if (checked) {
+            setSelectedChecklistIds(prev => [...prev, itemId]);
+        } else {
+            setSelectedChecklistIds(prev => prev.filter(id => id !== itemId));
+        }
     };
 
-    const handleBenefitsChange = (item: string, checked: boolean) => {
-        setBenefits(prev => ({
-            ...prev,
-            [item]: checked
-        }));
+    const handleBenefitsChange = (itemId: number, checked: boolean) => {
+        if (checked) {
+            setSelectedBenefitIds(prev => [...prev, itemId]);
+        } else {
+            setSelectedBenefitIds(prev => prev.filter(id => id !== itemId));
+        }
     };
+
+    useEffect(() => {
+        const fetchOnboardingChecklist = async () => {
+            const response = await getDataForBasic({ type_id: 7 });
+            setOnboardingChecklist(response.data);
+        };
+        fetchOnboardingChecklist();
+
+        const fetchBenefits = async () => {
+            const response = await getDataForBasic({ type_id: 8 });
+            setBenefits(response.data);
+        };
+        fetchBenefits();
+    }, []);
+
+    // Update form data when selections change
+    useEffect(() => {
+        const formData = {
+            onboardingChecklistIds: selectedChecklistIds,
+            trainingLearningPath: trainingPath,
+            benefitIds: selectedBenefitIds
+        };
+        onFormDataChange?.(formData);
+    }, [selectedChecklistIds, trainingPath, selectedBenefitIds, onFormDataChange]);
+
+    // Set up validation function
+    useEffect(() => {
+        const validateForm = () => {
+            return selectedChecklistIds.length > 0 && selectedBenefitIds.length > 0;
+        };
+        onValidation?.(validateForm);
+    }, [selectedChecklistIds, selectedBenefitIds, onValidation]);
 
     const trainingPaths = [
         'New Employee Onboarding Videos',
@@ -58,26 +89,20 @@ export default function Onboarding() {
                         Onboarding Checklist
                     </Label>
                     <div className="space-y-[12px]">
-                        {[
-                            { key: 'uploadId', label: 'Upload ID & Certifications' },
-                            { key: 'personalInfo', label: 'Complete Personal Information' },
-                            { key: 'bankTax', label: 'Submit Bank & Tax info' },
-                            { key: 'training', label: 'Training & Orientation' },
-                            { key: 'benefits', label: 'Benefits' }
-                        ].map((item) => (
-                            <div key={item.key} className="flex items-center space-x-[12px]">
+                        {onboardingChecklist.map((item) => (
+                            <div key={item.id} className="flex items-center space-x-[12px]">
                                 <Checkbox
-                                    id={item.key}
-                                    checked={onboardingChecklist[item.key as keyof typeof onboardingChecklist]}
+                                    id={item.id}
+                                    checked={selectedChecklistIds.includes(item.id)}
                                     onCheckedChange={(checked) =>
-                                        handleOnboardingChecklistChange(item.key, checked as boolean)
+                                        handleOnboardingChecklistChange(item.id, checked as boolean)
                                     }
                                 />
                                 <Label
-                                    htmlFor={item.key}
+                                    htmlFor={item.id}
                                     className="text-[14px]/[22px] font-medium text-[#353535] cursor-pointer"
                                 >
-                                    {item.label}
+                                    {item.name}
                                 </Label>
                             </div>
                         ))}
@@ -112,24 +137,20 @@ export default function Onboarding() {
                         What benefits does Alice have?
                     </Label>
                     <div className="space-y-[12px]">
-                        {[
-                            { key: 'healthBenefit1', label: 'Health Benefit' },
-                            { key: 'healthBenefit2', label: 'Health Benefit' },
-                            { key: 'retirement401k', label: '401k' }
-                        ].map((item) => (
-                            <div key={item.key} className="flex items-center space-x-[12px]">
+                        {benefits.map((item) => (
+                            <div key={item.id} className="flex items-center space-x-[12px]">
                                 <Checkbox
-                                    id={item.key}
-                                    checked={benefits[item.key as keyof typeof benefits]}
+                                    id={item.id}
+                                    checked={selectedBenefitIds.includes(item.id)}
                                     onCheckedChange={(checked) =>
-                                        handleBenefitsChange(item.key, checked as boolean)
+                                        handleBenefitsChange(item.id, checked as boolean)
                                     }
                                 />
                                 <Label
-                                    htmlFor={item.key}
+                                    htmlFor={item.id}
                                     className="text-[14px]/[22px] font-medium text-[#353535] cursor-pointer"
                                 >
-                                    {item.label}
+                                    {item.name}
                                 </Label>
                             </div>
                         ))}

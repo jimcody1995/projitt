@@ -9,7 +9,7 @@
 import 'react-quill-new/dist/quill.snow.css';
 import dynamic from 'next/dynamic';
 import { useState, useRef, JSX, useEffect } from 'react';
-import { CheckLine, Cloud, File, HardDrive, Link, Loader2, Redo, Undo, Smile, ChevronLeft } from 'lucide-react';
+import { CheckLine, Cloud, File, HardDrive, Link, Loader2, Redo, Undo, Smile, ChevronLeft, FileText } from 'lucide-react';
 import data from '@emoji-mart/data';
 import { ChevronRight } from 'lucide-react';
 
@@ -81,8 +81,11 @@ export default function JobDescription({
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const quillRef = useRef<HTMLDivElement | null>(null);
     const [isSelectFileFromServer, setIsSelectFileFromServer] = useState<boolean>(false);
+    const [isSelectFileFromTemplate, setIsSelectFileFromTemplate] = useState<boolean>(false);
     const [filesLoading, setFilesLoading] = useState<boolean>(false);
     const [loadingDescription, setLoadingDescription] = useState<boolean>(false);
+    const [templateFiles, setTemplateFiles] = useState<any[]>([]);
+    const [isAttachFilesDialogOpen, setIsAttachFilesDialogOpen] = useState<boolean>(false);
     /**
      * Handles file input changes
      */
@@ -148,8 +151,9 @@ export default function JobDescription({
         setLoadingDescription(true)
         try {
             const response = await getDescription();
-            if (response.data?.status && response.data?.data) {
-                setJobData((prev: JobData) => ({ ...prev, description: response.data.data }));
+            console.log(response);
+            if (response?.status && response.data) {
+                setTemplateFiles(response.data);
             }
         } catch (error) {
             console.error('Error getting last description:', error);
@@ -485,7 +489,7 @@ export default function JobDescription({
                     <div
                         className="flex justify-between items-center mt-6"
                     >
-                        <Dialog>
+                        <Dialog open={isAttachFilesDialogOpen} onOpenChange={setIsAttachFilesDialogOpen}>
                             <DialogTrigger asChild>
                                 <button
                                     type="button"
@@ -512,6 +516,10 @@ export default function JobDescription({
                                         <Cloud className="size-[25px] text-[#0d978b]" />
                                         <span className="text-[14px]/[20px] text-[#4b4b4b]">From Server</span>
                                     </button>
+                                    <button className='flex flex-col w-full items-center gap-[10px] border-[#717171] border-dashed border rounded-[6.52px] py-[10px] hover:border-[#0d978b] hover:bg-[#dcfffc] cursor-pointer' onClick={() => { setIsSelectFileFromTemplate(true) }}>
+                                        <FileText className="size-[25px] text-[#0d978b]" />
+                                        <span className="text-[14px]/[20px] text-[#4b4b4b]">From Template</span>
+                                    </button>
                                 </div>
                             </DialogContent>
                         </Dialog>
@@ -533,6 +541,22 @@ export default function JobDescription({
                                         <Button variant='outline'>Page {page} of {totalPgae}</Button>
                                         <Button variant='outline' onClick={() => { setPage(page + 1) }} disabled={page === totalPgae}><ChevronRight className="size-[16px]" /></Button>
                                     </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+
+                        <Dialog open={isSelectFileFromTemplate} onOpenChange={setIsSelectFileFromTemplate}>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Insert description from the template</DialogTitle>
+                                </DialogHeader>
+                                <div className='flex flex-col gap-[10px] w-full mt-[10px]'>
+                                    {templateFiles.map((file) => (
+                                        <div key={file.id} className='flex items-center gap-[10px] cursor-pointer border border-[#e9e9e9] rounded-[6.52px] px-[10px] py-[5px] hover:border-[#0d978b] hover:bg-[#dcfffc]' onClick={() => { setJobData((prev: JobData) => ({ ...prev, description: file.description })); setIsSelectFileFromTemplate(false); setIsAttachFilesDialogOpen(false) }}>
+                                            <FileText className="size-[16px] text-[#0d978b]" />
+                                            <span>{file.title}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </DialogContent>
                         </Dialog>

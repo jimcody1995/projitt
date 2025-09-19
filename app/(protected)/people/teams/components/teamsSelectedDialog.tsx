@@ -3,6 +3,7 @@ import { customToast } from "@/components/common/toastr";
 import { Download, Loader2, Trash2, GitMerge } from "lucide-react";
 import { JSX, useState } from "react";
 import { MergeTeamsDialog } from "./teamsDialogs";
+import { deleteTeam, mergeTeam } from "@/api/employee";
 
 interface DepartmentData {
     id: number;
@@ -46,34 +47,57 @@ export const TeamsSelectedDialog = ({
     const isAnyLoading = mergeLoading || deleteLoading || exportLoading;
 
     const handleMergeDepartments = async (data: { name: string }) => {
+        if (selectedRows.length < 2) {
+            customToast("Error", "Please select at least 2 teams to merge", "error");
+            return;
+        }
+
         setMergeLoading(true);
         try {
-            // TODO: Implement merge departments API call
-            console.log('Merging teams to:', data.name);
-            customToast("Success", "Teams merged successfully", "success");
-            setSelectedRows([]);
-            setRowSelection({});
-            getData();
-        } catch (error: unknown) {
-            const errorMessage = error instanceof Error ? error.message : 'An error occurred';
-            customToast("Error", errorMessage, "error");
+            const teamIds = selectedRows.map(id => parseInt(id));
+            const response = await mergeTeam({
+                team_ids: teamIds,
+                new_name: data.name
+            });
+
+            if (response.status) {
+                customToast("Success", "Teams merged successfully", "success");
+                setSelectedRows([]);
+                setRowSelection({});
+                getData();
+            } else {
+                customToast("Error", response.message || "Failed to merge teams", "error");
+            }
+        } catch (error: any) {
+            customToast("Error", error.response?.data?.message || "Failed to merge teams. Please try again.", "error");
         } finally {
             setMergeLoading(false);
         }
     };
 
     const handleDeleteDepartments = async () => {
+        if (selectedRows.length === 0) {
+            customToast("Error", "No teams selected for deletion", "error");
+            return;
+        }
+
         setDeleteLoading(true);
         try {
-            // TODO: Implement delete departments API call
-            console.log('Deleting teams:', selectedRows);
-            customToast("Success", "Teams deleted successfully", "success");
-            setSelectedRows([]);
-            setRowSelection({});
-            getData();
-        } catch (error: unknown) {
-            const errorMessage = error instanceof Error ? error.message : 'An error occurred';
-            customToast("Error", errorMessage, "error");
+            const teamIds = selectedRows.map(id => parseInt(id));
+            const response = await deleteTeam({
+                team_ids: teamIds
+            });
+
+            if (response.status) {
+                customToast("Success", `${teamIds.length} team(s) deleted successfully`, "success");
+                setSelectedRows([]);
+                setRowSelection({});
+                getData();
+            } else {
+                customToast("Error", response.message || "Failed to delete teams", "error");
+            }
+        } catch (error: any) {
+            customToast("Error", error.response?.data?.message || "Failed to delete teams. Please try again.", "error");
         } finally {
             setDeleteLoading(false);
         }

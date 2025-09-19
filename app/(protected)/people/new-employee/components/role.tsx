@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -11,51 +11,71 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import moment from 'moment';
 import { Calendar } from '@/components/ui/calendar';
+import { getDataForBasic } from '@/api/master';
+import { useBasic } from '@/context/BasicContext';
 
-export default function Role() {
+export default function Role({
+    employeeId,
+    onFormDataChange,
+    onValidation
+}: {
+    employeeId: string | null;
+    onFormDataChange?: (data: any) => void;
+    onValidation?: (validationFn: () => boolean) => void;
+}) {
     const [formData, setFormData] = useState({
         workAddress: '',
-        department: 'Data',
+        department: '',
         jobTitle: '',
         manager: '',
         contractStartDate: '10 June 2025'
     });
 
     const handleInputChange = (field: string, value: string) => {
-        setFormData(prev => ({
-            ...prev,
+        const newFormData = {
+            ...formData,
             [field]: value
-        }));
+        };
+        setFormData(newFormData);
+        onFormDataChange?.(newFormData);
     };
 
-    const workAddresses = [
-        'New York Office',
-        'San Francisco Office',
-        'London Office',
-        'Berlin Office',
-        'Tokyo Office',
-        'Remote'
-    ];
+    const validateForm = () => {
+        const requiredFields = ['workAddress', 'department', 'jobTitle', 'contractStartDate'];
+        const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
 
-    const departments = [
-        'Data',
-        'Engineering',
-        'Marketing',
-        'Sales',
-        'HR',
-        'Finance',
-        'Operations'
-    ];
+        if (missingFields.length > 0) {
+            return false;
+        }
+        return true;
+    };
 
-    const jobTitles = [
-        'Data Analyst',
-        'Senior Data Analyst',
-        'Data Scientist',
-        'Data Engineer',
-        'Business Analyst',
-        'Product Manager',
-        'Software Engineer'
-    ];
+    // Expose validation function to parent
+    useEffect(() => {
+        onValidation?.(validateForm);
+    }, [formData, onValidation]);
+
+
+    const [workAddresses, setWorkAddresses] = useState([]);
+    const { department } = useBasic();
+    const [jobTitles, setJobTitles] = useState([]);
+
+
+
+    useEffect(() => {
+        const fetchWorkAddresses = async () => {
+            const response = await getDataForBasic({ type_id: 9 });
+            setWorkAddresses(response.data);
+        };
+        fetchWorkAddresses();
+
+        const fetchJobTitles = async () => {
+            const response = await getDataForBasic({ type_id: 10 });
+            setJobTitles(response.data);
+        };
+        fetchJobTitles();
+
+    }, []);
 
 
     return (
@@ -78,9 +98,9 @@ export default function Role() {
                             <SelectValue placeholder="Select Work Address" />
                         </SelectTrigger>
                         <SelectContent>
-                            {workAddresses.map((address) => (
-                                <SelectItem key={address} value={address}>
-                                    {address}
+                            {workAddresses.map((address: any) => (
+                                <SelectItem key={address.id} value={address.id}>
+                                    {address.name}
                                 </SelectItem>
                             ))}
                         </SelectContent>
@@ -100,9 +120,9 @@ export default function Role() {
                             <SelectValue placeholder="Select Department" />
                         </SelectTrigger>
                         <SelectContent>
-                            {departments.map((dept) => (
-                                <SelectItem key={dept} value={dept}>
-                                    {dept}
+                            {department.map((dept: any) => (
+                                <SelectItem key={dept.id} value={dept.id}>
+                                    {dept.name}
                                 </SelectItem>
                             ))}
                         </SelectContent>
@@ -125,9 +145,9 @@ export default function Role() {
                             <SelectValue placeholder="Select Job Title" />
                         </SelectTrigger>
                         <SelectContent>
-                            {jobTitles.map((title) => (
-                                <SelectItem key={title} value={title}>
-                                    {title}
+                            {jobTitles.map((title: any) => (
+                                <SelectItem key={title.id} value={title.id}>
+                                    {title.name}
                                 </SelectItem>
                             ))}
                         </SelectContent>

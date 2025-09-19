@@ -146,8 +146,23 @@ export const TeamsDialog = ({
                 <div className="mt-[16px]">
                     {content.showInput && (
                         <Input
+                            onFocus={(e) => {
+                                e.stopPropagation();
+                            }}
+                            onBlur={(e) => {
+                                e.stopPropagation();
+                            }}
+                            onKeyDown={(e) => {
+                                e.stopPropagation();
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                            }}
                             value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
+                            onChange={(e) => {
+                                e.stopPropagation();
+                                setInputValue(e.target.value);
+                            }}
                             placeholder={content.placeholder}
                             className="w-full h-[42px]"
                             autoFocus

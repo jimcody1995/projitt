@@ -1,30 +1,72 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { addJobDetails } from '@/api/employee';
+import { useBasic } from '@/context/BasicContext';
 
-export default function JobDetails() {
+interface JobDetailsProps {
+    setCurrentStep: (step: number) => void;
+    onFormDataChange: (formData: any) => void;
+    onValidation: (validationFn: () => boolean) => void;
+}
+
+export default function JobDetails({ setCurrentStep, onFormDataChange, onValidation }: JobDetailsProps) {
     const [formData, setFormData] = useState({
         firstName: 'Alice',
         lastName: 'Fernadez',
-        employeeType: 'full-time',
+        employeeType: 'full_time',
         email: 'alicefernadez@gmail.com',
         country: ''
     });
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const { country } = useBasic();
 
     const handleInputChange = (field: string, value: string) => {
-        setFormData(prev => ({
-            ...prev,
+        const newFormData = {
+            ...formData,
             [field]: value
-        }));
+        };
+        setFormData(newFormData);
+        onFormDataChange(newFormData);
     };
+
+    const validateForm = useCallback(() => {
+        if (!formData.firstName.trim()) {
+            setError('First name is required');
+            return false;
+        }
+        if (!formData.email.trim()) {
+            setError('Email is required');
+            return false;
+        }
+        if (!formData.country) {
+            setError('Country is required');
+            return false;
+        }
+        setError(null);
+        return true;
+    }, [formData.firstName, formData.email, formData.country]);
+
+    // Notify parent of form data changes
+    useEffect(() => {
+        onFormDataChange(formData);
+    }, [formData, onFormDataChange]);
+
+    // Expose validation function to parent
+    useEffect(() => {
+        onValidation(validateForm);
+    }, [onValidation, validateForm]);
 
     const employeeTypes = [
         {
-            value: 'full-time',
+            value: 'full_time',
             label: 'Full-Time',
             description: 'Standard salaried employee with a fixed schedule and full benefits eligibility.'
         },
@@ -34,7 +76,7 @@ export default function JobDetails() {
             description: 'Independent contractor hired for specific tasks or projects, typically invoice-based.'
         },
         {
-            value: 'part-time',
+            value: 'part_time',
             label: 'Part-Time',
             description: 'Employee with limited working hours per week, often not eligible for full benefits.'
         },
@@ -45,18 +87,7 @@ export default function JobDetails() {
         }
     ];
 
-    const countries = [
-        'United States',
-        'Canada',
-        'United Kingdom',
-        'Germany',
-        'France',
-        'Australia',
-        'Japan',
-        'Brazil',
-        'India',
-        'China'
-    ];
+
 
     return (
         <div className="md:w-[619px] w-full">
@@ -159,15 +190,22 @@ export default function JobDetails() {
                             <SelectValue placeholder="Select Country" />
                         </SelectTrigger>
                         <SelectContent>
-                            {countries.map((country) => (
-                                <SelectItem key={country} value={country}>
-                                    {country}
+                            {country.map((countryItem: any) => (
+                                <SelectItem key={countryItem.id} value={countryItem.id}>
+                                    {countryItem.name}
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
                 </div>
             </div>
+
+            {/* Error Display */}
+            {error && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                    <p className="text-sm text-red-600">{error}</p>
+                </div>
+            )}
         </div>
     );
 }

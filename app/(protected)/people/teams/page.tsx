@@ -36,6 +36,7 @@ import { CreateTeamSheet } from './components/createTeamsSheet';
 import { CreateTeamsDialog, RenameTeamsDialog, DeleteTeamsDialog, MergeTeamsDialog } from './components/teamsDialogs';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { getTeams, editTeam, deleteTeam, mergeTeam } from '@/api/employee';
 
 export default function TeamsPage() {
     const router = useRouter();
@@ -48,28 +49,9 @@ export default function TeamsPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRows, setSelectedRows] = useState<string[]>([]);
     const [showFilter, setShowFilter] = useState(false);
-    const [loading] = useState(false);
-    // Sample departments data
-    const [teamsData] = useState<Array<{ id: number; team_id: string; name: string; employeeCount: number }>>([
-        {
-            id: 1,
-            team_id: "#T001",
-            name: 'Data',
-            employeeCount: 120
-        },
-        {
-            id: 2,
-            team_id: "#T002",
-            name: 'Design',
-            employeeCount: 56
-        },
-        {
-            id: 3,
-            team_id: "#T003",
-            name: 'Managerial',
-            employeeCount: 45
-        },
-    ]);
+    const [loading, setLoading] = useState(false);
+    const [teamsData, setTeamsData] = useState<Array<{ id: number; team_id: string; name: string; employeeCount: number }>>([]);
+    const [error, setError] = useState<string | null>(null);
 
     const filteredData = useMemo<Array<{ id: number; team_id: string; name: string; employeeCount: number }>>(() => {
         return teamsData.filter((item) => {
@@ -120,10 +102,34 @@ export default function TeamsPage() {
         });
     }, [sorting, filteredData]);
 
-    const getData = useCallback(() => {
-        // TODO: Implement data fetching logic
-        console.log('Refreshing teams data...');
+    const getData = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await getTeams();
+            if (response.status) {
+                // Transform API data to match the expected format
+                const transformedData = response.data.map((team: any) => ({
+                    id: team.id,
+                    team_id: team.id, // Using tuid as team_id
+                    name: team.name,
+                    employeeCount: 0 // This would need to be fetched separately or included in the API response
+                }));
+                setTeamsData(transformedData);
+            } else {
+                setError(response.message || 'Failed to fetch teams');
+            }
+        } catch (error: any) {
+            setError(error.response?.data?.message || 'Failed to fetch teams. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     }, []);
+
+    // Fetch teams data on component mount
+    useEffect(() => {
+        getData();
+    }, [getData]);
 
     // Dialog handlers
     const handleCreateTeams = useCallback(async (data?: { name: string }) => {
@@ -132,30 +138,84 @@ export default function TeamsPage() {
             return;
         }
         console.log('Creating team:', data.name);
-        // TODO: Implement create department API call
+        // Refresh teams data after creation
+        await getData();
     }, [getData]);
 
-    const handleRenameTeams = useCallback(async (data?: { name: string }) => {
+    const handleRenameTeams = useCallback(async (data?: { name: string, teamId?: number }) => {
         if (!data?.name) {
             customToast("Error", "Please enter a team name", "error");
             return;
         }
-        console.log('Renaming team to:', data.name);
-        // TODO: Implement rename department API call
+        if (!data?.teamId) {
+            customToast("Error", "Team ID is required", "error");
+            return;
+        }
+
+        try {
+            const response = await editTeam({
+                id: data.teamId,
+                name: data.name
+            });
+
+            if (response.status) {
+                customToast("Success", "Team renamed successfully", "success");
+                await getData();
+            } else {
+                customToast("Error", response.message || "Failed to rename team", "error");
+            }
+        } catch (error: any) {
+            customToast("Error", error.response?.data?.message || "Failed to rename team. Please try again.", "error");
+        }
     }, [getData]);
 
-    const handleDeleteTeams = useCallback(async () => {
-        console.log('Deleting team');
-        // TODO: Implement delete department API call
+    const handleDeleteTeams = useCallback(async (teamIds?: number[]) => {
+        if (!teamIds || teamIds.length === 0) {
+            customToast("Error", "No teams selected for deletion", "error");
+            return;
+        }
+
+        try {
+            const response = await deleteTeam({
+                team_ids: teamIds
+            });
+
+            if (response.status) {
+                customToast("Success", `${teamIds.length} team(s) deleted successfully`, "success");
+                await getData();
+            } else {
+                customToast("Error", response.message || "Failed to delete teams", "error");
+            }
+        } catch (error: any) {
+            customToast("Error", error.response?.data?.message || "Failed to delete teams. Please try again.", "error");
+        }
     }, [getData]);
 
-    const handleMergeTeams = useCallback(async (data?: { name: string }) => {
+    const handleMergeTeams = useCallback(async (data?: { name: string, teamIds?: number[] }) => {
         if (!data?.name) {
             customToast("Error", "Please enter a team name", "error");
             return;
         }
-        console.log('Merging teams to:', data.name);
-        // TODO: Implement merge department API call
+        if (!data?.teamIds || data.teamIds.length < 2) {
+            customToast("Error", "Please select at least 2 teams to merge", "error");
+            return;
+        }
+
+        try {
+            const response = await mergeTeam({
+                team_ids: data.teamIds,
+                new_name: data.name
+            });
+
+            if (response.status) {
+                customToast("Success", "Teams merged successfully", "success");
+                await getData();
+            } else {
+                customToast("Error", response.message || "Failed to merge teams", "error");
+            }
+        } catch (error: any) {
+            customToast("Error", error.response?.data?.message || "Failed to merge teams. Please try again.", "error");
+        }
     }, [getData]);
 
     const columns = useMemo<ColumnDef<{ id: number; team_id: string; name: string; employeeCount: number }>[]>(
@@ -267,31 +327,20 @@ export default function TeamsPage() {
                             >
                                 <RenameTeamsDialog
                                     departmentName={row.original.name}
-                                    onConfirm={handleRenameTeams}
+                                    onConfirm={(data) => handleRenameTeams({ ...data, teamId: row.original.id })}
                                 >
                                     <div
                                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                         data-testid={`edit-action-${row.original.id}`}
-
-                                    >
-                                        Rename
-                                    </div>
-                                </RenameTeamsDialog>
-                                <MergeTeamsDialog
-                                    mergeTeams={[row.original.name, 'Design']}
-                                    onConfirm={handleMergeTeams}
-                                >
-                                    <div
-                                        className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
-                                        data-testid={`merge-action-${row.original.id}`}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                         }}
                                     >
-                                        Merge Teams
+                                        Rename
                                     </div>
-                                </MergeTeamsDialog>
-                                <DeleteTeamsDialog onConfirm={handleDeleteTeams}>
+                                </RenameTeamsDialog>
+
+                                <DeleteTeamsDialog onConfirm={() => handleDeleteTeams([row.original.id])}>
                                     <div
                                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px] text-red-600"
                                         data-testid={`delete-action-${row.original.id}`}
@@ -388,7 +437,7 @@ export default function TeamsPage() {
                                     router.push('/people/job-title');
                                 }}
                             >
-                                Job TItles
+                                Job Titles
                             </div>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -396,25 +445,11 @@ export default function TeamsPage() {
                 </div>
 
                 <div className='flex gap-[16px] sm:flex-row flex-col w-full justify-end'>
-                    <CreateTeamSheet>
-                        <Button variant='outline' className='h-[42px] sm:w-auto w-full text-[14px]/[22px] font-medium text-[#053834] border-[#053834]'>
-                            <Image
-                                src="/images/icons/ai-line.png"
-                                alt="AI Icon"
-                                width={20}
-                                height={20}
-                                id="ai-icon"
-                                data-testid="ai-icon"
-                            />
-                            <span className='text-[14px]/[20px] font-semibold text-[#0d978b]'>Create With AI</span>
+                    <CreateTeamSheet onTeamCreated={getData}>
+                        <Button className='h-[42px] sm:w-auto w-full text-[14px]/[22px] font-medium'>
+                            Create Team
                         </Button>
                     </CreateTeamSheet>
-                    <CreateTeamsDialog onConfirm={handleCreateTeams}>
-                        <Button className='h-[42px] sm:w-auto w-full text-[14px]/[22px] font-medium'>
-                            Add Team
-                            <ChevronDown className='size-[18px]' />
-                        </Button>
-                    </CreateTeamsDialog>
                 </div>
             </div >
 
@@ -468,7 +503,17 @@ export default function TeamsPage() {
 
                     {loading ? <LoadingSpinner content='Loading Teams' /> :
                         <div className='mt-[24px] w-full rounded-[12px] overflow-hidden '>
-                            {sortedData.length === 0 ? (
+                            {error ? (
+                                <div className="flex flex-col items-center justify-center py-12">
+                                    <div className="text-red-600 text-center">
+                                        <p className="text-lg font-medium mb-2">Error Loading Teams</p>
+                                        <p className="text-sm mb-4">{error}</p>
+                                        <Button onClick={getData} variant="outline">
+                                            Try Again
+                                        </Button>
+                                    </div>
+                                </div>
+                            ) : sortedData.length === 0 ? (
                                 <NoData data-testid="no-data-message" />
                             ) : (
                                 <>
