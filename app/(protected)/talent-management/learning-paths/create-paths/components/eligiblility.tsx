@@ -91,6 +91,12 @@ function DraggableCriteria({ criteria, onUpdate, onRemove, onDuplicate }: Dragga
         }
     };
 
+    const handleTagsChange = (tags: string[]) => {
+        onUpdate(criteria.id, {
+            selectedValues: tags
+        });
+    };
+
     const handleRoleRemove = (role: string) => {
         const currentValues = criteria.selectedValues || [];
         onUpdate(criteria.id, {
@@ -116,7 +122,7 @@ function DraggableCriteria({ criteria, onUpdate, onRemove, onDuplicate }: Dragga
                             </SelectContent>
                         </Select>
 
-                        <TagInput tags={criteria.selectedValues || []} setTags={(value) => handleRoleSelect(value)} />
+                        <TagInput tags={criteria.selectedValues || []} setTags={handleTagsChange} />
                     </div>
                 );
 
