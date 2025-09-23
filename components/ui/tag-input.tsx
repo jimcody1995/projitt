@@ -111,7 +111,7 @@ export default function TagInput({
                     key={index}
                     id={`tag-${index}`}
                     data-testid={`tag-${index}`}
-                    className="flex items-center bg-[#d6eeec] text-[#0d978b] px-3 py-1 rounded-full"
+                    className="flex items-center bg-[#d6eeec] text-[#0d978b] px-3 py-1 rounded-full sm:text-[12px] text-[10px]"
                 >
                     <span id={`tag-label-${index}`} data-testid={`tag-label-${index}`}>
                         {tag}

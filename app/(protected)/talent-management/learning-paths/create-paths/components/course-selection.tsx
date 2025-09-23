@@ -78,7 +78,7 @@ function DraggableCourse({ course, isSelected, onRemove, onExpand }: DraggableCo
                     <p className="text-sm font-medium text-gray-900">{course.title}</p>
 
                 </div>
-                <p className="text-xs text-gray-500">Video - {course.duration}</p>
+                <p className="text-xs text-gray-500"> {course.duration}</p>
             </div>
 
             {isSelected && (
@@ -401,7 +401,7 @@ export default function CourseSelection() {
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
         >
-            <div className="h-full flex">
+            <div className="h-full flex lg:flex-row flex-col">
                 {/* Left Panel - Course Selection */}
                 <div className="flex-1 p-6 border-r border-gray-200">
                     <div className="mb-6">
@@ -435,7 +435,7 @@ export default function CourseSelection() {
                 </div>
 
                 {/* Right Panel - Course Library */}
-                <div className="w-[350px] p-6">
+                <div className="lg:w-[350px] w-full p-6">
                     <div className="mb-6">
                         <h2 className="text-xl font-semibold text-gray-900 mb-4">Course Library</h2>
 

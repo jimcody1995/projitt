@@ -87,7 +87,7 @@ export default function LearningPaths() {
                     <div className="flex flex-col sm:flex-row gap-4 lg:items-center">
 
                         <div className="flex gap-3">
-                            <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 h-[42px]">
+                            <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 h-[42px]" onClick={() => router.push('/talent-management/learning-paths/courses')}>
                                 Course Library
                             </Button>
                             <Button variant="primary" className="bg-teal-600 hover:bg-teal-700 h-[42px]" onClick={() => router.push('/talent-management/learning-paths/create-paths')}>

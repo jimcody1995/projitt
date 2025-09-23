@@ -7,9 +7,18 @@ import BasicInfo from "./components/basic-info";
 import CourseSelection from "./components/course-selection";
 import Eligibility from "./components/eligiblility";
 import Review from "./components/review";
+import { customToast } from "@/components/common/toastr";
 export default function CreatePaths() {
     const [currentStep, setCurrentStep] = useState(1);
     const router = useRouter();
+    const handleNext = () => {
+        if (currentStep > 3) {
+            customToast("Error", "Successfully published", "success");
+            router.push('/talent-management/learning-paths');
+        } else {
+            setCurrentStep(currentStep + 1);
+        }
+    }
     return (
         <div className="w-full h-full">
             <div className="flex w-full justify-between items-center px-[8px] py-[6px]">
@@ -19,14 +28,14 @@ export default function CreatePaths() {
                 </div>
                 <div className="flex gap-[10px]">
                     {currentStep !== 1 && <Button variant="outline" className=" h-[42px] min-w-[110px]" onClick={() => setCurrentStep(currentStep - 1)}>Back</Button>}
-                    <Button className=" h-[42px] min-w-[110px]" onClick={() => setCurrentStep(currentStep + 1)}>{currentStep === 4 ? 'Publish' : 'Save & Continue'}</Button>
+                    <Button className=" h-[42px] min-w-[110px]" onClick={() => handleNext()}>{currentStep === 4 ? 'Publish' : 'Save & Continue'}</Button>
                 </div>
             </div>
             <div className="mt-[30px] bg-white border-[#E9E9E9] rounded-[12px] flex">
-                <div className="w-[324px] pt-[52px] px-[48px]">
+                <div className="w-[324px] pt-[52px] px-[48px] sm:block hidden">
                     <Stepper currentStep={currentStep} />
                 </div>
-                <div className="flex-1 border-l-[1px] border-[#E9E9E9] ">
+                <div className="flex-1 border-l-[1px] border-[#E9E9E9] w-full">
                     {currentStep === 1 && <BasicInfo />}
                     {currentStep === 2 && <CourseSelection />}
                     {currentStep === 3 && <Eligibility />}

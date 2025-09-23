@@ -102,7 +102,7 @@ function DraggableCriteria({ criteria, onUpdate, onRemove, onDuplicate }: Dragga
         switch (criteria.type) {
             case 'role':
                 return (
-                    <div className="flex gap-[10px] items-center">
+                    <div className="flex md:flex-row flex-col gap-[10px] items-center">
                         <Select value={criteria.type} onValueChange={handleTypeChange}>
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select type" />
@@ -122,7 +122,7 @@ function DraggableCriteria({ criteria, onUpdate, onRemove, onDuplicate }: Dragga
 
             case 'isManager':
                 return (
-                    <div className="flex gap-[10px]">
+                    <div className="flex md:flex-row flex-col gap-[10px]">
                         <Select value={criteria.type} onValueChange={handleTypeChange}>
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select type" />
@@ -169,11 +169,11 @@ function DraggableCriteria({ criteria, onUpdate, onRemove, onDuplicate }: Dragga
         <div
             ref={setNodeRef}
             style={style}
-            className={`bg-[#F5F5F5] rounded-lg p-4 border border-gray-200 ${isDragging ? 'opacity-50' : ''
+            className={`bg-[#F5F5F5] rounded-lg p-4 border border-gray-200 w-full ${isDragging ? 'opacity-50' : ''
                 }`}
             {...attributes}
         >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full">
                 <div
                     {...listeners}
                     className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-200 rounded mt-1"
@@ -327,18 +327,17 @@ export default function Eligibility() {
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
         >
-            <div className="h-full flex">
-                {/* Left Panel - Eligibility Criteria */}
+            <div className="h-full flex lg:flex-row flex-col w-full">
                 <div className="flex-1 p-6 border-r border-gray-200">
                     <div className="mb-6">
                         <h2 className="text-2xl font-bold text-gray-900 mb-2">Eligibility Criteria</h2>
                         <p className="text-sm text-gray-600">Assign this learning path to individual employees or roles.</p>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-4 w-full">
                         <SortableContext items={criteria.map(c => c.id)} strategy={verticalListSortingStrategy}>
                             {criteria.map((criterion, index) => (
-                                <div key={criterion.id} className="space-y-4">
+                                <div key={criterion.id} className="space-y-4 w-full">
                                     {index > 0 && (
                                         <div className="flex">
                                             <Select defaultValue="and">
@@ -377,7 +376,7 @@ export default function Eligibility() {
                 </div>
 
                 {/* Right Panel - Eligible Employees */}
-                <div className="w-[400px] p-6">
+                <div className="lg:w-[400px] w-full p-6">
                     <div className="mb-6">
                         <h2 className="text-xl font-semibold text-gray-900">
                             Eligible Employees ({eligibleEmployees.length})
