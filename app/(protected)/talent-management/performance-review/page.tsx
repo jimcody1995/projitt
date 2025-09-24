@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import Active from "./components/active";
 import Completed from "./components/completed";
 import Draft from "./components/draft";
+import { useRouter } from "next/navigation";
 export default function Performance() {
     const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
     const tabRefs = useRef<{ active: HTMLDivElement | null, completed: HTMLDivElement | null, draft: HTMLDivElement | null }>({ active: null, completed: null, draft: null });
     const [activeSection, setActiveSection] = useState('active');
-
+    const router = useRouter();
 
     return (
         <div className="w-full h-full">
@@ -19,7 +20,7 @@ export default function Performance() {
                 <div className="flex flex-col gap-[4px]">
                     <p className="text-[24px]/[30px] font-semibold text-[#353535]">Performance Review</p>
                 </div>
-                <Button className="h-[48px] px-[24px] text-[16px]/[20px] bg-[#0d978b] hover:bg-[#0b7a6f]">
+                <Button className="h-[48px] px-[24px] text-[16px]/[20px] bg-[#0d978b] hover:bg-[#0b7a6f]" onClick={() => router.push('/talent-management/performance-review/create-review-cycle')}>
                     Create Review Cycle
                 </Button>
             </div>
