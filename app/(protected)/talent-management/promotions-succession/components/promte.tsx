@@ -9,12 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
-interface AddSuccessionSheetProps {
+interface PromteSheetProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-export default function AddSuccessionSheet({ open, onOpenChange }: AddSuccessionSheetProps) {
+export default function PromteSheet({ open, onOpenChange }: PromteSheetProps) {
     const [currentRole, setCurrentRole] = useState('');
     const [targetRole, setTargetRole] = useState('');
     const [roleReadiness, setRoleReadiness] = useState('');

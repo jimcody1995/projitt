@@ -12,6 +12,8 @@ import { Progress } from '@/components/ui/progress';
 import { useRouter } from 'next/navigation';
 import { Textarea } from '@/components/ui/textarea';
 import PromoteSheet from './components/promte';
+import StartPinSheet from './components/startPip';
+import AddSuccessionPlanSheet from './components/addSuccessionPlan';
 
 // Employee card component
 interface EmployeeCardProps {
@@ -83,10 +85,10 @@ function EmployeeCard({ name, role, avatar, retentionRisk, performanceScore, onC
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B]">View Profile</DropdownMenuItem>
-                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B]">
+                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B]" onClick={(e) => e.stopPropagation()}>View Profile</DropdownMenuItem>
+                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B]" onClick={(e) => e.stopPropagation()}>
                                 Edit Details</DropdownMenuItem>
-                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B]">Assign Successor</DropdownMenuItem>
+                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B]" onClick={(e) => e.stopPropagation()}>Assign Successor</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
 
@@ -361,19 +363,21 @@ export default function PromotionsSuccession() {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem>
-                                                <p onClick={() => setPromoteOpen(true)}>
+                                            <DropdownMenuItem onClick={() => setPromoteOpen(true)}>
+                                                <p >
                                                     Promote
                                                 </p>
-                                                <PromoteSheet open={promoteOpen} onOpenChange={setPromoteOpen} />
+
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem>Add to Succession Plan</DropdownMenuItem>
-                                            <DropdownMenuItem>Start PIP</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setPromoteOpen(true)}>Add to Succession Plan</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setPromoteOpen(true)}>Start PIP</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </div>
                             </SheetHeader>
-
+                            <PromoteSheet open={promoteOpen} onOpenChange={setPromoteOpen} />
+                            <AddSuccessionPlanSheet open={promoteOpen} onOpenChange={setPromoteOpen} />
+                            <StartPinSheet open={promoteOpen} onOpenChange={setPromoteOpen} />
                             <SheetBody className="space-y-6 p-[32px]">
                                 {/* Promotion Tracking */}
                                 <div className="space-y-4">
