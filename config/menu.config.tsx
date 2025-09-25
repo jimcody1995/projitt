@@ -118,8 +118,8 @@ export const MENU_SIDEBAR: MenuConfig = [
     children: [
       { title: 'Learning Paths', path: '/talent-management/learning-paths' },
       { title: 'Performance Review', path: '/talent-management/performance-review' },
-      { title: 'Promotions', path: '/talent-management/promotions' },
-      { title: 'Succession', path: '/talent-management/succession' },
+      { title: 'Promotions/Succession', path: '/talent-management/promotions-succession' },
+      // { title: 'Succession', path: '/talent-management/succession' },
     ],
   },
   {
