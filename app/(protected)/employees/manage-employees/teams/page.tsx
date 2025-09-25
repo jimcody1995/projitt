@@ -416,7 +416,7 @@ export default function TeamsPage() {
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    router.push('/employees/manage-employeesdepartments');
+                                    router.push('/employees/manage-employees/departments');
                                 }}
                             >
                                 Department
@@ -425,7 +425,7 @@ export default function TeamsPage() {
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    router.push('/employees/manage-employeesteams');
+                                    router.push('/employees/manage-employees/teams');
                                 }}
                             >
                                 Teams
@@ -434,7 +434,7 @@ export default function TeamsPage() {
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    router.push('/employees/manage-employeesjob-title');
+                                    router.push('/employees/manage-employees/job-title');
                                 }}
                             >
                                 Job Titles
