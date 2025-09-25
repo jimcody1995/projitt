@@ -59,6 +59,7 @@ import {
   BanknoteArrowUp,
   UserCog,
   PieChart,
+  User,
 } from 'lucide-react';
 import { type MenuConfig } from './types';
 
@@ -99,7 +100,16 @@ export const MENU_SIDEBAR: MenuConfig = [
       { title: 'Applications', path: '/recruitment/applications' },
       { title: 'Assessments', path: '/recruitment/assessments' },
       { title: 'Interview', path: '/recruitment/interviews' },
-      { title: 'Pending Hires', path: '/recruitment/pending-hires' },
+    ],
+  },
+  {
+    title: 'Employees',
+    icon: User,
+    children: [
+      { title: 'Start Hire', path: '/employees/pending-hires' },
+      { title: 'Onboarding', path: '/employees/onboarding' },
+      { title: 'Manage Employees', path: '/employees/manage-employees' },
+      { title: 'Offboarding', path: '/employees/offboarding' },
     ],
   },
   {

@@ -20,11 +20,11 @@ import { Button } from "@/components/ui/button";
 import { Download, EllipsisVertical, ListFilter, Search, X } from "lucide-react";
 import { DataGrid } from "@/components/ui/data-grid";
 import { Input } from "@/components/ui/input";
-import { FilterTool } from "./filter";
-import { NoData } from "./no-data";
+import { FilterTool } from "../../manage-employees/components/filter";
+import { NoData } from "../../manage-employees/components/no-data";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
-import CheckInterview from "./check-interview";
-import Suspend from "./suspend";
+import CheckInterview from "../../manage-employees/components/check-interview";
+import Suspend from "../../manage-employees/components/suspend";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 
@@ -376,7 +376,7 @@ export default function OffboardingTable() {
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`reschedule-action-${row.original.id}`}
-                        onClick={e => { e.stopPropagation(); router.push(`/people/detail?id=${row.original.id}`) }}
+                        onClick={e => { e.stopPropagation(); router.push(`/employees/manage-employeesdetail?id=${row.original.id}`) }}
                     >
                         View Profile
                     </div>

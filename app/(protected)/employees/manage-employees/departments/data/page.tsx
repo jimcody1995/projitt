@@ -33,7 +33,7 @@ import {
 } from '@/components/ui/data-grid-table';
 import { Input } from '@/components/ui/input';
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
-import { NoData } from '../../../recruitment/applications/components/noData';
+import { NoData } from '../../../../recruitment/applications/components/noData';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -165,7 +165,7 @@ export default function DepartmentsDataPage() {
                 header: ({ column }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium'
-                        title="Name"
+                        title="Employee Name"
                         column={column}
                         data-testid="employee-name-header"
                     />
@@ -229,30 +229,6 @@ export default function DepartmentsDataPage() {
                 ),
                 enableSorting: true,
                 size: 200,
-                meta: {
-                    headerClassName: '',
-                },
-            },
-            {
-                accessorKey: 'department',
-                header: ({ column }) => (
-                    <DataGridColumnHeader
-                        className='text-[14px] font-medium'
-                        title="Department"
-                        column={column}
-                        data-testid="department-header"
-                    />
-                ),
-                cell: ({ row }) => (
-                    <span
-                        className="text-[14px] text-[#4b4b4b]"
-                        data-testid={`department-${row.original.id}`}
-                    >
-                        {row.original.department}
-                    </span>
-                ),
-                enableSorting: true,
-                size: 150,
                 meta: {
                     headerClassName: '',
                 },
@@ -361,7 +337,7 @@ export default function DepartmentsDataPage() {
                             e.stopPropagation();
                         }}
                     >
-                        Send Message
+                        Add to Team
                     </div>
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]  flex items-center gap-2"
@@ -370,7 +346,7 @@ export default function DepartmentsDataPage() {
                             e.stopPropagation();
                         }}
                     >
-                        Remove From Team
+                        Send Message
                     </div>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -397,7 +373,7 @@ export default function DepartmentsDataPage() {
                         <ArrowLeft className="h-4 w-4" />
                     </Button>
                     <h1 className="text-2xl font-bold text-[#1a1a1a]" data-testid="page-title">
-                        Saas Development Team
+                        Data
                     </h1>
                 </div>
                 <div className="flex items-center gap-2 sm:w-auto w-full">

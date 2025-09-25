@@ -11,7 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import moment from "moment";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import Message from "../../recruitment/components/message";
+import Message from "../../../recruitment/components/message";
 
 interface DetailProps {
     open: boolean;

@@ -54,6 +54,7 @@ export default function People() {
 
     return <div className='px-[8px] py-[6px]'>
         <div className="flex justify-between w-full sm:flex-row flex-col items-start gap-[10px]">
+
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <div className='flex items-center gap-[10px] cursor-pointer'>
@@ -79,7 +80,7 @@ export default function People() {
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         onClick={(e) => {
                             e.stopPropagation();
-                            router.push('/people/departments');
+                            router.push('/employees/manage-employeesdepartments');
                         }}
                     >
                         Department
@@ -88,7 +89,7 @@ export default function People() {
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         onClick={(e) => {
                             e.stopPropagation();
-                            router.push('/people/teams');
+                            router.push('/employees/manage-employeesteams');
                         }}
                     >
                         Teams
@@ -97,7 +98,7 @@ export default function People() {
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         onClick={(e) => {
                             e.stopPropagation();
-                            router.push('/people/job-title');
+                            router.push('/employees/manage-employeesjob-title');
                         }}
                     >
                         Job TItles
@@ -105,16 +106,18 @@ export default function People() {
                 </DropdownMenuContent>
             </DropdownMenu>
             <div className='flex gap-[16px]'>
-                <Button variant='outline' className='h-[42px] text-[14px]/[22px] font-medium text-[#053834] border-[#053834]' onClick={() => router.push('/people/org-chart')}>
+                <Button variant='outline' className='h-[42px] text-[14px]/[22px] font-medium text-[#053834] border-[#053834]' onClick={() => router.push('/employees/manage-employees/org-chart')}>
                     <Diamond className='size-[18px] ' />
                     <span className='text-[14px]/[20px] font-semibold'>Org Chart</span>
                 </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button className='h-[42px] text-[14px]/[22px] font-medium '>
-                            Add Employee
-                            <ChevronDown className='size-[18px] ' />
-                        </Button>
+                        <div>
+                            <Button className='h-[42px] text-[14px]/[22px] font-medium '>
+                                Add Employee
+                                <ChevronDown className='size-[18px] ' />
+                            </Button>
+                        </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                         side="bottom"
@@ -125,16 +128,16 @@ export default function People() {
                         <div
                             className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                             data-testid={`view-applicants-action`}
-                            onClick={() => router.push('/people/new-employee')}
+                            onClick={() => router.push('/employees/manage-employees/new-employee')}
                         >
                             Add New Employee
                         </div>
                         <div
                             className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                             data-testid={`view-applicants-action`}
-                            onClick={() => router.push('/people/bulk-import')}
+                            onClick={() => router.push('/employees/manage-employees/bulk-import')}
                         >
-                            Bulk Import
+                            Add Multiple Employees
                         </div>
 
                     </DropdownMenuContent>

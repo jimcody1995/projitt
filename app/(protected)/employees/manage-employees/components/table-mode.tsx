@@ -4,8 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import SuspendedTable from "./suspended-table";
 import { Search } from "lucide-react";
-import OnboardingTable from "./onboarding-table";
-import OffboardingTable from "./offboarding-table";
+import OnboardingTable from "../../onboarding/components/onboarding-table";
+import OffboardingTable from "../../offboarding/components/offboarding-table";
 import ActiveTable from "./active-table";
 
 /**

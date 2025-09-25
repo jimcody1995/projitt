@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import DocumentItem from "../../people/detail/components/documentItem";
+import DocumentItem from "../../employees/manage-employees/detail/components/documentItem";
 import { useRouter } from "next/navigation";
 
 export default function Documents() {

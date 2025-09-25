@@ -35,7 +35,7 @@ import { FilterTool } from './filter';
 import { SelectedDialog } from './selectedDialog';
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
 import CheckDialog from './checkDialog';
-import { NoData } from '../../recruitment/applications/components/noData';
+import { NoData } from '../../../recruitment/applications/components/noData';
 import DialogContent, { Dialog, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 
@@ -70,7 +70,7 @@ const ProgressCircle = dynamic(
 // Import the CSS for CircularProgressbar
 import "react-circular-progressbar/dist/styles.css";
 
-import Message from '../../recruitment/components/message';
+import Message from '../../../recruitment/components/message';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import dynamic from 'next/dynamic';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -433,7 +433,7 @@ export default function ActiveTable() {
                         // onClick={() => setSelectedApplication(row.original.id)}
                         onClick={(e) => {
                             e.stopPropagation();
-                            router.push(`/people/detail?id=${row.original.id}`);
+                            router.push(`/employees/manage-employeesdetail?id=${row.original.id}`);
                         }}
                     >
                         View Profile

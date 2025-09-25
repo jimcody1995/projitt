@@ -33,7 +33,7 @@ import {
 } from '@/components/ui/data-grid-table';
 import { Input } from '@/components/ui/input';
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
-import { NoData } from '../../../recruitment/applications/components/noData';
+import { NoData } from '../../../../recruitment/applications/components/noData';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';

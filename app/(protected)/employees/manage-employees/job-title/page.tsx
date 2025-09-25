@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/data-grid-table';
 import { Input } from '@/components/ui/input';
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from '@/components/ui/dropdown-menu';
-import { NoData } from '../../recruitment/applications/components/noData';
+import { NoData } from '../../../recruitment/applications/components/noData';
 import LoadingSpinner from '@/components/common/loading-spinner';
 import { ChevronDown } from "lucide-react";
 import { TeamsSelectedDialog } from './components/teamsSelectedDialog';
@@ -371,7 +371,7 @@ export default function TeamsPage() {
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    router.push('/people/departments');
+                                    router.push('/employees/manage-employeesdepartments');
                                 }}
                             >
                                 Department
@@ -380,7 +380,7 @@ export default function TeamsPage() {
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    router.push('/people/teams');
+                                    router.push('/employees/manage-employeesteams');
                                 }}
                             >
                                 Teams
@@ -389,7 +389,7 @@ export default function TeamsPage() {
                                 className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    router.push('/people/job-title');
+                                    router.push('/employees/manage-employeesjob-title');
                                 }}
                             >
                                 Job Title
@@ -429,7 +429,7 @@ export default function TeamsPage() {
                     recordCount={sortedData?.length || 0}
                     data-testid="departments-grid"
                     onRowClick={(row) => {
-                        router.push(`/people/job-title/data?id=${row.id}`);
+                        router.push(`/employees/manage-employeesjob-title/data?id=${row.id}`);
                     }}
                 >
                     <div className="flex items-center justify-between sm:flex-row flex-col gap-[20px]">
