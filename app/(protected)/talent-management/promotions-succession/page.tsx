@@ -402,13 +402,13 @@ export default function PromotionsSuccession() {
                                                 <p className="text-[13px]/[20px] font-medium ">ACTIVE PIP</p>
                                             </div>
                                             <div className="text-right">
-                                                <span className="text-[13px]/[20px] text-[#0D978B] text-gray-800 font-medium">Day 12 of 90</span>
+                                                <span className="text-[13px]/[20px] text-[#0D978B] font-medium">Day 12 of 90</span>
                                             </div>
                                         </div>
                                         <div className="space-y-2 mb-4">
                                             <p className="text-sm text-gray-800">Improve client proposal acceptance rate by 20% in 60 days</p>
                                             <p className="text-sm text-gray-800">Learning Path: <span className="text-[#0D978B] border-b border-[#0D978B]">Leadership Fundamentals</span></p>
-                                            <p className="text-sm text-gray-800">Mentor:<span className="h-6 w-6 rounded-full bg-[#D6EEEC] text-primary-900 p-[5.5px] text-[13px]" >JB</span> Joe Brady</p>
+                                            <p className="text-sm text-gray-800">Mentor: <span className="h-6 w-6 rounded-full bg-[#D6EEEC] text-primary-900 p-[5.5px] text-[13px]" >JB</span> Joe Brady</p>
                                         </div>
                                     </div>
 
@@ -424,7 +424,7 @@ export default function PromotionsSuccession() {
                                         <div className="space-y-2 mb-4">
                                             <p className="text-sm text-gray-600">Added 12 Dec, 2025</p>
                                             <p className="text-sm text-gray-600">Learning Path: <span className="text-[#0D978B] border-b border-[#0D978B]">Leadership Fundamentals</span></p>
-                                            <p className="text-sm text-gray-600">Mentor:<span className="h-6 w-6 rounded-full bg-[#D6EEEC] text-primary-900 p-[5.5px] text-[13px]" >JB</span>Joe Brady</p>
+                                            <p className="text-sm text-gray-600">Mentor: <span className="h-6 w-6 rounded-full bg-[#D6EEEC] text-primary-900 p-[5.5px] text-[13px]" >JB</span> Joe Brady</p>
                                         </div>
                                     </div>
                                 </div>
@@ -494,7 +494,7 @@ export default function PromotionsSuccession() {
                                         </div>
                                         <div className="flex justify-between items-center">
                                             <span className="text-sm text-gray-700">Analytics</span>
-                                            <Badge className="text-[#C0FFE5] bg-[#C0FFE5] border-[#00683D] text-[#00683D] text-xs">
+                                            <Badge className="bg-[#C0FFE5] border-[#00683D] text-[#00683D] text-xs">
                                                 Advanced
                                             </Badge>
                                         </div>
@@ -521,7 +521,7 @@ export default function PromotionsSuccession() {
 
                                             className="text-[#0D978B]  bg-white text-xs h-7"
                                         >
-                                            <CirclePlus className="size-[20[px]" />
+                                            <CirclePlus className="size-[20px]" />
                                             Add Notes
                                         </Button>
                                     </div>

@@ -569,32 +569,50 @@ export default function ReviewInfo() {
                 <Label className="text-[14px]/[16px] text-[#1c1c1c]">Eligibility Criteria</Label>
                 <div className="flex flex-col gap-[12px] mt-[12px]">
                     <div className="space-y-4 w-full">
-                        <SortableContext items={criteria.map(c => c.id)} strategy={verticalListSortingStrategy}>
-                            {criteria.map((criterion, index) => (
-                                <div key={criterion.id} className="space-y-4 w-full">
-                                    {index > 0 && (
-                                        <div className="flex">
-                                            <Select defaultValue="and">
-                                                <SelectTrigger className="w-20">
-                                                    <SelectValue />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="and">And</SelectItem>
-                                                    <SelectItem value="or">Or</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                    )}
+                        <DndContext
+                            collisionDetection={closestCenter}
+                            onDragStart={handleDragStart}
+                            onDragEnd={handleDragEnd}
+                        >
+                            <SortableContext items={criteria.map(c => c.id)} strategy={verticalListSortingStrategy}>
+                                {criteria.map((criterion, index) => (
+                                    <div key={criterion.id} className="space-y-4 w-full">
+                                        {index > 0 && (
+                                            <div className="flex">
+                                                <Select defaultValue="and">
+                                                    <SelectTrigger className="w-20">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="and">And</SelectItem>
+                                                        <SelectItem value="or">Or</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        )}
 
-                                    <DraggableCriteria
-                                        criteria={criterion}
-                                        onUpdate={handleUpdateCriteria}
-                                        onRemove={handleRemoveCriteria}
-                                        onDuplicate={handleDuplicateCriteria}
-                                    />
-                                </div>
-                            ))}
-                        </SortableContext>
+                                        <DraggableCriteria
+                                            criteria={criterion}
+                                            onUpdate={handleUpdateCriteria}
+                                            onRemove={handleRemoveCriteria}
+                                            onDuplicate={handleDuplicateCriteria}
+                                        />
+                                    </div>
+                                ))}
+                            </SortableContext>
+                            <DragOverlay>
+                                {activeId ? (
+                                    <div className="transform rotate-2">
+                                        <DraggableCriteria
+                                            criteria={criteria.find(c => c.id === activeId)!}
+                                            onUpdate={() => { }}
+                                            onRemove={() => { }}
+                                            onDuplicate={() => { }}
+                                        />
+                                    </div>
+                                ) : null}
+                            </DragOverlay>
+                        </DndContext>
                     </div>
 
                     <div className="mt-6">

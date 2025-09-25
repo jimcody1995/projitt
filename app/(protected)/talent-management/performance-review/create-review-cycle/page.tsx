@@ -1,10 +1,15 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import ReviewInfo from './components/review-info';
+import dynamic from 'next/dynamic';
 import Competencies from './components/competencies';
 import { useState, useRef } from 'react';
 import Criteria from './components/criteria';
+
+const ReviewInfo = dynamic(() => import('./components/review-info'), {
+    ssr: false,
+    loading: () => <div className="p-8">Loading...</div>
+});
 
 
 export default function CreateReviewCycle() {

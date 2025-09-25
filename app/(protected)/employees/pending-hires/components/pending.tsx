@@ -16,9 +16,9 @@ import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu, DropdownMenuIte
 import { Button } from "@/components/ui/button";
 import { EllipsisVertical } from "lucide-react";
 import { DataGrid } from "@/components/ui/data-grid";
-import { NoData } from "../../assessments/components/noData";
+import { NoData } from "../../../recruitment/assessments/components/noData";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
-import Detail from "../../applications/components/detail";
+import Detail from "../../../recruitment/applications/components/detail";
 
 /**
  * @description

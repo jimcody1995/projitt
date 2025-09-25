@@ -14,7 +14,7 @@ import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { DataGrid } from "@/components/ui/data-grid";
-import { NoData } from "../../assessments/components/noData";
+import { NoData } from "../../../recruitment/assessments/components/noData";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import DetailLetter from "./detalilLetter";
 
