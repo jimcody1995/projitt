@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import { Textarea } from '@/components/ui/textarea';
 import PromoteSheet from './components/promte';
 import StartPinSheet from './components/startPip';
-import AddSuccessionPlanSheet from './components/addSuccessionPlan';
+import AddSuccessionPlanSheet from './components/addSuccessionSheet';
 
 // Employee card component
 interface EmployeeCardProps {
@@ -169,6 +169,8 @@ export default function PromotionsSuccession() {
     const [sheetOpen, setSheetOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState<EmployeeProfile | null>(null);
     const [promoteOpen, setPromoteOpen] = useState(false);
+    const [addSuccessionOpen, setAddSuccessionOpen] = useState(false);
+    const [startPipOpen, setStartPipOpen] = useState(false);
     const router = useRouter();
 
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -369,15 +371,15 @@ export default function PromotionsSuccession() {
                                                 </p>
 
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => setPromoteOpen(true)}>Add to Succession Plan</DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => setPromoteOpen(true)}>Start PIP</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setAddSuccessionOpen(true)}>Add to Succession Plan</DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => setStartPipOpen(true)}>Start PIP</DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </div>
                             </SheetHeader>
                             <PromoteSheet open={promoteOpen} onOpenChange={setPromoteOpen} />
-                            <AddSuccessionPlanSheet open={promoteOpen} onOpenChange={setPromoteOpen} />
-                            <StartPinSheet open={promoteOpen} onOpenChange={setPromoteOpen} />
+                            <AddSuccessionPlanSheet open={addSuccessionOpen} onOpenChange={setAddSuccessionOpen} />
+                            <StartPinSheet open={startPipOpen} onOpenChange={setStartPipOpen} />
                             <SheetBody className="space-y-6 p-[32px]">
                                 {/* Promotion Tracking */}
                                 <div className="space-y-4">

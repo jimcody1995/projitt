@@ -9,36 +9,33 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
-interface PromteSheetProps {
+interface StartPipSheetProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-export default function StartPinSheet({ open, onOpenChange }: PromteSheetProps) {
-    const [currentRole, setCurrentRole] = useState('');
-    const [targetRole, setTargetRole] = useState('');
-    const [roleReadiness, setRoleReadiness] = useState('');
-    const [notes, setNotes] = useState('');
+export default function StartPipSheet({ open, onOpenChange }: StartPipSheetProps) {
+    const [timeline, setTimeline] = useState('');
+    const [setGoal, setSetGoal] = useState('');
     const [learningPath, setLearningPath] = useState('');
     const [assignedMentor, setAssignedMentor] = useState('');
+    const [checkIns, setCheckIns] = useState('');
 
     const handleSubmit = () => {
         // Handle form submission
         console.log({
-            currentRole,
-            targetRole,
-            roleReadiness,
-            notes,
+            timeline,
+            setGoal,
             learningPath,
-            assignedMentor
+            assignedMentor,
+            checkIns,
         });
         // Reset form and close sheet
-        setCurrentRole('');
-        setTargetRole('');
-        setRoleReadiness('');
-        setNotes('');
+        setTimeline('');
+        setSetGoal('');
         setLearningPath('');
         setAssignedMentor('');
+        setCheckIns('');
         onOpenChange(false);
     };
 
@@ -55,74 +52,19 @@ export default function StartPinSheet({ open, onOpenChange }: PromteSheetProps) 
                 </SheetHeader>
 
                 <div className="pl-[32px] pr-[32px] pb-[32px] pt-[20px] space-y-6">
-                    {/* Current Role */}
+                    {/* Set goal */}
                     <div className="space-y-2">
-                        <Label htmlFor="currentRole" className="text-[14px]/[16px] font-medium">
-                            Current Role
-                        </Label>
-                        <div className="relative">
-                            <Input
-                                id="currentRole"
-                                placeholder="Senior Data Analyst"
-                                value={currentRole}
-                                onChange={(e) => setCurrentRole(e.target.value)}
-                                className="pl-10 h-[42px] text-[14px]/[20px] rounded-[10px]"
-                            />
-                        </div>
-                    </div>
-
-                    {/* Target Role */}
-                    <div className="space-y-2">
-                        <Label htmlFor="targetRole" className="text-[14px]/[16px] font-medium">
-                            Target Role
-                        </Label>
-                        <Select value={targetRole} onValueChange={setTargetRole}>
-                            <SelectTrigger className="h-[42px] text-[14px]/[20px] rounded-[10px]">
-                                <SelectValue placeholder="Select Target Role" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="senior-manager">Senior Manager</SelectItem>
-                                <SelectItem value="director">Director</SelectItem>
-                                <SelectItem value="vp">Vice President</SelectItem>
-                                <SelectItem value="head-of-marketing">Head of Marketing</SelectItem>
-                                <SelectItem value="team-lead">Team Lead</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {/* Role Readiness */}
-                    <div className="space-y-2">
-                        <Label htmlFor="roleReadiness" className="text-[14px]/[16px] font-medium">
-                            Role Readiness
-                        </Label>
-                        <Select value={roleReadiness} onValueChange={setRoleReadiness}>
-                            <SelectTrigger className="h-[42px] text-[14px]/[20px] rounded-[10px]">
-                                <SelectValue placeholder="6-12 months" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="0-6">0-6 months</SelectItem>
-                                <SelectItem value="6-12">6-12 months</SelectItem>
-                                <SelectItem value="12-18">12-18 months</SelectItem>
-                                <SelectItem value="18-24">18-24 months</SelectItem>
-                                <SelectItem value="24+">24+ months</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {/* Add Notes */}
-                    <div className="space-y-2">
-                        <Label htmlFor="notes" className="text-[14px]/[16px] font-medium">
-                            Add Notes
+                        <Label htmlFor="setGoal" className="text-[14px]/[16px] font-medium">
+                            Set Goal(SMART)
                         </Label>
                         <Textarea
-                            id="notes"
-                            placeholder="Add notes for Alice, like development suggestions etc..."
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
+                            id="setGoal"
+                            placeholder="Set Goal(SMART)"
+                            value={setGoal}
+                            onChange={(e) => setSetGoal(e.target.value)}
                             className="min-h-[80px] resize-none text-[14px]/[20px] rounded-[10px]"
                         />
                     </div>
-
                     {/* Add to Learning Path */}
                     <div className="space-y-2">
                         <Label htmlFor="learningPath" className="text-[14px]/[16px] font-medium">
@@ -141,7 +83,6 @@ export default function StartPinSheet({ open, onOpenChange }: PromteSheetProps) 
                             </SelectContent>
                         </Select>
                     </div>
-
                     {/* Assign Mentor */}
                     <div className="space-y-2">
                         <Label htmlFor="mentor" className="text-[14px]/[16px] font-medium">
@@ -158,14 +99,42 @@ export default function StartPinSheet({ open, onOpenChange }: PromteSheetProps) 
                             />
                         </div>
                     </div>
-
+                    {/*Timeline*/}
+                    <div className="space-y-2">
+                        <Label htmlFor="timeline" className="text-[14px]/[16px] font-medium">
+                            Timeline
+                        </Label>
+                        <Select value={timeline} onValueChange={setTimeline}>
+                            <SelectTrigger className="h-[42px] text-[14px]/[20px] rounded-[10px]">
+                                <SelectValue placeholder="Select Timeline" />
+                            </SelectTrigger>
+                        </Select>
+                    </div>
+                    {/* Check Ins */}
+                    <div className="space-y-2">
+                        <Label htmlFor="checkIns" className="text-[14px]/[16px] font-medium">
+                            Check Ins
+                        </Label>
+                        <Select value={checkIns} onValueChange={setCheckIns}>
+                            <SelectTrigger className="h-[42px] text-[14px]/[20px] rounded-[10px]">
+                                <SelectValue placeholder="Select Check Ins" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="0-6">Monthly</SelectItem>
+                                <SelectItem value="6-12">6-12 months</SelectItem>
+                                <SelectItem value="12-18">12-18 months</SelectItem>
+                                <SelectItem value="18-24">18-24 months</SelectItem>
+                                <SelectItem value="24+">24+ months</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
                     {/* Submit Button */}
                     <div className="pt-4">
                         <Button
                             onClick={handleSubmit}
                             className="w-[185px] h-[42px] bg-[#0D978B] hover:bg-[#0a7a6f] text-white font-medium"
                         >
-                            Add to Succession List
+                            Start PIP
                         </Button>
                     </div>
                 </div>

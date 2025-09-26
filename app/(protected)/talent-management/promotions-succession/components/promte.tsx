@@ -16,29 +16,18 @@ interface PromteSheetProps {
 
 export default function PromteSheet({ open, onOpenChange }: PromteSheetProps) {
     const [currentRole, setCurrentRole] = useState('');
-    const [targetRole, setTargetRole] = useState('');
-    const [roleReadiness, setRoleReadiness] = useState('');
-    const [notes, setNotes] = useState('');
-    const [learningPath, setLearningPath] = useState('');
-    const [assignedMentor, setAssignedMentor] = useState('');
+    const [justification, setJustification] = useState('');
+    const [proposedRole, setProposedRole] = useState('');
+    const [compensation, setCompensation] = useState('');
+    const [approval, setApproval] = useState('');
 
     const handleSubmit = () => {
-        // Handle form submission
-        console.log({
-            currentRole,
-            targetRole,
-            roleReadiness,
-            notes,
-            learningPath,
-            assignedMentor
-        });
         // Reset form and close sheet
         setCurrentRole('');
-        setTargetRole('');
-        setRoleReadiness('');
-        setNotes('');
-        setLearningPath('');
-        setAssignedMentor('');
+        setJustification('');
+        setProposedRole('');
+        setCompensation('');
+        setApproval('');
         onOpenChange(false);
     };
 
@@ -66,17 +55,32 @@ export default function PromteSheet({ open, onOpenChange }: PromteSheetProps) {
                                 placeholder="Senior Data Analyst"
                                 value={currentRole}
                                 onChange={(e) => setCurrentRole(e.target.value)}
+                                className="h-[42px] text-[14px]/[20px] rounded-[10px]"
+                            />
+                        </div>
+                    </div>
+                    {/* Justification Field */}
+                    <div className="space-y-2">
+                        <Label htmlFor="justification" className="text-[14px]/[16px] font-medium">
+                            Justification Field
+                        </Label>
+                        <div className="relative">
+                            <Input
+                                id="justification"
+                                placeholder="Sarah has consistently exceeded expectations in her role"
+                                value={justification}
+                                onChange={(e) => setJustification(e.target.value)}
                                 className="pl-10 h-[42px] text-[14px]/[20px] rounded-[10px]"
                             />
                         </div>
                     </div>
 
-                    {/* Target Role */}
+                    {/* Proposed Role */}
                     <div className="space-y-2">
-                        <Label htmlFor="targetRole" className="text-[14px]/[16px] font-medium">
-                            Target Role
+                        <Label htmlFor="roleReadiness" className="text-[14px]/[16px] font-medium">
+                            Proposed Role
                         </Label>
-                        <Select value={targetRole} onValueChange={setTargetRole}>
+                        <Select value={proposedRole} onValueChange={setProposedRole}>
                             <SelectTrigger className="h-[42px] text-[14px]/[20px] rounded-[10px]">
                                 <SelectValue placeholder="Select Target Role" />
                             </SelectTrigger>
@@ -90,74 +94,44 @@ export default function PromteSheet({ open, onOpenChange }: PromteSheetProps) {
                         </Select>
                     </div>
 
-                    {/* Role Readiness */}
-                    <div className="space-y-2">
-                        <Label htmlFor="roleReadiness" className="text-[14px]/[16px] font-medium">
-                            Role Readiness
-                        </Label>
-                        <Select value={roleReadiness} onValueChange={setRoleReadiness}>
-                            <SelectTrigger className="h-[42px] text-[14px]/[20px] rounded-[10px]">
-                                <SelectValue placeholder="6-12 months" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="0-6">0-6 months</SelectItem>
-                                <SelectItem value="6-12">6-12 months</SelectItem>
-                                <SelectItem value="12-18">12-18 months</SelectItem>
-                                <SelectItem value="18-24">18-24 months</SelectItem>
-                                <SelectItem value="24+">24+ months</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
                     {/* Add Notes */}
                     <div className="space-y-2">
-                        <Label htmlFor="notes" className="text-[14px]/[16px] font-medium">
-                            Add Notes
+                        <Label htmlFor="notes" className="text-[14px]/[16px] flex flex-row justify-between font-medium">
+                            <p className="text-[14px]/[16px] font-medium">Compensation Adjustment</p>
+                            <p className="text-[12px]/[16px] text-gray-500">Current Salary: $100,000</p>
                         </Label>
-                        <Textarea
-                            id="notes"
+                        <Input
+                            id="compensation"
                             placeholder="Add notes for Alice, like development suggestions etc..."
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
-                            className="min-h-[80px] resize-none text-[14px]/[20px] rounded-[10px]"
+                            value={compensation}
+                            onChange={(e) => setCompensation(e.target.value)}
+                            className="h-[42px] text-[14px]/[20px] rounded-[10px]"
                         />
+                        <Label htmlFor="notes" className="text-[14px]/[16px] font-medium">
+                            <p className="text-[14px]/[16px] font-medium text-gray-600">Suggested Salary: $100,000</p>
+                        </Label>
                     </div>
 
-                    {/* Add to Learning Path */}
+                    {/* Approval Workflow */}
                     <div className="space-y-2">
-                        <Label htmlFor="learningPath" className="text-[14px]/[16px] font-medium">
-                            Add to Learning Path
+                        <Label htmlFor="approval" className="text-[14px]/[16px] font-medium">
+                            Approval Workflow
                         </Label>
-                        <Select value={learningPath} onValueChange={setLearningPath}>
+                        <Select value={approval} onValueChange={setApproval}>
                             <SelectTrigger className="h-[42px] text-[14px]/[20px] rounded-[10px]">
-                                <SelectValue placeholder="Select Learning Path" />
+                                <SelectValue placeholder="Select Approval Workflow" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="leadership-fundamentals">Leadership Fundamentals</SelectItem>
-                                <SelectItem value="management-essentials">Management Essentials</SelectItem>
-                                <SelectItem value="strategic-thinking">Strategic Thinking</SelectItem>
-                                <SelectItem value="communication-skills">Communication Skills</SelectItem>
+                                <SelectItem value="manager">Manager</SelectItem>
+                                <SelectItem value="director">Director</SelectItem>
+                                <SelectItem value="vp">Vice President</SelectItem>
+                                <SelectItem value="ceo">CEO</SelectItem>
                                 <SelectItem value="technical-leadership">Technical Leadership</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
 
-                    {/* Assign Mentor */}
-                    <div className="space-y-2">
-                        <Label htmlFor="mentor" className="text-[14px]/[16px] font-medium">
-                            Assign Mentor
-                        </Label>
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                            <Input
-                                id="mentor"
-                                placeholder="Search by employee name or ID"
-                                value={assignedMentor}
-                                onChange={(e) => setAssignedMentor(e.target.value)}
-                                className="pl-10 h-[42px] text-[14px]/[20px] rounded-[10px]"
-                            />
-                        </div>
-                    </div>
 
                     {/* Submit Button */}
                     <div className="pt-4">
@@ -165,7 +139,7 @@ export default function PromteSheet({ open, onOpenChange }: PromteSheetProps) {
                             onClick={handleSubmit}
                             className="w-[185px] h-[42px] bg-[#0D978B] hover:bg-[#0a7a6f] text-white font-medium"
                         >
-                            Add to Succession List
+                            Submit for Approval
                         </Button>
                     </div>
                 </div>

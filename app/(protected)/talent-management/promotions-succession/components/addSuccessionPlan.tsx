@@ -9,14 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 
-interface PromteSheetProps {
+interface AddSuccessionSheetProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-export default function AddSuccessionPlanSheet({ open, onOpenChange }: PromteSheetProps) {
+export default function AddSuccessionPlanSheet({ open, onOpenChange }: AddSuccessionSheetProps) {
     const [currentRole, setCurrentRole] = useState('');
-    const [targetRole, setTargetRole] = useState('');
     const [roleReadiness, setRoleReadiness] = useState('');
     const [notes, setNotes] = useState('');
     const [learningPath, setLearningPath] = useState('');
@@ -26,7 +25,6 @@ export default function AddSuccessionPlanSheet({ open, onOpenChange }: PromteShe
         // Handle form submission
         console.log({
             currentRole,
-            targetRole,
             roleReadiness,
             notes,
             learningPath,
@@ -34,7 +32,6 @@ export default function AddSuccessionPlanSheet({ open, onOpenChange }: PromteShe
         });
         // Reset form and close sheet
         setCurrentRole('');
-        setTargetRole('');
         setRoleReadiness('');
         setNotes('');
         setLearningPath('');
@@ -69,25 +66,6 @@ export default function AddSuccessionPlanSheet({ open, onOpenChange }: PromteShe
                                 className="pl-10 h-[42px] text-[14px]/[20px] rounded-[10px]"
                             />
                         </div>
-                    </div>
-
-                    {/* Target Role */}
-                    <div className="space-y-2">
-                        <Label htmlFor="targetRole" className="text-[14px]/[16px] font-medium">
-                            Target Role
-                        </Label>
-                        <Select value={targetRole} onValueChange={setTargetRole}>
-                            <SelectTrigger className="h-[42px] text-[14px]/[20px] rounded-[10px]">
-                                <SelectValue placeholder="Select Target Role" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="senior-manager">Senior Manager</SelectItem>
-                                <SelectItem value="director">Director</SelectItem>
-                                <SelectItem value="vp">Vice President</SelectItem>
-                                <SelectItem value="head-of-marketing">Head of Marketing</SelectItem>
-                                <SelectItem value="team-lead">Team Lead</SelectItem>
-                            </SelectContent>
-                        </Select>
                     </div>
 
                     {/* Role Readiness */}

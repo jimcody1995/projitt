@@ -2,7 +2,7 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Maximize2, RotateCcw, PieChart, Minimize2, MoreVertical, Search, X, ArrowLeft, Plus } from "lucide-react";
+import { MoreHorizontal, Maximize2, RotateCcw, PieChart, Minimize2, MoreVertical, Search, X, ArrowLeft, Plus, GripVertical } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ListFilter } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -98,76 +98,80 @@ export default function PromotionsSuccession() {
                             <div className="text-[14px]/[20px] font-medium text-[#8F8F8F] uppercase tracking-wide mb-[8px]">
                                 SUCCESSORS
                             </div>
-
-                            {/* Table Header */}
-                            <div className="grid grid-cols-3 gap-[16px] mb-[12px] pb-[8px] border-b border-[#E9E9E9]">
-                                <div className="text-[12px] font-medium text-[#8F8F8F]">Name</div>
-                                <div className="text-[12px] font-medium text-[#8F8F8F]">Role</div>
-                                <div className="text-[12px] font-medium text-[#8F8F8F]">Status</div>
-                            </div>
-
-                            {/* Successor Rows */}
-                            <div className="space-y-[16px]">
-                                {/* Successor 1 */}
-                                <div className="grid grid-cols-3 gap-[16px] items-center">
-                                    <div className="flex items-center gap-[12px]">
-                                        <div className="w-[32px] h-[32px] rounded-full bg-[#D6EEEC] flex items-center justify-center">
-                                            <span className="text-[12px] font-medium text-[#053834]">AF</span>
-                                        </div>
-                                        <span className="text-[14px] font-medium text-[#353535]">Alice Fernandez</span>
-                                    </div>
-                                    <div>
-                                        <div className="text-[14px] font-medium text-[#353535]">Senior Data Analyst</div>
-                                        <div className="text-[12px] text-[#8F8F8F]">USA</div>
-                                    </div>
-                                    <div className="flex items-center gap-[8px] justify-between">
-                                        <span className="px-[8px] py-[4px] bg-[#D6EEEC] text-[#053834] text-[12px] font-medium rounded-full">
-                                            Ready
-                                        </span>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="sm" className="h-[24px] w-[24px] p-0">
-                                                    <MoreVertical className="w-[16px] h-[16px]" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem>Remove</DropdownMenuItem>
-                                                <DropdownMenuItem>View Profile</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
-                                </div>
-
-                                {/* Successor 2 */}
-                                <div className="grid grid-cols-3 gap-[16px] items-center">
-                                    <div className="flex items-center gap-[12px]">
-                                        <div className="w-[32px] h-[32px] rounded-full bg-[#D6EEEC] flex items-center justify-center">
-                                            <span className="text-[12px] font-medium text-[#053834]">AF</span>
-                                        </div>
-                                        <span className="text-[14px] font-medium text-[#353535]">Alice Fernandez</span>
-                                    </div>
-                                    <div>
-                                        <div className="text-[14px] font-medium text-[#353535]">Senior Data Analyst</div>
-                                        <div className="text-[12px] text-[#8F8F8F]">USA</div>
-                                    </div>
-                                    <div className="flex items-center gap-[8px] justify-between">
-                                        <span className="px-[8px] py-[4px] bg-[#D6EEEC] text-[#053834] text-[12px] font-medium rounded-full">
-                                            Ready
-                                        </span>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="sm" className="h-[24px] w-[24px] p-0">
-                                                    <MoreVertical className="w-[16px] h-[16px]" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem>Remove</DropdownMenuItem>
-                                                <DropdownMenuItem>View Profile</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
+                            {/*Table with Row Lines*/}
+                            <div className="border rounded-[12px] border-[1px] border-[#EAEAEA] overflow-hidden">
+                                {/* Successors Table Header */}
+                                <div>
+                                    <table className="w-full">
+                                        <thead>
+                                            <tr className="border-b border-[#E9E9E9]">
+                                                <th className="text-[12px] font-medium text-[#8F8F8F] px-4 py-3 text-left  border-[#E9E9E9] last:border-r-0"></th>
+                                                <th className="text-[12px] font-medium text-[#8F8F8F] px-4 py-3 text-left  border-[#E9E9E9] last:border-r-0">Name</th>
+                                                <th className="text-[12px] font-medium text-[#8F8F8F] px-4 py-3 text-left  border-[#E9E9E9] last:border-r-0">Role</th>
+                                                <th className="text-[12px] font-medium text-[#8F8F8F] px-4 py-3 text-left">Status</th>
+                                                <th className="text-[12px] font-medium text-[#8F8F8F] px-4 py-3 text-left"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="sm:text-[14px] text-[9px]">
+                                            <tr className="border-b border-[#E9E9E9] hover:bg-[#D6EEEC]/20 transition-colors">
+                                                <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0"><GripVertical /></td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0">
+                                                    <span className="w-[24px] h-[24px] rounded-full bg-[#D6EEEC] text-[#053834] p-1 ">
+                                                        AF
+                                                    </span>Alice Fernandez</td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3  border-[#E9E9E9] last:border-r-0">Senior Data Analyst</td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3">
+                                                    <span className="px-[8px] py-[4px] text-[#0D978B] sm:bg-[#D6EEEC]  sm:text-[14px] text-[7px] font-medium rounded-full">
+                                                        Ready Now
+                                                    </span>
+                                                </td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3">
+                                                    <span className="px-[8px] py-[4px]  text-[#053834] text-[12px] font-medium">
+                                                        <DropdownMenu>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <Button variant="ghost" size="sm" className="h-[24px] w-[24px] p-0">
+                                                                    <MoreVertical className="w-[16px] h-[16px]" />
+                                                                </Button>
+                                                            </DropdownMenuTrigger>
+                                                            <DropdownMenuContent align="end">
+                                                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                                <DropdownMenuItem>Remove</DropdownMenuItem>
+                                                                <DropdownMenuItem>View Profile</DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr className="border-b border-[#E9E9E9] hover:bg-[#D6EEEC]/20 transition-colors last:border-b-0">
+                                                <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0"><GripVertical /></td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3  border-[#E9E9E9] last:border-r-0"><span className="w-[24px] h-[24px] rounded-full bg-[#D6EEEC] text-[#053834] p-1 ">
+                                                    EH
+                                                </span>Bob Wilson</td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0">Marketing Manager</td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3">
+                                                    <span className="sm:px-[8px] py-[4px] sm:bg-[#FFDFC0]  sm:text-[14px] text-[7px]  text-[#BE5E00]  font-medium rounded-full">
+                                                        Ready in 3-6 months
+                                                    </span>
+                                                </td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3">
+                                                    <span className="px-[8px] py-[4px]  text-[#053834] text-[12px] font-medium">
+                                                        <DropdownMenu>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <Button variant="ghost" size="sm" className="h-[24px] w-[24px] p-0">
+                                                                    <MoreVertical className="w-[16px] h-[16px]" />
+                                                                </Button>
+                                                            </DropdownMenuTrigger>
+                                                            <DropdownMenuContent align="end">
+                                                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                                <DropdownMenuItem>Remove</DropdownMenuItem>
+                                                                <DropdownMenuItem>View Profile</DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

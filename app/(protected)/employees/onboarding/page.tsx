@@ -7,14 +7,14 @@ import OnboardingTable from "./components/onboarding-table";
 
 export default function Onboarding() {
     return <div>
-        <div className="w-full justify-between flex">
+        <div className="w-full justify-between flex lg:flex-row flex-col gap-[10px]">
             <p className="text-[24px]/[30px] font-semibold text-[#1C1C1C]" data-testid="page-title" id="page-title">Onboarding</p>
-            <div className="gap-[10px] flex items-center">
+            <div className="gap-[10px] flex items-center sm:flex-row flex-col">
                 <div className="relative">
                     <Search className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2" />
                     <Input
                         placeholder="Search by name, ID"
-                        className="ps-9 w-[243px] h-[42px]"
+                        className="ps-9 md:w-[243px] w-full h-[42px]"
                         data-testid="search-input"
                     />
                 </div>

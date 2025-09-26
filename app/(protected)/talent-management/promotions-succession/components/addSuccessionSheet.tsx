@@ -49,7 +49,7 @@ export default function AddSuccessionSheet({ open, onOpenChange }: AddSuccession
                     <div className="flex flex-col gap-[18px]">
                         <X className="h-8 w-8 p-[6px] text-[#787878] border border-[#787878] rounded-[6px]" onClick={() => onOpenChange(false)} />
                         <SheetTitle className="text-[22px]/[30px] font-semibold text-gray-900">
-                            Succession
+                            Add to Succession
                         </SheetTitle>
                     </div>
                 </SheetHeader>
