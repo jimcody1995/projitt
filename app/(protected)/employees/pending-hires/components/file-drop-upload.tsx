@@ -3,10 +3,10 @@ import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FileText, FileUp, X } from 'lucide-react';
 import React from 'react';
-import * as pdfjsLib from 'pdfjs-dist';
-import 'pdfjs-dist/legacy/build/pdf.worker';
+// import * as pdfjsLib from 'pdfjs-dist';
+// import 'pdfjs-dist/legacy/build/pdf.worker';
 import { uploadMedia } from '@/api/media';
-pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
+// pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.mjs';
 /**
  * FileDropUpload is a file upload component that allows users to drag and drop
  * or click to select a file for upload. It shows file type icons based on MIME type,
@@ -45,31 +45,31 @@ export default function FileDropUpload({
   const [preview, setPreview] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    const renderPdf = async () => {
-      if (!file || file.type !== 'application/pdf' || !preview) return;
+    // const renderPdf = async () => {
+    //   if (!file || file.type !== 'application/pdf' || !preview) return;
 
-      const fileReader = new FileReader();
-      fileReader.onload = async function () {
-        const typedArray = new Uint8Array(this.result as ArrayBuffer);
+    //   const fileReader = new FileReader();
+    //   fileReader.onload = async function () {
+    //     const typedArray = new Uint8Array(this.result as ArrayBuffer);
 
-        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-        const page = await pdf.getPage(1);
+    //     const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+    //     const page = await pdf.getPage(1);
 
-        const viewport = page.getViewport({ scale: 1.5 });
+    //     const viewport = page.getViewport({ scale: 1.5 });
 
-        const canvas = document.getElementById('pdf-canvas') as HTMLCanvasElement;
-        if (!canvas) return;
+    //     const canvas = document.getElementById('pdf-canvas') as HTMLCanvasElement;
+    //     if (!canvas) return;
 
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+    //     const context = canvas.getContext('2d');
+    //     canvas.height = viewport.height;
+    //     canvas.width = viewport.width;
 
-        await page.render({ canvasContext: context!, viewport, canvas }).promise;
-      };
-      fileReader.readAsArrayBuffer(file);
-    };
+    //     await page.render({ canvasContext: context!, viewport, canvas }).promise;
+    //   };
+    //   fileReader.readAsArrayBuffer(file);
+    // };
 
-    renderPdf();
+    // renderPdf();
   }, [file, preview]);
 
   return (

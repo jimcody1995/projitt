@@ -26,6 +26,7 @@ import CheckInterview from "../../manage-employees/components/check-interview";
 import Suspend from "../../manage-employees/components/suspend";
 import moment from "moment";
 import { useRouter } from "next/navigation";
+import BackgroundCheck from "../../manage-employees/components/background-check";
 
 export default function OnboardingTable() {
     const router = useRouter();
@@ -78,6 +79,8 @@ export default function OnboardingTable() {
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [nameFilter, setNameFilter] = useState<string>('');
     const [message, setMessage] = useState<string>('');
+    const [backgroundCheckOpen, setBackgroundCheckOpen] = useState(false);
+
 
     const filteredData = useMemo<any[]>(() => {
         return data.filter((item) => {
@@ -448,6 +451,7 @@ export default function OnboardingTable() {
                     </>
                 </div>
             </DataGrid>
+            <BackgroundCheck open={backgroundCheckOpen} onOpenChange={setBackgroundCheckOpen} setMessage={setMessage} />
 
         </div>
     );

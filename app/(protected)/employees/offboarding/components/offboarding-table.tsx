@@ -24,7 +24,7 @@ import { FilterTool } from "../../manage-employees/components/filter";
 import { NoData } from "../../manage-employees/components/no-data";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import CheckInterview from "../../manage-employees/components/check-interview";
-import Suspend from "../../manage-employees/components/suspend";
+import OffboardStart from "../../manage-employees/components/offboardStart";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 
@@ -79,7 +79,7 @@ export default function OffboardingTable() {
     ]);
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilter, setShowFilter] = useState(false);
-    const [suspendOpen, setSuspendOpen] = useState(false);
+    const [offboardStartOpen, setOffboardStartOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
     const [selectedMode, setSelectedMode] = useState<string[]>([]);
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
@@ -405,7 +405,7 @@ export default function OffboardingTable() {
                 table={table}
                 recordCount={data?.length || 0}
                 data-testid="data-data-grid"
-                onRowClick={(row) => { setSelectedApplication(row.original); setSuspendOpen(true); }}
+                onRowClick={(row) => { setSelectedApplication(row.original); setOffboardStartOpen(true); }}
             >
                 <div className="flex items-center justify-between sm:flex-row flex-col gap-[10px]">
                     <div className="relative">
@@ -495,7 +495,7 @@ export default function OffboardingTable() {
                     </>
                 </div>
             </DataGrid>
-            <Suspend open={suspendOpen} onOpenChange={setSuspendOpen} setMessage={setMessage} />
+            <OffboardStart open={offboardStartOpen} onOpenChange={setOffboardStartOpen} setMessage={setMessage} />
             <CheckInterview open={message.length > 0} setOpen={() => setMessage('')} message={message} />
         </div>
     );
