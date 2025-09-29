@@ -376,7 +376,7 @@ export default function OffboardingTable() {
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`reschedule-action-${row.original.id}`}
-                        onClick={e => { e.stopPropagation(); router.push(`/employees/manage-employees/detail?id=${row.original.id}`) }}
+                        onClick={e => { e.stopPropagation(); router.push(`/employees/offboarding/detail?id=${row.original.id}`) }}
                     >
                         View Profile
                     </div>
