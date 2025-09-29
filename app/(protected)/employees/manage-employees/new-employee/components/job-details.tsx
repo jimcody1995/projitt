@@ -17,10 +17,10 @@ interface JobDetailsProps {
 
 export default function JobDetails({ setCurrentStep, onFormDataChange, onValidation }: JobDetailsProps) {
     const [formData, setFormData] = useState({
-        firstName: 'Alice',
-        lastName: 'Fernadez',
+        firstName: '',
+        lastName: '',
         employeeType: 'full_time',
-        email: 'alicefernadez@gmail.com',
+        email: '',
         country: ''
     });
     const [isLoading, setIsLoading] = useState(false);

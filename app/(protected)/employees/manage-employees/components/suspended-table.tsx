@@ -32,8 +32,12 @@ import { NoData } from "./no-data";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import CheckInterview from "./check-interview";
 import Suspend from "./suspend";
+import { useRouter } from 'next/navigation';
+
+
 
 export default function SuspendedTable() {
+    const router = useRouter();
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -360,6 +364,10 @@ export default function SuspendedTable() {
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`reschedule-action-${row.original.id}`}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(`/employees/manage-employees/detail?id=${row.original.id}`);
+                        }}
                     >
                         View Profile
                     </div>

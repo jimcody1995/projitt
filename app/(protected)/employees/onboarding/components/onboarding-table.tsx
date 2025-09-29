@@ -19,7 +19,6 @@ import { Button } from "@/components/ui/button";
 import { Download, EllipsisVertical, ListFilter, Search, X } from "lucide-react";
 import { DataGrid } from "@/components/ui/data-grid";
 import { Input } from "@/components/ui/input";
-import { FilterTool } from "../../manage-employees/components/filter";
 import { NoData } from "../../manage-employees/components/no-data";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import CheckInterview from "../../manage-employees/components/check-interview";
@@ -27,6 +26,7 @@ import Suspend from "../../manage-employees/components/suspend";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import BackgroundCheck from "../../manage-employees/components/background-check";
+import { FilterTool } from "./filterOnboardingTable";
 
 export default function OnboardingTable() {
     const router = useRouter();
@@ -74,7 +74,6 @@ export default function OnboardingTable() {
     const [suspendOpen, setSuspendOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
     const [selectedMode, setSelectedMode] = useState<string[]>([]);
-    const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const [selectedCountries, setSelectedCountries] = useState<number[]>([]);
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const [nameFilter, setNameFilter] = useState<string>('');
@@ -83,40 +82,23 @@ export default function OnboardingTable() {
 
 
     const filteredData = useMemo<any[]>(() => {
+        console.log(nameFilter);
+
         return data.filter((item) => {
-            // Status filter
-            const matchesStatus =
-                !selectedStatuses?.length ||
-                selectedStatuses.includes(
-                    item.status.replace('bg-', '').charAt(0).toUpperCase() +
-                    item.status.replace('bg-', '').slice(1),
-                );
-
-            // Mode filter
-            const matchesMode =
-                !selectedMode?.length ||
-                selectedMode.includes(item.mode || '');
-
-            // Country filter
-            const matchesCountry =
-                !selectedCountries?.length ||
-                selectedCountries.includes(item.job?.country_id || 0);
-
             // Name filter
             const matchesName =
                 !nameFilter ||
-                (item.applicant.first_name + " " + item.applicant.last_name).toLowerCase().includes(nameFilter.toLowerCase());
+                (item.name).toLowerCase().includes(nameFilter.toLowerCase());
 
-            // Search filter
+            // Job Detail Country filter
             const searchLower = (searchQuery || "").toLowerCase();
             const matchesSearch =
                 !searchQuery ||
-                item.job?.title.toLowerCase().includes(searchLower) ||
-                (item.applicant.first_name + " " + item.applicant.last_name).toLowerCase().includes(searchLower);
+                item.job.country.toLowerCase().includes(searchLower)
 
-            return matchesSearch && matchesStatus && matchesMode && matchesCountry && matchesName;
+            return matchesSearch && matchesName;
         });
-    }, [searchQuery, selectedStatuses, selectedMode, selectedCountries, nameFilter, data]);
+    }, [searchQuery, selectedCountries, nameFilter, data]);
 
     const sortedData = useMemo<any[]>(() => {
         if (sorting.length === 0) return filteredData;
@@ -286,8 +268,8 @@ export default function OnboardingTable() {
 
     const table = useReactTable({
         columns: columns as ColumnDef<any, any>[],
-        data: data,
-        pageCount: Math.ceil((data?.length || 0) / pagination.pageSize),
+        data: filteredData,
+        pageCount: Math.ceil((filteredData?.length || 0) / pagination.pageSize),
         getRowId: (row: any) => row.id,
         state: {
             pagination,
@@ -332,7 +314,7 @@ export default function OnboardingTable() {
                     <div
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         data-testid={`reschedule-action-${row.original.id}`}
-                        onClick={e => { e.stopPropagation(); router.push(`/employees/manage-employees/profile`); }} // TODO: change to profile page
+                        onClick={e => { e.stopPropagation(); router.push(`/employees/onboarding/profile`); }} // TODO: change to profile page
                     >
                         View
                     </div>
@@ -360,7 +342,7 @@ export default function OnboardingTable() {
             <DataGrid
                 className='w-full'
                 table={table}
-                recordCount={data?.length || 0}
+                recordCount={filteredData?.length || 0}
                 data-testid="data-data-grid"
             >
                 <div className="flex items-center justify-between sm:flex-row flex-col gap-[10px]">
@@ -423,18 +405,14 @@ export default function OnboardingTable() {
                         }`}
                 >
                     <FilterTool
-                        selectedMode={selectedMode}
-                        selectedStatuses={selectedStatuses}
                         selectedCountries={selectedCountries}
                         nameFilter={nameFilter}
-                        setSelectedMode={setSelectedMode}
-                        setSelectedStatuses={setSelectedStatuses}
                         setSelectedCountries={setSelectedCountries}
                         setNameFilter={setNameFilter}
                     />
                 </div>
                 <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
-                    <> {data.length === 0 ?
+                    <> {filteredData.length === 0 ?
                         (!loading && <NoData data-testid="no-data-message" />) : <>
                             <div
                                 className={`w-full overflow-x-auto transition-all duration-300 ease-in-out ${showFilter

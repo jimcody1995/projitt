@@ -71,7 +71,7 @@ export default function People() {
                         className="cursor-pointer hover:bg-[#e9e9e9] text-[12px]/[18px] py-[7px] px-[12px] rounded-[8px]"
                         onClick={(e) => {
                             e.stopPropagation();
-                            router.push('/employees/pending-hires');
+                            router.push('/employees/manage-employees');
                         }}
                     >
                         Employees
