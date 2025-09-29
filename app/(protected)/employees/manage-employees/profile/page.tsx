@@ -36,7 +36,7 @@ export default function Profile() {
     return <div>
         <div className="flex w-full justify-between items-center px-[8px] py-[6px]">
             <div className="flex flex-col gap-[4px]">
-                <p className="text-[12px]/[20px] text-[#A5A5A5]"><span className="cursor-pointer " onClick={() => router.push('/people')}>Onboarding</span> <span className="text-[#0d978b]">/ Profile</span></p>
+                <p className="text-[12px]/[20px] text-[#A5A5A5]"><span className="cursor-pointer " onClick={() => router.push('/employees/manage-employees')}>Onboarding</span> <span className="text-[#0d978b]">/ Profile</span></p>
                 <p className="text-[24px]/[30px] font-semibold text-[#353535]">Profile</p>
             </div>
             <div className="w-[129px] h-[42px] rounded-[8px] bg-[#D6EEEC] overflow-hidden relative flex itmes-center justify-center">
