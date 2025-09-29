@@ -6,7 +6,9 @@ import { Search, Settings } from "lucide-react";
 import OnboardingTable from "./components/onboarding-table";
 import BackgroundCheck from "../manage-employees/components/background-check";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 export default function Onboarding() {
+    const router = useRouter();
     const [backgroundCheckOpen, setBackgroundCheckOpen] = useState(false);
     const [message, setMessage] = useState<string>('');
     return <div>
@@ -24,7 +26,7 @@ export default function Onboarding() {
                 <Button
                     variant="outline"
                     className="h-[42px] text-[14px]/[22px] font-medium text-[#053834] border-[#053834] flex items-center gap-2"
-                    onClick={() => setBackgroundCheckOpen(true)}
+                    onClick={() => router.push('/employees/onboarding/background-checks')}
                 >
                     <Settings className="size-4" />
                     Background Checks
@@ -33,6 +35,5 @@ export default function Onboarding() {
         </div>
         <div className="mt-[27px]">
             <OnboardingTable /></div>
-        <BackgroundCheck open={backgroundCheckOpen} onOpenChange={setBackgroundCheckOpen} setMessage={setMessage} />
     </div>;
 }
