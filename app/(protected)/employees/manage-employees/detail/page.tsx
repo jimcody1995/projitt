@@ -71,7 +71,7 @@ export default function Detail() {
     return <div className="px-[8px] py-[6px]">
         <div className="w-full justify-between items-center flex md:flex-row flex-col gap-[10px]">
             <div className="flex items-center">
-                <div className="w-[24px] h-[24px] rounded-full border border-[#E9E9E9] flex justify-center items-center cursor-pointer" onClick={() => router.push('/people')}>
+                <div className="w-[24px] h-[24px] rounded-full border border-[#E9E9E9] flex justify-center items-center cursor-pointer" onClick={() => router.push('/employees/manage-employees')}>
                     <ArrowLeft className="size-[12px] text-[#4B4B4B]" />
                 </div>
                 <div className="w-[40px] h-[40px] rounded-full bg-[#d6eeec] text-[#0D978B] flex items-center justify-center ml-[11px]">
