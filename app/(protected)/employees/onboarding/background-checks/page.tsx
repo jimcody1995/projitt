@@ -15,7 +15,7 @@ export default function Onboarding() {
     return <div>
         <div className="w-full justify-between flex lg:flex-row flex-col gap-[10px]">
             <div className="flex items-center gap-2">
-                <div className="w-[24px] h-[24px] rounded-full border border-[#E9E9E9] flex justify-center items-center cursor-pointer" onClick={() => router.push('/employees/offboarding')}>
+                <div className="w-[24px] h-[24px] rounded-full border border-[#E9E9E9] flex justify-center items-center cursor-pointer" onClick={() => router.push('/employees/onboarding')}>
                     <ArrowLeft className="size-[12px] text-[#4B4B4B]" />
                 </div>
                 <p className="text-[24px]/[30px] font-semibold text-[#1C1C1C]" data-testid="page-title" id="page-title">
