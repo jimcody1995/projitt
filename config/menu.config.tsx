@@ -126,9 +126,9 @@ export const MENU_SIDEBAR: MenuConfig = [
     title: 'Leave & Attendance',
     icon: CalendarClock,
     children: [
-      { title: 'Leave Management', path: '/leave-management/leave-management' },
-      { title: 'Attendance Tracking', path: '/attendance/attendance-tracking' },
-      { title: 'Scheduling', path: '/scheduling/scheduling' },
+      { title: 'Leave Management', path: '/leave-attendance/leave-management' },
+      { title: 'Attendance Tracking', path: '/leave-attendance/attendance-tracking' },
+      { title: 'Scheduling', path: '/leave-attendance/scheduling' },
       { title: 'Payroll', path: '/payroll/payroll' },
     ],
   },
