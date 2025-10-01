@@ -36,6 +36,12 @@ export default function ManageLeaves() {
         }
     };
 
+    const handleSetUpClick = (leaveName: string) => {
+        if (leaveName === "Jury Duty") {
+            router.push("/leave-attendance/manage-leaves/setup");
+        }
+    };
+
     return (
         <div className="w-full h-full bg-[#F8F9FA] min-h-screen">
             {/* Header */}
@@ -105,6 +111,7 @@ export default function ManageLeaves() {
                                     ) : (
                                         <Button
                                             className="h-[32px] px-[8px] text-[14px]/[20px] bg-[#0d978b] text-white hover:bg-[#086159] font-semibold rounded-[6px] flex items-center gap-[4px]"
+                                            onClick={() => handleSetUpClick(leave.name)}
                                         >
                                             <Plus className="size-3" />
                                             Set Up

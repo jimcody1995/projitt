@@ -28,6 +28,7 @@ export default function Role({
         department: '',
         jobTitle: '',
         manager: '',
+        level: '',
         contractStartDate: '10 June 2025'
     });
 
@@ -41,7 +42,7 @@ export default function Role({
     };
 
     const validateForm = () => {
-        const requiredFields = ['workAddress', 'department', 'jobTitle', 'contractStartDate'];
+        const requiredFields = ['workAddress', 'department', 'jobTitle', 'level', 'manager', 'contractStartDate'];
         const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
 
         if (missingFields.length > 0) {
@@ -155,6 +156,27 @@ export default function Role({
                     <button className="text-[#0D978B] text-[12px]/[18px] font-semibold hover:underline mt-[10px]">
                         + Create a new job title in Data
                     </button>
+                </div>
+                {/* Select level */}
+                <div>
+                    <Label htmlFor="jobTitle" className="text-[14px]/[22px] font-medium text-[#353535]">
+                        Select Level
+                    </Label>
+                    <Select
+                        value={formData.level}
+                        onValueChange={(value) => handleInputChange('level', value)}
+                    >
+                        <SelectTrigger className="w-full h-[48px] mt-[8px]">
+                            <SelectValue placeholder="Select Level" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {jobTitles.map((title: any) => (
+                                <SelectItem key={title.id} value={title.id}>
+                                    {title.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
 
                 {/* Manager */}

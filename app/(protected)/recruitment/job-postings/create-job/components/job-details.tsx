@@ -43,6 +43,7 @@ interface JobDetailsProps {
     errors?: {
         title?: string;
         department_id?: string;
+        level_id?: string;
         employment_type_id?: string;
         no_of_job_opening?: string;
         skill_ids?: string;
@@ -75,6 +76,16 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
     const { skills } = useBasic();
     const { designation } = useBasic();
 
+    // Define levels locally since it's not available in BasicContext
+    const levels = [
+        { id: 1, name: 'Junior' },
+        { id: 2, name: 'Mid-level' },
+        { id: 3, name: 'Senior' },
+        { id: 4, name: 'Lead' },
+        { id: 5, name: 'Principal' },
+        { id: 6, name: 'Director' },
+        { id: 7, name: 'Executive' }
+    ];
     // Helper function to get country name from country ID
     const getCountryNameById = (countryId: string): string => {
         const foundCountry = (country as any[] || []).find((c: any) => c.id.toString() === countryId);
@@ -223,6 +234,31 @@ export default function JobDetails({ jobData, setJobData, errors = {}, triggerVa
                             )}
                         </div>
 
+                        <div className="flex flex-col gap-[12px]">
+                            <p className="text-[14px]/[16px] text-[#1c1c1c]">Select Level</p>
+                            <Select
+                                key={`level-${jobData?.level_id}`}
+                                defaultValue="Junior"
+                                value={jobData?.level_id?.toString() || ""}
+                                onValueChange={(e) => setJobData({ ...jobData, level_id: e })}
+                                disabled={disabled}
+                            >
+                                <SelectTrigger
+                                    className="h-[48px]"
+                                    id="job-details-level"
+                                    data-testid="job-details-level"
+                                    disabled={disabled}
+                                >
+                                    <SelectValue placeholder="Select a level" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {(levels || [])?.map((level: any) => (
+                                        <SelectItem key={level.id} value={level.id.toString()}>{level.name}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {triggerValidation && errors.level_id && <span className="text-red-500 text-xs ">{errors.level_id}</span>}
+                        </div>
                         <div className="flex flex-col gap-[12px]">
                             <p className="text-[14px]/[16px] text-[#1c1c1c]">Department *</p>
                             <Select
