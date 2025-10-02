@@ -177,19 +177,19 @@ function DraggableCriteria({ criteria, onUpdate, onRemove, onDuplicate }: Dragga
         <div
             ref={setNodeRef}
             style={style}
-            className={`bg-[#F5F5F5] rounded-lg p-4 border border-gray-200 w-full ${isDragging ? 'opacity-50' : ''
+            className={`bg-[#F5F5F5] rounded-lg p-3 sm:p-4 border border-gray-200 w-full ${isDragging ? 'opacity-50' : ''
                 }`}
             {...attributes}
         >
-            <div className="flex items-center gap-3 w-full">
+            <div className="flex items-start sm:items-center gap-2 sm:gap-3 w-full">
                 <div
                     {...listeners}
-                    className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-200 rounded mt-1"
+                    className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-200 rounded mt-1 flex-shrink-0"
                 >
                     <GripVertical className="h-4 w-4 text-gray-400" />
                 </div>
 
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                     {renderCriteriaContent()}
                 </div>
 
@@ -198,9 +198,9 @@ function DraggableCriteria({ criteria, onUpdate, onRemove, onDuplicate }: Dragga
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0 hover:bg-gray-200"
+                            className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-gray-200 flex-shrink-0"
                         >
-                            <MoreVertical className="h-4 w-4" />
+                            <MoreVertical className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -336,14 +336,14 @@ export default function Eligibility() {
             onDragEnd={handleDragEnd}
         >
             <div className="h-full flex lg:flex-row flex-col w-full">
-                <div className="flex-1 p-7 border-r border-gray-200">
+                <div className="flex-1 p-4 sm:p-7 border-r border-gray-200">
                     <div className="mb-6">
-                        <h2 className="text-[22px]/[30px] font-bold text-gray-900 mb-2">Eligibility Criteria</h2>
+                        <h2 className="text-[18px]/[24px] sm:text-[22px]/[30px] font-bold text-gray-900 mb-2">Eligibility Criteria</h2>
 
                     </div>
                     {/* Summary */}
-                    <div className="bg-[#D6EEEC]  rounded-[12px] py-[10px] pl-[10px] pr-[38px] mb-6">
-                        <p className="text-sm text-gray-500">
+                    <div className="bg-[#D6EEEC] rounded-[12px] py-[10px] pl-[10px] pr-[10px] sm:pr-[38px] mb-6">
+                        <p className="text-xs sm:text-sm text-gray-500">
                             Employee's role are any of <strong className='text-primary'>Brand Designer</strong><span className='text-primary'>or</span> <strong className='text-primary'>AI Engineer</strong>
                             <span className='text-black' >AND</span>is <strong className='text-black'>NOT</strong> a <strong className='text-primary'>Manager</strong>
                         </p>
@@ -353,9 +353,9 @@ export default function Eligibility() {
                             {criteria.map((criterion, index) => (
                                 <div key={criterion.id} className="space-y-4 w-full">
                                     {index > 0 && (
-                                        <div className="flex">
+                                        <div className="flex justify-center sm:justify-start">
                                             <Select defaultValue="and">
-                                                <SelectTrigger className="w-20">
+                                                <SelectTrigger className="w-16 sm:w-20 text-xs sm:text-sm">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -390,24 +390,24 @@ export default function Eligibility() {
                 </div>
 
                 {/* Right Panel - Eligible Employees */}
-                <div className="lg:w-[400px] h-full overflow-y-auto w-full p-6">
+                <div className="lg:w-[400px] h-full overflow-y-auto w-full p-4 sm:p-6">
                     <div className="mb-6">
-                        <h2 className="text-[22px]/[30px] font-bold text-gray-900">
+                        <h2 className="text-[18px]/[24px] sm:text-[22px]/[30px] font-bold text-gray-900">
                             Eligible Employees ({eligibleEmployees.length})
                         </h2>
                     </div>
 
-                    <div className="space-y-3 ">
+                    <div className="space-y-3">
                         {eligibleEmployees.map((employee) => (
-                            <div key={employee.id} className="flex items-center gap-3 p-3 rounded-lg border border-gray-100 ">
-                                <div className="w-10 h-10 rounded-full bg-[#D6EEEC] flex items-center justify-center">
-                                    <span className="text-sm font-medium text-black">
+                            <div key={employee.id} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg border border-gray-100">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#D6EEEC] flex items-center justify-center flex-shrink-0">
+                                    <span className="text-xs sm:text-sm font-medium text-black">
                                         {employee.initials}
                                     </span>
                                 </div>
-                                <div className="flex-1">
-                                    <p className="text-sm font-medium text-black">{employee.name}</p>
-                                    <p className="text-xs text-black">{employee.role}</p>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-xs sm:text-sm font-medium text-black truncate">{employee.name}</p>
+                                    <p className="text-xs text-black truncate">{employee.role}</p>
                                 </div>
                             </div>
                         ))}

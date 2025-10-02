@@ -77,120 +77,117 @@ export default function SickLeaveReview() {
     return (
         <div className="h-full">
             {/* Main Content */}
-            <div className="p-6">
-                <div className="mb-8">
-                    <h1 className="text-[22px]/[30px] font-bold text-[#353535] mb-2">Review & Publish</h1>
-                    <div className="w-[200px]">
+            <div className="p-4 sm:p-6">
+                <div className="mb-6 sm:mb-8">
+                    <h1 className="text-[18px]/[24px] sm:text-[22px]/[30px] font-bold text-[#353535] mb-2">Review & Publish</h1>
+                    <div className="w-full sm:w-[200px]">
                         {/* Eligible Employees Card - Full Width */}
                         <div
-                            className="w-full border border-gray-200 rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                            className="w-full border border-gray-200 rounded-lg p-3 sm:p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                             onClick={() => setShowEmployeeList(true)}
                         >
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-[16px]/[24px] font-medium text-[#0d978b]">{sickLeaveData.eligibleEmployees}</p>
-                                    <p className="text-[13px]/[20px] text-[#8F8F8F] mt-[2px]">Eligible Employees</p>
+                                    <p className="text-[14px]/[20px] sm:text-[16px]/[24px] font-medium text-[#0d978b]">{sickLeaveData.eligibleEmployees}</p>
+                                    <p className="text-[12px]/[16px] sm:text-[13px]/[20px] text-[#8F8F8F] mt-[2px]">Eligible Employees</p>
                                 </div>
-                                <Maximize2Icon className="h-4 w-4 text-[#0d978b]" />
+                                <Maximize2Icon className="h-4 w-4 text-[#0d978b] flex-shrink-0" />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Basic Leave Info */}
-                <Card className="border border-gray-200 w-[484px] mb-8">
-                    <CardContent className="p-6">
+                <Card className="border border-gray-200 w-full max-w-[484px] mb-6 sm:mb-8">
+                    <CardContent className="p-4 sm:p-6">
                         <div className="flex justify-between items-start mb-4">
-                            <h3 className="text-[18px]/[24px] font-medium text-gray-900">Basic Leave Info</h3>
+                            <h3 className="text-[16px]/[20px] sm:text-[18px]/[24px] font-medium text-gray-900">Basic Leave Info</h3>
                             <Button
                                 size="sm"
                                 variant="primary"
                                 onClick={() => handleEdit(1)}
-                                className="text-[#0d978b] hover:text-[#0d978b] w-7 h-7"
+                                className="text-[#0d978b] hover:text-[#0d978b] w-6 h-6 sm:w-7 sm:h-7"
                             >
-                                <Pen className="h-4 w-4 text-white" />
+                                <Pen className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                             </Button>
                         </div>
                         <div className="space-y-3">
                             <div>
-                                <p className="text-sm text-gray-500 mb-1">Description</p>
-                                <p className="text-gray-900">{sickLeaveData.description}</p>
+                                <p className="text-xs sm:text-sm text-gray-500 mb-1">Description</p>
+                                <p className="text-sm sm:text-base text-gray-900">{sickLeaveData.description}</p>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <p className="text-sm text-gray-500 mb-1">Minimum Notice Period</p>
-                                    <p className="text-gray-900">{sickLeaveData.minimumNoticePeriod}</p>
+                                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Minimum Notice Period</p>
+                                    <p className="text-sm sm:text-base text-gray-900">{sickLeaveData.minimumNoticePeriod}</p>
                                 </div>
-
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 mb-1">Leave Usage waiting period</p>
-                                <p className="text-gray-900">{sickLeaveData.leaveUsageWaitingPeriod}</p>
+                                <p className="text-xs sm:text-sm text-gray-500 mb-1">Leave Usage waiting period</p>
+                                <p className="text-sm sm:text-base text-gray-900">{sickLeaveData.leaveUsageWaitingPeriod}</p>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 mb-1">Require document submission</p>
-                                <p className="text-gray-900">{sickLeaveData.requireDocumentSubmission}</p>
+                                <p className="text-xs sm:text-sm text-gray-500 mb-1">Require document submission</p>
+                                <p className="text-sm sm:text-base text-gray-900">{sickLeaveData.requireDocumentSubmission}</p>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Allowance & Accrual */}
-                <Card className="border border-gray-200 w-[484px] mb-8">
-                    <CardContent className="p-6">
+                <Card className="border border-gray-200 w-full max-w-[484px] mb-6 sm:mb-8">
+                    <CardContent className="p-4 sm:p-6">
                         <div className="flex justify-between items-start mb-4">
-                            <h3 className="text-[18px]/[24px] font-medium text-gray-900">Allowance & Accrual</h3>
+                            <h3 className="text-[16px]/[20px] sm:text-[18px]/[24px] font-medium text-gray-900">Allowance & Accrual</h3>
                             <Button
                                 size="sm"
                                 variant="primary"
                                 onClick={() => handleEdit(2)}
-                                className="text-white hover:text-[#0d978b] w-7 h-7"
+                                className="text-white hover:text-[#0d978b] w-6 h-6 sm:w-7 sm:h-7"
                             >
-                                <Pen className="h-4 w-4 text-white" />
+                                <Pen className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                             </Button>
                         </div>
                         <div className="space-y-3">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <p className="text-sm text-gray-500 mb-1">Total hours per year</p>
-                                    <p className="text-gray-900">{sickLeaveData.totalHoursPerYear}</p>
+                                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Total hours per year</p>
+                                    <p className="text-sm sm:text-base text-gray-900">{sickLeaveData.totalHoursPerYear}</p>
                                 </div>
-
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 mb-1">Accrual Method</p>
-                                <p className="text-gray-900">{sickLeaveData.accrualMethod}</p>
+                                <p className="text-xs sm:text-sm text-gray-500 mb-1">Accrual Method</p>
+                                <p className="text-sm sm:text-base text-gray-900">{sickLeaveData.accrualMethod}</p>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <p className="text-sm text-gray-500 mb-1">Carryover</p>
-                                    <p className="text-gray-900">{sickLeaveData.allowCarryover}</p>
+                                    <p className="text-xs sm:text-sm text-gray-500 mb-1">Carryover</p>
+                                    <p className="text-sm sm:text-base text-gray-900">{sickLeaveData.allowCarryover}</p>
                                 </div>
-
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 mb-1">Maximum Carryover</p>
-                                <p className="text-gray-900">{sickLeaveData.maximumCarryover}</p>
+                                <p className="text-xs sm:text-sm text-gray-500 mb-1">Maximum Carryover</p>
+                                <p className="text-sm sm:text-base text-gray-900">{sickLeaveData.maximumCarryover}</p>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Eligibility Rule */}
-                <Card className="border border-gray-200 w-[484px]">
-                    <CardContent className="p-6">
+                <Card className="border border-gray-200 w-full max-w-[484px]">
+                    <CardContent className="p-4 sm:p-6">
                         <div className="flex justify-between items-start mb-4">
-                            <h3 className="text-[18px]/[24px] font-medium text-gray-900">Eligibility Rule</h3>
+                            <h3 className="text-[16px]/[20px] sm:text-[18px]/[24px] font-medium text-gray-900">Eligibility Rule</h3>
                             <Button
                                 size="sm"
                                 variant="primary"
                                 onClick={() => handleEdit(3)}
-                                className="text-white hover:text-[#0d978b] w-7 h-7"
+                                className="text-white hover:text-[#0d978b] w-6 h-6 sm:w-7 sm:h-7"
                             >
-                                <Pen className="h-4 w-4 text-white" />
+                                <Pen className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                             </Button>
                         </div>
-                        <div className="space-y-2 text-[14px]/[16px]">
+                        <div className="space-y-2 text-[12px]/[16px] sm:text-[14px]/[16px]">
                             <p className="text-black">Department<span className='text-gray-500'> is any of</span>  Data, Design and Engineering</p>
 
                             <p className="text-black">AND</p>
@@ -202,35 +199,35 @@ export default function SickLeaveReview() {
 
             {/* Employee List Sheet */}
             <Sheet open={showEmployeeList} onOpenChange={setShowEmployeeList}>
-                <SheetContent side="right" className="w-[400px] p-0" close={false}>
-                    <SheetHeader className="p-6 border-b border-gray-200">
+                <SheetContent side="right" className="w-full sm:w-[400px] p-0" close={false}>
+                    <SheetHeader className="p-4 sm:p-6 border-b border-gray-200">
                         <div className="flex items-center justify-between">
-                            <SheetTitle className="text-xl font-semibold text-gray-900">
+                            <SheetTitle className="text-lg sm:text-xl font-semibold text-gray-900">
                                 Eligible Employees ({employees.length})
                             </SheetTitle>
                             <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setShowEmployeeList(false)}
-                                className="h-8 w-8 p-0 hover:bg-gray-100 border border-gray-200"
+                                className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-gray-100 border border-gray-200"
                             >
-                                <X className="h-4 w-4" />
+                                <X className="h-3 w-3 sm:h-4 sm:w-4" />
                             </Button>
                         </div>
                     </SheetHeader>
 
                     <div className="flex-1 overflow-y-auto">
-                        <div className="p-6">
+                        <div className="p-4 sm:p-6">
                             <div className="space-y-0">
                                 {employees.map((employee, index) => (
-                                    <div key={employee.id} className="flex items-center gap-3 py-4 border-b border-gray-100 last:border-b-0">
-                                        <div className="w-10 h-10 rounded-full bg-[#D6EEEC] flex items-center justify-center">
-                                            <span className="text-sm font-medium text-[#053834]">
+                                    <div key={employee.id} className="flex items-center gap-2 sm:gap-3 py-3 sm:py-4 border-b border-gray-100 last:border-b-0">
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#D6EEEC] flex items-center justify-center flex-shrink-0">
+                                            <span className="text-xs sm:text-sm font-medium text-[#053834]">
                                                 {employee.initials}
                                             </span>
                                         </div>
-                                        <div className="flex-1">
-                                            <p className="text-sm font-medium text-gray-900">{employee.name}</p>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">{employee.name}</p>
                                         </div>
                                     </div>
                                 ))}
