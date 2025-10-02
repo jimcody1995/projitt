@@ -29,6 +29,7 @@ import { useRouter } from "next/navigation";
 const mockLeaveRequests = [
     {
         id: 1,
+        employeeId: "EMP001",
         employeeName: "Alice Fernadez",
         position: "Senior Data Analyst",
         balance: "8 days",
@@ -42,6 +43,7 @@ const mockLeaveRequests = [
     },
     {
         id: 2,
+        employeeId: "EMP001",
         employeeName: "Alice Fernadez",
         position: "Senior Data Analyst",
         balance: "8 days",
@@ -55,6 +57,7 @@ const mockLeaveRequests = [
     },
     {
         id: 3,
+        employeeId: "EMP001",
         employeeName: "Alice Fernadez",
         position: "Senior Data Analyst",
         balance: "8 days",
@@ -68,6 +71,7 @@ const mockLeaveRequests = [
     },
     {
         id: 4,
+        employeeId: "EMP001",
         employeeName: "Alice Fernadez",
         position: "Senior Data Analyst",
         balance: "8 days",
@@ -81,6 +85,7 @@ const mockLeaveRequests = [
     },
     {
         id: 5,
+        employeeId: "EMP002",
         employeeName: "John Doe",
         position: "Frontend Developer",
         balance: "12 days",
@@ -94,6 +99,7 @@ const mockLeaveRequests = [
     },
     {
         id: 6,
+        employeeId: "EMP003",
         employeeName: "Jane Smith",
         position: "UX Designer",
         balance: "10 days",
@@ -107,6 +113,7 @@ const mockLeaveRequests = [
     },
     {
         id: 7,
+        employeeId: "EMP004",
         employeeName: "Bob Johnson",
         position: "Backend Developer",
         balance: "6 days",
@@ -149,6 +156,7 @@ export default function LeaveManagement() {
         if (searchQuery) {
             filtered = filtered.filter(req =>
                 req.employeeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                req.employeeId.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 req.type.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
@@ -239,6 +247,23 @@ export default function LeaveManagement() {
                 ),
                 enableSorting: false,
                 size: 50,
+            },
+            {
+                accessorKey: 'employeeId',
+                header: ({ column }) => (
+                    <DataGridColumnHeader
+                        className='text-[14px] font-medium text-[#8f8f8f]'
+                        title="Employee ID"
+                        column={column}
+                    />
+                ),
+                cell: ({ row }) => (
+                    <span className="text-[14px] text-[#353535] font-medium">
+                        {row.original.employeeId}
+                    </span>
+                ),
+                enableSorting: true,
+                size: 100,
             },
             {
                 accessorKey: 'employeeName',
@@ -386,7 +411,7 @@ export default function LeaveManagement() {
                 ),
                 cell: ({ row }) => <ActionsCell row={row} />,
                 enableSorting: false,
-                size: 150,
+                size: 180,
             },
         ],
         []

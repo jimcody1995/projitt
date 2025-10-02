@@ -17,6 +17,9 @@ export const Employees = ({ filteredEmployees }: { filteredEmployees: any }) => 
                                 Employee Name
                             </TableHead>
                             <TableHead className="py-[12px] px-[16px] text-[14px]/[22px] font-medium text-[#8F8F8F] tracking-wide">
+                                Employee ID
+                            </TableHead>
+                            <TableHead className="py-[12px] px-[16px] text-[14px]/[22px] font-medium text-[#8F8F8F] tracking-wide">
                                 Department
                             </TableHead>
                             <TableHead className="py-[12px] px-[16px] text-[14px]/[22px] font-medium text-[#8F8F8F] tracking-wide">
@@ -26,7 +29,7 @@ export const Employees = ({ filteredEmployees }: { filteredEmployees: any }) => 
                                 Leave Balance
                             </TableHead>
                             <TableHead className="py-[12px] px-[16px] text-[14px]/[22px] font-medium text-[#8F8F8F] tracking-wide">
-                                Leave Balance
+                                Total Balance
                             </TableHead>
                             <TableHead className="py-[12px] px-[16px] text-[14px]/[22px] font-medium text-[#8F8F8F] tracking-wide">
                                 Last Leave
@@ -54,6 +57,11 @@ export const Employees = ({ filteredEmployees }: { filteredEmployees: any }) => 
                                             </p>
                                         </div>
                                     </div>
+                                </TableCell>
+                                <TableCell className="py-[12px] px-[16px]">
+                                    <span className="text-[14px] text-[#353535] font-medium">
+                                        {employee.employeeId || `EMP${String(employee.id).padStart(3, '0')}`}
+                                    </span>
                                 </TableCell>
                                 <TableCell className="py-[12px] px-[16px]">
                                     <span className="text-[14px] text-[#353535]">

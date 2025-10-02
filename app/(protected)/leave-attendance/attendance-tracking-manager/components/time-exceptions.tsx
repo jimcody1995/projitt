@@ -5,7 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, Check, X } from "lucide-react";
+import { MoreHorizontal, Check, X, User, Edit, Trash2, Eye } from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface TimeException {
     id: string;
@@ -274,6 +281,26 @@ export default function TimeExceptionsComponent({ searchQuery, selectedDate, fil
         // Add rejection logic here
     };
 
+    const handleViewProfile = (exceptionId: string) => {
+        console.log('View profile for exception:', exceptionId);
+        // Add view profile logic here
+    };
+
+    const handleEditException = (exceptionId: string) => {
+        console.log('Edit exception:', exceptionId);
+        // Add edit exception logic here
+    };
+
+    const handleDeleteException = (exceptionId: string) => {
+        console.log('Delete exception:', exceptionId);
+        // Add delete exception logic here
+    };
+
+    const handleViewDetails = (exceptionId: string) => {
+        console.log('View details for exception:', exceptionId);
+        // Add view details logic here
+    };
+
     return (
         <div className="bg-white rounded-[8px] border border-[#E9E9E9] overflow-hidden">
             <div className="overflow-x-auto">
@@ -304,21 +331,13 @@ export default function TimeExceptionsComponent({ searchQuery, selectedDate, fil
                                     />
                                 </TableCell>
                                 <TableCell>
-                                    <div className="flex items-center gap-[8px] sm:gap-[12px]">
-                                        {exception.avatar ? (
-                                            <img
-                                                src={exception.avatar}
-                                                alt={exception.employeeName}
-                                                className="w-[24px] h-[24px] sm:w-[32px] sm:h-[32px] rounded-full object-cover flex-shrink-0"
-                                            />
-                                        ) : (
-                                            <div className="w-[24px] h-[24px] sm:w-[32px] sm:h-[32px] rounded-full bg-[#0d978b] flex items-center justify-center text-white text-[10px] sm:text-[12px] leading-[12px] sm:leading-[16px] font-medium flex-shrink-0">
-                                                {exception.initials}
-                                            </div>
-                                        )}
-                                        <span className="text-[12px] sm:text-[14px] leading-[16px] sm:leading-[22px] text-gray-900 font-medium truncate">
+                                    <div>
+                                        <div className="text-[12px] sm:text-[14px] leading-[16px] sm:leading-[22px] text-gray-900 font-medium">
                                             {exception.employeeName}
-                                        </span>
+                                        </div>
+                                        <div className="text-[10px] sm:text-[12px] leading-[12px] sm:leading-[16px] text-[#6B7280]">
+                                            {exception.employeeRole}
+                                        </div>
                                     </div>
                                 </TableCell>
                                 <TableCell>
