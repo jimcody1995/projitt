@@ -8,7 +8,7 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter, Calendar, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import { Search, Filter, Calendar, ChevronLeft, ChevronRight, MoreHorizontal, ListFilter } from "lucide-react";
 import { format } from "date-fns";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -339,7 +339,7 @@ export default function AttendanceTracking() {
                         </div>
                     </div>
                     <Button
-                        className="h-[36px] px-[24px] flex items-center rounded-[8px] justify-center gap-[8px] text-[12px] sm:text-[14px] leading-[16px] sm:leading-[22px] w-full sm:w-auto"
+                        className="h-[36px] sm:mb-[22px] px-[24px] flex items-center rounded-[8px] justify-center gap-[8px] text-[12px] sm:text-[14px] leading-[16px] sm:leading-[22px] w-full sm:w-auto"
                     >
                         Accept Timesheet
                     </Button>
@@ -363,10 +363,10 @@ export default function AttendanceTracking() {
                         {/* Filter Toggle Button */}
                         <Button
                             variant="outline"
-                            className="h-[36px] px-[12px] flex items-center justify-center gap-[8px] border border-[#626262] text-[12px] sm:text-[14px] leading-[16px] sm:leading-[22px] w-full sm:w-auto"
+                            className="h-[32px] px-[12px] flex items-center justify-center gap-[8px] border border-[#626262] text-[12px] sm:text-[14px] leading-[16px] sm:leading-[22px] w-full sm:w-auto"
                             onClick={() => setShowFilter(!showFilter)}
                         >
-                            <Filter className="size-4" />
+                            <ListFilter className="size-4" />
                             <span className="hidden sm:inline">Filter</span>
                             {(filterOptions.status.length > 0 || filterOptions.department.length > 0) && (
                                 <span className="ml-1 bg-primary text-white text-[10px] sm:text-[12px] leading-[12px] sm:leading-[16px] px-1 sm:px-1.5 py-0.5 rounded-full">
@@ -400,8 +400,7 @@ export default function AttendanceTracking() {
 
                             <Button
                                 variant="outline"
-                                size="sm"
-                                className="p-1"
+                                className="w-8 h-8 "
                                 onClick={() => handleDateChange('prev')}
                             >
                                 <ChevronLeft className="size-4" />
@@ -414,8 +413,7 @@ export default function AttendanceTracking() {
 
                             <Button
                                 variant="outline"
-                                size="sm"
-                                className="p-1"
+                                className="w-8 h-8"
                                 onClick={() => handleDateChange('next')}
                             >
                                 <ChevronRight className="size-4" />

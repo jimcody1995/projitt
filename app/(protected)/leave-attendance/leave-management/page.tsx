@@ -495,18 +495,18 @@ export default function LeaveManagement() {
                 </h1>
                 <Button
                     variant="outline"
-                    className="h-[42px] px-[16px] flex items-center gap-[8px] border-[#E9E9E9] text-[#353535] text-[14px]/[20px] hover:bg-white w-full sm:w-auto"
+                    className="h-[42px] px-[16px] flex items-center gap-[8px] border-gray-200 text-[#053834] text-[14px]/[20px] hover:bg-white w-full sm:w-auto"
                     onClick={() => router.push("./manage-leaves")}
                 >
-                    <Settings className="size-4" />
+                    <Settings className="size-4 text-[#053834]" />
                     Manage Leaves
                 </Button>
             </div>
             {/* Statistics Cards */}
-            <div className="px-[24px] mb-[24px]">
-                <div className="flex gap-[24px] overflow-x-auto">
+            <div className="mb-[24px]">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-[24px] overflow-x-auto px-[24px]">
                     {/* Currently On Leave */}
-                    <div className="bg-white rounded-[8px] p-[16px] border border-[#E9E9E9] min-w-[280px] flex-shrink-0">
+                    <div className="bg-white rounded-[8px] p-[16px] border border-[#E9E9E9]  flex-shrink-0">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-[14px]/[22px] text-[#8F8F8F]">
@@ -522,7 +522,7 @@ export default function LeaveManagement() {
                         </div>
                     </div>
                     {/* Average Leave per Employee */}
-                    <div className="bg-white rounded-[8px] p-[16px] border border-[#E9E9E9] min-w-[280px] flex-shrink-0">
+                    <div className="bg-white rounded-[8px] p-[16px] border border-[#E9E9E9]  flex-shrink-0">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-[14px]/[22px] text-[#8F8F8F]">
@@ -538,7 +538,7 @@ export default function LeaveManagement() {
                         </div>
                     </div>
                     {/* Most Utilized Leave */}
-                    <div className="bg-white rounded-[8px] p-[16px] border border-[#E9E9E9] min-w-[280px] flex-shrink-0">
+                    <div className="bg-white rounded-[8px] p-[16px] border border-[#E9E9E9]  flex-shrink-0">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-[14px]/[22px] text-[#8F8F8F]">

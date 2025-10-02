@@ -445,8 +445,8 @@ export default function SchedulingPage() {
                         <div className="overflow-x-auto">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="bg-gray-50 border-b border-gray-200">
-                                        <TableHead className="w-[200px] xl:w-[250px] px-4 py-3 border-r border-gray-200 border-l-0 sticky left-0 bg-gray-50 z-10">
+                                    <TableRow className=" border-b border-gray-200">
+                                        <TableHead className="w-[200px] xl:w-[250px] px-4 py-3 border-r border-gray-200 border-l-0 sticky left-0  z-10">
                                             <span className="text-sm font-medium text-gray-700">Name</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r border-gray-200">

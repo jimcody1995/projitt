@@ -285,7 +285,7 @@ export default function SwapRequestsComponent({ searchQuery, selectedDate, filte
     };
 
     return (
-        <div className="bg-white rounded-[6px] sm:rounded-[8px] border border-[#E9E9E9] overflow-hidden">
+        <div className="bg-white border border-[#E9E9E9] overflow-hidden">
             <div className="overflow-x-auto">
                 <Table>
                     <TableHeader>
@@ -294,7 +294,7 @@ export default function SwapRequestsComponent({ searchQuery, selectedDate, filte
                                 <Checkbox
                                     checked={selectedRequests.length === filteredRequests.length && filteredRequests.length > 0}
                                     onCheckedChange={handleSelectAll}
-                                    className="scale-75 sm:scale-100"
+                                    className="scale-75 sm:scale-100 bg-[#EEF3F2]"
                                 />
                             </TableHead>
                             <TableHead className="text-[10px] sm:text-[12px] lg:text-[14px] leading-[12px] sm:leading-[16px] lg:leading-[22px] bg-[#EEF3F2] font-medium text-[#8C8E8E] min-w-[140px] sm:min-w-[180px]">Requesting Employee</TableHead>
@@ -306,12 +306,12 @@ export default function SwapRequestsComponent({ searchQuery, selectedDate, filte
                     </TableHeader>
                     <TableBody>
                         {filteredRequests.map((request) => (
-                            <TableRow key={request.id} className="border-b border-[#E9E9E9] hover:bg-[#F8F9FA]">
-                                <TableCell className=" bg-white">
+                            <TableRow key={request.id} className="border-b border-[#E9E9E9] hover:bg-[#F8F9FA] bg-gray-100">
+                                <TableCell className="">
                                     <Checkbox
                                         checked={selectedRequests.includes(request.id)}
                                         onCheckedChange={() => handleSelectRequest(request.id)}
-                                        className="scale-75 sm:scale-100"
+                                        className="scale-75 sm:scale-100 bg-gray-100"
                                     />
                                 </TableCell>
                                 <TableCell>

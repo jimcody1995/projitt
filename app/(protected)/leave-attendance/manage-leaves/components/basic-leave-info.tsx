@@ -116,7 +116,7 @@ export default function BasicLeaveInfo() {
                             value={formData.description}
                             onChange={(e) => handleInputChange('description', e.target.value)}
                             placeholder="Enter a brief purpose or scope"
-                            className="w-full min-h-[100px] border-gray-300 focus:border-[#0d348b] focus:ring-[#0d978b] resize-none rounded-[10px] px-3 py-4 text-[14px]/[20px]"
+                            className="w-full min-h-[100px] border-gray-300 focus:border-[#0d978b] focus:ring-[#0d978b]resize-none rounded-[10px] px-3 py-4 text-[14px]/[20px]"
                         />
                         {errors.description && (
                             <p className="text-red-500 text-sm">{errors.description}</p>

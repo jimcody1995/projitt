@@ -98,7 +98,7 @@ export default function SickLeaveReview() {
                 </div>
 
                 {/* Basic Leave Info */}
-                <Card className="border border-gray-200 w-full max-w-[484px] mb-6 sm:mb-8">
+                <Card className="border border-gray-200 w-full max-w-[484px] mb-6 sm:mb-8 bg-gray-100">
                     <CardContent className="p-4 sm:p-6">
                         <div className="flex justify-between items-start mb-4">
                             <h3 className="text-[16px]/[20px] sm:text-[18px]/[24px] font-medium text-gray-900">Basic Leave Info</h3>
@@ -135,7 +135,7 @@ export default function SickLeaveReview() {
                 </Card>
 
                 {/* Allowance & Accrual */}
-                <Card className="border border-gray-200 w-full max-w-[484px] mb-6 sm:mb-8">
+                <Card className="border border-gray-200 w-full max-w-[484px] mb-6 sm:mb-8 bg-gray-100">
                     <CardContent className="p-4 sm:p-6">
                         <div className="flex justify-between items-start mb-4">
                             <h3 className="text-[16px]/[20px] sm:text-[18px]/[24px] font-medium text-gray-900">Allowance & Accrual</h3>
@@ -174,7 +174,7 @@ export default function SickLeaveReview() {
                 </Card>
 
                 {/* Eligibility Rule */}
-                <Card className="border border-gray-200 w-full max-w-[484px]">
+                <Card className="border border-gray-200 w-full max-w-[484px] bg-gray-100">
                     <CardContent className="p-4 sm:p-6">
                         <div className="flex justify-between items-start mb-4">
                             <h3 className="text-[16px]/[20px] sm:text-[18px]/[24px] font-medium text-gray-900">Eligibility Rule</h3>
