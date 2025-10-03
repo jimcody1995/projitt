@@ -213,7 +213,7 @@ export default function Draft() {
                                 </h3>
                                 <div className="text-[14px]/[22px] text-[#626262]">{cycle.dateRange}</div>
                                 <div className="text-[14px]/[22px] text-[#626262]">{cycle.employees} employees</div>
-                                <Button variant="outline" className="h-[40px] px-[16px] text-[#053834]">
+                                <Button variant="outline" className="h-[40px] px-[16px] text-[#053834] font-semibold">
                                     Continue Editing
                                 </Button>
                             </div>

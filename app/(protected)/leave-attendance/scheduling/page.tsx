@@ -463,7 +463,7 @@ export default function SchedulingPage() {
                                 <TableBody className="bg-gray-50">
                                     {filteredData.map(({ employee, monday, tuesday, wednesday, thursday, friday }, index) => (
                                         <TableRow key={employee.id} className={`${index < filteredData.length - 1 ? '' : ''} hover:bg-gray-100 border-b border-gray-200`}>
-                                            <TableCell className="px-4 py-4 border-r-0 border-l-0 sticky left-0 bg-gray-50 z-10">
+                                            <TableCell className="px-4 py-4 border-r-0 border-l-0  left-0 bg-gray-50 ">
                                                 <EmployeeCell employee={employee} />
                                             </TableCell>
                                             <TableCell className="px-4 py-4  border-r border-gray-200">
@@ -620,7 +620,7 @@ export default function SchedulingPage() {
                                                 className='size-4'
                                                 id={day}
                                                 checked={selectedDays.includes(day)}
-                                                onCheckedChange={(checked) => {
+                                                onCheckedChange={(checked: boolean) => {
                                                     if (checked) {
                                                         setSelectedDays(prev => [...prev, day]);
                                                     } else {

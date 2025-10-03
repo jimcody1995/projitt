@@ -64,8 +64,10 @@ const selectTriggerVariants = cva(
 );
 
 export interface SelectTriggerProps
-  extends React.ComponentProps<typeof SelectPrimitive.Trigger>,
-  VariantProps<typeof selectTriggerVariants> { }
+  extends Omit<React.ComponentProps<typeof SelectPrimitive.Trigger>, 'children'>,
+  VariantProps<typeof selectTriggerVariants> {
+  children?: React.ReactNode;
+}
 
 function SelectTrigger({ className, children, size, ...props }: SelectTriggerProps) {
   return (

@@ -79,7 +79,7 @@ export default function PromotionsSuccession() {
                                 <span className="text-[14px]/[22px] text-gray-800">Data</span>
                             </div>
                             <Button variant="ghost" className="h-[28px] w-[28px]" onClick={() => setSelectedRole(null)}>
-                                <Minimize2 className="w-[21px] h-[21px]" />
+                                <Minimize2 className="w-[32px] h-[32px]" />
                             </Button>
                         </div>
 

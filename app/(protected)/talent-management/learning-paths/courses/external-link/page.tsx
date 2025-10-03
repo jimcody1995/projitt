@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CiCircleCheck } from "react-icons/ci";
 import { Label } from "@/components/ui/label";
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FaCheckCircle } from "react-icons/fa";
 
 export default function ExternalLink() {
     const router = useRouter();
@@ -105,7 +107,7 @@ export default function ExternalLink() {
                                 placeholder="https://youtube.com/xyz"
                             />
                             {isUrlValid && formData.url && (
-                                <Check className="absolute right-[12px] top-1/2 transform -translate-y-1/2 size-[20px] text-green-500" />
+                                <FaCheckCircle className="absolute right-[12px] top-1/2 transform -translate-y-1/2 size-[20px]  w-3 h-3 sm:w-4 sm:h-4 text-[#00D47D]" />
                             )}
                         </div>
                     </div>
@@ -161,7 +163,7 @@ export default function ExternalLink() {
                         <Label htmlFor="category" className="text-[14px]/[20px] font-medium text-[#353535]">
                             Category
                         </Label>
-                        <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
+                        <Select value={formData.category} onValueChange={(value: string) => handleInputChange('category', value)}>
                             <SelectTrigger className="h-[48px] text-[14px] bg-[#fafafa]">
                                 <SelectValue placeholder="Select Category" />
                             </SelectTrigger>

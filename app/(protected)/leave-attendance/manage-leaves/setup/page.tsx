@@ -30,28 +30,28 @@ export default function SetupSickLeave() {
 
     return (
         <div className="w-full h-full">
-            <div className="flex w-full justify-between items-center px-[8px] py-[6px]">
-                <div className="flex flex-col gap-[4px]">
-                    <p className="text-[14px]/[20px] text-[#A5A5A5]">
+            <div className="flex flex-col sm:flex-row w-full justify-between items-start sm:items-center gap-4 px-4 sm:px-2 py-4 sm:py-2">
+                <div className="flex flex-col gap-1 sm:gap-1">
+                    <p className="text-xs sm:text-sm text-[#A5A5A5]">
                         <span className="cursor-pointer" onClick={() => router.push('/leave-attendance/manage-leaves')}>
                             Leaves Management / Leaves
                         </span>
                         <span className="text-[#0d978b]"> / Set Up Sick Leave</span>
                     </p>
-                    <p className="text-[24px]/[30px] font-semibold text-[#353535]">Set up Sick Leave</p>
+                    <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-[#353535]">Set up Sick Leave</p>
                 </div>
-                <div className="flex gap-[10px]">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                     {currentStep !== 1 && (
                         <Button
                             variant="ghost"
-                            className="h-[48px] min-w-[110px] text-[16px]/[20px]"
+                            className="h-10 sm:h-12 w-full sm:min-w-[110px] text-sm sm:text-base order-2 sm:order-1"
                             onClick={handleBack}
                         >
                             Back
                         </Button>
                     )}
                     <Button
-                        className="h-[48px] min-w-[110px] bg-[#0d978b] hover:bg-[#0d978b]/90 text-[16px]/[20px] px-7"
+                        className="h-10 sm:h-12 w-full sm:min-w-[110px] bg-[#0d978b] hover:bg-[#0d978b]/90 text-sm sm:text-base px-4 sm:px-7 order-1 sm:order-2"
                         onClick={handleNext}
                     >
                         {currentStep === 1 && 'Continue'}
