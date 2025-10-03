@@ -79,7 +79,7 @@ export default function ManageLeaves() {
                         placeholder="Search"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="ps-9 h-[36px] border-[#E9E9E9] text-[14px] rounded-[8px] bg-white"
+                        className="ps-9 bg-gray-50 h-[36px] border-[#E9E9E9] text-[14px] rounded-[8px]"
                     />
                 </div>
             </div>
@@ -90,7 +90,7 @@ export default function ManageLeaves() {
                     {filteredLeaveTypes.map((leave) => (
                         <Card
                             key={leave.id}
-                            className="bg-white border border-[#E9E9E9] rounded-[8px] p-[20px] hover:shadow-sm transition-shadow duration-200"
+                            className="bg-white border border-[#E9E9E9] rounded-[12px] p-[20px] hover:shadow-sm transition-shadow duration-200"
                         >
                             <div className="flex items-center justify-between">
                                 <div className="flex-1 min-w-0">
@@ -102,15 +102,15 @@ export default function ManageLeaves() {
                                     {leave.canManage ? (
                                         <Button
                                             variant="outline"
-                                            className="h-[32px] px-[8px] text-[14px]/[21px] border-[#E9E9E9] text-[#353535] hover:bg-[#F8F9FA] font-semibold rounded-[6px] flex items-center gap-[4px]"
+                                            className="h-[32px] px-[8px] text-[14px]/[21px] border-[#E9E9E9] text-primary-950 hover:bg-[#F8F9FA] font-semibold rounded-[8px] flex items-center gap-[4px]"
                                             onClick={() => handleManageClick(leave.name)}
                                         >
-                                            <Settings className="size-4" />
+                                            <Settings className="size-4 text-primary-950" />
                                             Manage
                                         </Button>
                                     ) : (
                                         <Button
-                                            className="h-[32px] px-[8px] text-[14px]/[20px] bg-[#0d978b] text-white hover:bg-[#086159] font-semibold rounded-[6px] flex items-center gap-[4px]"
+                                            className="h-[32px] px-[8px] text-[14px]/[20px] bg-[#0d978b] text-white hover:bg-[#086159] font-semibold rounded-[8px] flex items-center gap-[4px]"
                                             onClick={() => handleSetUpClick(leave.name)}
                                         >
                                             <Plus className="size-3" />

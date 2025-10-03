@@ -175,7 +175,7 @@ export default function Courses() {
                         {row.original.title}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 200,
                 meta: {
                     headerClassName: '',
@@ -216,7 +216,7 @@ export default function Courses() {
                         </span>
                     );
                 },
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
@@ -240,7 +240,7 @@ export default function Courses() {
                         {row.original.duration}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 100,
                 meta: {
                     headerClassName: '',
@@ -264,7 +264,7 @@ export default function Courses() {
                         {row.original.assignedPaths}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
@@ -288,7 +288,7 @@ export default function Courses() {
                         {row.original.assignedUsers}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',

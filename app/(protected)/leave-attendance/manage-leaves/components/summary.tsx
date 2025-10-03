@@ -22,7 +22,7 @@ export const Summary = () => {
                         <label className="text-[15px]/[16px] text-[#8F8F8F] mb-[9px] block">
                             Description
                         </label>
-                        <p className="text-[15px]/[16px] text-[#353535] leading-[20px]">
+                        <p className="text-[15px]/[20px] font-medium text-[#353535] leading-[20px]">
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text.
                         </p>
                     </div>
@@ -30,7 +30,7 @@ export const Summary = () => {
                         <label className="text-[15px]/[16px] text-[#8F8F8F] mb-[9px] block">
                             Minimum Notice Period
                         </label>
-                        <p className="text-[15x]/[16px] text-gray-900 font-medium">
+                        <p className="text-[15x]/[20px] text-black font-medium">
                             12 days
                         </p>
                     </div>
@@ -46,7 +46,7 @@ export const Summary = () => {
                         <label className="text-[15px]/[16px] text-gray-700 mb-[9px] block">
                             Require document submission
                         </label>
-                        <p className="text-[15px]/[16px] text-gray-900 font-seemibold">
+                        <p className="text-[15px]/[16px] text-gray-950 font-seemibold">
                             Yes, require document for leave request
                         </p>
                     </div>
@@ -74,7 +74,7 @@ export const Summary = () => {
                         <label className="text-[14px]/[16px] text-gray-700 mb-[9px] block">
                             Total hours per year
                         </label>
-                        <p className="text-[14px]/[16px] text-gray-900 font-medium">
+                        <p className="text-[14px]/[16px] text-gray-950 font-medium">
                             30 hours
                         </p>
                     </div>
@@ -82,7 +82,7 @@ export const Summary = () => {
                         <label className="text-[14px]/[16px] text-gray-700 mb-[9px] block">
                             Accrual Method
                         </label>
-                        <p className="text-[14px]/[16px] text-gray-900 font-medium ">
+                        <p className="text-[14px]/[16px] text-gray-950 font-medium ">
                             Monthly - 2.5hours/month
                         </p>
                     </div>
@@ -90,7 +90,7 @@ export const Summary = () => {
                         <label className="text-[14px]/[16px] text-gray-700 mb-[9px] block">
                             Carryover
                         </label>
-                        <p className="text-[14px]/[16px] text-gray-900 font-medium">
+                        <p className="text-[14px]/[16px] text-gray-950 font-medium">
                             Yes, allow carryover
                         </p>
                     </div>
@@ -98,7 +98,7 @@ export const Summary = () => {
                         <label className="text-[14px]/[16px] text-gray-700 mb-[9px] block">
                             Maximum Carryover
                         </label>
-                        <p className="text-[14px]/[16px] text-gray-900 font-medium">
+                        <p className="text-[14px]/[16px] text-gray-950 font-medium">
                             20 hours
                         </p>
                     </div>

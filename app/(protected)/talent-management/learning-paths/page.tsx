@@ -103,7 +103,7 @@ export default function LearningPaths() {
                     <Search className="text-gray-400" size={20} />
                     <Input
                         placeholder="Search"
-                        className="border-gray-300 focus:border-teal-500 "
+                        className="border-gray-300 focus:border-teal-500 bg-gray-50 "
                     />
                 </InputWrapper>
             </div>

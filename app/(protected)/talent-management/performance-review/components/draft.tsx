@@ -155,9 +155,8 @@ export default function Draft() {
         const style = getScoreBadgeStyle(score);
         return (
             <div
-                className="inline-flex items-center justify-center px-[12px] py-[4px] rounded-[6px] text-[14px] font-medium border"
+                className="inline-flex items-center justify-center px-[12px] py-[4px] rounded-[6px] text-[14px] font-medium"
                 style={{
-                    backgroundColor: style.backgroundColor,
                     borderColor: style.borderColor,
                     color: style.textColor
                 }}
@@ -214,7 +213,7 @@ export default function Draft() {
                                 </h3>
                                 <div className="text-[14px]/[22px] text-[#626262]">{cycle.dateRange}</div>
                                 <div className="text-[14px]/[22px] text-[#626262]">{cycle.employees} employees</div>
-                                <Button variant="outline" className="h-[40px] px-[16px]">
+                                <Button variant="outline" className="h-[40px] px-[16px] text-[#053834]">
                                     Continue Editing
                                 </Button>
                             </div>

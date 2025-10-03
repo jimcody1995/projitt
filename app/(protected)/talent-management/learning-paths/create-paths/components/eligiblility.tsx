@@ -121,8 +121,9 @@ function DraggableCriteria({ criteria, onUpdate, onRemove, onDuplicate }: Dragga
                                 <SelectItem value="custom">Custom</SelectItem>
                             </SelectContent>
                         </Select>
-
-                        <TagInput tags={criteria.selectedValues || []} setTags={handleTagsChange} />
+                        <div className="bg-white rounded-lg [&>:first-child]:border-none">
+                            <TagInput tags={criteria.selectedValues || []} setTags={handleTagsChange} />
+                        </div>
                     </div>
                 );
 
@@ -373,9 +374,9 @@ export default function Eligibility() {
                         <Button
                             onClick={handleAddCriteria}
                             variant="outline"
-                            className="border-[#0d978b] text-[#0d978b] hover:bg-[#0d978b] hover:text-white"
+                            className="border-[#053834] text-[#053834] hover:bg-[#0d978b] hover:text-white"
                         >
-                            <Plus className="h-4 w-4 mr-2" />
+                            <Plus className="h-4 w-4 mr-2   text-[#053834]" />
                             Add Criteria
                         </Button>
                     </div>
@@ -391,7 +392,7 @@ export default function Eligibility() {
 
                     <div className="space-y-3 max-h-[600px] overflow-y-auto">
                         {eligibleEmployees.map((employee) => (
-                            <div key={employee.id} className="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50">
+                            <div key={employee.id} className="flex items-center gap-3 p-3 border-b border-gray-200 hover:bg-gray-50">
                                 <div className="w-10 h-10 rounded-full bg-[#D6EEEC] flex items-center justify-center">
                                     <span className="text-sm font-medium text-[#053834]">
                                         {employee.initials}

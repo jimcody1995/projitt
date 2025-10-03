@@ -127,9 +127,9 @@ export default function Review() {
                                 <label className="text-sm font-medium text-gray-500 block mb-2">Target Roles</label>
                                 <div className="flex flex-wrap gap-2">
                                     {learningPathData.targetRoles.map((role, index) => (
-                                        <Badge key={index} variant="secondary" className="bg-blue-100 text-blue-800">
+                                        <div key={index} className="text-gray-900 text-[14px]/[20px]">
                                             {role}
-                                        </Badge>
+                                        </div>
                                     ))}
                                 </div>
                             </div>
@@ -138,7 +138,6 @@ export default function Review() {
                             <div>
                                 <label className="text-sm font-medium text-gray-500 block mb-2">Begin Month</label>
                                 <div className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4 text-gray-400" />
                                     <span className="text-gray-900">{learningPathData.beginMonth}</span>
                                 </div>
                             </div>
@@ -147,7 +146,6 @@ export default function Review() {
                             <div>
                                 <label className="text-sm font-medium text-gray-500 block mb-2">End Month</label>
                                 <div className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4 text-gray-400" />
                                     <span className="text-gray-900">{learningPathData.endMonth}</span>
                                 </div>
                             </div>
@@ -157,10 +155,9 @@ export default function Review() {
                                 <label className="text-sm font-medium text-gray-500 block mb-2">Tags</label>
                                 <div className="flex flex-wrap gap-2">
                                     {learningPathData.tags.map((tag, index) => (
-                                        <Badge key={index} variant="outline" className="border-gray-300 text-gray-700">
-                                            <Tag className="h-3 w-3 mr-1" />
+                                        <div key={index} className="border-gray-300 text-[14px]/[20px] text-gray-700">
                                             {tag}
-                                        </Badge>
+                                        </div>
                                     ))}
                                 </div>
                             </div>

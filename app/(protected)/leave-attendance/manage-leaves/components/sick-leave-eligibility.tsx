@@ -121,10 +121,15 @@ function DraggableCriteria({ criteria, onUpdate, onRemove, onDuplicate }: Dragga
                                 <SelectItem value="custom">Custom</SelectItem>
                             </SelectContent>
                         </Select>
-                        <TagInput
-                            tags={criteria.selectedValues || []}
-                            setTags={handleTagsChange}
-                        />
+                        <div
+                            className="bg-white rounded-lg [&>:first-child]:border-none"
+                        >
+                            <TagInput
+                                tags={criteria.selectedValues || []}
+                                setTags={handleTagsChange}
+                            />
+                        </div>
+
                     </div>
                 );
 

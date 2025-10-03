@@ -355,7 +355,7 @@ export default function AttendanceTracking() {
                             placeholder="Search"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-9 h-[36px] w-full sm:w-[200px] border-[#E9E9E9] text-[12px] sm:text-[14px] rounded-[8px] bg-white"
+                            className="pl-9 h-[36px] w-full sm:w-[200px] border-[#E9E9E9] text-[12px] sm:text-[14px] rounded-[8px] bg-gray-50"
                         />
                     </div>
 
@@ -363,7 +363,7 @@ export default function AttendanceTracking() {
                         {/* Filter Toggle Button */}
                         <Button
                             variant="outline"
-                            className="h-[32px] px-[12px] flex items-center justify-center gap-[8px] border border-[#626262] text-[12px] sm:text-[14px] leading-[16px] sm:leading-[22px] w-full sm:w-auto"
+                            className="h-[32px] px-[12px] flex items-center justify-center gap-[8px] border border-[#626262] text-[12px] sm:text-[14px] leading-[16px] sm:leading-[22px] w-full sm:w-auto bg-gray-50"
                             onClick={() => setShowFilter(!showFilter)}
                         >
                             <ListFilter className="size-4" />
@@ -400,7 +400,7 @@ export default function AttendanceTracking() {
 
                             <Button
                                 variant="outline"
-                                className="w-8 h-8 "
+                                className="w-8 h-8 bg-gray-50"
                                 onClick={() => handleDateChange('prev')}
                             >
                                 <ChevronLeft className="size-4" />
@@ -413,7 +413,7 @@ export default function AttendanceTracking() {
 
                             <Button
                                 variant="outline"
-                                className="w-8 h-8"
+                                className="w-8 h-8 bg-gray-50"
                                 onClick={() => handleDateChange('next')}
                             >
                                 <ChevronRight className="size-4" />
@@ -505,13 +505,13 @@ export default function AttendanceTracking() {
                     )
                 }
 
-                <div className="bg-white rounded-[8px] border border-[#E9E9E9] overflow-hidden">
+                <div className=" overflow-hidden">
                     <div className="overflow-x-auto">
                         <Table>
                             <TableHeader>
                                 <TableRow className="border-b border-[#E9E9E9]">
                                     <TableHead className="w-[50px]  bg-[#EEF3F2]">
-                                        <Checkbox
+                                        <Checkbox className="bg-[#EEF3F2]"
                                             checked={selectedEmployees.length === filteredEmployees.length && filteredEmployees.length > 0}
                                             onCheckedChange={handleSelectAll}
                                         />
@@ -527,10 +527,11 @@ export default function AttendanceTracking() {
                             </TableHeader>
                             <TableBody>
                                 {filteredEmployees.map((employee) => (
-                                    <TableRow key={employee.id} className="border-b border-[#E9E9E9] hover:bg-[#F8F9FA]">
-                                        <TableCell className=" bg-white">
+                                    <TableRow key={employee.id} className="border-b border-[#E9E9E9] bg-gray-50 hover:bg-[#F8F9FA]">
+                                        <TableCell className=" ">
                                             <Checkbox
                                                 checked={selectedEmployees.includes(employee.id)}
+                                                className="bg-gray-50"
                                                 onCheckedChange={() => handleSelectEmployee(employee.id)}
                                             />
                                         </TableCell>
@@ -576,7 +577,7 @@ export default function AttendanceTracking() {
                                             {employee.status !== 'leave' && (
                                                 <div className="flex items-center gap-[4px] sm:gap-[8px]">
                                                     <div
-                                                        className="h-[24px] sm:h-[32px] px-[6px] sm:px-[12px] bg-[#D6EEEC] hover:bg-[#0b7a6f] text-primary rounded-[21px] font-medium text-[12px]/[22px] sm:text-[12px] items-center justify-center flex"
+                                                        className="h-[28px] sm:h-[32px] px-[6px] sm:px-[12px] bg-[#D6EEEC] text-primary rounded-[21px] font-medium text-[12px]/[22px] sm:text-[12px] items-center justify-center flex"
                                                         onClick={() => handleApprove(employee.id)}
                                                     >
                                                         <span className="hidden sm:inline">Approve</span>

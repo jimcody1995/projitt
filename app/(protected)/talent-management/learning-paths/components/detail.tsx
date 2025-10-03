@@ -188,7 +188,7 @@ export default function LearningPathDetail({ isOpen, onClose, learningPath }: Le
                     {/* Footer Actions */}
                     <SheetFooter className="p-6 pt-4 border-t border-gray-200">
                         <div className="flex items-center justify-between w-full">
-                            <Button variant="ghost" className="text-gray-600 hover:text-gray-900 p-0 h-auto">
+                            <Button variant="ghost" className="text-[#353535] hover:text-[#353535] p-0 h-auto">
                                 Move to Draft
                             </Button>
                             <Button variant="outline" className="text-[#053834]  px-6">

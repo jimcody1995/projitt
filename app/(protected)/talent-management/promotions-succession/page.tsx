@@ -227,7 +227,7 @@ export default function PromotionsSuccession() {
                         placeholder="Search Applicant"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="ps-9 w-[172px] h-[42px]"
+                        className="ps-9 w-[172px] h-[42px] bg-[#fafafa]"
                         data-testid="search-input"
                     />
                     {searchQuery.length > 0 && (

@@ -200,7 +200,7 @@ export default function SickLeaveReview() {
             {/* Employee List Sheet */}
             <Sheet open={showEmployeeList} onOpenChange={setShowEmployeeList}>
                 <SheetContent side="right" className="w-full sm:w-[400px] p-0" close={false}>
-                    <SheetHeader className="p-4 sm:p-6 border-b border-gray-200">
+                    <SheetHeader className="px-4 pt-4 pb-0 sm:px-6 sm:pt-6 sm:pb-0">
                         <div className="flex items-center justify-between">
                             <SheetTitle className="text-lg sm:text-xl font-semibold text-gray-900">
                                 Eligible Employees ({employees.length})

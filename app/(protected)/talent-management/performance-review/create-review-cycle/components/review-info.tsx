@@ -150,8 +150,9 @@ function DraggableCriteria({ criteria, onUpdate, onRemove, onDuplicate }: Dragga
                                 <SelectItem value="custom">Custom</SelectItem>
                             </SelectContent>
                         </Select>
-
-                        <TagInput tags={criteria.selectedValues || []} setTags={handleTagsChange} />
+                        <div className="bg-white rounded-lg [&>:first-child]:border-none">
+                            <TagInput tags={criteria.selectedValues || []} setTags={handleTagsChange} />
+                        </div>
                     </div>
                 );
 
@@ -393,7 +394,7 @@ export default function ReviewInfo() {
                 <Input
                     id="cycleName"
                     placeholder="e.g H1 2025 Mid-Year Review"
-                    className='h-[48px] mt-[12px]'
+                    className='h-[48px] mt-[12px] bg-[#fafafa]'
                     value={formData.cycleName}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('cycleName', e.target.value)}
                     variant="md"
@@ -414,7 +415,7 @@ export default function ReviewInfo() {
                                     variant="outline"
                                     id="date"
                                     className={cn(
-                                        'w-full flex justify-start h-[48px] data-[state=open]:border-primary rounded-[10px] border-[#bcbcbc]',
+                                        'w-full flex justify-start  bg-[#fafafa] h-[48px] data-[state=open]:border-primary rounded-[10px] border-[#bcbcbc]',
                                     )}
                                 >
                                     <CalendarDays className="-ms-0.5" />
@@ -442,7 +443,7 @@ export default function ReviewInfo() {
                                     variant="outline"
                                     id="date"
                                     className={cn(
-                                        'w-full flex justify-start h-[48px] data-[state=open]:border-primary rounded-[10px] border-[#bcbcbc]',
+                                        'w-full flex justify-start  bg-[#fafafa] h-[48px] data-[state=open]:border-primary rounded-[10px] border-[#bcbcbc]',
                                     )}
                                 >
                                     <CalendarDays className="-ms-0.5" />
@@ -526,7 +527,7 @@ export default function ReviewInfo() {
                     Set Frequency
                 </Label>
                 <Select value={formData.frequency} onValueChange={(value: string) => handleInputChange('frequency', value)}>
-                    <SelectTrigger className='mt-[12px] h-[48px]'>
+                    <SelectTrigger className='mt-[12px] h-[48px]  bg-[#fafafa]'>
                         <SelectValue placeholder="Select frequency" />
                     </SelectTrigger>
                     <SelectContent >

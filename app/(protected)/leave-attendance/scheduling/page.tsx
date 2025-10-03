@@ -147,14 +147,8 @@ const EmployeeCell = ({ employee }: { employee: Employee }) => (
             </span>
         </div>
         <div className="min-w-0 flex-1">
-            <div className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900 truncate">
+            <div className="text-sm sm:text-base lg:text-[14px]/[22px]  text-gray-900 truncate">
                 {employee.name}
-            </div>
-            <div className="text-xs sm:text-sm text-gray-500 truncate">
-                {employee.role}
-            </div>
-            <div className="text-xs text-gray-400 truncate">
-                {employee.department}
             </div>
         </div>
     </div>
@@ -254,7 +248,7 @@ export default function SchedulingPage() {
     return (
         <div className="w-full h-full min-h-screen bg-gray-50">
             {/* Header Section */}
-            <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
+            <div className=" ">
                 <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-6">
                     {/* Title */}
                     <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-3 sm:mb-4">Scheduling</h1>
@@ -268,9 +262,9 @@ export default function SchedulingPage() {
                                     variant="outline"
                                     size="sm"
                                     onClick={handlePreviousWeek}
-                                    className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 p-0 hover:bg-gray-100"
+                                    className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 p-0 hover:bg-gray-100 bg-gray-50"
                                 >
-                                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+                                    <ChevronLeft className="h-3 w-3 sm:h-4  sm:w-4" />
                                 </Button>
                                 <span className="text-sm sm:text-base font-medium text-gray-700 min-w-[140px] sm:min-w-[160px] lg:min-w-[180px] text-center px-2">
                                     {currentWeek}
@@ -279,7 +273,7 @@ export default function SchedulingPage() {
                                     variant="outline"
                                     size="sm"
                                     onClick={handleNextWeek}
-                                    className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 p-0 hover:bg-gray-100"
+                                    className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 p-0 hover:bg-gray-100 bg-gray-50"
                                 >
                                     <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
                                 </Button>
@@ -290,12 +284,12 @@ export default function SchedulingPage() {
                         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
                             {/* Filter Button */}
                             <Button
-                                variant="outline"
+                                variant="ghost"
                                 size="sm"
                                 onClick={() => setShowFilters(!showFilters)}
                                 className="h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11 p-0 hover:bg-gray-50 border-gray-300 flex-shrink-0"
                             >
-                                <ListFilter className="h-4 w-4" />
+                                <ListFilter className="h-8 w-8" />
                             </Button>
 
                             {/* Button Row */}
@@ -306,7 +300,7 @@ export default function SchedulingPage() {
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none justify-between"
+                                            className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none justify-between text-primary-950"
                                         >
                                             <span className="hidden sm:inline">Swap Requests</span>
                                             <span className="sm:hidden">Swap</span>
@@ -327,9 +321,9 @@ export default function SchedulingPage() {
                                     variant="outline"
                                     size="sm"
                                     onClick={handleAutoSchedule}
-                                    className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none"
+                                    className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none text-primary-950"
                                 >
-                                    <span className="hidden sm:inline">Auto-Schedule</span>
+                                    <span className="hidden sm:inline !text-primary-950">Auto-Schedule</span>
                                     <span className="sm:hidden">Auto</span>
                                 </Button>
 
@@ -381,7 +375,7 @@ export default function SchedulingPage() {
 
             {/* Main Schedule Grid */}
             <div className="p-3 sm:p-4 lg:p-6">
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                <div className="rounded-lg border-none overflow-hidden">
                     {/* Mobile View - Card Layout */}
                     <div className="block lg:hidden">
                         <div className="p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
@@ -441,45 +435,45 @@ export default function SchedulingPage() {
                     </div>
 
                     {/* Desktop View - Table Layout */}
-                    <div className="hidden lg:block">
+                    <div className="hidden lg:block border-none">
                         <div className="overflow-x-auto">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className=" border-b border-gray-200">
-                                        <TableHead className="w-[200px] xl:w-[250px] px-4 py-3 border-r border-gray-200 border-l-0 sticky left-0  z-10">
-                                            <span className="text-sm font-medium text-gray-700">Name</span>
+                                    <TableRow className="border-b border-gray-200 bg-white">
+                                        <TableHead className="w-[200px] xl:w-[250px] px-4 py-3  border-r border-gray-200 border-l-0 border-r-0  sticky left-0  z-10">
+                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Name</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r border-gray-200">
-                                            <span className="text-sm font-medium text-gray-700">Monday</span>
+                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Monday</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r border-gray-200">
-                                            <span className="text-sm font-medium text-gray-700">Tuesday</span>
+                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Tuesday</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r border-gray-200">
-                                            <span className="text-sm font-medium text-gray-700">Wednesday</span>
+                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Wednesday</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r border-gray-200">
-                                            <span className="text-sm font-medium text-gray-700">Thursday</span>
+                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Thursday</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r-0">
-                                            <span className="text-sm font-medium text-gray-700">Friday</span>
+                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Friday</span>
                                         </TableHead>
                                     </TableRow>
                                 </TableHeader>
-                                <TableBody>
+                                <TableBody className="bg-gray-50">
                                     {filteredData.map(({ employee, monday, tuesday, wednesday, thursday, friday }, index) => (
-                                        <TableRow key={employee.id} className={`${index < filteredData.length - 1 ? 'border-b border-gray-200' : ''} hover:bg-gray-50`}>
-                                            <TableCell className="px-4 py-4 border-r border-gray-200 border-l-0 sticky left-0 bg-white z-10">
+                                        <TableRow key={employee.id} className={`${index < filteredData.length - 1 ? '' : ''} hover:bg-gray-100 border-b border-gray-200`}>
+                                            <TableCell className="px-4 py-4 border-r-0 border-l-0 sticky left-0 bg-gray-50 z-10">
                                                 <EmployeeCell employee={employee} />
                                             </TableCell>
-                                            <TableCell className="px-4 py-4 border-r border-gray-200">
+                                            <TableCell className="px-4 py-4  border-r border-gray-200">
                                                 <ShiftCell
                                                     shift={monday}
                                                     onEdit={() => handleEditShift(employee.id, 'monday')}
                                                     onDelete={() => handleDeleteShift(employee.id, 'monday')}
                                                 />
                                             </TableCell>
-                                            <TableCell className="px-4 py-4 border-r border-gray-200">
+                                            <TableCell className="px-4 py-4  border-r border-gray-200">
                                                 <ShiftCell
                                                     shift={tuesday}
                                                     onEdit={() => handleEditShift(employee.id, 'tuesday')}
@@ -500,7 +494,7 @@ export default function SchedulingPage() {
                                                     onDelete={() => handleDeleteShift(employee.id, 'thursday')}
                                                 />
                                             </TableCell>
-                                            <TableCell className="px-4 py-4 border-r-0">
+                                            <TableCell className="px-4 py-4 ">
                                                 <ShiftCell
                                                     shift={friday}
                                                     onEdit={() => handleEditShift(employee.id, 'friday')}
@@ -519,7 +513,7 @@ export default function SchedulingPage() {
             {/* Auto-Schedule Modal */}
             <Sheet open={showAutoSchedule} onOpenChange={setShowAutoSchedule}>
                 <SheetContent side="right" className="w-full sm:w-[400px] lg:w-[500px] xl:w-[600px] p-0" close={false}>
-                    <SheetHeader className="py-4 sm:py-6 px-4 sm:px-6 border-b border-gray-200">
+                    <SheetHeader className="py-4 sm:py-6 px-4 sm:px-6 ">
                         <div className="flex items-center justify-between">
                             <SheetTitle className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
                                 Auto-Schedule
@@ -539,9 +533,6 @@ export default function SchedulingPage() {
                         <div className="space-y-4 sm:space-y-6">
                             {/* By Department Dropdown */}
                             <div>
-                                <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                                    Schedule Type
-                                </Label>
                                 <Select>
                                     <SelectTrigger className="w-full h-10 sm:h-11">
                                         <SelectValue placeholder="By Department" />
@@ -622,9 +613,9 @@ export default function SchedulingPage() {
                                 <Label className="text-sm font-medium text-gray-700 mb-3 block">
                                     Select Days
                                 </Label>
-                                <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
+                                <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
                                     {['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'].map((day) => (
-                                        <div key={day} className="flex items-center gap-2">
+                                        <div key={day} className="flex items-center gap-0.5">
                                             <Checkbox
                                                 className='size-4'
                                                 id={day}
@@ -685,7 +676,7 @@ export default function SchedulingPage() {
                                         console.log('Assign to employees');
                                         setShowAutoSchedule(false);
                                     }}
-                                    className="w-full h-11 sm:h-12 bg-primary hover:bg-green-700 text-white text-sm sm:text-base font-medium"
+                                    className="w-full h-11 sm:h-12 bg-primary hover:bg-green-700 text-white text-sm sm:text-base font-medium rounded-[8px]"
                                 >
                                     Assign to Employees
                                 </Button>
@@ -697,58 +688,47 @@ export default function SchedulingPage() {
 
             {/* Shift Edit Dialog */}
             <Dialog open={showShiftDialog} onOpenChange={setShowShiftDialog}>
-                <DialogContent className="w-[95vw] sm:w-[450px] lg:w-[500px] max-h-[90vh] p-0" close={false}>
-                    <DialogHeader className="px-4 sm:px-6 py-4 border-b border-gray-200">
-                        <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900">
-                            Edit Shift
-                        </DialogTitle>
-                    </DialogHeader>
-
-                    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto">
+                <DialogContent className="w-[95vw] sm:w-[450px] lg:w-[400px] max-h-[400px] p-0" close={false}>
+                    <div className="p-4 sm:p-6 space-y-4 sm:space-y-4 overflow-y-auto">
                         {/* Current Timeslot Display */}
-                        <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
-                            <div className="flex items-center justify-between">
+                        <div className="rounded-lg px-4 pt-4 pb-0">
+                            <div className="flex items-start flex-col justify-between">
                                 <div>
-                                    <div className="text-sm font-medium text-gray-900 mb-1">
-                                        Current Timeslot
-                                    </div>
-                                    <div className="text-sm text-gray-600">
+                                    <div className="text-[14px]/[20px] text-gray-600">
                                         {currentTimeslot}
                                     </div>
                                 </div>
                                 <Button
-                                    variant="outline"
+                                    variant="ghost"
                                     size="sm"
                                     onClick={() => {
                                         // Handle timeslot change
                                         console.log('Change timeslot');
                                     }}
-                                    className="text-xs sm:text-sm"
+                                    className="text-[14px]/[20px] px-0  text-[#0D978B]"
                                 >
-                                    Change
+                                    <span className="text-[14px]/[20px] px-0  text-primary-900">Change</span>
                                 </Button>
                             </div>
                         </div>
 
                         {/* Current Project Display */}
-                        <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
-                            <div className="flex items-center justify-between">
+                        <div className=" rounded-lg p-3 sm:p-4">
+                            <div className="flex items-start flex-col justify-between">
                                 <div>
-                                    <div className="text-sm font-medium text-gray-900 mb-1">
-                                        Current Project
-                                    </div>
-                                    <div className="text-sm text-gray-600">
+                                    <div className="text-[14px]/[20px] text-gray-600">
                                         {currentProject}
                                     </div>
                                 </div>
                                 <Button
-                                    variant="outline"
+                                    variant="ghost"
                                     size="sm"
                                     onClick={() => {
                                         // Handle project change
                                         console.log('Change project');
                                     }}
-                                    className="text-xs sm:text-sm"
+
+                                    className="text-xs sm:text-sm px-0 text-[#0D978B]"
                                 >
                                     Change
                                 </Button>
@@ -797,26 +777,6 @@ export default function SchedulingPage() {
                                     <SelectItem value="Hospital Construction Project">Hospital Construction Project</SelectItem>
                                 </SelectContent>
                             </Select>
-                        </div>
-
-                        {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                            <Button
-                                onClick={() => setShowShiftDialog(false)}
-                                variant="outline"
-                                className="flex-1 h-10 sm:h-11 text-sm"
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    console.log('Save shift changes');
-                                    setShowShiftDialog(false);
-                                }}
-                                className="flex-1 h-10 sm:h-11 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium"
-                            >
-                                Save Changes
-                            </Button>
                         </div>
                     </div>
                 </DialogContent>

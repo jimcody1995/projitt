@@ -143,8 +143,8 @@ export default function Reports() {
                 };
             case 'High Potential':
                 return {
-                    backgroundColor: '#fff3cd',
-                    textColor: '#856404'
+                    backgroundColor: '#FFDFC0',
+                    textColor: '#BE5E00'
                 };
             case 'Solid':
                 return {
@@ -190,7 +190,7 @@ export default function Reports() {
         const style = getStatusBadgeStyle(status);
         return (
             <div
-                className="inline-flex items-center justify-center px-[12px] py-[4px] rounded-[6px] text-[14px] font-medium"
+                className="inline-flex items-center justify-center px-[12px] py-[4px] rounded-[21px] text-[14px]/[22px] font-medium"
                 style={{
                     backgroundColor: style.backgroundColor,
                     color: style.textColor
@@ -254,7 +254,7 @@ export default function Reports() {
                         </div>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 200,
             },
             {
@@ -271,7 +271,7 @@ export default function Reports() {
                         {row.original.department}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
             },
             {
@@ -286,8 +286,8 @@ export default function Reports() {
                 cell: ({ row }: { row: any }) => (
                     <StatusBadge status={row.original.status} />
                 ),
-                enableSorting: true,
-                size: 120,
+                enableSorting: false,
+                size: 150,
             },
             {
                 accessorKey: 'finalScore',
@@ -301,7 +301,7 @@ export default function Reports() {
                 cell: ({ row }: { row: any }) => (
                     <ScoreBadge score={row.original.finalScore} />
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
             },
             {
@@ -316,7 +316,7 @@ export default function Reports() {
                 cell: ({ row }: { row: any }) => (
                     <ScoreCell score={row.original.peerAvg} />
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 100,
             },
             {
@@ -331,7 +331,7 @@ export default function Reports() {
                 cell: ({ row }: { row: any }) => (
                     <ScoreCell score={row.original.manager} />
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 100,
             },
             {
@@ -346,7 +346,7 @@ export default function Reports() {
                 cell: ({ row }: { row: any }) => (
                     <ScoreCell score={row.original.self} />
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 100,
             },
             {
@@ -418,9 +418,9 @@ export default function Reports() {
                         variant="ghost"
                         size="icon"
                         onClick={() => router.back()}
-                        className="h-[40px] w-[40px]"
+                        className="h-[40px] w-[40px] bg-white rounded-full"
                     >
-                        <ArrowLeft className="size-5" />
+                        <ArrowLeft className="size-5 text-gray-800" />
                     </Button>
                     <h1 className="text-[24px]/[30px] font-semibold text-[#353535]">
                         H1 2025 Mid-Year Review Report

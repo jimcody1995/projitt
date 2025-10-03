@@ -193,7 +193,7 @@ export default function Completed() {
                         className="p-[24px] cursor-pointer w-full"
                         onClick={() => toggleExpanded(cycle.id)}
                     >
-                        <div className="flex items-center justify-between gap-[12px] w-full">
+                        <div className="flex items-center justify-between gap-[12px] w-full bg-white">
                             {cycle.isExpanded ? (
                                 <ChevronUp className="size-5 text-[#8f8f8f]" />
                             ) : (

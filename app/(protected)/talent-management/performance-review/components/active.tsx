@@ -155,9 +155,8 @@ export default function Active() {
         const style = getScoreBadgeStyle(score);
         return (
             <div
-                className="inline-flex items-center justify-center px-[12px] py-[4px] rounded-[6px] text-[14px] font-medium border"
+                className="inline-flex items-center justify-center px-[12px] py-[4px] rounded-[6px] text-[14px] font-medium"
                 style={{
-                    backgroundColor: style.backgroundColor,
                     borderColor: style.borderColor,
                     color: style.textColor
                 }}

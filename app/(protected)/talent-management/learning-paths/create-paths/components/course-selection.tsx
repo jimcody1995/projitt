@@ -61,7 +61,7 @@ function DraggableCourse({ course, isSelected, onRemove, onExpand }: DraggableCo
         <div
             ref={setNodeRef}
             style={style}
-            className={`flex items-center gap-3 p-3 rounded-lg border ${isSelected ? 'bg-gray-50 border-gray-200' : 'bg-white border-gray-100'
+            className={`flex items-center gap-3 p-3 border-b border-gray-200 bg-white ${isSelected ? ' border-gray-200' : ' border-gray-100'
                 } ${isDragging ? 'opacity-50' : ''} hover:bg-gray-50 transition-colors`}
             {...attributes}
         >
@@ -148,7 +148,7 @@ function LibraryCourse({ course, onAdd }: { course: Course; onAdd: (course: Cour
         <div
             ref={setNodeRef}
             style={style}
-            className={`flex items-center gap-3 p-3 rounded-lg border border-gray-100 bg-white hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing ${isDragging ? 'opacity-50' : ''
+            className={`flex items-center gap-3 p-3 border-b border-gray-200 bg-white hover:bg-gray-50 transition-colors cursor-grab active:cursor-grabbing ${isDragging ? 'opacity-50' : ''
                 }`}
             {...attributes}
             {...listeners}

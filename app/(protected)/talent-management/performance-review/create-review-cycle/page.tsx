@@ -31,7 +31,7 @@ export default function CreateReviewCycle() {
                     <p className="text-[24px]/[30px] font-semibold text-[#353535]">Create Review Cycle</p>
                 </div>
                 <div className='flex gap-[10px]'>
-                    <Button className='h-[42px]' variant="outline">Save & Exit</Button>
+                    <Button className='h-[42px]' variant="ghost">Save & Exit</Button>
                     {step !== 1 && <Button className='h-[42px]' variant="outline" onClick={() => setStep(step - 1)}>Back</Button>}
                     <Button
                         onClick={() => {

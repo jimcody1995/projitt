@@ -185,7 +185,7 @@ export default function SickLeave() {
                         </button>
                         <Button
                             variant="outline"
-                            className="h-[36px] px-[16px] text-[14px]/[20px] border-gray-800 text-[#353535] bg-[#F8F9FA] font-medium rounded-[6px] text-#053834]"
+                            className="h-[36px] px-[16px] text-[14px]/[20px] border-gray-800 text-[#353535] bg-[#F8F9FA] font-medium rounded-[6px] text-primary-950"
                         >
                             Edit Leave
                         </Button>

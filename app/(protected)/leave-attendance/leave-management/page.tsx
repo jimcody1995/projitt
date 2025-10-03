@@ -17,7 +17,7 @@ import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/compon
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Settings, Search, ListFilter, EllipsisVertical, FileText, X, CheckCircle, Calendar, User, TrendingUp, Check } from "lucide-react";
+import { Settings, Search, ListFilter, EllipsisVertical, FileText, X, CheckCircle, Calendar, User, TrendingUp, Check, File } from "lucide-react";
 import { DataGrid } from "@/components/ui/data-grid";
 import { Input } from "@/components/ui/input";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
@@ -234,7 +234,7 @@ export default function LeaveManagement() {
                         type="checkbox"
                         checked={table.getIsAllPageRowsSelected()}
                         onChange={(e) => table.toggleAllPageRowsSelected(e.target.checked)}
-                        className="size-4 rounded border-2 border-[#E9E9E9]"
+                        className="size-4 rounded bg-gray-50 border-2 border-[#E9E9E9]"
                     />
                 ),
                 cell: ({ row }) => (
@@ -242,7 +242,7 @@ export default function LeaveManagement() {
                         type="checkbox"
                         checked={row.getIsSelected()}
                         onChange={(e) => row.toggleSelected(e.target.checked)}
-                        className="size-4 rounded border-2 border-[#E9E9E9]"
+                        className="size-4 bg-gray-50 rounded border-2 border-[#E9E9E9]"
                     />
                 ),
                 enableSorting: false,
@@ -253,7 +253,7 @@ export default function LeaveManagement() {
                 header: ({ column }) => (
                     <DataGridColumnHeader
                         className='text-[14px] font-medium text-[#8f8f8f]'
-                        title="Employee ID"
+                        title="ID"
                         column={column}
                     />
                 ),
@@ -262,7 +262,7 @@ export default function LeaveManagement() {
                         {row.original.employeeId}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 100,
             },
             {
@@ -291,7 +291,7 @@ export default function LeaveManagement() {
                         </div>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 180,
             },
             {
@@ -308,7 +308,7 @@ export default function LeaveManagement() {
                         {row.original.balance}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 100,
             },
             {
@@ -325,7 +325,7 @@ export default function LeaveManagement() {
                         {row.original.startDate}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
             },
             {
@@ -342,7 +342,7 @@ export default function LeaveManagement() {
                         {row.original.endDate}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
             },
             {
@@ -359,7 +359,7 @@ export default function LeaveManagement() {
                         {row.original.days}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 80,
             },
             {
@@ -378,7 +378,7 @@ export default function LeaveManagement() {
                         {row.original.type}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 100,
             },
             {
@@ -442,7 +442,7 @@ export default function LeaveManagement() {
                         className="h-[32px] w-[32px] p-0 bg-white text-gray-900 border border-[#E9E9E9] hover:bg-[#F8F9FA] hover:text-[#353535] rounded-[6px]"
                         variant="outline"
                     >
-                        <X className="size-4" />
+                        <File className="size-4" />
                     </Button>
                     <Button
                         size="sm"
@@ -596,12 +596,12 @@ export default function LeaveManagement() {
                                 placeholder="Search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="ps-9 w-full sm:w-[200px] h-[36px] border-[#E9E9E9] text-[14px] rounded-[8px]"
+                                className="ps-9 w-full sm:w-[200px] h-[36px] border-[#E9E9E9] text-[14px] rounded-[8px] bg-gray-50"
                             />
                         </div>
                         <Button
                             variant="outline"
-                            className={`h-[36px] px-[16px] flex items-center gap-[8px] w-full sm:w-auto text-[14px] rounded-[8px] transition-all duration-200 ${showFilters
+                            className={`h-[36px] px-[16px] flex items-center gap-[8px] w-full sm:w-auto text-[14px] rounded-[8px] transition-all bg-gray-50 duration-200 ${showFilters
                                 ? 'border-[#0d978b] text-[#0d978b] bg-[#F0FDFA] shadow-sm'
                                 : (selectedLeaveTypes.length > 0 || selectedStatuses.length > 0 || selectedEmployees.length > 0 || nameFilter || dateRange.start || dateRange.end)
                                     ? 'border-[#0d978b] text-[#0d978b] bg-[#F0FDFA]'

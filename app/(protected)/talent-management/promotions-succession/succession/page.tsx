@@ -16,9 +16,14 @@ export default function PromotionsSuccession() {
     const [open, setOpen] = useState(false);
     return (
         <div className="p-6 space-y-6">
-            <div className="flex items-center gap-[4px] text-[24px]/[30px] font-semibold text-[#353535]">
-                <ArrowLeft className="w-6 h-6 border border-[#E9E9E9] rounded-[56.84px]" onClick={() => router.back()} />
-                Successions
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-[4px] text-[24px]/[30px] font-semibold text-[#353535]">
+                    <ArrowLeft className="w-6 h-6 border border-[#E9E9E9] rounded-[56.84px]" onClick={() => router.back()} />
+                    Successions
+                </div>
+                <Button className="h-[42px] bg-[#0D978B] text-white px-4">
+                    Add Role
+                </Button>
             </div>
             {/* Search and Filter */}
             <div className="flex items-center justify-between sm:flex-row flex-col gap-[20px] ">
@@ -31,7 +36,7 @@ export default function PromotionsSuccession() {
                         placeholder="Search"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="ps-9 w-[172px] h-[42px]"
+                        className="ps-9 w-[172px] h-[42px] bg-[#fafafa]"
                         data-testid="search-input"
                     />
                     {searchQuery.length > 0 && (
@@ -46,6 +51,7 @@ export default function PromotionsSuccession() {
                         </Button>
                     )}
                 </div>
+
             </div>
             <div className="flex gap-[10px] mt-[39px]">
                 <div className="bg-white border border-[#e9e9e9] rounded-[12px] p-[20px] sm:w-[350px] w-full cursor-pointer" onClick={() => setSelectedRole('1')}>
@@ -119,7 +125,7 @@ export default function PromotionsSuccession() {
                                                     <span className="w-[24px] h-[24px] rounded-full bg-[#D6EEEC] text-[#053834] p-1 ">
                                                         AF
                                                     </span>Alice Fernandez</td>
-                                                <td className=" font-medium text-[#353535] px-4 py-3  border-[#E9E9E9] last:border-r-0">Senior Data Analyst</td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3  border-[#E9E9E9] last:border-r-0">Senior Data <br /><span className="text-[12px] font-medium text-[#8F8F8F]">USA</span></td>
                                                 <td className=" font-medium text-[#353535] px-4 py-3">
                                                     <span className="px-[8px] py-[4px] text-[#0D978B] sm:bg-[#D6EEEC]  sm:text-[14px] text-[7px] font-medium rounded-full">
                                                         Ready Now
@@ -147,7 +153,7 @@ export default function PromotionsSuccession() {
                                                 <td className=" font-medium text-[#353535] px-4 py-3  border-[#E9E9E9] last:border-r-0"><span className="w-[24px] h-[24px] rounded-full bg-[#D6EEEC] text-[#053834] p-1 ">
                                                     EH
                                                 </span>Bob Wilson</td>
-                                                <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0">Marketing Manager</td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0">Marketing Manager<br /><span className="text-[12px] font-medium text-[#8F8F8F]">USA</span></td>
                                                 <td className=" font-medium text-[#353535] px-4 py-3">
                                                     <span className="sm:px-[8px] py-[4px] sm:bg-[#FFDFC0]  sm:text-[14px] text-[7px]  text-[#BE5E00]  font-medium rounded-full">
                                                         Ready in 3-6 months

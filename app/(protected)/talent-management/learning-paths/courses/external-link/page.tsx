@@ -101,7 +101,7 @@ export default function ExternalLink() {
                                 type="url"
                                 value={formData.url}
                                 onChange={(e) => handleInputChange('url', e.target.value)}
-                                className="pr-[40px] h-[48px] text-[14px]"
+                                className="pr-[40px] h-[48px] text-[14px] bg-[#fafafa]"
                                 placeholder="https://youtube.com/xyz"
                             />
                             {isUrlValid && formData.url && (
@@ -120,7 +120,7 @@ export default function ExternalLink() {
                             type="text"
                             value={formData.title}
                             onChange={(e) => handleInputChange('title', e.target.value)}
-                            className="h-[48px] text-[14px] mt-[12px]"
+                            className="h-[48px] text-[14px] mt-[12px] bg-[#fafafa]"
                             placeholder="e.g Leadership Fundamentals"
                         />
                     </div>
@@ -135,7 +135,7 @@ export default function ExternalLink() {
                                 id="duration"
                                 value={formData.duration}
                                 onChange={(e) => handleInputChange('duration', e.target.value)}
-                                className="h-[48px] text-[14px] w-full"
+                                className="h-[48px] text-[14px] w-full bg-[#fafafa]"
                                 placeholder="30"
                             />
                             <span className="text-[14px] text-[#8f8f8f] absolute right-[12px] top-[50%] translate-y-[-50%]">mins</span>
@@ -151,7 +151,7 @@ export default function ExternalLink() {
                             id="description"
                             value={formData.description}
                             onChange={(e) => handleInputChange('description', e.target.value)}
-                            className="min-h-[100px] text-[14px] resize-none"
+                            className="min-h-[100px] text-[14px] resize-none bg-[#fafafa]"
                             placeholder="Enter a brief purpose or scope"
                         />
                     </div>
@@ -162,7 +162,7 @@ export default function ExternalLink() {
                             Category
                         </Label>
                         <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
-                            <SelectTrigger className="h-[48px] text-[14px]">
+                            <SelectTrigger className="h-[48px] text-[14px] bg-[#fafafa]">
                                 <SelectValue placeholder="Select Category" />
                             </SelectTrigger>
                             <SelectContent>
@@ -180,7 +180,7 @@ export default function ExternalLink() {
                         <Label className="text-[14px]/[20px] font-medium text-[#353535]">
                             Tags
                         </Label>
-                        <div className="min-h-[48px] border border-[#e9e9e9] rounded-[8px] p-[8px] flex flex-wrap gap-[8px] items-center">
+                        <div className="min-h-[100px] border border-[#e9e9e9] rounded-[8px] p-[8px] flex flex-wrap gap-[8px] items-start">
                             {/* Existing Tags */}
                             {tags.map((tag, index) => (
                                 <div

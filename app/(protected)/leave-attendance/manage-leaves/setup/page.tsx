@@ -43,7 +43,7 @@ export default function SetupSickLeave() {
                 <div className="flex gap-[10px]">
                     {currentStep !== 1 && (
                         <Button
-                            variant="outline"
+                            variant="ghost"
                             className="h-[48px] min-w-[110px] text-[16px]/[20px]"
                             onClick={handleBack}
                         >
@@ -51,10 +51,13 @@ export default function SetupSickLeave() {
                         </Button>
                     )}
                     <Button
-                        className="h-[48px] min-w-[110px] bg-[#0d978b] hover:bg-[#0d978b]/90 text-[16px]/[20px]"
+                        className="h-[48px] min-w-[110px] bg-[#0d978b] hover:bg-[#0d978b]/90 text-[16px]/[20px] px-7"
                         onClick={handleNext}
                     >
-                        {currentStep === 4 ? 'Publish' : 'Save & Continue'}
+                        {currentStep === 1 && 'Continue'}
+                        {currentStep === 2 && 'Save & Continue'}
+                        {currentStep === 3 && 'Save & Continue'}
+                        {currentStep === 4 && 'Publish'}
                     </Button>
                 </div>
             </div>

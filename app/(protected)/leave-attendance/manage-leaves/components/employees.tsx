@@ -40,7 +40,7 @@ export const Employees = ({ filteredEmployees }: { filteredEmployees: any }) => 
                     </TableHeader>
                     <TableBody>
                         {filteredEmployees.map((employee: any, index: any) => (
-                            <TableRow key={employee.id} className="border-b border-gray-200 bg-gray-100 hover:bg-[#FAFAFA]">
+                            <TableRow key={employee.id} className="border-b border-gray-200 bg-gray-50 hover:bg-[#FAFAFA]">
                                 <TableCell className="py-[12px] px-[32px]">
                                     <div className="flex items-center gap-[12px]">
                                         <Avatar className="size-7">
