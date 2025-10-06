@@ -440,7 +440,7 @@ export default function SchedulingPage() {
                             <Table>
                                 <TableHeader>
                                     <TableRow className="border-b border-gray-200 bg-white">
-                                        <TableHead className="w-[200px] xl:w-[250px] px-4 py-3  border-r border-gray-200 border-l-0 border-r-0  sticky left-0  z-10">
+                                        <TableHead className="w-[200px] xl:w-[250px] px-4 py-3  border-r border-gray-200 border-l-0 border-r-0 ">
                                             <span className="text-[14px]/[22px] font-medium text-gray-700">Name</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r border-gray-200">

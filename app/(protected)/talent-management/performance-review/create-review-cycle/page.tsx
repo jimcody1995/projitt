@@ -32,7 +32,7 @@ export default function CreateReviewCycle() {
                 </div>
                 <div className='flex gap-[10px]'>
                     <Button className='h-[42px]' variant="ghost">Save & Exit</Button>
-                    {step !== 1 && <Button className='h-[42px]' variant="outline" onClick={() => setStep(step - 1)}>Back</Button>}
+                    {step !== 1 && <Button className='h-[42px] px-4' variant="outline" onClick={() => setStep(step - 1)}>Back</Button>}
                     <Button
                         onClick={() => {
                             if (step === 3) {
@@ -42,9 +42,9 @@ export default function CreateReviewCycle() {
                             console.log("asdf123");
 
                         }}
-                        className='h-[42px]'
+                        className='h-[42px]  px-7'
                     >
-                        Continue
+                        {step !== 3 ? "Continue" : "Launch"}
                     </Button>
                 </div>
             </div>
