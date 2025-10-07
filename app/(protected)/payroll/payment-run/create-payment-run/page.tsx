@@ -28,9 +28,18 @@ const employees = [
         hoursWorked: "40hrs",
         additionalEarnings: "$125.00",
         deductions: "$50.00",
-        ytd: "€2,500.00\n¥350,000",
-        grossPay: "€1,250.00\n¥175,000",
-        netPay: "€1,200.00\n¥168,000"
+        ytd: {
+            main: "€2,500.00",
+            sub: "¥350,000"
+        },
+        grossPay: {
+            main: "€1,250.00",
+            sub: "¥175,000"
+        },
+        netPay: {
+            main: "€1,200.00",
+            sub: "¥168,000"
+        }
     },
     {
         id: "#E002",
@@ -42,9 +51,18 @@ const employees = [
         hoursWorked: "40hrs",
         additionalEarnings: "-",
         deductions: "$75.00",
-        ytd: "€5,000.00\n¥700,000",
-        grossPay: "€2,500.00\n¥350,000",
-        netPay: "€2,425.00\n¥339,500"
+        ytd: {
+            main: "€5,000.00",
+            sub: "¥700,000"
+        },
+        grossPay: {
+            main: "€2,500.00",
+            sub: "¥350,000"
+        },
+        netPay: {
+            main: "€2,425.00",
+            sub: "¥339,500"
+        }
     },
     {
         id: "#E003",
@@ -56,9 +74,18 @@ const employees = [
         hoursWorked: "40hrs",
         additionalEarnings: "$90.00",
         deductions: "$60.00",
-        ytd: "€3,000.00\n¥420,000",
-        grossPay: "€1,500.00\n¥210,000",
-        netPay: "€1,440.00\n¥201,600"
+        ytd: {
+            main: "€3,000.00",
+            sub: "¥420,000"
+        },
+        grossPay: {
+            main: "€1,500.00",
+            sub: "¥210,000"
+        },
+        netPay: {
+            main: "€1,440.00",
+            sub: "¥201,600"
+        }
     },
     {
         id: "#E004",
@@ -70,9 +97,18 @@ const employees = [
         hoursWorked: "40hrs",
         additionalEarnings: "-",
         deductions: "$45.00",
-        ytd: "€3,800.00\n¥532,000",
-        grossPay: "€1,900.00\n¥266,000",
-        netPay: "€1,855.00\n¥259,700"
+        ytd: {
+            main: "€3,800.00",
+            sub: "¥532,000"
+        },
+        grossPay: {
+            main: "€1,900.00",
+            sub: "¥266,000"
+        },
+        netPay: {
+            main: "€1,855.00",
+            sub: "¥259,700"
+        }
     },
     {
         id: "#E005",
@@ -84,9 +120,18 @@ const employees = [
         hoursWorked: "40hrs",
         additionalEarnings: "$56.00",
         deductions: "$40.00",
-        ytd: "€2,800.00\n¥392,000",
-        grossPay: "€1,400.00\n¥196,000",
-        netPay: "€1,360.00\n¥190,400"
+        ytd: {
+            main: "€2,800.00",
+            sub: "¥392,000"
+        },
+        grossPay: {
+            main: "€1,400.00",
+            sub: "¥196,000"
+        },
+        netPay: {
+            main: "€1,360.00",
+            sub: "¥190,400"
+        }
     }
 ];
 
@@ -241,19 +286,22 @@ export default function CreatePaymentRun() {
                                     <div>
                                         <span className="text-gray-500">YTD:</span>
                                         <p className="font-medium text-gray-900 whitespace-pre-line text-[10px]">
-                                            {employee.ytd}
+                                            {employee.ytd.main}<br />
+                                            <span className="text-[10px] text-gray-500">{employee.ytd.sub}</span>
                                         </p>
                                     </div>
                                     <div>
                                         <span className="text-gray-500">Gross Pay:</span>
                                         <p className="font-medium text-gray-900 whitespace-pre-line text-[10px]">
-                                            {employee.grossPay}
+                                            {employee.grossPay.main}<br />
+                                            <span className="text-[10px] text-gray-500">{employee.grossPay.sub}</span>
                                         </p>
                                     </div>
                                     <div>
                                         <span className="text-gray-500">Net Pay (EBT):</span>
                                         <p className="font-medium text-gray-900 text-teal-600 whitespace-pre-line text-[10px]">
-                                            {employee.netPay}
+                                            {employee.netPay.main}<br />
+                                            <span className="text-[10px] text-gray-500">{employee.netPay.sub}</span>
                                         </p>
                                     </div>
                                 </div>
@@ -287,7 +335,7 @@ export default function CreatePaymentRun() {
                             </TableHeader>
                             <TableBody>
                                 {filteredEmployees.map((employee) => (
-                                    <TableRow key={employee.id} className="hover:bg-gray-50">
+                                    <TableRow key={employee.id} className="hover:bg-gray-50 border-b border-gray-200">
                                         <TableCell>
                                             <Checkbox
                                                 checked={selectedEmployees.includes(employee.id)}
@@ -330,17 +378,20 @@ export default function CreatePaymentRun() {
                                         </TableCell>
                                         <TableCell className="min-w-[120px] text-gray-900 text-[14px]/[22px]">
                                             <div className="whitespace-pre-line text-sm">
-                                                {employee.ytd}
+                                                {employee.ytd.main}<br />
+                                                <span className="text-[10px] text-gray-500">{employee.ytd.sub}</span>
                                             </div>
                                         </TableCell>
                                         <TableCell className="min-w-[120px] text-gray-900 text-[14px]/[22px]">
                                             <div className="whitespace-pre-line text-sm">
-                                                {employee.grossPay}
+                                                {employee.grossPay.main}<br />
+                                                <span className="text-[10px] text-gray-500">{employee.grossPay.sub}</span>
                                             </div>
                                         </TableCell>
                                         <TableCell className="min-w-[120px]  text-gray-900 text-[14px]/[22px]">
                                             <div className="whitespace-pre-line text-sm">
-                                                {employee.netPay}
+                                                {employee.netPay.main}<br />
+                                                <span className="text-[10px] text-gray-500">{employee.netPay.sub}</span>
                                             </div>
                                         </TableCell>
                                     </TableRow>
