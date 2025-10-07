@@ -129,14 +129,16 @@ export const MENU_SIDEBAR: MenuConfig = [
       { title: 'Leave Management', path: '/leave-attendance/leave-management' },
       { title: 'Attendance Tracking', path: '/leave-attendance/attendance-tracking' },
       { title: 'Scheduling', path: '/leave-attendance/scheduling' },
-      { title: 'Payroll', path: '/payroll/payroll' },
     ],
   },
   {
     title: 'Payroll',
     icon: BanknoteArrowUp,
     children: [
-      { title: 'Payroll', path: '/payroll/payroll' },
+      { title: 'Payment Run', path: '/payroll/payment-run' },
+      { title: 'Tax Filing', path: '/payroll/tax-filing' },
+      { title: 'Year End Processing', path: '/payroll/year-end-processing' },
+      { title: 'Reports & Analytics', path: '/payroll/reports-analytics' },
 
     ],
   },
