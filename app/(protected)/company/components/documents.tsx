@@ -46,10 +46,10 @@ export default function Documents() {
     return (
         <div className="pt-[20px]">
             <div className="w-full flex justify-between">
-                <div className="flex items-center bg-[#e9e9e9] rounded-[6px] p-[2px] relative">
+                <div className="flex items-center bg-[#e9e9e9] rounded-[6px]  relative h-[32px]">
                     {/* Animated background slider */}
                     <div
-                        className={`absolute top-[2px] h-[32px] w-[131px] bg-[#0d978b] rounded-[6px] transition-all duration-300 ease-in-out transform ${activeTab === 'documents' ? 'translate-x-0' : 'translate-x-[131px]'
+                        className={`absolute  h-[32px] w-[131px] bg-[#0d978b] rounded-[6px] transition-all duration-300 ease-in-out transform ${activeTab === 'documents' ? 'translate-x-0' : 'translate-x-[131px]'
                             }`}
                     />
                     <div
@@ -70,7 +70,7 @@ export default function Documents() {
                 {activeTab === 'documents' && <Button className="h-[40px]">
                     Upload Files
                 </Button>}
-                {activeTab === 'templates' && <Button className="h-[40px]" onClick={() => router.push('/hr-settings/new-template')}>
+                {activeTab === 'templates' && <Button className="h-[40px]" onClick={() => router.push('/company/new-template')}>
                     Create New Template
                 </Button>}
             </div>

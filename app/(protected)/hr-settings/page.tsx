@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import Recruitment from './components/recruitment';
 import Onboarding from './components/onboarding';
 import Leave from './components/leave';
-import Documents from './components/documents';
 import Payroll from './components/users';
 
 export default function HRSettings() {
@@ -230,13 +229,6 @@ export default function HRSettings() {
                         <p className='whitespace-nowrap'>Recruitment</p>
                     </div>
                     <div
-                        ref={(el) => { tabRefs.current.documents = el; }}
-                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer transition-colors duration-200 ${activeSection === 'documents' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
-                        onClick={() => setActiveSection('documents')}
-                    >
-                        <p className='whitespace-nowrap'>Documents</p>
-                    </div>
-                    <div
                         ref={(el) => { tabRefs.current.onboarding = el; }}
                         className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer transition-colors duration-200 ${activeSection === 'onboarding' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
                         onClick={() => setActiveSection('onboarding')}
@@ -261,7 +253,6 @@ export default function HRSettings() {
             </div>
 
             {activeSection === 'recruitment' && <Recruitment />}
-            {activeSection === 'documents' && <Documents />}
             {activeSection === 'onboarding' && <Onboarding />}
             {activeSection === 'leave' && <Leave />}
             {activeSection === 'payroll' && <Payroll />}

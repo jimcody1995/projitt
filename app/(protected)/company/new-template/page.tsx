@@ -207,7 +207,7 @@ HR Team`
             <div className="">
                 <div className="flex items-center justify-between">
                     <div>
-                        <p className="text-[12px]/[20px] text-[#A5A5A5]"><span className="cursor-pointer " onClick={() => router.push('/hr-settings')}>Documents</span> <span className="text-[#0d978b]">/ Create Templates</span></p>
+                        <p className="text-[12px]/[20px] text-[#A5A5A5]"><span className="cursor-pointer " onClick={() => router.push('/company')}>Documents</span> <span className="text-[#0d978b]">/ Create Templates</span></p>
                         <p className="text-[24px]/[30px] font-semibold text-[#353535] mt-[4px]">Create Templates</p>
                     </div>
                     <Button
