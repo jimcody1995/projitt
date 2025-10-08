@@ -12,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Upload, Edit, Trash2, Plus, Eye, EyeOff } from 'lucide-react';
 import General from './components/general';
 import Documents from './components/documents';
+import FacilityManagement from './components/facility-management';
+import Integrations from './components/integrations';
 
 export default function Company() {
     const [activeTab, setActiveTab] = useState('general');
@@ -181,6 +183,14 @@ export default function Company() {
                         <p className='whitespace-nowrap'>Documents</p>
                     </div>
                     <div
+                        ref={(el) => { tabRefs.current['facility-management'] = el; }}
+                        className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer transition-colors duration-200 ${activeSection === 'facility-management' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
+                        onClick={() => setActiveSection('facility-management')}
+                        data-testid="facility-management-tab-button"
+                    >
+                        <p className='whitespace-nowrap'>Facility Management</p>
+                    </div>
+                    <div
                         ref={(el) => { tabRefs.current.integrations = el; }}
                         className={`py-[11px] px-[32px] text-[15px]/[20px] font-medium flex items-center gap-[4px] cursor-pointer transition-colors duration-200 ${activeSection === 'integrations' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
                         onClick={() => setActiveSection('integrations')}
@@ -203,8 +213,11 @@ export default function Company() {
                         handleSaveChanges={handleSaveChanges}
                     />
                 )}
-                {activeSection === 'documents' && <Documents />}
             </div>
+            {activeSection === 'documents' && <Documents />}
+            {activeSection === 'integrations' && <Integrations />}
+            {activeSection === 'facility-management' && <FacilityManagement />}
+
 
 
         </div>

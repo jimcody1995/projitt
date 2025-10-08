@@ -16,6 +16,7 @@ import TagInput from '@/components/ui/tag-input';
 export default function Recruitment() {
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [activeSection, setActiveSection] = useState('candidate-settings');
     const [formData, setFormData] = useState({
         // Candidate Settings
         reconsiderationPeriod: 6,
@@ -50,6 +51,33 @@ export default function Recruitment() {
     const [showAddEmailInput, setShowAddEmailInput] = useState(false);
     const [newJobApproval, setNewJobApproval] = useState('');
     const [newOfferApproval, setNewOfferApproval] = useState('');
+
+    // Scroll spy functionality
+    useEffect(() => {
+        const handleScroll = () => {
+            const sections = ['candidate-settings', 'job-opening-settings', 'offer-rejection', 'interview-settings'];
+            const scrollPosition = window.scrollY + 100; // Offset for better UX
+
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const element = document.getElementById(sections[i]);
+                if (element && element.offsetTop <= scrollPosition) {
+                    setActiveSection(sections[i]);
+                    break;
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const scrollToSection = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            const elementPosition = element.offsetTop - 120; // Adjust offset to show section properly
+            window.scrollTo({ top: elementPosition, behavior: 'smooth' });
+        }
+    };
 
 
     const handleInputChange = (field: string, value: any) => {
@@ -151,7 +179,7 @@ export default function Recruitment() {
             <div className="flex-1">
                 <div className="space-y-8 md:w-[504px] w-full">
                     {/* Candidate Settings Section */}
-                    <div>
+                    <div id="candidate-settings">
                         <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Candidate Settings</p>
                         <div className="space-y-6 mt-[16px]">
                             <div className="space-y-2">
@@ -274,7 +302,7 @@ export default function Recruitment() {
                     </div>
 
                     {/* Job Opening Settings Section */}
-                    <div>
+                    <div id="job-opening-settings">
                         <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Job Opening Settings</p>
                         <div className="space-y-6 mt-[16px]">
                             <div className="space-y-2">
@@ -367,7 +395,7 @@ export default function Recruitment() {
                     </div>
 
                     {/* Offer & Rejection Section */}
-                    <div>
+                    <div id="offer-rejection">
                         <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Offer & Rejection</p>
                         <div className="space-y-6 mt-[16px]">
                             <div className="space-y-2">
@@ -478,7 +506,7 @@ export default function Recruitment() {
                     </div>
 
                     {/* Interview Settings Section */}
-                    <div>
+                    <div id="interview-settings">
                         <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Interview Settings</p>
                         <div className="space-y-6 mt-[16px]">
                             <div className="space-y-2 mt-[6px]">
@@ -507,25 +535,31 @@ export default function Recruitment() {
             </div>
 
             {/* Sidebar - Hidden on mobile, visible on desktop */}
-            <div className="hidden lg:block w-64 p-6">
-                <div className="space-y-4">
-                    {sidebarItems.map((item) => (
-                        <Button
-                            key={item.id}
-                            variant="ghost"
-                            className="w-full justify-start text-[#353535] hover:text-[#0d978b]"
-                        >
-                            {item.label}
-                        </Button>
-                    ))}
-                    <div className="pt-4">
-                        <Button
-                            onClick={handleSaveChanges}
-                            className="w-full bg-[#0d978b] hover:bg-[#0d978b]/90"
-                            disabled={isLoading}
-                        >
-                            {isLoading ? 'Saving...' : 'Save Changes'}
-                        </Button>
+            <div className="hidden lg:block w-64">
+                <div className="sticky top-20 p-6">
+                    <div className="space-y-4">
+                        {sidebarItems.map((item) => (
+                            <Button
+                                key={item.id}
+                                variant="ghost"
+                                onClick={() => scrollToSection(item.id)}
+                                className={`w-full justify-start transition-colors duration-200 ${activeSection === item.id
+                                    ? 'text-[#0d978b]'
+                                    : 'text-[#353535] hover:text-[#0d978b]'
+                                    }`}
+                            >
+                                {item.label}
+                            </Button>
+                        ))}
+                        <div className="pt-4">
+                            <Button
+                                onClick={handleSaveChanges}
+                                className="w-full bg-[#0d978b] hover:bg-[#0d978b]/90"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? 'Saving...' : 'Save Changes'}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

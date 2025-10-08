@@ -2,7 +2,7 @@ import { ArrowRight, Banknote, Calendar, Star, User } from "lucide-react"
 
 export default function ActionList() {
     return (
-        <div className="w-full rounded-[12px] border border-[#e9e9e9] bg-white p-[16px]">
+        <div className="w-full h-full rounded-[12px] border border-[#e9e9e9] bg-white p-[16px]">
             <div className="flex justify-between items-center">
                 <div className="flex gap-[4px]">
                     <p className="text-[#4b4b4b] text-[13px]/[16px]">Actions List</p>

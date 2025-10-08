@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,23 +15,27 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 export default function Leave() {
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [activeSection, setActiveSection] = useState('leave-policies');
     const [formData, setFormData] = useState({
-        // Leave Policies
-        leavePolicies: [
-            { id: 'annual', name: 'Annual Leave', days: 21, carryForward: true },
-            { id: 'sick', name: 'Sick Leave', days: 10, carryForward: false },
-            { id: 'personal', name: 'Personal Leave', days: 5, carryForward: false }
-        ],
+        // Enable Birthday Leave
+        enableBirthdayLeave: 'yes',
+        enableShortLeave: 'yes',
+        enableMaternityLeaveIndia: 'yes',
+        enableCompOff: 'yes',
+        enableLeaveEncashment: 'yes',
 
         // Attendance Settings
         shiftHours: [
-            { id: 'shift1', from: '8:00am', to: '5:00pm', isEditing: false }
+            { id: 'shift1', from: '8:00pm', to: '5:00pm', isEditing: false }
         ],
+        breaksAllowed: 'yes',
+        breakDuration: 0,
+        breakDurationUnit: 'min',
         timesheetApproval: 'yes',
-        includeBreaks: 'yes',
+        includeBreaks: 'include',
         excludeFromHours: {
-            weekends: false,
-            publicHolidays: false
+            weekends: true,
+            publicHolidays: true
         },
         timesheetDeadline: 'Every Friday',
         allowFutureSubmission: 'yes',
@@ -41,6 +45,33 @@ export default function Leave() {
     const [newShiftFrom, setNewShiftFrom] = useState('8:00am');
     const [newShiftTo, setNewShiftTo] = useState('5:00pm');
     const [editingShift, setEditingShift] = useState<string | null>(null);
+
+    // Scroll spy functionality
+    useEffect(() => {
+        const handleScroll = () => {
+            const sections = ['leave-policies', 'attendance'];
+            const scrollPosition = window.scrollY + 100; // Offset for better UX
+
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const element = document.getElementById(sections[i]);
+                if (element && element.offsetTop <= scrollPosition) {
+                    setActiveSection(sections[i]);
+                    break;
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const scrollToSection = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            const elementPosition = element.offsetTop - 120; // Adjust offset to show section properly
+            window.scrollTo({ top: elementPosition, behavior: 'smooth' });
+        }
+    };
 
     const handleInputChange = (field: string, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -133,20 +164,109 @@ export default function Leave() {
             <div className="flex-1">
                 <div className="space-y-8 md:w-[504px] w-full">
                     {/* Leave Policies Section */}
-                    <div>
+                    <div id="leave-policies">
                         <div className="flex flex-col gap-[10px] mb-4">
                             <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Leave</p>
-                            <Button
-                                variant="outline"
-                                className="md:w-[182px] w-full"
-                            >
-                                Manage Leave Policies
-                            </Button>
+                            <div className="flex flex-col gap-[24px]">
+                                {/* Enable Birthday Leave */}
+                                <div className="space-y-2">
+                                    <Label className='text-[13px]/[21px] text-[#353535]'>Enable Birthday Leave</Label>
+                                    <RadioGroup
+                                        value={formData.enableBirthdayLeave}
+                                        onValueChange={(value) => handleInputChange('enableBirthdayLeave', value)}
+                                        className="flex gap-6 mt-[6px]"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="yes" id="yes-birthday" />
+                                            <Label htmlFor="yes-birthday" className={formData.enableBirthdayLeave === 'yes' ? 'text-[#0D978B]' : 'text-[#787878]'}>Yes</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="no" id="no-birthday" />
+                                            <Label htmlFor="no-birthday" className={formData.enableBirthdayLeave === 'no' ? 'text-[#0D978B]' : 'text-[#787878]'}>No</Label>
+                                        </div>
+                                    </RadioGroup>
+                                </div>
+                                {/* Enable Short Leave */}
+                                <div className="space-y-2">
+                                    <Label className='text-[13px]/[21px] text-[#353535]'>Enable Short Leave</Label>
+                                    <RadioGroup
+                                        value={formData.enableShortLeave}
+                                        onValueChange={(value) => handleInputChange('enableShortLeave', value)}
+                                        className="flex gap-6 mt-[6px]"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="yes" id="yes-short-leave" />
+                                            <Label htmlFor="yes-short-leave" className={formData.enableShortLeave === 'yes' ? 'text-[#0D978B]' : 'text-[#787878]'}>Yes</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="no" id="no-short-leave" />
+                                            <Label htmlFor="no-short-leave" className={formData.enableShortLeave === 'no' ? 'text-[#0D978B]' : 'text-[#787878]'}>No</Label>
+                                        </div>
+                                    </RadioGroup>
+                                </div>
+
+                                {/* Enable Maternity Leave for India */}
+                                <div className="space-y-2">
+                                    <Label className='text-[13px]/[21px] text-[#353535]'>Enable Maternity Leave for India</Label>
+                                    <RadioGroup
+                                        value={formData.enableMaternityLeaveIndia}
+                                        onValueChange={(value) => handleInputChange('enableMaternityLeaveIndia', value)}
+                                        className="flex gap-6 mt-[6px]"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="yes" id="yes-maternity-india" />
+                                            <Label htmlFor="yes-maternity-india" className={formData.enableMaternityLeaveIndia === 'yes' ? 'text-[#0D978B]' : 'text-[#787878]'}>Yes</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="no" id="no-maternity-india" />
+                                            <Label htmlFor="no-maternity-india" className={formData.enableMaternityLeaveIndia === 'no' ? 'text-[#0D978B]' : 'text-[#787878]'}>No</Label>
+                                        </div>
+                                    </RadioGroup>
+                                </div>
+
+                                {/* Enable Compensatory Off */}
+                                <div className="space-y-2">
+                                    <Label className='text-[13px]/[21px] text-[#353535]'>Enable Compensatory Off</Label>
+                                    <RadioGroup
+                                        value={formData.enableCompOff}
+                                        onValueChange={(value) => handleInputChange('enableCompOff', value)}
+                                        className="flex gap-6 mt-[6px]"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="yes" id="yes-comp-off" />
+                                            <Label htmlFor="yes-comp-off" className={formData.enableCompOff === 'yes' ? 'text-[#0D978B]' : 'text-[#787878]'}>Yes</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="no" id="no-comp-off" />
+                                            <Label htmlFor="no-comp-off" className={formData.enableCompOff === 'no' ? 'text-[#0D978B]' : 'text-[#787878]'}>No</Label>
+                                        </div>
+                                    </RadioGroup>
+                                </div>
+
+                                {/* Enable Leave Encashment */}
+                                <div className="space-y-2">
+                                    <Label className='text-[13px]/[21px] text-[#353535]'>Enable Leave Encashment</Label>
+                                    <RadioGroup
+                                        value={formData.enableLeaveEncashment}
+                                        onValueChange={(value) => handleInputChange('enableLeaveEncashment', value)}
+                                        className="flex gap-6 mt-[6px]"
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="yes" id="yes-leave-encashment" />
+                                            <Label htmlFor="yes-leave-encashment" className={formData.enableLeaveEncashment === 'yes' ? 'text-[#0D978B]' : 'text-[#787878]'}>Yes</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="no" id="no-leave-encashment" />
+                                            <Label htmlFor="no-leave-encashment" className={formData.enableLeaveEncashment === 'no' ? 'text-[#0D978B]' : 'text-[#787878]'}>No</Label>
+                                        </div>
+                                    </RadioGroup>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     {/* Attendance Settings Section */}
-                    <div>
+                    <div id="attendance">
                         <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Attendance</p>
                         <div className="space-y-6 mt-[16px]">
                             {/* Shift Hours Configuration */}
@@ -154,7 +274,7 @@ export default function Leave() {
                                 <Label className='text-[13px]/[21px] text-[#353535]'>Shift Hours</Label>
                                 <div className="space-y-3 mt-[6px]">
                                     {formData.shiftHours.map((shift) => (
-                                        <div key={shift.id} className="flex items-center  md:w-[230px] w-full justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div key={shift.id} className="flex items-center md:w-[230px] w-full justify-between bg-gray-50 rounded-lg">
                                             {shift.isEditing ? (
                                                 <div className="flex items-center gap-3 flex-1">
                                                     <div className="flex items-center gap-2">
@@ -162,7 +282,7 @@ export default function Leave() {
                                                         <Input
                                                             value={shift.from}
                                                             onChange={(e) => handleUpdateShift(shift.id, 'from', e.target.value)}
-                                                            className="w-24 h-8"
+                                                            className="w-24 h-8 rounded-[4px] bg-transparent"
                                                         />
                                                     </div>
                                                     <div className="flex items-center gap-2">
@@ -170,7 +290,7 @@ export default function Leave() {
                                                         <Input
                                                             value={shift.to}
                                                             onChange={(e) => handleUpdateShift(shift.id, 'to', e.target.value)}
-                                                            className="w-24 h-8"
+                                                            className="w-24 h-8 rounded-[4px] bg-transparent"
                                                         />
                                                     </div>
                                                     <Button
@@ -185,8 +305,8 @@ export default function Leave() {
                                                 </div>
                                             ) : (
                                                 <>
-                                                    <span className='text-[14px]/[210x] text-[#353535] font-bold'>{shift.from} - {shift.to}</span>
-                                                    <div className="flex  items-center gap-2">
+                                                    <span className='text-[14px]/[21px] text-[#353535] font-bold'>{shift.from} - {shift.to}</span>
+                                                    <div className="flex items-center gap-2">
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
@@ -216,7 +336,7 @@ export default function Leave() {
                                             <Input
                                                 value={newShiftFrom}
                                                 onChange={(e) => setNewShiftFrom(e.target.value)}
-                                                className="w-24 h-8"
+                                                className="w-24 h-8 rounded-[4px] bg-transparent"
                                                 placeholder="8:00am"
                                             />
                                         </div>
@@ -225,7 +345,7 @@ export default function Leave() {
                                             <Input
                                                 value={newShiftTo}
                                                 onChange={(e) => setNewShiftTo(e.target.value)}
-                                                className="w-24 h-8"
+                                                className="w-24 h-8 rounded-[4px] bg-transparent"
                                                 placeholder="5:00pm"
                                             />
                                         </div>
@@ -247,7 +367,51 @@ export default function Leave() {
                                 </div>
                             </div>
 
-                            {/* Timesheet Approval */}
+                            {/* Are breaks allowed? */}
+                            <div className="space-y-2">
+                                <Label className='text-[13px]/[21px] text-[#353535]'>Are breaks allowed?</Label>
+                                <RadioGroup
+                                    value={formData.breaksAllowed}
+                                    onValueChange={(value) => handleInputChange('breaksAllowed', value)}
+                                    className="flex gap-6 mt-[6px]"
+                                >
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="yes" id="yes-breaks-allowed" />
+                                        <Label htmlFor="yes-breaks-allowed" className={formData.breaksAllowed === 'yes' ? 'text-[#0D978B]' : 'text-[#787878]'}>Yes</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <RadioGroupItem value="no" id="no-breaks-allowed" />
+                                        <Label htmlFor="no-breaks-allowed" className={formData.breaksAllowed === 'no' ? 'text-[#0D978B]' : 'text-[#787878]'}>No</Label>
+                                    </div>
+                                </RadioGroup>
+                            </div>
+
+                            {/* Break duration per employee */}
+                            <div className="space-y-2">
+                                <Label className='text-[13px]/[21px] text-[#353535]'>Break duration per employee</Label>
+                                <div className="relative w-full mt-[6px]">
+                                    <Input
+                                        value={formData.breakDuration}
+                                        onChange={(e) => handleInputChange('breakDuration', parseInt(e.target.value) || 0)}
+                                        className="w-full h-10 pr-16 rounded-[10px] bg-transparent"
+                                        type="number"
+                                        placeholder="0"
+                                    />
+                                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+                                        <Select value={formData.breakDurationUnit} onValueChange={(value) => handleInputChange('breakDurationUnit', value)}>
+                                            <SelectTrigger className="w-12 h-6 border-none bg-transparent p-0 focus:ring-0 focus:ring-offset-0">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="min">min</SelectItem>
+                                                <SelectItem value="hr">hr</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Timesheet are to be approved */}
                             <div className="space-y-2">
                                 <Label className='text-[13px]/[21px] text-[#353535]'>Timesheet are to be approved</Label>
                                 <RadioGroup
@@ -257,30 +421,30 @@ export default function Leave() {
                                 >
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="yes" id="yes-approval" />
-                                        <Label htmlFor="yes-approval">Yes</Label>
+                                        <Label htmlFor="yes-approval" className={formData.timesheetApproval === 'yes' ? 'text-[#0D978B]' : 'text-[#787878]'}>Yes</Label>
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="no" id="no-approval" />
-                                        <Label htmlFor="no-approval">No</Label>
+                                        <Label htmlFor="no-approval" className={formData.timesheetApproval === 'no' ? 'text-[#0D978B]' : 'text-[#787878]'}>No</Label>
                                     </div>
                                 </RadioGroup>
                             </div>
 
-                            {/* Shift Hours (Breaks Inclusion) */}
+                            {/* Shift Hours (Break Inclusion) */}
                             <div className="space-y-2">
-                                <Label className='text-[13px]/[21px] text-[#353535]'>Shift Hours</Label>
+                                <Label className='text-[13px]/[21px] text-[#353535]'>Shift Hours (Break Inclusion)</Label>
                                 <RadioGroup
                                     value={formData.includeBreaks}
                                     onValueChange={(value) => handleInputChange('includeBreaks', value)}
                                     className="flex gap-6 mt-[6px]"
                                 >
                                     <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="yes" id="yes-breaks" />
-                                        <Label htmlFor="yes-breaks">Include Breaks</Label>
+                                        <RadioGroupItem value="include" id="include-breaks" />
+                                        <Label htmlFor="include-breaks" className={formData.includeBreaks === 'include' ? 'text-[#0D978B]' : 'text-[#787878]'}>Include Breaks</Label>
                                     </div>
                                     <div className="flex items-center space-x-2">
-                                        <RadioGroupItem value="no" id="no-breaks" />
-                                        <Label htmlFor="no-breaks">Exclude Breaks</Label>
+                                        <RadioGroupItem value="exclude" id="exclude-breaks" />
+                                        <Label htmlFor="exclude-breaks" className={formData.includeBreaks === 'exclude' ? 'text-[#0D978B]' : 'text-[#787878]'}>Exclude Breaks</Label>
                                     </div>
                                 </RadioGroup>
                             </div>
@@ -310,7 +474,7 @@ export default function Leave() {
                             <div className="space-y-2">
                                 <Label className='text-[13px]/[21px] text-[#353535]'>Timesheet Submission Deadline</Label>
                                 <Select value={formData.timesheetDeadline} onValueChange={(value) => handleInputChange('timesheetDeadline', value)}>
-                                    <SelectTrigger className="md:w-[270px] w-full h-[40px] mt-[6px]">
+                                    <SelectTrigger className=" w-full h-[40px] mt-[6px] rounded-[10px] bg-transparent">
                                         <SelectValue placeholder="Select deadline" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -332,11 +496,11 @@ export default function Leave() {
                                 >
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="yes" id="yes-future" />
-                                        <Label htmlFor="yes-future">Yes</Label>
+                                        <Label htmlFor="yes-future" className={formData.allowFutureSubmission === 'yes' ? 'text-[#0D978B]' : 'text-[#787878]'}>Yes</Label>
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="no" id="no-future" />
-                                        <Label htmlFor="no-future">No</Label>
+                                        <Label htmlFor="no-future" className={formData.allowFutureSubmission === 'no' ? 'text-[#0D978B]' : 'text-[#787878]'}>No</Label>
                                     </div>
                                 </RadioGroup>
                             </div>
@@ -351,11 +515,11 @@ export default function Leave() {
                                 >
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="yes" id="yes-update" />
-                                        <Label htmlFor="yes-update">Yes</Label>
+                                        <Label htmlFor="yes-update" className={formData.allowUpdateApproved === 'yes' ? 'text-[#0D978B]' : 'text-[#787878]'}>Yes</Label>
                                     </div>
                                     <div className="flex items-center space-x-2">
                                         <RadioGroupItem value="no" id="no-update" />
-                                        <Label htmlFor="no-update">No</Label>
+                                        <Label htmlFor="no-update" className={formData.allowUpdateApproved === 'no' ? 'text-[#0D978B]' : 'text-[#787878]'}>No</Label>
                                     </div>
                                 </RadioGroup>
                             </div>
@@ -376,25 +540,31 @@ export default function Leave() {
             </div>
 
             {/* Sidebar - Hidden on mobile, visible on desktop */}
-            <div className="hidden lg:block w-64 p-6">
-                <div className="space-y-4">
-                    {sidebarItems.map((item) => (
-                        <Button
-                            key={item.id}
-                            variant="ghost"
-                            className="w-full justify-start text-[#353535] hover:text-[#0d978b]"
-                        >
-                            {item.label}
-                        </Button>
-                    ))}
-                    <div className="pt-4">
-                        <Button
-                            onClick={handleSaveChanges}
-                            className="w-full bg-[#0d978b] hover:bg-[#0d978b]/90"
-                            disabled={isLoading}
-                        >
-                            {isLoading ? 'Saving...' : 'Save Changes'}
-                        </Button>
+            <div className="hidden lg:block w-64">
+                <div className="sticky top-20 p-6">
+                    <div className="space-y-4">
+                        {sidebarItems.map((item) => (
+                            <Button
+                                key={item.id}
+                                variant="ghost"
+                                onClick={() => scrollToSection(item.id)}
+                                className={`w-full justify-start transition-colors duration-200 ${activeSection === item.id
+                                    ? 'text-[#0d978b]'
+                                    : 'text-[#353535] hover:text-[#0d978b]'
+                                    }`}
+                            >
+                                {item.label}
+                            </Button>
+                        ))}
+                        <div className="pt-4">
+                            <Button
+                                onClick={handleSaveChanges}
+                                className="w-full bg-[#0d978b] hover:bg-[#0d978b]/90"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? 'Saving...' : 'Save Changes'}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,6 +17,7 @@ import TagInput from '@/components/ui/tag-input';
 export default function Onboarding() {
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [activeSection, setActiveSection] = useState('onboarding-settings');
     const [formData, setFormData] = useState({
         // Onboarding Settings
         onboardingInviteEmail: '',
@@ -83,6 +84,33 @@ export default function Onboarding() {
     const [newEmployeeDoc, setNewEmployeeDoc] = useState('');
     const [newOffboardingDoc, setNewOffboardingDoc] = useState('');
     const [newOffboardingActivity, setNewOffboardingActivity] = useState('');
+
+    // Scroll spy functionality
+    useEffect(() => {
+        const handleScroll = () => {
+            const sections = ['onboarding-settings', 'onboarding-config', 'onboarding-documents', 'offboarding-settings'];
+            const scrollPosition = window.scrollY + 100; // Offset for better UX
+
+            for (let i = sections.length - 1; i >= 0; i--) {
+                const element = document.getElementById(sections[i]);
+                if (element && element.offsetTop <= scrollPosition) {
+                    setActiveSection(sections[i]);
+                    break;
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const scrollToSection = (sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            const elementPosition = element.offsetTop - 120; // Adjust offset to show section properly
+            window.scrollTo({ top: elementPosition, behavior: 'smooth' });
+        }
+    };
 
     const handleInputChange = (field: string, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -238,7 +266,7 @@ export default function Onboarding() {
             <div className="flex-1">
                 <div className="space-y-8 md:w-[504px] w-full">
                     {/* Onboarding Settings Section */}
-                    <div>
+                    <div id="onboarding-settings">
                         <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Onboarding Settings</p>
                         <div className="space-y-6 mt-[16px]">
                             <div className="space-y-2">
@@ -304,7 +332,7 @@ export default function Onboarding() {
                     </div>
 
                     {/* Onboarding Configuration Section */}
-                    <div>
+                    <div id="onboarding-config">
                         <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Onboarding Configuration</p>
                         <div className="space-y-6 mt-[16px]">
                             <div className="space-y-2">
@@ -457,7 +485,7 @@ export default function Onboarding() {
                     </div>
 
                     {/* Onboarding Documents Section */}
-                    <div>
+                    <div id="onboarding-documents">
                         <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Onboarding Documents</p>
                         <div className="space-y-6 mt-[16px]">
                             <div className="space-y-2">
@@ -633,7 +661,7 @@ export default function Onboarding() {
                     </div>
 
                     {/* Offboarding Settings Section */}
-                    <div>
+                    <div id="offboarding-settings">
                         <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Offboarding Settings</p>
                         <div className="space-y-6 mt-[16px]">
                             <div className="space-y-2">
@@ -792,25 +820,31 @@ export default function Onboarding() {
             </div>
 
             {/* Sidebar - Hidden on mobile, visible on desktop */}
-            <div className="hidden lg:block w-64 p-6">
-                <div className="space-y-4">
-                    {sidebarItems.map((item) => (
-                        <Button
-                            key={item.id}
-                            variant="ghost"
-                            className="w-full justify-start text-[#353535] hover:text-[#0d978b]"
-                        >
-                            {item.label}
-                        </Button>
-                    ))}
-                    <div className="pt-4">
-                        <Button
-                            onClick={handleSaveChanges}
-                            className="w-full bg-[#0d978b] hover:bg-[#0d978b]/90"
-                            disabled={isLoading}
-                        >
-                            {isLoading ? 'Saving...' : 'Save Changes'}
-                        </Button>
+            <div className="hidden lg:block w-64">
+                <div className="sticky top-20 p-6">
+                    <div className="space-y-4">
+                        {sidebarItems.map((item) => (
+                            <Button
+                                key={item.id}
+                                variant="ghost"
+                                onClick={() => scrollToSection(item.id)}
+                                className={`w-full justify-start transition-colors duration-200 ${activeSection === item.id
+                                    ? 'text-[#0d978b]'
+                                    : 'text-[#353535] hover:text-[#0d978b]'
+                                    }`}
+                            >
+                                {item.label}
+                            </Button>
+                        ))}
+                        <div className="pt-4">
+                            <Button
+                                onClick={handleSaveChanges}
+                                className="w-full bg-[#0d978b] hover:bg-[#0d978b]/90"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? 'Saving...' : 'Save Changes'}
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

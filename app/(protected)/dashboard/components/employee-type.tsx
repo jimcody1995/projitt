@@ -23,7 +23,7 @@ export default function EmployeeType() {
                 startAngle: -135,
                 endAngle: 135,
                 donut: {
-                    size: "80%",
+                    size: "70%",
                 },
             },
         },
