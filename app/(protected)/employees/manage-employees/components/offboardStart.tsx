@@ -2,7 +2,7 @@
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { CalendarDays, X } from "lucide-react";
+import { AlertCircle, CalendarDays, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
@@ -28,6 +28,7 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
     const [preview, setPreview] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
+    const [confirmModal, setConfirmModal] = useState(false);
 
     const handleDateChange = (date: Date | undefined) => {
         setSelectedDate(date);
@@ -80,7 +81,7 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                                 </div>
                             </RadioGroup>
                         </div>
-                        <Label className="text-[14px]/[24px] text-[#8f8f8f] mt-[20px]">Enter Reson here</Label>
+                        <Label className="text-[14px]/[24px] text-[#1C1C1C] mt-[20px]">Enter Reason here</Label>
                         <Input type="input" className="h-[48px] mt-[20px]" placeholder="Enter offboarding reason" />
                         <Label className="text-[14px]/[24px] mt-[20px] mb-[12px]">Last Working Day</Label>
                         <Popover>
@@ -129,7 +130,12 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                                 <p className="text-[12px]/[18px] text-[#4b4b4b]" data-testid="activity-text-final-pay-confirmed">Final Pay Confirmed</p>
                             </div>
                         </div>
-                        <Button className="w-[181px] h-[42px] mt-[20px]">Start Offboarding</Button>
+                        <Button
+                            className="w-[181px] h-[42px] mt-[20px]"
+                            onClick={() => setConfirmModal(true)}
+                        >
+                            Start Offboarding
+                        </Button>
                     </div>
                 </SheetContent>
             </Sheet>
@@ -169,6 +175,35 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                 open={isEdit}
                 onOpenChange={setIsEdit}
             />
+            <Dialog open={confirmModal} onOpenChange={setConfirmModal}>
+                <DialogContent className="w-[286px] h-[186px] p-0" close={false}>
+                    <div className="flex flex-col items-center justify-center h-full p-6">
+                        <div className="w-8 h-8 bg-[#d6eeec] rounded-full flex items-center justify-center mb-4">
+                            <AlertCircle className="size-[20px] text-[#0d978b]" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-[#1c1c1c] mb-6">Confirm Offboarding</h3>
+                        <div className="flex gap-3 w-full">
+                            <Button
+                                variant="outline"
+                                className="flex-1 h-10 rounded-[8px]"
+                                onClick={() => setConfirmModal(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                className="flex-1 h-10 rounded-[8px] bg-[#0d978b] hover:bg-[#0d978b]/90"
+                                onClick={() => {
+                                    setConfirmModal(false);
+                                    // Add your offboarding logic here
+                                    console.log('Offboarding confirmed');
+                                }}
+                            >
+                                Yes, Confirm
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -36,7 +36,8 @@ export default function PendingHires() {
     }, [activeSection]);
 
     return (
-        <div data-testid="pending-hires-container" id="pending-hires-container">
+        <div data-testid="pending-hires-container" id="pending-hires-container"
+            className="py-[5px] px-[10px]">
             {onboarding !== null ? (
                 <Onboarding setOnboarding={setOnboarding} data-testid="onboarding-component" />
             ) : (
@@ -65,7 +66,7 @@ export default function PendingHires() {
                             id="approved-tab-button"
                         >
                             <p className='whitespace-nowrap' data-testid="approved-tab-text">Approved</p>
-                            <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]' data-testid="approved-count">12</span>
+                            <span className={`w-[26px] h-[26px] rounded-full ${activeSection === 'approved' ? 'bg-[#D6EEEC]' : 'bg-[#E9E9E9]'} text-[12px]/[22px] flex items-center justify-center ${activeSection === 'approved' ? 'text-[#0d978b]' : 'text-[#353535]'}`} data-testid="approved-count">12</span>
                         </div>
                         <div
                             ref={(el) => { tabRefs.current.pending = el; }}
@@ -75,7 +76,7 @@ export default function PendingHires() {
                             id="pending-tab-button"
                         >
                             <p className='whitespace-nowrap' data-testid="pending-tab-text">Pending Approval</p>
-                            <span className='w-[26px] h-[26px] rounded-full bg-[#d6eeec] text-[12px]/[22px] flex items-center justify-center text-[#0d978b]' data-testid="pending-count">12</span>
+                            <span className={`w-[26px] h-[26px] rounded-full ${activeSection === 'pending' ? 'bg-[#D6EEEC]' : 'bg-[#E9E9E9]'} text-[12px]/[22px] flex items-center justify-center ${activeSection === 'pending' ? 'text-[#0d978b]' : 'text-[#353535]'}`} data-testid="pending-count">12</span>
                         </div>
                     </div>
                     <div className="mt-[15px]" data-testid="content-area" id="content-area">

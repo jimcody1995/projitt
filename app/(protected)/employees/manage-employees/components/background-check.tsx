@@ -37,7 +37,7 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
     return (
         <div>
             <Sheet open={open} onOpenChange={onOpenChange}>
-                <SheetContent close={false} className="p-0 w-full sm:w-[575px] sm:max-w-none  overflow-y-auto  gap-[0px]">
+                <SheetContent close={false} className="p-0 w-full sm:w-[575px] sm:max-w-none  overflow-y-auto  gap-[0px] bg-[#FAFAFA]">
                     <div className="p-[32px] border-b border-[#e9e9e9]  bg-[#f7f7f7]  sticky top-0 z-10">
                         <div className="w-full justify-between flex items-center">
                             <div className="flex flex-col">
@@ -47,12 +47,13 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                             <Button
                                 variant="outline"
                                 onClick={() => onOpenChange(false)}
+                                className="bg-[#FAFAFA] border-[#787878]"
                             >
-                                <X className="size-[14px] text-[#1a1a1a]" />
+                                <X className="size-[14px] text-[#1a1a1a] bg-[#FAFAFA]" />
                             </Button>
                         </div>
                     </div>
-                    <div className="m-[22px] flex pt-0 flex-col gap-[20px] md:w-[511px] w-full">
+                    <div className="m-[22px] flex pt-0 flex-col gap-[20px] md:w-[511px] w-full ">
                         <div>
                             <p className="text-[14px]/[16px]  text-[#1C1C1C] mb-[6px]">Select Employee</p>
                             <div className="relative">
@@ -64,7 +65,7 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                                     placeholder="Search by Employee Name or ID"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="ps-9 w-full h-[42px]"
+                                    className="ps-9 w-full h-[42px] bg-[#FAFAFA]"
                                     data-testid="search-input"
                                 />
                                 {searchQuery.length > 0 && (
@@ -82,7 +83,7 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                         </div>
                         <div>
                             <p className="text-[14px]/[16px]  text-[#1C1C1C] mb-[6px]">SSN Last 4</p>
-                            <Input type="input" className="h-[48px]" />
+                            <Input type="input" className="h-[48px] bg-[#FAFAFA]" />
                         </div>
                         <div>
                             <p className="text-[14px]/[16px]  text-[#1C1C1C]">Date of Birth</p>
@@ -94,7 +95,7 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                                             variant="outline"
                                             id="date"
                                             className={cn(
-                                                'w-full h-[48px] border-[#bcbcbc] data-[state=open]:border-primary',
+                                                'w-full h-[48px] border-[#bcbcbc] data-[state=open]:border-primary bg-[#FAFAFA]',
                                             )}
                                             data-test-id="certificate-issue-date"
                                         >
@@ -122,7 +123,7 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                         <div data-testid="training-path-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="training-path-label" id="training-path-label">Regions</p>
                             <Select value="1" data-testid="training-path-select">
-                                <SelectTrigger className="w-full h-[48px] mt-[6px] text-gray-800" data-testid="training-path-select-trigger" id="training-path-select-trigger">
+                                <SelectTrigger className="w-full h-[48px] mt-[6px] text-gray-800 bg-[#FAFAFA]" data-testid="training-path-select-trigger" id="training-path-select-trigger">
                                     <SelectValue placeholder="Select" />
                                 </SelectTrigger>
                                 <SelectContent data-testid="training-path-select-content" id="training-path-select-content">
@@ -135,7 +136,7 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                         <div data-testid="training-path-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="training-path-label" id="training-path-label">Sensitivity</p>
                             <Select value="1" data-testid="training-path-select">
-                                <SelectTrigger className="w-full h-[48px] mt-[6px] text-gray-800" data-testid="training-path-select-trigger" id="training-path-select-trigger">
+                                <SelectTrigger className="w-full h-[48px] mt-[6px] text-gray-800 bg-[#FAFAFA]" data-testid="training-path-select-trigger" id="training-path-select-trigger">
                                     <SelectValue placeholder="Select" />
                                 </SelectTrigger>
                                 <SelectContent data-testid="training-path-select-content" id="training-path-select-content">
@@ -146,30 +147,30 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                             </Select>
                         </div>
                         <div className="flex items-center gap-[6px]" data-testid="confirm-bg-checks">
-                            <Checkbox className="size-[24px] text-[#0d978b]" />
+                            <Checkbox className="size-[24px] text-[#0d978b] bg-[#FAFAFA]" />
                             <p className="text-[14px]/[16px] text-[#4b4b4b]" >I confirm I have candidate consent for background checks.</p>
                         </div>
                         <div data-testid="background-checks-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="background-checks-label" id="background-checks-label">Checks</p>
                             <div className="grid grid-cols-2 gap-[8px] mt-[12px]">
                                 <div className="flex items-center gap-[8px]" data-testid="check-item-criminal" id="check-item-criminal">
-                                    <Checkbox className="size-[24px] text-[#0d978b]" data-testid="check-checkbox-criminal" id="check-checkbox-criminal" />
+                                    <Checkbox className="size-[24px] text-[#0d978b] bg-[#FAFAFA]" data-testid="check-checkbox-criminal" id="check-checkbox-criminal" />
                                     <p className="text-[14px]/[16px] text-[#4b4b4b]" data-testid="check-text-criminal">Criminal</p>
                                 </div>
                                 <div className="flex items-center gap-[8px]" data-testid="check-item-employment" id="check-item-employment">
-                                    <Checkbox className="size-[24px] text-[#0d978b]" data-testid="check-checkbox-employment" id="check-checkbox-employment" />
+                                    <Checkbox className="size-[24px] text-[#0d978b] bg-[#FAFAFA]" data-testid="check-checkbox-employment" id="check-checkbox-employment" />
                                     <p className="text-[14px]/[16px] text-[#4b4b4b]" data-testid="check-text-employment">Employment</p>
                                 </div>
                                 <div className="flex items-center gap-[8px]" data-testid="check-item-education" id="check-item-education">
-                                    <Checkbox className="size-[24px] text-[#0d978b]" data-testid="check-checkbox-education" id="check-checkbox-education" />
+                                    <Checkbox className="size-[24px] text-[#0d978b] bg-[#FAFAFA]" data-testid="check-checkbox-education" id="check-checkbox-education" />
                                     <p className="text-[14px]/[16px] text-[#4b4b4b]" data-testid="check-text-education">Education</p>
                                 </div>
                                 <div className="flex items-center gap-[8px]" data-testid="check-item-identity" id="check-item-identity">
-                                    <Checkbox className="size-[24px] text-[#0d978b]" data-testid="check-checkbox-identity" id="check-checkbox-identity" />
+                                    <Checkbox className="size-[24px] text-[#0d978b] bg-[#FAFAFA]" data-testid="check-checkbox-identity" id="check-checkbox-identity" />
                                     <p className="text-[14px]/[16px] text-[#4b4b4b]" data-testid="check-text-identity">Identity</p>
                                 </div>
                                 <div className="flex items-center gap-[8px]" data-testid="check-item-credit" id="check-item-credit">
-                                    <Checkbox className="size-[24px] text-[#0d978b]" data-testid="check-checkbox-credit" id="check-checkbox-credit" />
+                                    <Checkbox className="size-[24px] text-[#0d978b] bg-[#FAFAFA]" data-testid="check-checkbox-credit" id="check-checkbox-credit" />
                                     <p className="text-[14px]/[16px] text-[#4b4b4b]" data-testid="check-text-credit">Credit</p>
                                 </div>
                             </div>
@@ -204,7 +205,7 @@ export default function OffboardStart({ open, onOpenChange, setMessage }: Detail
                             </div>
                         </div>
                         <div className="flex justify-end gap-[16px] pt-[28px] ">
-                            <Button variant="outline" className="h-[42px]" onClick={() => setPreview(false)}>Go Back</Button>
+                            <Button variant="outline" className="h-[42px] bg-[#FAFAFA]" onClick={() => setPreview(false)}>Go Back</Button>
                             <Button className="h-[42px]" onClick={() => setIsEdit(true)}>Edit Message</Button>
                         </div>
                     </div>

@@ -57,33 +57,34 @@ export default function Traning() {
                 accessorKey: 'module-name',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
-                        title="Documents"
+                        className='text-[14px] font-medium text-[#8C8E8E]'
+                        title="Module Name"
                         column={column}
-                        data-testid="documents-header"
+                        data-testid="module-name-header"
                     />
                 ),
                 cell: ({ row }: { row: any }) => (
                     <div
                         className="text-[14px] text-[#4b4b4b] flex items-center gap-[8px]"
-                        data-testid={`documents-${row.original.id}`}
+                        data-testid={`module-name-${row.original.id}`}
                     >
                         <p className="text-[14px]/[22px]">
                             {row.original.module_name}
                         </p>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 200,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'type',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Type"
                         column={column}
                         data-testid="type-header"
@@ -94,17 +95,18 @@ export default function Traning() {
                         {row.original.type}
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'status',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]  '
                         title="Status"
                         column={column}
                         data-testid="status-header"
@@ -115,10 +117,11 @@ export default function Traning() {
                         {row.original.status === "completed" ? <span className="px-[16px] py-[2px] rounded-[20px] bg-[#D6EEEC] text-[#0d978b]">Completed</span> : <span className="px-[16px] py-[2px] rounded-[20px] bg-[#E9E9E9] text-[#4B4B4B]">Not Started</span>}
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
 
@@ -130,6 +133,7 @@ export default function Traning() {
                 size: 10,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
         ].filter(Boolean),
@@ -173,7 +177,7 @@ export default function Traning() {
                         data-testid={`actions-button-${row.original.id}`}
                         onClick={e => e.stopPropagation()}
                     >
-                        <EllipsisVertical className="size-[20px] text-[#353535]" />
+                        <EllipsisVertical className="size-[14px] text-[#4B4B4B]" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent

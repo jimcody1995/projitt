@@ -130,7 +130,7 @@ export default function Offer() {
             {
                 id: 'externalLink',
                 header: '',
-                cell: ({ row }: { row: any }) => <ExternalLink className="size-[20px] text-[#353535]" />,
+                cell: ({ row }: { row: any }) => <ExternalLink className="size-[14px] text-[#353535]" />,
                 enableSorting: false,
                 size: 10,
                 meta: {
@@ -140,7 +140,7 @@ export default function Offer() {
             {
                 id: 'download',
                 header: '',
-                cell: ({ row }: { row: any }) => <Download className="size-[20px] text-[#353535]" />,
+                cell: ({ row }: { row: any }) => <Download className="size-[14px] text-[#353535]" />,
                 enableSorting: false,
                 size: 10,
                 meta: {
@@ -199,7 +199,7 @@ export default function Offer() {
                         data-testid={`actions-button-${row.original.id}`}
                         onClick={e => e.stopPropagation()}
                     >
-                        <EllipsisVertical className="size-[20px] text-[#353535]" />
+                        <EllipsisVertical className="size-[14px] text-[#353535]" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent

@@ -102,7 +102,7 @@ export default function Pending() {
                 accessorKey: 'name',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] text-[#8C8E8E] font-medium'
                         title="Name"
                         column={column}
                         data-testid="name-header"
@@ -116,17 +116,18 @@ export default function Pending() {
                         {row.original.name}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'job-detail',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Job Details"
                         column={column}
                         data-testid="job-detail-header"
@@ -146,17 +147,18 @@ export default function Pending() {
                         </p>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'status',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Status"
                         column={column}
                         data-testid="status-header"
@@ -164,16 +166,17 @@ export default function Pending() {
                 ),
                 cell: ({ row }: { row: any }) => (
                     <span
-                        className={`text-[14px]/[22px] px-[12px] py-[2px] rounded-[8px] ${row.original.status === 'Pending' ? 'bg-[#a5a5a5] text-white' : ' text-[#FA1E1E] bg-[#FA1E1E26]'}`}
+                        className={`text-[14px]/[22px] px-[12px] py-[2px] rounded-[21px] ${row.original.status === 'Pending' ? 'bg-[#a5a5a5] text-white' : ' text-[#FA1E1E] bg-[#FA1E1E26]'}`}
                         data-testid={`status-${row.original.id}`}
                     >
                         {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 90,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
@@ -184,6 +187,7 @@ export default function Pending() {
                 size: 40,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
         ].filter(Boolean),
@@ -278,6 +282,9 @@ export default function Pending() {
                     table={table}
                     recordCount={sortedData?.length || 0}
                     data-testid="pending-applicants-grid"
+                    tableLayout={{
+                        rowBorder: false
+                    }}
                 >
                     <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                         {sortedData.length === 0 ? (

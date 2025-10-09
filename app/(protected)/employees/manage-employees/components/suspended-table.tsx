@@ -168,37 +168,39 @@ export default function SuspendedTable() {
                 enableResizing: false,
                 size: 46,
                 meta: {
-                    cellClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
+                    headerClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'employee',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]  '
                         title="Employee ID"
                         column={column}
                     />
                 ),
                 cell: ({ row }: { row: any }) => (
                     <span
-                        className="text-[14px] text-[#4b4b4b]"
+                        className="text-[14px] text-[#4b4b4b] border-b border-[#EEF3F2]"
                         data-testid={`employee-${row.original.id}`}
                     >
                         {row.original.employee_id}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 90,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'name',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]  '
                         title="Name"
                         column={column}
                         data-testid="name-header"
@@ -217,17 +219,18 @@ export default function SuspendedTable() {
                         </p>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'job-detail',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]  '
                         title="Job Details"
                         column={column}
                         data-testid="job-detail-header"
@@ -247,17 +250,18 @@ export default function SuspendedTable() {
                         </p>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'department',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]  '
                         title="Department"
                         column={column}
                         data-testid="department-header"
@@ -273,17 +277,18 @@ export default function SuspendedTable() {
                         </span>
                     );
                 },
-                enableSorting: true,
+                enableSorting: false,
                 size: 90,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'employment-type',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E] '
                         title="Employment Type"
                         column={column}
                         data-testid="employment-type-header"
@@ -297,9 +302,11 @@ export default function SuspendedTable() {
                         {row.original.employment_type}
                     </span>
                 ),
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
@@ -310,6 +317,7 @@ export default function SuspendedTable() {
                 size: 40,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
         ].filter(Boolean),
@@ -415,7 +423,7 @@ export default function SuspendedTable() {
                 <div className="flex items-center justify-between sm:flex-row flex-col gap-[10px]">
                     <div className="relative">
                         <Search
-                            className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"
+                            className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2 bg-transparent"
                             data-testid="search-icon"
                             id="search-icon"
                         />
@@ -423,7 +431,7 @@ export default function SuspendedTable() {
                             placeholder="Search data"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="ps-9 w-[243px] h-[42px]"
+                            className="ps-9 w-[243px] h-[42px] bg-transparent"
                             data-testid="search-input"
                             id="search-input"
                         />
@@ -431,7 +439,7 @@ export default function SuspendedTable() {
                             <Button
                                 mode="icon"
                                 variant="ghost"
-                                className="absolute end-1.5 top-1/2 -translate-y-1/2 h-6 w-6"
+                                className="absolute end-1.5 top-1/2 -translate-y-1/2 h-6 w-6 bg-transparent "
                                 onClick={() => setSearchQuery('')}
                                 data-testid="clear-search-button"
                                 id="clear-search-button"
@@ -444,7 +452,7 @@ export default function SuspendedTable() {
                         <Button
                             variant="outline"
                             onClick={() => setShowFilter(!showFilter)}
-                            className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
+                            className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold bg-transparent'
                             data-testid="filter-button"
                             id="filter-button"
                         >

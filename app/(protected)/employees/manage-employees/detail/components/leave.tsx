@@ -180,13 +180,13 @@ export default function Leave() {
 
                 <div className="flex items-center gap-6">
                     <div className="flex items-center gap-1">
-                        <span className="text-[#8c8e8e] text-sm">{requestStatuses.pending} Pending</span>
+                        <span className="text-[#8c8e8e] text-sm">{requestStatuses.pending} <span className="text-[#8c8e8e] text-sm">Pending</span></span>
                     </div>
                     <div className="flex items-center gap-1">
-                        <span className="text-[#0D978B] text-sm font-medium">{requestStatuses.accepted} Accepted</span>
+                        <span className="text-[#0D978B] text-sm font-medium">{requestStatuses.accepted} <span className="text-[#8c8e8e] text-sm">Accepted</span></span>
                     </div>
                     <div className="flex items-center gap-1">
-                        <span className="text-red-500 text-sm font-medium">{requestStatuses.rejected} Rejected</span>
+                        <span className="text-[#0D978B] text-sm font-medium">{requestStatuses.rejected} <span className="text-[#8c8e8e] text-sm">Rejected</span></span>
                     </div>
                 </div>
             </div>

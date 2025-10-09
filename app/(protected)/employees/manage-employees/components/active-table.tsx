@@ -226,14 +226,14 @@ export default function ActiveTable() {
                 enableResizing: false,
                 size: 46,
                 meta: {
-                    cellClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'employee_id',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]  '
                         title="Employee ID"
                         column={column}
                         data-testid="employee-id-header"
@@ -247,17 +247,18 @@ export default function ActiveTable() {
                         {row.original.employee_id}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 80,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'name',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]  '
                         title="Name"
                         column={column}
                         data-testid="name-header"
@@ -276,17 +277,18 @@ export default function ActiveTable() {
                         </p>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 140,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'job-detail',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]  '
                         title="Job Details"
                         column={column}
                         data-testid="job-detail-header"
@@ -306,17 +308,18 @@ export default function ActiveTable() {
                         </p>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'department',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]  '
                         title="Department"
                         column={column}
                         data-testid="department-header"
@@ -332,17 +335,18 @@ export default function ActiveTable() {
                         </span>
                     );
                 },
-                enableSorting: true,
+                enableSorting: false,
                 size: 90,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'employment-type',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]   '
                         title="Employment Type"
                         column={column}
                         data-testid="employment-type-header"
@@ -356,9 +360,11 @@ export default function ActiveTable() {
                         {employmentType.find((item) => item.item === row.original.employment_type)?.label}
                     </span>
                 ),
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
@@ -369,6 +375,7 @@ export default function ActiveTable() {
                 size: 40,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
         ],

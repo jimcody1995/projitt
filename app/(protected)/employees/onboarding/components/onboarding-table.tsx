@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 import BackgroundCheck from "../../manage-employees/components/background-check";
 import { FilterTool } from "./filterOnboardingTable";
 
-export default function OnboardingTable() {
+export default function OnboardingTable({ searchQuery }: { searchQuery: string }) {
     const router = useRouter();
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -69,7 +69,6 @@ export default function OnboardingTable() {
         start_date: new Date(),
         completed: 35
     }]);
-    const [searchQuery, setSearchQuery] = useState('');
     const [showFilter, setShowFilter] = useState(false);
     const [suspendOpen, setSuspendOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
@@ -151,7 +150,7 @@ export default function OnboardingTable() {
                 accessorKey: 'name',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] text-[#8C8E8E] font-medium'
                         title="Name"
                         column={column}
                         data-testid="name-header"
@@ -167,17 +166,18 @@ export default function OnboardingTable() {
                         </p>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'job-detail',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] text-[#8C8E8E] font-medium'
                         title="Job Details"
                         column={column}
                         data-testid="job-detail-header"
@@ -197,18 +197,19 @@ export default function OnboardingTable() {
                         </p>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'Start Date',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
-                        title="Department"
+                        className='text-[14px] text-[#8C8E8E] font-medium'
+                        title="Start Date"
                         column={column}
                         data-testid="department-header"
                     />
@@ -223,33 +224,69 @@ export default function OnboardingTable() {
                         </span>
                     );
                 },
-                enableSorting: true,
+                enableSorting: false,
                 size: 90,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: '%Completion',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
-                        title="Employment Type"
+                        className='text-[14px] text-[#8C8E8E] font-medium'
+                        title="% Completion"
                         column={column}
                         data-testid="employment-type-header"
                     />
                 ),
                 cell: ({ row }: { row: any }) => (
-                    <span
-                        className="text-[14px] text-[#0d978b]"
+                    <div
+                        className="flex items-center text-[14px] text-[#0d978b]"
                         data-testid={`employment-type-${row.original.id}`}
                     >
-                        {row.original.completed}%
-                    </span>
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            className="mr-2"
+                            data-testid={`completion-progress-${row.original.id}`}
+                        >
+                            <circle
+                                cx="10"
+                                cy="10"
+                                r="9"
+                                fill="none"
+                                stroke="#EEF3F2"
+                                strokeWidth="2"
+                                rotate="180"
+                                transform="rotate(180 10 10)"
+                            />
+                            <circle
+                                cx="10"
+                                cy="10"
+                                r="9"
+                                fill="none"
+                                stroke="#0d978b"
+                                strokeWidth="2"
+                                strokeDasharray={2 * Math.PI * 9}
+                                strokeDashoffset={
+                                    2 * Math.PI * 9 * (1 - (row.original.completed || 0) / 100)
+                                }
+                                strokeLinecap="round"
+                                rotate="180"
+                                transform="rotate(180 10 10)"
+                            />
+                        </svg>
+                        <span>{row.original.completed}%</span>
+                    </div>
                 ),
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
@@ -260,6 +297,7 @@ export default function OnboardingTable() {
                 size: 40,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
         ].filter(Boolean),
@@ -345,72 +383,6 @@ export default function OnboardingTable() {
                 recordCount={filteredData?.length || 0}
                 data-testid="data-data-grid"
             >
-                <div className="flex items-center justify-between sm:flex-row flex-col gap-[10px]">
-                    <div className="relative">
-                        <Search
-                            className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"
-                            data-testid="search-icon"
-                            id="search-icon"
-                        />
-                        <Input
-                            placeholder="Search data"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="ps-9 w-[243px] h-[42px]"
-                            data-testid="search-input"
-                            id="search-input"
-                        />
-                        {searchQuery.length > 0 && (
-                            <Button
-                                mode="icon"
-                                variant="ghost"
-                                className="absolute end-1.5 top-1/2 -translate-y-1/2 h-6 w-6"
-                                onClick={() => setSearchQuery('')}
-                                data-testid="clear-search-button"
-                                id="clear-search-button"
-                            >
-                                <X />
-                            </Button>
-                        )}
-                    </div>
-                    <div className='flex gap-[16px]'>
-                        <Button
-                            variant="outline"
-                            onClick={() => setShowFilter(!showFilter)}
-                            className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
-                            data-testid="filter-button"
-                            id="filter-button"
-                        >
-                            <ListFilter
-                                className={`size-[20px] transition-transform duration-300 ease-in-out ${showFilter ? 'rotate-180' : 'rotate-0'
-                                    }`}
-                            />
-                            Filter
-                        </Button>
-                        <Button
-                            variant="outline"
-                            className='text-[#053834] px-[12px] py-[6px] flex items-center gap-[6px] font-semibold'
-                            data-testid="export-button"
-                            id="export-button"
-                        >
-                            <Download className='size-[20px]' />
-                            Export
-                        </Button>
-                    </div>
-                </div>
-                <div
-                    className={`overflow-hidden transition-all duration-300 ease-in-out ${showFilter
-                        ? 'max-h-[500px] opacity-100 mt-4'
-                        : 'max-h-0 opacity-0 mt-0'
-                        }`}
-                >
-                    <FilterTool
-                        selectedCountries={selectedCountries}
-                        nameFilter={nameFilter}
-                        setSelectedCountries={setSelectedCountries}
-                        setNameFilter={setNameFilter}
-                    />
-                </div>
                 <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                     <> {filteredData.length === 0 ?
                         (!loading && <NoData data-testid="no-data-message" />) : <>
@@ -423,7 +395,6 @@ export default function OnboardingTable() {
                             >
                                 <DataGridTable />
                             </div>
-                            <DataGridPagination data-testid="pagination-controls" className="mt-[25px]" />
                         </>
                     }
                     </>

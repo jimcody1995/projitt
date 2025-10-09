@@ -71,11 +71,11 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
                     </div>
                     <div className="flex gap-[12px]">
                         {continueBtn ? (
-                            <Button className="w-[208px] h-[42px]" onClick={() => setContinueBtn(false)}>Continue</Button>
+                            <Button className="w-[111px] h-[42px] rounded-[8px]" onClick={() => setContinueBtn(false)}>Continue</Button>
                         ) : (
                             <>
-                                <Button className="w-[85px] h-[42px]" variant="outline" onClick={() => setContinueBtn(true)}>Back</Button>
-                                <Button className="w-[208px] h-[42px]">Send Onboarding Invite</Button>
+                                <Button className="w-[85px] h-[42px] text-primary-950 border border-[#E9E9E9] rounded-[8px]" variant="outline" onClick={() => setContinueBtn(true)}>Back</Button>
+                                <Button className="w-[208px] h-[42px] rounded-[8px]">Send Onboarding Invite</Button>
                             </>
                         )}
                     </div>

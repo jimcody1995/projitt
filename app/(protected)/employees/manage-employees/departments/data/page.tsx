@@ -164,7 +164,7 @@ export default function DepartmentsDataPage() {
                 accessorKey: 'name',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Employee Name"
                         column={column}
                         data-testid="employee-name-header"
@@ -194,7 +194,7 @@ export default function DepartmentsDataPage() {
                         </div>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 250,
                 meta: {
                     headerClassName: '',
@@ -204,7 +204,7 @@ export default function DepartmentsDataPage() {
                 accessorKey: 'position',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Job Details"
                         column={column}
                         data-testid="job-details-header"
@@ -227,7 +227,7 @@ export default function DepartmentsDataPage() {
                         </span>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 200,
                 meta: {
                     headerClassName: '',
@@ -237,7 +237,7 @@ export default function DepartmentsDataPage() {
                 accessorKey: 'employmentType',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Employment Type"
                         column={column}
                         data-testid="employment-type-header"
@@ -252,7 +252,7 @@ export default function DepartmentsDataPage() {
                         </p>
                     );
                 },
-                enableSorting: true,
+                enableSorting: false,
                 size: 150,
                 meta: {
                     headerClassName: '',
@@ -380,12 +380,12 @@ export default function DepartmentsDataPage() {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
-                                variant="outline"
+                                variant="ghost"
                                 className="text-red-600 border-red-200 hover:bg-red-50 md:w-auto w-full"
                                 data-testid="delete-dropdown-button"
                             >
                                 Delete
-                                <ChevronDown className="h-4 w-4 ml-1" />
+                                <ChevronDown className="h-4 w-4 ml-1 text-gray-900" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -463,7 +463,6 @@ export default function DepartmentsDataPage() {
                                 >
                                     <DataGridTable />
                                 </div>
-                                <DataGridPagination data-testid="pagination-controls" className='mt-[25px]' />
                             </>
                         )}
                     </div>

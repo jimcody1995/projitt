@@ -114,7 +114,9 @@ export default function Exceptions() {
                     <table className="w-full">
                         <thead className="bg-[#eef3f2]">
                             <tr>
-
+                                <th className="w-14 px-4 text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider items-center">
+                                    <Checkbox className="w-[13px] h-[13px]" />
+                                </th>
                                 <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Date
                                 </th>
@@ -135,7 +137,9 @@ export default function Exceptions() {
                         <tbody className="bg-white divide-y divide-gray-200">
                             {exceptions.map((exception) => (
                                 <tr key={exception.id} className="hover:bg-gray-50">
-
+                                    <td className="w-14 px-4 whitespace-nowrap text-sm font-medium text-gray-900 items-center">
+                                        <Checkbox className="w-[13px] h-[14px]" />
+                                    </td>
                                     <td className="px-[16px] py-[11px] whitespace-nowrap text-sm font-medium text-gray-900">
                                         {exception.date}
                                     </td>

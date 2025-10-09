@@ -160,7 +160,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                             </div>
                             <Dialog>
                                 <DialogTrigger asChild>
-                                    <Button className="w-[150px] h-[42px]" data-testid="continue-button" id="continue-button">
+                                    <Button className="w-[150px] h-[42px] font-semibold" data-testid="continue-button" id="continue-button">
                                         Continue
                                     </Button>
                                 </DialogTrigger>
@@ -169,10 +169,10 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                     <div className="flex flex-col">
                                         <img src="/images/applicant/check.png" alt="" className="w-[95px] h-[95px] mx-auto" data-testid="check-image" />
                                         <span className="text-[28px]/[36px] font-semibold mt-[28px] text-[#353535] text-center" data-testid="hire-applicant-title" id="hire-applicant-title">Hire Applicant</span>
-                                        <span className="text-[14px]/[24px] text-[#626262] mt-[8px] text-center" data-testid="hire-applicant-message" id="hire-applicant-message">You're about to send an offer to this applicant they will be moved to onboarding once accepted</span>
+                                        <span className="text-[14px]/[24px] text-[#4B4B4B] mt-[8px] text-center" data-testid="hire-applicant-message" id="hire-applicant-message">You're about to send an offer to this applicant they will be moved to onboarding once accepted</span>
                                         <span className="mt-[28px] text-[14px]/[24px] text-[#8f8f8f]" data-testid="email-template-label" id="email-template-label">Select an email template</span>
                                         <Select data-testid="email-template-select">
-                                            <SelectTrigger className="w-full h-[42px]" data-testid="email-template-select-trigger" id="email-template-select-trigger">
+                                            <SelectTrigger className="w-full h-[42px] text-[#4B4B4B]" data-testid="email-template-select-trigger" id="email-template-select-trigger">
                                                 <SelectValue placeholder="Offer Letter Template" />
                                             </SelectTrigger>
                                             <SelectContent data-testid="email-template-select-content" id="email-template-select-content">
@@ -187,8 +187,8 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                         </Select>
                                         <button className="text-[14px]/[24px] text-[#0d978b] underline mt-[6px] text-start cursor-pointer" onClick={() => setPreview(true)} data-testid="preview-edit-email-button" id="preview-edit-email-button">Preview/Edit Email</button>
                                         <div className="flex items-center gap-[12px] mt-[28px] w-full">
-                                            <Button variant="outline" className="w-full h-[42px]" data-testid="cancel-hire-button" id="cancel-hire-button">Cancel</Button>
-                                            <Button className="bg-[#0D978B] hover:bg-[#0D978B] w-full h-[42px]" data-testid="send-offer-button" id="send-offer-button">Send Offer</Button>
+                                            <Button variant="outline" className="w-full h-[42px] rounded-[8px] border border-primary-950 text-primary-950 font-semibold" data-testid="cancel-hire-button" id="cancel-hire-button">Cancel</Button>
+                                            <Button className="bg-[#0D978B] hover:bg-[#0D978B] w-full h-[42px] rounded-[8px] font-semibold" data-testid="send-offer-button" id="send-offer-button">Send Offer</Button>
                                         </div>
                                     </div>
                                 </DialogContent>
@@ -274,11 +274,11 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                             <RadioGroup value={selectedOfferMethod} onValueChange={setSelectedOfferMethod} className="mt-[12px] flex items-center gap-[12px]" data-testid="offer-method-radio-group" id="offer-method-radio-group">
                                 <div className="flex items-center gap-[5px]">
                                     <RadioGroupItem value="system-generated" data-testid="system-generated-radio" id="system-generated-radio" />
-                                    <p className="text-[13px]/[17px] text-[#787878]">System Generated</p>
+                                    <p className={`text-[13px]/[17px] ${selectedOfferMethod === 'system-generated' ? 'text-[#0D978B]' : 'text-[#787878]'}`}>System Generated</p>
                                 </div>
                                 <div className="flex items-center gap-[5px]">
                                     <RadioGroupItem value="upload-manually" data-testid="upload-manually-radio" id="upload-manually-radio" />
-                                    <p className="text-[13px]/[17px] text-[#787878]">Upload Manually</p>
+                                    <p className={`text-[13px]/[17px] ${selectedOfferMethod === 'system-generated' ? 'text-[#787878]' : 'text-[#0D978B]'}`}>Upload Manually</p>
                                 </div>
                             </RadioGroup>
                         </div>
@@ -299,6 +299,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="upload-label" id="upload-label">Upload Offer Letter</p>
                             <FileDropUpload file={file} setFile={setFile} setID={setID} label="Upload Offer Letter" data-testid="file-drop-upload" />
                         </div>}
+                        <p className="text-[14px]/[16px] text-[#8F8F8F]" data-testid="offer-letter-info-label" id="offer-letter-info-label">Fill out the information below to populate the smart text in your offer letter template. These details will be saved to Projitt and used in onboarding once the offer has been accepted</p>
                         <div data-testid="work-location-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="work-location-label" id="work-location-label">Work Location</p>
                             <Select data-testid="work-location-select">
@@ -328,11 +329,11 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                             <div className="flex flex-col gap-[12px] mt-[12px]">
                                 <div className="flex items-center gap-[12px]">
                                     <Checkbox data-testid="health-insurance-checkbox" id="health-insurance-checkbox" />
-                                    <p data-testid="health-insurance-label" id="health-insurance-label">Health Insurance</p>
+                                    <p data-testid="health-insurance-label" id="health-insurance-label" className="text-[14px]/[16px] text-gray-800">Health Insurance</p>
                                 </div>
                                 <div className="flex items-center gap-[12px]">
                                     <Checkbox data-testid="401k-checkbox" id="401k-checkbox" />
-                                    <p data-testid="401k-label" id="401k-label">401k</p>
+                                    <p data-testid="401k-label" id="401k-label" className="text-[14px]/[16px] text-gray-800">401k</p>
                                 </div>
                             </div>
                         </div>
@@ -427,12 +428,12 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                         </div>
                         <div data-testid="earnings-table-section">
                             <p className="text-[14px]/[16px] text-[#1C1C1C]" data-testid="earnings-label" id="earnings-label">Earnings</p>
-                            <table className="w-full mt-[12px] border-spacing-0 " data-testid="earnings-table">
-                                <thead className="h-[32px] rounded-[10px]">
-                                    <tr className="bg-[#eef3f2] ">
-                                        <th className="w-[50%] text-left text-[12px] text-[#8c8e8e] pl-[16px] " data-testid="earnings-category-header">Category</th>
+                            <table className="w-full mt-[12px] border-spacing-0  " data-testid="earnings-table">
+                                <thead className="h-[32px] !rounded-[10px]">
+                                    <tr className="bg-[#eef3f2] !rounded-[10px]">
+                                        <th className="w-[50%] text-left text-[12px] text-[#8c8e8e] pl-[16px] rounded-tl-[10px]" data-testid="earnings-category-header">Category</th>
                                         <th className="w-[30%] text-left text-[12px] text-[#8c8e8e] pl-[16px]" data-testid="earnings-amount-header">Amount</th>
-                                        <th className="w-[20%] text-left text-[12px] text-[#8c8e8e] pl-[16px]" data-testid="earnings-action-header">Action</th>
+                                        <th className="w-[20%] text-left text-[12px] text-[#8c8e8e] pl-[16px] !rounded-tr-[10px]" data-testid="earnings-action-header  ">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -443,7 +444,7 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                                                     <td className="pl-[16px] font-medium text-[12px] text-[#4b4b4b] border-b border-[#e9e9e9]" data-testid={`earning-category-${earning.id}`}>{earning.category}</td>
                                                     <td className="pl-[16px] font-medium text-[12px] text-[#4b4b4b] border-b border-[#e9e9e9]" data-testid={`earning-amount-${earning.id}`}>${earning.amount}</td>
                                                     <td className="pl-[16px] border-b border-[#e9e9e9]">
-                                                        <MoreVertical data-testid={`earning-more-vertical-${earning.id}`} />
+                                                        <MoreVertical data-testid={`earning-more-vertical-${earning.id}`} className="size-[17px] text-[#4B4B4B]" />
                                                     </td>
                                                 </tr>
                                             ) : (
@@ -502,8 +503,8 @@ export default function DetailLetter({ open, onOpenChange }: DetailLetterProps) 
                             </div>
                         </div>
                         <div className="flex justify-end gap-[16px] pt-[28px] ">
-                            <Button variant="outline" className="h-[42px]" onClick={() => setPreview(false)} data-testid="go-back-button" id="go-back-button">Go Back</Button>
-                            <Button className="h-[42px]" onClick={() => setIsEdit(true)} data-testid="edit-message-button" id="edit-message-button">Edit Message</Button>
+                            <Button variant="outline" className="h-[42px] text-primary-950 font-semibold px-[34px]" onClick={() => setPreview(false)} data-testid="go-back-button" id="go-back-button">Go Back</Button>
+                            <Button className="h-[42px] font-semibold px-[34px]" onClick={() => setIsEdit(true)} data-testid="edit-message-button" id="edit-message-button">Edit Message</Button>
                         </div>
                     </div>
                 </DialogContent>

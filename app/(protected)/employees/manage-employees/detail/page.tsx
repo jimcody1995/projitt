@@ -20,11 +20,11 @@ export default function Detail() {
     });
 
     const menu = [
-        {
-            label: 'Offboarding',
-            value: 'offboarding',
-            icon: LogOut
-        },
+        // {
+        //     label: 'Offboarding',
+        //     value: 'offboarding',
+        //     icon: LogOut
+        // },
         {
             label: 'Personal Information',
             value: 'personal-information',
@@ -134,7 +134,7 @@ export default function Detail() {
                 </div>
             </div>
             <div className="mt-[27px]">
-                {activeSection === 'offboarding' && <Offboarding />}
+                {/* {activeSection === 'offboarding' && <Offboarding />} */}
                 {activeSection === 'personal-information' && <PersonalInfomation />}
                 {activeSection === 'document' && <Documents />}
                 {activeSection === 'leave-attendance' && <LeaveAttendence />}

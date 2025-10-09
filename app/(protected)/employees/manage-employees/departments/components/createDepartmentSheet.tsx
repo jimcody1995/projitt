@@ -102,7 +102,7 @@ export const CreateDepartmentSheet = ({ children }: CreateDepartmentSheetProps):
                             variant="ghost"
                             size="sm"
                             onClick={handleCancel}
-                            className="h-8 w-8 p-0"
+                            className="h-8 w-8 p-0 border border-[#8C8E8E]"
                         >
                             <X className="h-4 w-4" />
                         </Button>
@@ -136,15 +136,15 @@ export const CreateDepartmentSheet = ({ children }: CreateDepartmentSheetProps):
                     {/* Footer */}
                     <div className="flex items-center justify-between gap-3 p-6 border-t border-gray-200">
                         <Button
-                            variant="outline"
+                            variant="ghost"
                             onClick={handleCancel}
-                            className="px-6"
+                            className="px-6 text-primary-950 font-semibold"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleAddAll}
-                            className="px-6 bg-[#0d978b] hover:bg-[#0d978b]/90 text-white"
+                            className="px-6 bg-[#0d978b] hover:bg-[#0d978b]/90 text-white font-semibold"
                         >
                             Add All
                         </Button>

@@ -12,6 +12,7 @@ export default function Onboarding() {
     const router = useRouter();
     const [backgroundCheckOpen, setBackgroundCheckOpen] = useState(false);
     const [message, setMessage] = useState<string>('');
+    const [searchQuery, setSearchQuery] = useState('');
     return <div>
         <div className="w-full justify-between flex lg:flex-row flex-col gap-[10px]">
             <div className="flex items-center gap-2">
@@ -26,6 +27,8 @@ export default function Onboarding() {
                     <Search className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2" />
                     <Input
                         placeholder="Search by name, ID"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         className="ps-9 md:w-[243px] w-full h-[42px]"
                         data-testid="search-input"
                     />
@@ -40,7 +43,7 @@ export default function Onboarding() {
             </div>
         </div>
         <div className="mt-[27px]">
-            <BackgroundCheckTable /></div>
+            <BackgroundCheckTable searchQuery={searchQuery} /></div>
         <BackgroundCheck open={backgroundCheckOpen} onOpenChange={setBackgroundCheckOpen} setMessage={setMessage} />
     </div>;
 }

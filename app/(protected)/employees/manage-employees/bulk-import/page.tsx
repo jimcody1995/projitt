@@ -28,7 +28,7 @@ export default function BulkImport() {
                     </div>
                 </div>
                 <div className="mt-[30px] bg-white border-[#E9E9E9] rounded-[12px] flex">
-                    <div className="w-[324px] pt-[52px] px-[48px]">
+                    <div className="w-[324px] pt-[52px] px-[48px] border-r border-[#E9E9E9]">
                         <Stepper currentStep={currentStep} />
                     </div>
                     <div className="flex-1 py-[42px] px-[56px]">

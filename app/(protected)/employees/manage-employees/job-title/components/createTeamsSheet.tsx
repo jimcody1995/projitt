@@ -121,13 +121,13 @@ export const CreateJobTitleSheet = ({ children }: CreateJobTitleSheetProps): JSX
                         <Button
                             variant="ghost"
                             onClick={handleCancel}
-                            className="text-gray-700"
+                            className="text-primary-950 font-semibold"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleAddAll}
-                            className="px-6 bg-[#0d978b] hover:bg-[#0d978b]/90 text-white"
+                            className="px-6 bg-[#0d978b] hover:bg-[#0d978b]/90 text-white font-semibold"
                         >
                             Add All
                         </Button>

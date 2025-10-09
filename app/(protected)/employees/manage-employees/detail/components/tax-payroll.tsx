@@ -131,38 +131,43 @@ export default function TaxPayroll() {
                     <h2 className="text-lg font-semibold text-gray-800">Payment Information</h2>
                 </div>
 
-                <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-5 gap-6">
-                    <div>
-                        <p className="text-sm text-gray-500 mb-1">Payment Method</p>
-                        <p className="font-medium text-gray-800">{paymentInfo.paymentMethod}</p>
+                <div className="space-y-6">
+                    <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-5 gap-6">
+                        <div>
+                            <p className="text-sm text-gray-500 mb-1">Payment Method</p>
+                            <p className="font-medium text-gray-800">{paymentInfo.paymentMethod}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500 mb-1">Bank Name</p>
+                            <p className="font-medium text-gray-800">{paymentInfo.bankName}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500 mb-1">Bank Country</p>
+                            <p className="font-medium text-gray-800">{paymentInfo.bankCountry}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500 mb-1">Account Number</p>
+                            <p className="font-medium text-gray-800">{paymentInfo.accountNumber}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500 mb-1">Account Name</p>
+                            <p className="font-medium text-gray-800">{paymentInfo.accountName}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p className="text-sm text-gray-500 mb-1">Bank Name</p>
-                        <p className="font-medium text-gray-800">{paymentInfo.bankName}</p>
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 mb-1">Bank Country</p>
-                        <p className="font-medium text-gray-800">{paymentInfo.bankCountry}</p>
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 mb-1">Account Number</p>
-                        <p className="font-medium text-gray-800">{paymentInfo.accountNumber}</p>
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 mb-1">Account Name</p>
-                        <p className="font-medium text-gray-800">{paymentInfo.accountName}</p>
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 mb-1">Routing Number</p>
-                        <p className="font-medium text-gray-800">{paymentInfo.routingNumber}</p>
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 mb-1">Bank Code</p>
-                        <p className="font-medium text-gray-800">{paymentInfo.bankCode}</p>
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 mb-1">Currency</p>
-                        <p className="font-medium text-gray-800">{paymentInfo.currency}</p>
+                    <div className="border-t border-gray-200"></div>
+                    <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-5 gap-6">
+                        <div>
+                            <p className="text-sm text-gray-500 mb-1">Routing Number</p>
+                            <p className="font-medium text-gray-800">{paymentInfo.routingNumber}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500 mb-1">Bank Code</p>
+                            <p className="font-medium text-gray-800">{paymentInfo.bankCode}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm text-gray-500 mb-1">Currency</p>
+                            <p className="font-medium text-gray-800">{paymentInfo.currency}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -208,7 +213,7 @@ export default function TaxPayroll() {
                                     {payment.netPay}
                                 </td>
                                 <td className="px-[16px] py-[13px] whitespace-nowrap text-sm text-center">
-                                    <span className="inline-flex items-center px-[8px] text-[12px]/[22px] rounded-[4px]  bg-[#D6EEEC] text-[#0D978B] ">
+                                    <span className="inline-flex items-center px-[8px] text-[12px]/[22px] rounded-full  bg-[#D6EEEC] text-[#0D978B] ">
                                         {payment.status}
                                     </span>
                                 </td>

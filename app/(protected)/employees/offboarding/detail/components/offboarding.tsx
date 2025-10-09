@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 
 export default function Offboarding() {
     return <div>
-        <Button className="h-[42px] sm:w-[312px] w-full">
+        <Button className="h-[42px] sm:w-[181px] w-full rounded-[8px]">
             Complete Offboarding
         </Button>
         <div className="md:w-[635px] w-full p-[16px] bg-white rounded-[12px] mt-[38px] border border-[#e9e9e9] flex flex-col gap-[12px]">
@@ -17,7 +17,7 @@ export default function Offboarding() {
             <div className="h-[32px] flex w-full justify-between">
                 <p className="text-[14px]/[22px] text-[#626262]">Email Id Creation</p>
 
-                <Button className="h-[32px]">Completed</Button>
+                <Button className="h-[32px] rounded-[8px]">Completed</Button>
             </div>
             <div className="w-full h-[1px] bg-[#e9e9e9]"></div>
             <div className="h-[32px] flex w-full justify-between">
@@ -29,7 +29,7 @@ export default function Offboarding() {
             <div className="h-[32px] flex w-full justify-between">
                 <p className="text-[14px]/[22px] text-[#626262]">Background Check</p>
 
-                <button className="text-[#0d978b] text-[14px]/[22px]">Mark as Completed </button>
+                <button className="text-[#0d978b] text-[14px]/[22px] rounded-[8px]">Mark as Completed </button>
             </div>
         </div>
         <div className="md:w-[635px] w-full p-[16px] bg-white rounded-[12px] mt-[38px] border border-[#e9e9e9] flex flex-col gap-[12px]">

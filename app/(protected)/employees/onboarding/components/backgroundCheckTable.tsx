@@ -28,7 +28,7 @@ import { useRouter } from "next/navigation";
 import BackgroundCheck from "../../manage-employees/components/background-check";
 import { FilterTool } from "./filterOnboardingTable";
 
-export default function BackgroundCheckTable() {
+export default function BackgroundCheckTable({ searchQuery }: { searchQuery: string }) {
     const router = useRouter();
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
@@ -95,7 +95,6 @@ export default function BackgroundCheckTable() {
             status: 'Completed'
         }
     ]);
-    const [searchQuery, setSearchQuery] = useState('');
     const [showFilter, setShowFilter] = useState(false);
     const [suspendOpen, setSuspendOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
@@ -192,7 +191,7 @@ export default function BackgroundCheckTable() {
                 accessorKey: 'name',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium text-gray-600'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Name"
                         column={column}
                         data-testid="name-header"
@@ -206,17 +205,18 @@ export default function BackgroundCheckTable() {
                         {row.original.name}
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 160,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'dateOfBirth',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium text-gray-600'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Date of Birth"
                         column={column}
                         data-testid="date-of-birth-header"
@@ -230,17 +230,18 @@ export default function BackgroundCheckTable() {
                         {row.original.dateOfBirth}
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 140,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'sensitivity',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium text-gray-600'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Sensitivity"
                         column={column}
                         data-testid="sensitivity-header"
@@ -254,17 +255,18 @@ export default function BackgroundCheckTable() {
                         {row.original.sensitivity}
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 100,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'checks',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium text-gray-600'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Checks"
                         column={column}
                         data-testid="checks-header"
@@ -282,13 +284,14 @@ export default function BackgroundCheckTable() {
                 size: 220,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'regions',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium text-gray-600'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Regions"
                         column={column}
                         data-testid="regions-header"
@@ -302,17 +305,18 @@ export default function BackgroundCheckTable() {
                         {row.original.regions}
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 100,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'status',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium text-gray-600'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Status"
                         column={column}
                         data-testid="status-header"
@@ -325,11 +329,11 @@ export default function BackgroundCheckTable() {
 
                     return (
                         <span
-                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${isCompleted
+                            className={`inline-flex items-center text-[12px]/[18px] font-medium ${isCompleted
                                 ? ' text-teal-700'
                                 : isOngoing
-                                    ? 'text-orange-600'
-                                    : 'text-gray-600'
+                                    ? 'text-[#FFA750]'
+                                    : 'text-[#0D978B]'
                                 }`}
                             data-testid={`status-badge-${row.original.id}`}
                         >
@@ -337,10 +341,11 @@ export default function BackgroundCheckTable() {
                         </span>
                     );
                 },
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
         ].filter(Boolean),
@@ -451,7 +456,6 @@ export default function BackgroundCheckTable() {
                             >
                                 <DataGridTable />
                             </div>
-                            <DataGridPagination data-testid="pagination-controls" className="mt-[25px]" />
                         </>
                     }
                     </>

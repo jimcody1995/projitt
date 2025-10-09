@@ -180,7 +180,7 @@ export default function TeamsPage() {
                 accessorKey: 'name',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Name"
                         column={column}
                         data-testid="name-header"
@@ -194,7 +194,7 @@ export default function TeamsPage() {
                         {row.original.name}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 200,
                 meta: {
                     headerClassName: '',
@@ -204,7 +204,7 @@ export default function TeamsPage() {
                 accessorKey: 'department',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Department"
                         column={column}
                         data-testid="department-header"
@@ -218,7 +218,7 @@ export default function TeamsPage() {
                         {row.original.department}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 150,
                 meta: {
                     headerClassName: '',
@@ -228,7 +228,7 @@ export default function TeamsPage() {
                 accessorKey: 'employeeCount',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="No. of Employees"
                         column={column}
                         data-testid="employee-count-header"
@@ -242,7 +242,7 @@ export default function TeamsPage() {
                         {row.original.employeeCount}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 150,
                 meta: {
                     headerClassName: '',
@@ -350,7 +350,7 @@ export default function TeamsPage() {
                         <DropdownMenuTrigger asChild>
                             <div className='flex items-center gap-[10px] cursor-pointer'>
                                 <p className="text-[24px]/[30px] font-semibold text-[#0d978b]">Job Title</p>
-                                <ChevronDown className='size-[20px] text-[#0d978b]' />
+                                <ChevronDown className='size-[20px] text-[#0d978b] fill-[#0d978b]' />
                             </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
@@ -429,7 +429,7 @@ export default function TeamsPage() {
                     recordCount={sortedData?.length || 0}
                     data-testid="departments-grid"
                     onRowClick={(row) => {
-                        router.push(`/employees/manage-employeesjob-title/data?id=${row.id}`);
+                        router.push(`/employees/manage-employees/job-title/data?id=${row.id}`);
                     }}
                 >
                     <div className="flex items-center justify-between sm:flex-row flex-col gap-[20px]">
@@ -493,7 +493,6 @@ export default function TeamsPage() {
                                     >
                                         <DataGridTable />
                                     </div>
-                                    <DataGridPagination data-testid="pagination-controls" className='mt-[25px]' />
                                 </>
                             )}
                         </div>

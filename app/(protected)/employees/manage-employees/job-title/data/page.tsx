@@ -157,14 +157,15 @@ export default function DepartmentsDataPage() {
                 enableResizing: false,
                 size: 46,
                 meta: {
-                    cellClassName: '',
+                    cellClassName: 'border-b border-[#E9E9E9]'
+
                 },
             },
             {
                 accessorKey: 'name',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Name"
                         column={column}
                         data-testid="employee-name-header"
@@ -194,17 +195,18 @@ export default function DepartmentsDataPage() {
                         </div>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 250,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#E9E9E9]',
                 },
             },
             {
                 accessorKey: 'position',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Job Details"
                         column={column}
                         data-testid="job-details-header"
@@ -227,17 +229,18 @@ export default function DepartmentsDataPage() {
                         </span>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 200,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#E9E9E9]',
                 },
             },
             {
                 accessorKey: 'department',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Department"
                         column={column}
                         data-testid="department-header"
@@ -251,17 +254,18 @@ export default function DepartmentsDataPage() {
                         {row.original.department}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 150,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#E9E9E9]',
                 },
             },
             {
                 accessorKey: 'employmentType',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Employment Type"
                         column={column}
                         data-testid="employment-type-header"
@@ -276,10 +280,11 @@ export default function DepartmentsDataPage() {
                         </p>
                     );
                 },
-                enableSorting: true,
+                enableSorting: false,
                 size: 150,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#E9E9E9]',
                 },
             },
             {
@@ -290,6 +295,7 @@ export default function DepartmentsDataPage() {
                 size: 40,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#E9E9E9]',
                 },
             },
         ],
@@ -370,7 +376,7 @@ export default function DepartmentsDataPage() {
                             e.stopPropagation();
                         }}
                     >
-                        Remove From Team
+                        Add to Team
                     </div>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -390,26 +396,26 @@ export default function DepartmentsDataPage() {
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="p-2"
+                        className="p-2 border border-[#E9E9E9] bg-white rounded-full"
                         onClick={() => window.history.back()}
                         data-testid="back-button"
                     >
-                        <ArrowLeft className="h-4 w-4" />
+                        <ArrowLeft className="h-4 w-4 text-gray-900" />
                     </Button>
                     <h1 className="text-2xl font-bold text-[#1a1a1a]" data-testid="page-title">
-                        Saas Development Team
+                        Data Analyst
                     </h1>
                 </div>
                 <div className="flex items-center gap-2 sm:w-auto w-full">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
-                                variant="outline"
+                                variant="ghost"
                                 className="text-red-600 border-red-200 hover:bg-red-50 md:w-auto w-full"
                                 data-testid="delete-dropdown-button"
                             >
                                 Delete
-                                <ChevronDown className="h-4 w-4 ml-1" />
+                                <ChevronDown className="h-4 w-4 ml-1 text-gray-900" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -459,7 +465,7 @@ export default function DepartmentsDataPage() {
                             onClick={() => setSearchQuery('')}
                             data-testid="clear-search-button"
                         >
-                            <ChevronDown className="h-4 w-4" />
+                            <ChevronDown className="h-4 w-4 text-gray-900" />
                         </Button>
                     )}
                 </div>
@@ -487,7 +493,6 @@ export default function DepartmentsDataPage() {
                                 >
                                     <DataGridTable />
                                 </div>
-                                <DataGridPagination data-testid="pagination-controls" className='mt-[25px]' />
                             </>
                         )}
                     </div>

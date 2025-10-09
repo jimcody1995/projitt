@@ -28,10 +28,6 @@ import DetailLetter from "./detalilLetter";
  */
 export default function Approved({ setOnboarding }: { setOnboarding: any }) {
     const [selectedApplication, setSelectedApplication] = useState<string | null>(null);
-    const [pagination, setPagination] = useState<PaginationState>({
-        pageIndex: 0,
-        pageSize: 10,
-    });
     const [sorting, setSorting] = useState<SortingState>([
         { id: 'lastSession', desc: true },
     ]);
@@ -152,7 +148,7 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
                 accessorKey: 'name',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] text-[#8C8E8E] font-medium'
                         title="Name"
                         column={column}
                         data-testid="name-header"
@@ -160,23 +156,24 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
                 ),
                 cell: ({ row }) => (
                     <span
-                        className="text-[14px] text-[#4b4b4b]"
+                        className="text-[14px] text-[#4b4b4b] "
                         data-testid={`name-${row.original.id}`}
                     >
                         {row.original.name}
                     </span>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'job-detail',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] text-[#8C8E8E]  font-medium'
                         title="Job Details"
                         column={column}
                         data-testid="job-detail-header"
@@ -196,17 +193,18 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
                         </p>
                     </div>
                 ),
-                enableSorting: true,
+                enableSorting: false,
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 accessorKey: 'status',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] text-[#8C8E8E]  font-medium'
                         title="Offer Status"
                         column={column}
                         data-testid="status-header"
@@ -216,24 +214,25 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
                     const status = row.original.status as keyof typeof statusTextColors;
                     return (
                         <span
-                            className={`text-[14px]/[22px] px-[12px] py-[2px] rounded-[8px] ${statusTextColors[status] || ''} ${statusBgColors[status] || ''}`}
+                            className={`text-[14px]/[22px] px-[12px] py-[2px] rounded-[21px] h-[26px]  ${statusTextColors[status] || ''} ${statusBgColors[status] || ''}`}
                             data-testid={`status-${row.original.id}`}
                         >
-                            {row.original.status ? row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1) : 'Not Sent'}
+                            {row.original.status ? row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1) : '-'}
                         </span>
                     );
                 },
-                enableSorting: true,
+                enableSorting: false,
                 size: 90,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
             {
                 id: 'actions',
                 header: ({ column }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] text-[#8C8E8E]  font-medium'
                         title="Action"
                         column={column}
                         data-testid="action-header"
@@ -279,6 +278,7 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
                 size: 120,
                 meta: {
                     headerClassName: '',
+                    cellClassName: 'border-b border-[#EEF3F2]',
                 },
             },
         ],
@@ -304,26 +304,26 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
     const table = useReactTable({
         columns: columns as ColumnDef<any, any>[],
         data: sortedData,
-        pageCount: Math.ceil((sortedData?.length || 0) / pagination.pageSize),
         getRowId: (row: any) => row.id,
         state: {
-            pagination,
             sorting,
         },
-        onPaginationChange: setPagination,
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
     });
 
     return (
         <div data-testid="approved-applicants-container">
             <div className='w-full mt-[22px]'>
                 <DataGrid
-                    className='w-full'
+
                     table={table}
                     recordCount={sortedData?.length || 0}
                     data-testid="approved-applicants-grid"
+                    tableLayout={{
+                        rowBorder: false
+                    }}
+                    className='w-full'
                 >
                     <div className='mt-[24px] w-full rounded-[12px] overflow-hidden relative'>
                         {sortedData.length === 0 ? (
@@ -336,7 +336,6 @@ export default function Approved({ setOnboarding }: { setOnboarding: any }) {
                                 >
                                     <DataGridTable />
                                 </div>
-                                <DataGridPagination data-testid="approved-pagination-controls" className="mt-[25px]" />
                             </>
                         )}
                     </div>

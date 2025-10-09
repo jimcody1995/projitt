@@ -128,7 +128,7 @@ export default function Attendence() {
                                                 {record.status}
                                             </span>
                                             {record.statusType === 'warning' && (
-                                                <InfoIcon className="h-4 w-4 text-orange-500" />
+                                                <InfoIcon className="h-4 w-4 fill-orange-500 text-white" />
                                             )}
                                         </div>
                                     </td>

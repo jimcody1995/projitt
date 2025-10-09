@@ -59,7 +59,7 @@ export default function People() {
                 <DropdownMenuTrigger asChild>
                     <div className='flex items-center gap-[10px] cursor-pointer'>
                         <p className="text-[24px]/[30px] font-semibold text-[#0d978b]">Employee</p>
-                        <ChevronDown className='size-[20px] text-[#0d978b]' />
+                        <ChevronDown className='size-[20px] text-[#0d978b]  fill-[#0d978b]' />
                     </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent

@@ -19,9 +19,11 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useSession } from '@/context/SessionContext';
 import { logout } from '@/api/user';
+import { useSettings } from '@/providers/settings-provider';
 
 export function SidebarMenu() {
   const pathname = usePathname();
+  const { settings } = useSettings();
 
   // Memoize matchPath to prevent unnecessary re-renders
   const matchPath = useCallback(
@@ -32,7 +34,7 @@ export function SidebarMenu() {
 
   // Global classNames for consistent styling
   const classNames: AccordionMenuClassNames = {
-    root: 'lg:ps-1 space-y-3',
+    root: 'space-y-2',
     group: 'gap-px',
     label:
       'uppercase text-xs font-medium text-muted-foreground/70 pt-2.25 pb-px',
@@ -57,11 +59,12 @@ export function SidebarMenu() {
     });
   };
 
+
   const buildMenuItemRoot = (item: MenuItem, index: number): JSX.Element => {
     if (item.children) {
       return (
         <AccordionMenuSub key={index} value={item.path || `root-${index}`}>
-          <AccordionMenuSubTrigger className="text-[13px] font-medium">
+          <AccordionMenuSubTrigger className={`text-[12px]/[18px] font-medium px-[8px] py-[7px] ${settings.layouts.demo1.sidebarCollapse ? 'ml-[8px]' : ''}`}>
             {item.icon && <item.icon data-slot="accordion-menu-icon" />}
             <span data-slot="accordion-menu-title" className="whitespace-nowrap">{item.title}</span>
           </AccordionMenuSubTrigger>
@@ -82,13 +85,13 @@ export function SidebarMenu() {
         <AccordionMenuItem
           key={index}
           value={item.path || ''}
-          className="text-[13px] font-medium px-[10px] py-[8px]"
+          className={`text-[12px]/[18px] font-medium px-[8px] py-[7px] ${settings.layouts.demo1.sidebarCollapse ? 'ml-[8px]' : ''}`}
         >
           <Link
             href={item.path || '#'}
             className="flex items-center grow gap-2"
           >
-            {item.icon && <item.icon data-slot="accordion-menu-icon" />}
+            {item.icon && <item.icon data-slot="accordion-menu-icon" className="w-[14px] h-[14px]" />}
             <span data-slot="accordion-menu-title" className="whitespace-nowrap">{item.title}</span>
           </Link>
         </AccordionMenuItem>
@@ -104,7 +107,7 @@ export function SidebarMenu() {
       <AccordionMenuItem
         key={index}
         value={`disabled-${index}`}
-        className="text-[13px] font-medium"
+        className="text-[12px]/[18px] font-medium"
       >
         {item.icon && <item.icon data-slot="accordion-menu-icon" />}
         <span data-slot="accordion-menu-title" className="whitespace-nowrap">{item.title}</span>
@@ -141,7 +144,7 @@ export function SidebarMenu() {
           key={index}
           value={item.path || `child-${level}-${index}`}
         >
-          <AccordionMenuSubTrigger className="text-[13px]">
+          <AccordionMenuSubTrigger className="text-[12px]/[18px]">
             {item.collapse ? (
               <span className="text-muted-foreground">
                 <span className="hidden [[data-state=open]>span>&]:inline">
@@ -179,7 +182,7 @@ export function SidebarMenu() {
         <AccordionMenuItem
           key={index}
           value={item.path || ''}
-          className="text-[13px]"
+          className="text-[12px]/[18px]"
         >
           <div className="relative">
             <Link href={item.path || '#'} className="flex items-center h-full py-[10px] whitespace-nowrap" prefetch>{item.title}</Link>
@@ -199,7 +202,7 @@ export function SidebarMenu() {
       <AccordionMenuItem
         key={index}
         value={`disabled-child-${level}-${index}`}
-        className="text-[13px]"
+        className="text-[12px]/[18px]"
       >
         <span data-slot="accordion-menu-title" className="whitespace-nowrap">{item.title}</span>
         {item.disabled && (
@@ -212,7 +215,7 @@ export function SidebarMenu() {
   };
 
   const buildMenuHeading = (item: MenuItem, index: number): JSX.Element => {
-    return <AccordionMenuLabel className="text-[11px]/[16px] text-[#a5a5a5] pt-[18px] mb-[8px]" key={index}>{item.heading}</AccordionMenuLabel>;
+    return <AccordionMenuLabel className={`text-[11px]/[16px] text-[#a5a5a5] pt-[18px] mb-[8px] ${settings.layouts.demo1.sidebarCollapse ? 'ml-[14px]' : ''}`} key={index}>{item.heading}</AccordionMenuLabel>;
   };
 
   const { setSession, setLoading } = useSession();
@@ -231,7 +234,7 @@ export function SidebarMenu() {
 
   return (
     <div className='flex flex-col justify-between '>
-      <div className="kt-scrollable-y-hover flex grow shrink-0 pt-[48px] px-[14px] lg:max-h-[calc(100vh-5.5rem)]">
+      <div className={`kt-scrollable-y-hover flex grow shrink-0 pt-[48px] px-[${settings.layouts.demo1.sidebarCollapse ? '14px' : '24px'}] lg:max-h-[calc(100vh-5.5rem)]`}>
         <AccordionMenu
           selectedValue={pathname}
           matchPath={matchPath}

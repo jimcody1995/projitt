@@ -100,7 +100,7 @@ export default function JobDetails({ setCurrentStep, onFormDataChange, onValidat
                 <div className='flex gap-[24px] w-full flex-col md:flex-row'>
                     <div className="space-y-[8px] w-full">
                         <Label htmlFor="firstName" className="text-[14px]/[22px] font-medium text-[#353535]">
-                            First Name <span className="text-red-500">*</span>
+                            First Name <span className="text-gray-900">*</span>
                         </Label>
                         <Input
                             id="firstName"
