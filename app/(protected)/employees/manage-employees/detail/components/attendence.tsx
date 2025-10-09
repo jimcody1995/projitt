@@ -83,19 +83,19 @@ export default function Attendence() {
                     <table className="w-full">
                         <thead className="bg-[#EEF3F2]">
                             <tr>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8F8F8F] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8F8F8F] uppercase tracking-wider">
                                     Date
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8F8F8F] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8F8F8F] uppercase tracking-wider">
                                     Clock In
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8F8F8F] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8F8F8F] uppercase tracking-wider">
                                     Clock Out
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8F8F8F] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8F8F8F] uppercase tracking-wider">
                                     Total Hours
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8F8F8F] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8F8F8F] uppercase tracking-wider">
                                     Status
                                 </th>
                             </tr>
@@ -103,20 +103,20 @@ export default function Attendence() {
                         <tbody className="bg-white divide-y divide-gray-200">
                             {attendanceData.map((record, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800 font-medium text-gray-900">
                                         {record.date}
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm text-[#4b4b4b]">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800 text-[#4b4b4b]">
                                         {record.clockIn}
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm text-gray-900">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800 text-gray-900">
                                         {record.clockOut}
                                     </td>
-                                    <td className={`px-[16px] py-[11px] whitespace-nowrap text-sm ${record.totalHoursType === 'warning' ? 'text-orange-600' : 'text-gray-900'
+                                    <td className={`px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800 ${record.totalHoursType === 'warning' ? 'text-orange-600' : 'text-gray-900'
                                         }`}>
                                         {record.totalHours}
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800">
                                         <div className="flex items-center gap-2">
 
                                             <span className={`${record.statusType === 'warning'

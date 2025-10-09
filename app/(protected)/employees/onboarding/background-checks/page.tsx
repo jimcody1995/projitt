@@ -35,7 +35,7 @@ export default function Onboarding() {
                 </div>
                 <Button
                     variant="outline"
-                    className="h-[42px] text-[14px]/[22px] font-medium text-[#053834] text-white bg-primary flex items-center gap-2"
+                    className="h-[42px] text-[14px]/[22px] font-medium text-[#053834] text-white bg-primary hover:bg-primary/90 flex items-center gap-2 px-[25px] rounded-[8px]"
                     onClick={() => setBackgroundCheckOpen(true)}
                 >
                     Start Background Check

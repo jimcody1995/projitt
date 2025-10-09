@@ -185,7 +185,7 @@ export function SidebarMenu() {
           className="text-[12px]/[18px]"
         >
           <div className="relative">
-            <Link href={item.path || '#'} className="flex items-center h-full py-[10px] whitespace-nowrap" prefetch>{item.title}</Link>
+            <Link href={item.path || '#'} className="flex items-center text-[13px]/[20px] h-full py-[6px] whitespace-nowrap" prefetch>{item.title}</Link>
             <div className="absolute border-l border-[#ededed] border-b w-[10px] h-full top-[-14px] left-[-22px]"></div>
           </div>
         </AccordionMenuItem>

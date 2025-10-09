@@ -162,19 +162,20 @@ export default function Leave() {
 
     return (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden w-full">
-            <div className="flex items-center justify-between pt-[12px] pb-[17px] px-[20px]">
-                <div className="flex items-center gap-6">
+            <div className="flex items-center justify-between pt-[21px] pb-[23px] px-[20px]">
+                <div className="flex items-center gap-3">
                     <div className="flex items-center gap-1">
                         <span className="text-[#0d978b] font-medium">
                             {leaveBalances.vacation.used}/{leaveBalances.vacation.total}
                         </span>
-                        <span className="text-[#8c8e8e] text-sm">Vacation</span>
+                        <span className="text-[#8c8e8e] text-[14px]/[22px]">Vacation</span>
                     </div>
+                    <div className="w-[2px] h-[2px] bg-[#A5A5A5]"></div>
                     <div className="flex items-center gap-1">
                         <span className="text-[#0d978b] font-medium">
                             {leaveBalances.sick.used}/{leaveBalances.sick.total}
                         </span>
-                        <span className="text-[#8c8e8e] text-sm">Sick</span>
+                        <span className="text-[#8c8e8e] text-[14px]/[22px]">Sick</span>
                     </div>
                 </div>
 
@@ -196,22 +197,22 @@ export default function Leave() {
                     <table className="w-full">
                         <thead className="bg-[#eef3f2]">
                             <tr>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e]  uppercase tracking-wider">
                                     Request Date
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Start Date & End Date
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Leave Type
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Days
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Reason
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Status
                                 </th>
                             </tr>
@@ -219,19 +220,19 @@ export default function Leave() {
                         <tbody className="bg-white divide-y divide-gray-200">
                             {leaveRequests.map((request) => (
                                 <tr key={request.id} className="hover:bg-gray-50">
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800 font-medium text-gray-900">
                                         {request.requestDate}
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm text-gray-900">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800 text-gray-900">
                                         {request.startDate} to {request.endDate}
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm text-gray-900">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800 text-gray-900">
                                         {request.leaveType}
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm text-gray-900">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800 text-gray-900">
                                         {request.days}
                                     </td>
-                                    <td className="px-[16px] py-[11px] text-sm text-gray-900 max-w-xs">
+                                    <td className="px-[16px] py-[11px] text-[12px]/[22px] text-gray-800 text-gray-900 max-w-xs">
                                         <div className="flex items-center justify-between gap-2" title={request.reason}>
                                             <div className="truncate">{request.reason}</div>
                                             <Button variant="outline" size="sm" >
@@ -239,7 +240,7 @@ export default function Leave() {
                                             </Button>
                                         </div>
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800">
                                         {getStatusBadge(request.status)}
                                     </td>
                                 </tr>

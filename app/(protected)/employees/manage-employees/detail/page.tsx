@@ -1,6 +1,6 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Banknote, ChevronDown, ChevronLeft, ChevronRight, Clock, File, LogOut, User, Users } from "lucide-react";
+import { ArrowLeft, Banknote, BookText, ChevronDown, ChevronLeft, ChevronRight, Clock, File, LogOut, Medal, User, UserRound, Users } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Offboarding from "./components/offboarding";
 import PersonalInfomation from "./components/personalInfomation";
@@ -11,7 +11,7 @@ import TaxPayroll from "./components/tax-payroll";
 import { useRouter } from "next/navigation";
 
 export default function Detail() {
-    const [activeSection, setActiveSection] = useState<'offboarding' | 'personal-information' | 'document' | 'leave-attendance' | 'talent-management' | 'tax-payroll'>('offboarding');
+    const [activeSection, setActiveSection] = useState<'offboarding' | 'personal-information' | 'document' | 'leave-attendance' | 'talent-management' | 'tax-payroll'>('personal-information');
     const router = useRouter();
     const tabRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
     const [indicatorStyle, setIndicatorStyle] = useState({
@@ -28,12 +28,12 @@ export default function Detail() {
         {
             label: 'Personal Information',
             value: 'personal-information',
-            icon: User
+            icon: UserRound
         },
         {
             label: 'Document',
             value: 'document',
-            icon: File
+            icon: BookText
         },
         {
             label: 'Leave & Attendance',
@@ -43,7 +43,7 @@ export default function Detail() {
         {
             label: 'Talent Management',
             value: 'talent-management',
-            icon: Users
+            icon: Medal
         },
         {
             label: 'Tax & Payroll',
@@ -79,7 +79,7 @@ export default function Detail() {
                 </div>
                 <p className="text-[18px]/[24px] font-medium text-[#1c1c1c] pl-[17px]">Alice Fernadez</p>
                 <div className="border-l border-[#D2D2D2] flex gap-[14px] pl-[24px] ml-[24px] sm:flex-row flex-col">
-                    <Button className="h-[24px]">Active</Button>
+                    <Button className="h-[24px] rounded-full">Active</Button>
                     <p className="text-[14px]/[22px] text-[#8f8f8f]">ID: #E0001</p>
                 </div>
             </div>

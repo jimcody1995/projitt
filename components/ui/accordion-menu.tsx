@@ -383,7 +383,7 @@ function AccordionMenuSubContent({
         </AccordionPrimitive.Root>
       ) : (
         <AccordionPrimitive.Root
-          className={cn('w-full py-0.5 pt-[10px]', classNames?.subWrapper)}
+          className={cn('w-full py-0.5 pt-[5px]', classNames?.subWrapper)}
           type="single"
           collapsible={collapsible}
           value={currentValue as string}

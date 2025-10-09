@@ -35,7 +35,7 @@ export default function Suspend({ open, onOpenChange, setMessage }: DetailProps)
                     <div className="p-[32px] border-b border-[#e9e9e9]">
                         <div className="w-full justify-between flex items-center">
                             <div className="flex flex-col">
-                                <p className="text-[16px]/[20px] font-semibold text-[#353535]">Suspend: Alice Fernadez</p>
+                                <p className="text-[22px]/[30px] font-semibold text-[#353535]">Suspend: Alice Fernadez</p>
                                 <p className="text-[14px]/[16px] text-[#626262]">Senior Data Analyst ~ United States</p>
                             </div>
                             <Button

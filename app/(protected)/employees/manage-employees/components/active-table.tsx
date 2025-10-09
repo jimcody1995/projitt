@@ -603,7 +603,7 @@ export default function ActiveTable() {
                             >
                                 <DataGridTable />
                             </div>
-                            <DataGridPagination data-testid="pagination-controls" className='mt-[25px]' />
+                            <DataGridPagination data-testid="pagination-controls" className='mt-[45px]' />
                         </>
                     }
 

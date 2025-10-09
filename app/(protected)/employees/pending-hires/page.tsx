@@ -37,7 +37,7 @@ export default function PendingHires() {
 
     return (
         <div data-testid="pending-hires-container" id="pending-hires-container"
-            className="py-[5px] px-[10px]">
+            className="py-[15px] px-[10px]">
             {onboarding !== null ? (
                 <Onboarding setOnboarding={setOnboarding} data-testid="onboarding-component" />
             ) : (

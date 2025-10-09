@@ -114,22 +114,22 @@ export default function Exceptions() {
                     <table className="w-full">
                         <thead className="bg-[#eef3f2]">
                             <tr>
-                                <th className="w-14 px-4 text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider items-center">
+                                <th className="w-14 px-4 text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider items-center">
                                     <Checkbox className="w-[13px] h-[13px]" />
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Date
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Type
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Details
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Reason
                                 </th>
-                                <th className="px-[16px] py-[15px] text-left text-xs font-medium text-[#8c8e8e] uppercase tracking-wider">
+                                <th className="px-[16px] py-[15px] text-left text-[12px]/[18px] font-medium text-[#8c8e8e] uppercase tracking-wider">
                                     Status
                                 </th>
                             </tr>
@@ -137,19 +137,19 @@ export default function Exceptions() {
                         <tbody className="bg-white divide-y divide-gray-200">
                             {exceptions.map((exception) => (
                                 <tr key={exception.id} className="hover:bg-gray-50">
-                                    <td className="w-14 px-4 whitespace-nowrap text-sm font-medium text-gray-900 items-center">
+                                    <td className="w-14 px-4 whitespace-nowrap text-[12px]/[22px] font-medium text-gray-800 items-center">
                                         <Checkbox className="w-[13px] h-[14px]" />
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm font-medium text-gray-900">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] font-medium text-gray-800">
                                         {exception.date}
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm text-gray-900">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800">
                                         {exception.type}
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm text-gray-900">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px] text-gray-800">
                                         {exception.details}
                                     </td>
-                                    <td className="px-[16px] py-[11px] text-sm text-gray-900 max-w-xs">
+                                    <td className="px-[16px] py-[11px] text-[12px]/[22px] text-gray-800 max-w-xs">
                                         <div className="flex items-center justify-between gap-2" title={exception.reason}>
                                             <div className="truncate">{exception.reason}</div>
                                             <Button variant="outline" size="sm">
@@ -157,7 +157,7 @@ export default function Exceptions() {
                                             </Button>
                                         </div>
                                     </td>
-                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-sm">
+                                    <td className="px-[16px] py-[11px] whitespace-nowrap text-[12px]/[22px]">
                                         {getStatusBadge(exception.status)}
                                     </td>
                                 </tr>

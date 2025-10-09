@@ -52,7 +52,7 @@ export default function People() {
     const [selectedApplication, setSelectedApplication] = useState<any>(null);
     const router = useRouter();
 
-    return <div className='px-[8px] py-[6px]'>
+    return <div className='py-[15px] px-[10px]'>
         <div className="flex justify-between w-full sm:flex-row flex-col items-start gap-[10px]">
 
             <DropdownMenu>
@@ -137,7 +137,7 @@ export default function People() {
                             data-testid={`view-applicants-action`}
                             onClick={() => router.push('/employees/manage-employees/bulk-import')}
                         >
-                            Add Multiple Employees
+                            Bulk Import
                         </div>
 
                     </DropdownMenuContent>

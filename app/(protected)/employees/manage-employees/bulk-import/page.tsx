@@ -19,7 +19,7 @@ export default function BulkImport() {
             {currentStep !== 4 ? <div>
                 <div className="flex w-full justify-between items-center px-[8px] py-[6px]">
                     <div className="flex flex-col gap-[4px]">
-                        <p className="text-[12px]/[20px] text-[#A5A5A5]"><span className="cursor-pointer " onClick={() => router.push('/employees/manage-employees')}>Employeee</span> <span className="text-[#0d978b]">/ Add Multiple Employee</span></p>
+                        <p className="text-[12px]/[20px] text-[#A5A5A5]"><span className="cursor-pointer " onClick={() => router.push('/employees/manage-employees')}>Employeee</span> <span className="text-[#0d978b]">/ Bulk Import</span></p>
                         <p className="text-[24px]/[30px] font-semibold text-[#353535]">Bulk Import</p>
                     </div>
                     <div className="flex gap-[10px]">

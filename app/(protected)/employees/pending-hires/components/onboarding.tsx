@@ -11,6 +11,14 @@ import { cn } from "@/lib/utils";
 import { ArrowLeft, BriefcaseBusiness, CalendarDays, PieChart, Search } from "lucide-react";
 import { formatDate } from "@/lib/date-utils";
 
+// Bag component from SVG
+const Bag = ({ className }: { className?: string }) => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path fillRule="evenodd" clipRule="evenodd" d="M7.97098 2H8.02902C8.53079 2 8.94884 2 9.28037 2.04465C9.63088 2.09153 9.94735 2.19535 10.2013 2.4493C10.4558 2.70381 10.5596 3.02028 10.6065 3.37023C10.64 3.61581 10.6484 3.90828 10.6506 4.24651C11.0123 4.25823 11.3349 4.28 11.6218 4.31795C12.2759 4.40614 12.8056 4.59144 13.2236 5.00893C13.6411 5.42698 13.8264 5.95665 13.9146 6.61079C14 7.24707 14 8.05916 14 9.08502V9.14754C14 10.1734 14 10.986 13.9146 11.6218C13.8264 12.2759 13.6411 12.8056 13.2236 13.2236C12.8056 13.6411 12.2759 13.8264 11.6218 13.9146C10.9855 14 10.1734 14 9.14754 14H6.85247C5.8266 14 5.01395 14 4.37823 13.9146C3.72409 13.8264 3.19442 13.6411 2.77637 13.2236C2.35888 12.8056 2.17358 12.2759 2.0854 11.6218C2 10.9855 2 10.1734 2 9.14754V9.08502C2 8.05916 2 7.24651 2.0854 6.61079C2.17358 5.95665 2.35888 5.42698 2.77637 5.00893C3.19442 4.59144 3.72409 4.40614 4.37823 4.31795C4.70061 4.27846 5.02471 4.25461 5.3494 4.24651C5.35163 3.90828 5.36056 3.61581 5.39349 3.37023C5.44037 3.02028 5.54419 2.70381 5.79814 2.4493C6.05265 2.19535 6.36912 2.09209 6.71907 2.04465C7.05116 2 7.46977 2 7.97098 2ZM6.18716 4.23367C6.39814 4.23256 6.61991 4.23219 6.85247 4.23256H9.14754C9.38009 4.23256 9.60186 4.23293 9.81284 4.23367C9.81061 3.91553 9.80279 3.67553 9.77712 3.48186C9.74195 3.22456 9.68223 3.11405 9.60967 3.04149C9.53712 2.96893 9.4266 2.90921 9.16874 2.87405C8.89972 2.83833 8.53805 2.83721 8 2.83721C7.46195 2.83721 7.10028 2.83833 6.8307 2.8746C6.5734 2.90921 6.46288 2.96893 6.39033 3.04205C6.31777 3.11516 6.25805 3.22456 6.22288 3.48186C6.19721 3.67498 6.1894 3.91498 6.18716 4.23367ZM4.4893 5.14791C3.92781 5.22326 3.60409 5.36502 3.36744 5.60112C3.13191 5.83721 2.99014 6.16093 2.91479 6.72242C2.83777 7.29563 2.83665 8.05191 2.83665 9.11628C2.83665 10.1807 2.83777 10.9369 2.91479 11.5107C2.99014 12.0716 3.13191 12.3953 3.368 12.6314C3.60409 12.8675 3.92781 13.0093 4.4893 13.0847C5.06307 13.1617 5.81879 13.1628 6.88316 13.1628H9.11572C10.1801 13.1628 10.9364 13.1617 11.5101 13.0847C12.0711 13.0093 12.3948 12.8675 12.6309 12.6314C12.867 12.3953 13.0087 12.0716 13.0841 11.5101C13.1611 10.9369 13.1622 10.1807 13.1622 9.11628C13.1622 8.05191 13.1611 7.29619 13.0841 6.72186C13.0087 6.16093 12.867 5.83721 12.6309 5.60112C12.3948 5.36502 12.0711 5.22326 11.5096 5.14791C10.9364 5.07088 10.1801 5.06977 9.11572 5.06977H6.88316C5.81879 5.06977 5.06363 5.07088 4.4893 5.14791Z" fill="currentColor" />
+        <path d="M10.7907 6.32572C10.7907 6.47375 10.7319 6.61571 10.6272 6.72038C10.5226 6.82505 10.3806 6.88386 10.2326 6.88386C10.0845 6.88386 9.94258 6.82505 9.83791 6.72038C9.73324 6.61571 9.67444 6.47375 9.67444 6.32572C9.67444 6.17769 9.73324 6.03572 9.83791 5.93105C9.94258 5.82638 10.0845 5.76758 10.2326 5.76758C10.3806 5.76758 10.5226 5.82638 10.6272 5.93105C10.7319 6.03572 10.7907 6.17769 10.7907 6.32572ZM6.3256 6.32572C6.3256 6.47375 6.2668 6.61571 6.16212 6.72038C6.05745 6.82505 5.91549 6.88386 5.76746 6.88386C5.61943 6.88386 5.47747 6.82505 5.3728 6.72038C5.26812 6.61571 5.20932 6.47375 5.20932 6.32572C5.20932 6.17769 5.26812 6.03572 5.3728 5.93105C5.47747 5.82638 5.61943 5.76758 5.76746 5.76758C5.91549 5.76758 6.05745 5.82638 6.16212 5.93105C6.2668 6.03572 6.3256 6.17769 6.3256 6.32572Z" fill="currentColor" />
+    </svg>
+);
+
 /**
  * @description
  * Onboarding is a component designed to manage and configure the onboarding process for a new hire.
@@ -56,7 +64,7 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
                         <p className="font-semibold text-[20px]/[30px] text-[#8f8f8f]"><span className="text-[#1C1C1C]">Alice Fernadez</span> ~ Senior Data Analyst </p>
                         <div className="flex gap-[15px] mt-[6px]">
                             <span
-                                className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
+                                className='text-[14px]/[22px] px-[4px] flex items-center gap-[2px] text-[#4b4b4b]'
                             >
                                 <PieChart className='size-[20px] text-[#00d47d]' />
                                 Data
@@ -64,7 +72,7 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
                             <span
                                 className='text-[14px]/[22px] px-[8px] flex items-center gap-[2px] text-[#4b4b4b]'
                             >
-                                <BriefcaseBusiness className='size-[20px] text-[#4b4b4b]' />
+                                <Bag className='size-[20px] text-[#4b4b4b]' />
                                 Fulltime
                             </span>
                         </div>
@@ -80,7 +88,7 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
                         )}
                     </div>
                 </div>
-            </div>
+            </div >
             <div className=" w-full rounded-bl-[20px] rounded-br-[20px] bg-[#fff] border border-[#e9e9e9] pt-[22px] pb-[40px] pl-[48px] pr-[77px]">
                 {continueBtn ?
                     (<div className=" flex pt-0 flex-col gap-[32px] md:w-[623px] w-full">
@@ -165,6 +173,62 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
                                         <p className="text-[14px]/[16px] text-[#4b4b4b]" data-testid={`activity-text-${index}`}>{item}</p>
                                     </div>
                                 ))}
+                            </div>
+                        </div>
+                        <div data-testid="background-checks-section" className="mb-[20px]">
+                            <p className="text-[14px]/[16px] text-[#1C1C1C] mb-[6px]">
+                                Do you want to perform background checks?
+                            </p>
+                            <div className="flex items-center gap-[24px] mt-[12px]">
+                                <label className="flex items-center gap-[6px] cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        name="background-checks"
+                                        value="yes"
+                                        defaultChecked
+                                        className="accent-[#0d978b] size-[20px]"
+                                        data-testid="background-checks-yes"
+                                    />
+                                    <span className="text-[14px]/[16px] text-[#0d978b]">Yes</span>
+                                </label>
+                                <label className="flex items-center gap-[6px] cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        name="background-checks"
+                                        value="no"
+                                        className="accent-[#bcbcbc] size-[20px]"
+                                        data-testid="background-checks-no"
+                                    />
+                                    <span className="text-[14px]/[16px] text-[#4b4b4b]">No</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div data-testid="request-referrals-section" className="mb-[20px]">
+                            <p className="text-[14px]/[16px] text-[#1C1C1C] mb-[6px]">
+                                Do you want to request for Referrals?
+                            </p>
+                            <div className="flex items-center gap-[24px] mt-[12px]">
+                                <label className="flex items-center gap-[6px] cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        name="request-referrals"
+                                        value="yes"
+                                        defaultChecked
+                                        className="accent-[#0d978b] size-[20px]"
+                                        data-testid="request-referrals-yes"
+                                    />
+                                    <span className="text-[14px]/[16px] text-[#0d978b]">Yes</span>
+                                </label>
+                                <label className="flex items-center gap-[6px] cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        name="request-referrals"
+                                        value="no"
+                                        className="accent-[#bcbcbc] size-[20px]"
+                                        data-testid="request-referrals-no"
+                                    />
+                                    <span className="text-[14px]/[16px] text-[#4b4b4b]">No</span>
+                                </label>
                             </div>
                         </div>
                         <div data-testid="training-path-section">
@@ -284,6 +348,6 @@ export default function Onboarding({ setOnboarding }: { setOnboarding: any }) {
                     </>
                     )}
             </div>
-        </div>
+        </div >
     )
 }

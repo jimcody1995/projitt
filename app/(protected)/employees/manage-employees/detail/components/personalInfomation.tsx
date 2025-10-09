@@ -1,4 +1,4 @@
-import { BookMinus, BriefcaseBusiness, Edit, User } from "lucide-react";
+import { BookMinus, BriefcaseBusiness, CircleUser, Edit, User, UserRound } from "lucide-react";
 
 export default function PersonalInfomation() {
     return <div>
@@ -43,7 +43,7 @@ export default function PersonalInfomation() {
                 <div className="w-full rounded-[12px] bg-white border border-[#e9e9e9] p-[20px] pb-[39px]">
                     <div className="flex justify-between">
                         <div className="flex items-center gap-[6px]">
-                            <BriefcaseBusiness className="size-[16px] text-[#8f8f8f]" />
+                            <BriefcaseBusiness className="size-[16px] text-white fill-[#8F8F8F]" />
                             <p className="text-[16px]/[20px] font-semibold text-[#353535]">Employment Overview</p>
                         </div>
                         {/* <button
@@ -91,7 +91,7 @@ export default function PersonalInfomation() {
                 <div className="w-full rounded-[12px] bg-white border border-[#e9e9e9] p-[20px] pb-[39px]">
                     <div className="flex justify-between">
                         <div className="flex items-center gap-[6px]">
-                            <User className="size-[16px] text-[#8f8f8f]" />
+                            <UserRound className="size-[16px] fill-[#8F8F8F] text-white" />
                             <p className="text-[16px]/[20px] font-semibold text-[#353535]">Personal Information</p>
                         </div>
                         <button

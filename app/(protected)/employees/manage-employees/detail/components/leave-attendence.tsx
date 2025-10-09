@@ -21,7 +21,7 @@ export default function LeaveAttendence() {
                 <div className="flex items-center gap-0 mb-6 bg-[#e9e9e9] rounded-lg cursor-pointer">
                     <button
                         onClick={() => setActiveTab('attendance')}
-                        className={`px-4 py-2 text-sm font-medium rounded-lg cursor-pointer transition-colors ${activeTab === 'attendance'
+                        className={`px-4 py-2 text-sm font-medium w-[108px] rounded-lg cursor-pointer transition-colors ${activeTab === 'attendance'
                             ? 'bg-[#0D978B] text-white'
                             : 'text-[#8F8F8F] hover:text-gray-800'
                             }`}
@@ -30,7 +30,7 @@ export default function LeaveAttendence() {
                     </button>
                     <button
                         onClick={() => setActiveTab('leave')}
-                        className={`px-4 py-2 text-sm font-medium rounded-lg cursor-pointer transition-colors ${activeTab === 'leave'
+                        className={`px-4 py-2 text-sm font-medium w-[108px] rounded-lg cursor-pointer transition-colors ${activeTab === 'leave'
                             ? 'bg-[#0D978B] text-white'
                             : 'text-[#8F8F8F] hover:text-gray-800'
                             }`}
@@ -39,7 +39,7 @@ export default function LeaveAttendence() {
                     </button>
                     <button
                         onClick={() => setActiveTab('exceptions')}
-                        className={`px-4 py-2 text-sm font-medium rounded-lg cursor-pointer transition-colors ${activeTab === 'exceptions'
+                        className={`px-4 py-2 text-sm font-medium w-[108px] rounded-lg cursor-pointer transition-colors ${activeTab === 'exceptions'
                             ? 'bg-[#0D978B] text-white'
                             : 'text-[#8F8F8F] hover:text-gray-800'
                             }`}

@@ -517,24 +517,28 @@ export default function TeamsPage() {
                                 <NoData data-testid="no-data-message" />
                             ) : (
                                 <>
-                                    {selectedRows.length > 0 && (
-                                        <TeamsSelectedDialog
-                                            getData={getData}
-                                            selectedRows={selectedRows}
-                                            totalCount={sortedData?.length || 0}
-                                            allData={sortedData}
-                                            setSelectedRows={setSelectedRows}
-                                            setRowSelection={setRowSelection}
-                                            data-testid="teams-selected-dialog"
-                                        />
-                                    )}
+
                                     <div
                                         className={`w-full overflow-x-auto ${showFilter ? 'h-[calc(100vh-480px)]' : 'h-[calc(100vh-430px)]'}`}
                                         data-testid="list-view-container"
                                     >
                                         <DataGridTable />
                                     </div>
-                                    <DataGridPagination data-testid="pagination-controls" className='mt-[25px]' />
+                                    {selectedRows.length > 0 && (
+
+                                        <div className="mt-[100px]">
+
+                                            <TeamsSelectedDialog
+                                                getData={getData}
+                                                selectedRows={selectedRows}
+                                                totalCount={sortedData?.length || 0}
+                                                allData={sortedData}
+                                                setSelectedRows={setSelectedRows}
+                                                setRowSelection={setRowSelection}
+                                                data-testid="teams-selected-dialog"
+                                            />
+                                        </div>
+                                    )}
                                 </>
                             )}
                         </div>

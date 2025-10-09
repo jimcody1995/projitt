@@ -12,7 +12,7 @@ export default function Onboarding() {
     const [backgroundCheckOpen, setBackgroundCheckOpen] = useState(false);
     const [message, setMessage] = useState<string>('');
     const [searchQuery, setSearchQuery] = useState('');
-    return <div>
+    return <div className="py-[15px] px-[10px]">
         <div className="w-full justify-between flex lg:flex-row flex-col gap-[10px]">
             <p className="text-[24px]/[30px] font-semibold text-[#1C1C1C]" data-testid="page-title" id="page-title">Onboarding</p>
             <div className="gap-[10px] flex items-center sm:flex-row flex-col">

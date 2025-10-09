@@ -199,7 +199,7 @@ export default function BackgroundCheckTable({ searchQuery }: { searchQuery: str
                 ),
                 cell: ({ row }: { row: any }) => (
                     <div
-                        className="text-[14px] text-gray-900 font-medium"
+                        className="text-[14px] text-[#4B4B4B]  font-medium"
                         data-testid={`name-${row.original.id}`}
                     >
                         {row.original.name}
@@ -224,7 +224,7 @@ export default function BackgroundCheckTable({ searchQuery }: { searchQuery: str
                 ),
                 cell: ({ row }: { row: any }) => (
                     <div
-                        className="text-[14px] text-gray-900"
+                        className="text-[14px] text-[#4B4B4B] "
                         data-testid={`date-of-birth-${row.original.id}`}
                     >
                         {row.original.dateOfBirth}
@@ -249,7 +249,7 @@ export default function BackgroundCheckTable({ searchQuery }: { searchQuery: str
                 ),
                 cell: ({ row }: { row: any }) => (
                     <div
-                        className="text-[14px] text-gray-900"
+                        className="text-[14px] text-[#4B4B4B] "
                         data-testid={`sensitivity-${row.original.id}`}
                     >
                         {row.original.sensitivity}
@@ -274,7 +274,7 @@ export default function BackgroundCheckTable({ searchQuery }: { searchQuery: str
                 ),
                 cell: ({ row }: { row: any }) => (
                     <div
-                        className="text-[14px] text-gray-900"
+                        className="text-[14px] text-[#4B4B4B] "
                         data-testid={`checks-${row.original.id}`}
                     >
                         {row.original.checks.join(', ')}
@@ -299,7 +299,7 @@ export default function BackgroundCheckTable({ searchQuery }: { searchQuery: str
                 ),
                 cell: ({ row }: { row: any }) => (
                     <div
-                        className="text-[14px] text-gray-900"
+                        className="text-[14px] text-[#4B4B4B] "
                         data-testid={`regions-${row.original.id}`}
                     >
                         {row.original.regions}
