@@ -12,12 +12,15 @@ import {
     GripVertical,
     Play,
     FileText,
+    File,
     Search,
     X,
     Expand,
     MoreVertical,
     Sparkles,
-    Plus
+    Plus,
+    CirclePlay,
+    Maximize2
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
@@ -89,7 +92,7 @@ function DraggableCourse({ course, isSelected, onRemove, onExpand }: DraggableCo
                         onClick={() => onExpand?.(course.id)}
                         className="h-6 w-6 p-0 hover:bg-gray-200"
                     >
-                        <Expand className="h-3 w-3" />
+                        <Maximize2 className="h-3 w-3" />
                     </Button>
                     <Button
                         variant="ghost"
@@ -154,9 +157,9 @@ function LibraryCourse({ course, onAdd }: { course: Course; onAdd: (course: Cour
             {...listeners}
         >
             {course.type === 'video' ? (
-                <Play className="h-4 w-4 text-green-600" />
+                <CirclePlay className="h-4 w-4 text-[#0D978B]" />
             ) : (
-                <FileText className="h-4 w-4 text-blue-600" />
+                <File className="h-4 w-4 text-[#0D978B]" />
             )}
 
             <div className="flex-1">
@@ -474,9 +477,9 @@ export default function CourseSelection() {
                 {draggedCourse ? (
                     <div className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 bg-white shadow-lg">
                         {draggedCourse.type === 'video' ? (
-                            <Play className="h-4 w-4 text-green-600" />
+                            <CirclePlay className="h-4 w-4 text-[#0D978B]" />
                         ) : (
-                            <FileText className="h-4 w-4 text-blue-600" />
+                            <File className="h-4 w-4 text-[#0D978B]" />
                         )}
                         <div className="flex-1">
                             <p className="text-sm font-medium text-gray-900">{draggedCourse.title}</p>

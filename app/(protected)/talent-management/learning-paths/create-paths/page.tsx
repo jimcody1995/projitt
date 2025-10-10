@@ -27,8 +27,10 @@ export default function CreatePaths() {
                     <p className="text-[24px]/[30px] font-semibold text-[#353535]">Create Learning Paths</p>
                 </div>
                 <div className="flex gap-[10px]">
-                    {currentStep !== 1 && <Button variant="outline" className=" h-[42px] min-w-[110px]" onClick={() => setCurrentStep(currentStep - 1)}>Back</Button>}
-                    <Button className=" h-[42px] min-w-[110px]" onClick={() => handleNext()}>{currentStep === 4 ? 'Publish' : 'Save & Continue'}</Button>
+                    <Button variant="ghost" className=" h-[42px] min-w-[90px] text-gray-500 font-semibold" >Save & Exit</Button>
+                    {currentStep !== 1 && <Button variant="outline" className=" h-[42px] min-w-[70px] bg-transparent font-semibold" onClick={() => setCurrentStep(currentStep - 1)}>Back</Button>}
+                    {currentStep !== 4 && <Button className=" h-[42px] min-w-[70px] font-semibold" onClick={() => handleNext()}>Next</Button>}
+                    {currentStep === 4 && <Button className=" h-[42px] min-w-[110px] font-semibold" onClick={() => handleNext()}>Publish</Button>}
                 </div>
             </div>
             <div className="mt-[30px] bg-white border-[#E9E9E9] rounded-[12px] flex">

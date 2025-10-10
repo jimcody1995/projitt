@@ -165,7 +165,7 @@ export default function UploadFile() {
                             type="text"
                             value={formData.title}
                             onChange={(e) => handleInputChange('title', e.target.value)}
-                            className="h-[48px] text-[14px] mt-[12px] bg-[#fafafa]"
+                            className="h-[48px] text-[14px] mt-[12px] bg-[#fafafa] border-gray-300"
                             placeholder="e.g Leadership Fundamentals"
                         />
                     </div>
@@ -180,7 +180,7 @@ export default function UploadFile() {
                                 id="duration"
                                 value={formData.duration}
                                 onChange={(e) => handleInputChange('duration', e.target.value)}
-                                className="h-[48px] text-[14px] w-full bg-[#fafafa]"
+                                className="h-[48px] text-[14px] w-full bg-[#fafafa] border-gray-300"
                                 placeholder="30"
                             />
                             <span className="text-[14px] text-[#8f8f8f] absolute right-[12px] top-[50%] translate-y-[-50%]">mins</span>
@@ -196,7 +196,7 @@ export default function UploadFile() {
                             id="description"
                             value={formData.description}
                             onChange={(e) => handleInputChange('description', e.target.value)}
-                            className="min-h-[100px] text-[14px] resize-none bg-[#fafafa]"
+                            className="min-h-[100px] text-[14px] resize-none bg-[#fafafa] border-gray-300"
                             placeholder="Enter a brief purpose or scope"
                         />
                     </div>
@@ -207,7 +207,7 @@ export default function UploadFile() {
                             Category
                         </Label>
                         <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
-                            <SelectTrigger className="h-[48px] text-[14px] bg-[#fafafa]">
+                            <SelectTrigger className="h-[48px] text-[14px] bg-[#fafafa] border-gray-300">
                                 <SelectValue placeholder="Select Category" />
                             </SelectTrigger>
                             <SelectContent>

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import TagInput from '@/components/ui/tag-input';
+import { CiCirclePlus } from 'react-icons/ci';
 
 interface Criteria {
     id: string;
@@ -340,7 +341,7 @@ export default function Eligibility() {
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
         >
-            <div className="h-full flex lg:flex-row flex-col w-full">
+            <div className="h-full flex xl:flex-row flex-col w-full">
                 <div className="flex-1 p-4 sm:p-7 border-r border-gray-200">
                     <div className="mb-6">
                         <h2 className="text-[18px]/[24px] sm:text-[22px]/[30px] font-bold text-gray-900 mb-2">Eligibility Criteria</h2>
@@ -386,33 +387,33 @@ export default function Eligibility() {
                         <Button
                             onClick={handleAddCriteria}
                             variant="outline"
-                            className="border-[#0d978b] text-[#0d978b] hover:bg-[#0d978b] hover:text-white"
+                            className="border-primary-950 text-primary-950 hover:bg-[#0d978b] hover:text-white"
                         >
-                            <Plus className="h-4 w-4 mr-2" />
+                            <CiCirclePlus className="h-5 w-5 mr-2 text-primary-950" />
                             Add Criteria
                         </Button>
                     </div>
                 </div>
 
                 {/* Right Panel - Eligible Employees */}
-                <div className="lg:w-[400px] h-full overflow-y-auto w-full p-4 sm:p-6">
-                    <div className="mb-6">
-                        <h2 className="text-[18px]/[24px] sm:text-[22px]/[30px] font-bold text-gray-900">
+                <div className="xl:w-[400px] h-full overflow-y-auto w-full">
+                    <div className="mb-6  border-b border-gray-200">
+                        <h2 className="text-[18px]/[24px] sm:text-[22px]/[30px] font-bold text-gray-900 m-3 sm:m-4">
                             Eligible Employees ({eligibleEmployees.length})
                         </h2>
                     </div>
 
                     <div className="space-y-3">
                         {eligibleEmployees.map((employee) => (
-                            <div key={employee.id} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg border border-gray-100">
-                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#D6EEEC] flex items-center justify-center flex-shrink-0">
-                                    <span className="text-xs sm:text-sm font-medium text-black">
+                            <div key={employee.id} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 border-b -px-3 border-gray-200">
+                                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#D6EEEC] flex items-center justify-center flex-shrink-0">
+                                    <span className="text-xs sm:text-[10px]/[12px] font-medium text-[#353535]">
                                         {employee.initials}
                                     </span>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs sm:text-sm font-medium text-black truncate">{employee.name}</p>
-                                    <p className="text-xs text-black truncate">{employee.role}</p>
+                                    <p className="text- sm:text-[14px]/[22px] font-medium text-[#353535] truncate">{employee.name}</p>
+                                    <p className="text-[11px]/[14px] text-[#8F8F8F] truncate">{employee.role}</p>
                                 </div>
                             </div>
                         ))}

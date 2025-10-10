@@ -41,7 +41,7 @@ function DataGridPagination(props: DataGridPaginationProps) {
 
   const mergedProps: DataGridPaginationProps = { ...defaultProps, ...props };
 
-  const btnBaseClasses = 'size-7 p-0 text-sm';
+  const btnBaseClasses = 'h-8 w-8 p-0 text-sm';
   const btnArrowClasses = btnBaseClasses + ' rtl:transform rtl:rotate-180';
   const pageIndex = table.getState().pagination.pageIndex;
   const pageSize = table.getState().pagination.pageSize;
@@ -72,10 +72,9 @@ function DataGridPagination(props: DataGridPaginationProps) {
         <Button
           key={i}
           size="sm"
-          mode="icon"
           variant="ghost"
-          className={cn(btnBaseClasses, 'text-muted-foreground', {
-            'bg-accent text-accent-foreground': pageIndex === i,
+          className={cn(btnBaseClasses, 'text-gray-600 hover:bg-gray-100', {
+            'bg-[#D6EEEC] text-gray-800 hover:bg-[#D6EEEC]': pageIndex === i,
           })}
           onClick={() => {
             if (pageIndex !== i) {
@@ -96,9 +95,8 @@ function DataGridPagination(props: DataGridPaginationProps) {
       return (
         <Button
           size="sm"
-          mode="icon"
-          className={btnBaseClasses}
           variant="ghost"
+          className={cn(btnBaseClasses, 'text-gray-600 hover:bg-gray-100')}
           onClick={() => table.setPageIndex(currentGroupStart - 1)}
         >
           ...
@@ -113,10 +111,9 @@ function DataGridPagination(props: DataGridPaginationProps) {
     if (currentGroupEnd < pageCount) {
       return (
         <Button
-          className={btnBaseClasses}
-          variant="ghost"
           size="sm"
-          mode="icon"
+          variant="ghost"
+          className={cn(btnBaseClasses, 'text-gray-600 hover:bg-gray-100')}
           onClick={() => table.setPageIndex(currentGroupEnd)}
         >
           ...
@@ -130,16 +127,16 @@ function DataGridPagination(props: DataGridPaginationProps) {
     <div
       data-slot="data-grid-pagination"
       className={cn(
-        'flex flex-wrap flex-col sm:flex-row justify-between items-center gap-2.5 py-2.5 sm:py-0 grow',
+        'flex flex-wrap flex-col sm:flex-row justify-between items-center gap-4 py-4 px-6 border-t !border-gray-300 !bg-transparent',
         mergedProps?.className
       )}
     >
-      <div className="flex flex-wrap items-center space-x-2.5 pb-2.5 sm:pb-0 order-2 sm:order-1">
+      <div className="flex items-center gap-2 order-2 sm:order-1">
         {isLoading ? (
           mergedProps?.sizesSkeleton
         ) : (
           <>
-            <div className="text-sm text-muted-foreground">Rows per page</div>
+            <span className="text-sm text-gray-600">Show per page</span>
             <Select
               value={`${pageSize}`}
               indicatorPosition="right"
@@ -148,7 +145,7 @@ function DataGridPagination(props: DataGridPaginationProps) {
                 table.setPageSize(newPageSize);
               }}
             >
-              <SelectTrigger className="w-fit" size="sm">
+              <SelectTrigger className="w-16 h-8 bg-white border border-gray-300 rounded text-sm">
                 <SelectValue placeholder={`${pageSize}`} />
               </SelectTrigger>
               <SelectContent side="top" className="min-w-[50px]">
@@ -162,26 +159,22 @@ function DataGridPagination(props: DataGridPaginationProps) {
           </>
         )}
       </div>
-      <div className="flex flex-col sm:flex-row justify-center sm:justify-end items-center gap-2.5 pt-2.5 sm:pt-0 order-1 sm:order-2">
+      <div className="flex items-center gap-1 order-1 sm:order-2">
         {isLoading ? (
           mergedProps?.infoSkeleton
         ) : (
           <>
-            <div className="text-sm text-muted-foreground text-nowrap order-2 sm:order-1">
-              {paginationInfo}
-            </div>
             {pageCount > 1 && (
-              <div className="flex items-center space-x-1 order-1 sm:order-2">
+              <>
                 <Button
                   size="sm"
-                  mode="icon"
-                  variant="ghost"
-                  className={btnArrowClasses}
+                  variant="outline"
+                  className="h-8 px-3 text-sm border-gray-300 hover:bg-gray-50"
                   onClick={() => table.previousPage()}
                   disabled={!table.getCanPreviousPage()}
                 >
-                  <span className="sr-only">Go to previous page</span>
-                  <ChevronLeftIcon className="size-4" />
+                  <ChevronLeftIcon className="size-4 mr-1" />
+                  Previous
                 </Button>
 
                 {renderEllipsisPrevButton()}
@@ -192,16 +185,15 @@ function DataGridPagination(props: DataGridPaginationProps) {
 
                 <Button
                   size="sm"
-                  mode="icon"
-                  variant="ghost"
-                  className={btnArrowClasses}
+                  variant="outline"
+                  className="h-8 px-3 text-sm border-gray-300 hover:bg-gray-50"
                   onClick={() => table.nextPage()}
                   disabled={!table.getCanNextPage()}
                 >
-                  <span className="sr-only">Go to next page</span>
-                  <ChevronRightIcon className="size-4" />
+                  Next
+                  <ChevronRightIcon className="size-4 ml-1" />
                 </Button>
-              </div>
+              </>
             )}
           </>
         )}

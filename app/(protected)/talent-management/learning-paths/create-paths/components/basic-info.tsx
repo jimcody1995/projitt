@@ -7,12 +7,13 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { CalendarDays, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import TagInput from '@/components/ui/tag-input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import moment from 'moment';
 import { cn } from '@/lib/utils';
+import { Calendar as CalendarIcon } from 'lucide-react';
 
 export default function BasicInfo() {
     const [isLoading, setIsLoading] = useState(false);
@@ -136,8 +137,8 @@ export default function BasicInfo() {
                                             'w-full h-[48px] flex justify-start data-[state=open]:border-primary rounded-[10px] border-[#bcbcbc] mt-[10px]',
                                         )}
                                     >
-                                        <CalendarDays className="-ms-0.5" />
-                                        {formData.beginMonth ? moment(formData.beginMonth).format('MMM DD, YYYY') : 'Pick a date'}
+                                        <CalendarIcon className="-ms-0.5" />
+                                        {formData.beginMonth ? moment(formData.beginMonth).format('MMM DD, YYYY') : 'MM/YYY'}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0 " align="center">
@@ -166,8 +167,8 @@ export default function BasicInfo() {
                                             'w-full h-[48px] flex justify-start data-[state=open]:border-primary rounded-[10px] border-[#bcbcbc] mt-[10px]',
                                         )}
                                     >
-                                        <CalendarDays className="-ms-0.5" />
-                                        {formData.endMonth ? moment(formData.endMonth).format('MMM DD, YYYY') : 'Pick a date'}
+                                        <CalendarIcon className="-ms-0.5" />
+                                        {formData.endMonth ? moment(formData.endMonth).format('MMM DD, YYYY') : 'MM/YYY'}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0 " align="center">
@@ -235,7 +236,7 @@ export default function BasicInfo() {
                     {/* Tags */}
                     <div className="space-y-2">
                         <Label className="text-[13px]/[21px] text-[#353535] font-medium">Tags</Label>
-                        <div className="space-y-3">
+                        <div className="space-y-3 [&>div>div]:!rounded-[8px]">
                             <TagInput
                                 tags={formData.tags}
                                 setTags={(tags) => setFormData(prev => ({ ...prev, tags }))}

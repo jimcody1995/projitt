@@ -9,9 +9,12 @@ import { KeenIcon } from '@/components/keenicons';
 import { Search, Users, Play, MoreVertical, PlayCircle } from 'lucide-react';
 import LearningPathDetail from './components/detail';
 import { useRouter } from 'next/navigation';
+import { HiOutlineUserGroup } from 'react-icons/hi2';
+import { FaRegCirclePlay } from 'react-icons/fa6';
 export default function LearningPaths() {
     const [selectedPath, setSelectedPath] = useState<any>(null);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const router = useRouter();
     const learningPaths = [
         {
@@ -65,11 +68,19 @@ export default function LearningPaths() {
         setIsDetailOpen(true);
     };
 
+    // Filter learning paths based on search query
+    const filteredLearningPaths = learningPaths.filter(path =>
+        path.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        path.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        path.roles.some(role => role.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        path.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+
     const getRoleColor = (index: number) => {
         const colors = [
-            'bg-green-100 text-green-800',
-            'bg-pink-100 text-pink-800',
-            'bg-purple-100 text-purple-800',
+            'bg-green-100 text-gray-800',
+            'bg-pink-100 text-gray-800',
+            'bg-purple-100 text-gray-800',
             'bg-gray-100 text-gray-800'
         ];
         return colors[index % colors.length];
@@ -87,10 +98,10 @@ export default function LearningPaths() {
                     <div className="flex flex-col sm:flex-row gap-4 lg:items-center">
 
                         <div className="flex gap-3">
-                            <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 h-[42px]" onClick={() => router.push('/talent-management/learning-paths/courses')}>
+                            <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 h-[42px] text-primary-950 font-semibold bg-transparent" onClick={() => router.push('/talent-management/learning-paths/courses')}>
                                 Course Library
                             </Button>
-                            <Button variant="primary" className="bg-teal-600 hover:bg-teal-700 h-[42px]" onClick={() => router.push('/talent-management/learning-paths/create-paths')}>
+                            <Button variant="primary" className="bg-teal-600 hover:bg-teal-700 h-[42px] font-semibold" onClick={() => router.push('/talent-management/learning-paths/create-paths')}>
                                 Create Learning Path
                             </Button>
                         </div>
@@ -99,16 +110,18 @@ export default function LearningPaths() {
             </div>
 
             <div className="relative">
-                <InputWrapper className="w-full sm:w-80 h-[42px]">
+                <InputWrapper className="w-full sm:w-80 h-[42px] bg-transparent">
                     <Search className="text-gray-400" size={20} />
                     <Input
-                        placeholder="Search"
-                        className="border-gray-300 focus:border-teal-500 bg-gray-50 "
+                        placeholder="Search learning paths..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="border-gray-300 focus:border-teal-500"
                     />
                 </InputWrapper>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-[28px] mt-[20px]">
-                {learningPaths.map((path) => (
+                {filteredLearningPaths.map((path) => (
                     <Card
                         key={path.id}
                         className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
@@ -162,12 +175,12 @@ export default function LearningPaths() {
                             <div className="flex items-center gap-6 mb-[20px]">
                                 {path.employees && (
                                     <div className="flex items-center gap-2 text-[#353535]">
-                                        <Users size={15} />
+                                        <HiOutlineUserGroup size={15} />
                                         <span className="text-[12px]/[14px]">{path.employees} employees</span>
                                     </div>
                                 )}
                                 <div className="flex items-center gap-2 text-[#353535]">
-                                    <PlayCircle size={15} />
+                                    <FaRegCirclePlay size={15} />
                                     <span className="text-[12px]/[14px]">{path.courses} courses</span>
                                 </div>
                             </div>

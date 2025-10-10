@@ -6,23 +6,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Users, Search, MoreHorizontal, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import { Summary } from "../components/summary";
 import { Employees } from "../components/employees";
+import { HiOutlineUserGroup } from 'react-icons/hi2';
 
 // Mock employee data
 const employeeData = [
@@ -166,10 +152,10 @@ export default function SickLeave() {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-[16px]">
                         <Button
-                            variant="ghost"
+                            variant="outline"
                             size="icon"
                             onClick={() => router.push('/leave-attendance/manage-leaves')}
-                            className="h-[32px] w-[32px] hover:bg-[#E9E9E9] rounded-full bg-white"
+                            className="h-[30px] w-[30px] hover:bg-[#E9E9E9] rounded-full bg-white p-[3px]"
                         >
                             <ArrowLeft className="size-4 text-gray-900" />
                         </Button>
@@ -185,7 +171,7 @@ export default function SickLeave() {
                         </button>
                         <Button
                             variant="outline"
-                            className="h-[36px] px-[16px] text-[14px]/[20px] border-gray-800 text-[#353535] bg-[#F8F9FA] font-medium rounded-[6px] text-primary-950"
+                            className="h-[36px] px-[16px] text-[14px]/[20px] border-gray-800 text-[#353535] bg-[#F8F9FA] font-semibold rounded-[6px] text-primary-950"
                         >
                             Edit Leave
                         </Button>
@@ -199,7 +185,7 @@ export default function SickLeave() {
                     <button
                         className={`py-[12px] md:px-[36px] text-[14px] font-medium transition-colors duration-200 border-b-2 whitespace-nowrap ${activeTab === 'summary'
                             ? 'text-[#0d978b] border-[#0d978b]'
-                            : 'text-[#8f8f8f] border-transparent hover:text-[#353535]'
+                            : 'text-[#626262] border-transparent hover:text-[#353535]'
                             }`}
                         onClick={() => setActiveTab('summary')}
                     >
@@ -210,15 +196,22 @@ export default function SickLeave() {
                     <button
                         className={`py-[12px] md:px-[36px] flex items-center gap-[8px] text-[14px] font-medium transition-colors duration-200 border-b-2 whitespace-nowrap ${activeTab === 'employees'
                             ? 'text-[#0d978b] border-[#0d978b]'
-                            : 'text-[#0d978b] border-transparent hover:text-[#086159]'
+                            : 'text-[#626262] border-transparent hover:text-[#353535]'
                             }`}
                         onClick={() => setActiveTab('employees')}
                     >
-                        <Users className="size-4" />
+                        <HiOutlineUserGroup className="size-4" />
                         <span>45 eligible employees</span>
                     </button>
                 </div>
-                <Search className="size-5 text-[#8f8f8f]" />
+                <div className="relative">
+                    <Search className="size-4 text-[#8f8f8f] absolute right-3 top-1/2 -translate-y-1/2" />
+                    <Input
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-9 w-[280px] h-[36px] border-none bg-transparent shadow-none"
+                    />
+                </div>
             </div>
 
             {/* Content */}

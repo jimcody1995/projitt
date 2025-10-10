@@ -15,7 +15,7 @@ import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Star, Download, Search, ListFilter, EllipsisVertical } from "lucide-react";
+import { ArrowLeft, Star, Download, Search, ListFilter, EllipsisVertical, Sparkles } from "lucide-react";
 import { DataGrid } from "@/components/ui/data-grid";
 import { Input } from "@/components/ui/input";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
@@ -148,12 +148,12 @@ export default function Reports() {
                 };
             case 'Solid':
                 return {
-                    backgroundColor: '#e2e3f1',
-                    textColor: '#6f42c1'
+                    backgroundColor: '#AF52DE33',
+                    textColor: '#AF52DE'
                 };
             case 'Developing':
                 return {
-                    backgroundColor: '#f8f9fa',
+                    backgroundColor: '#E9E9E9',
                     textColor: '#6c757d'
                 };
             default:
@@ -232,7 +232,7 @@ export default function Reports() {
                 accessorKey: 'name',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8f8f8f]'
                         title="Employee Name"
                         column={column}
                     />
@@ -261,7 +261,7 @@ export default function Reports() {
                 accessorKey: 'department',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8f8f8f]'
                         title="Department"
                         column={column}
                     />
@@ -278,7 +278,7 @@ export default function Reports() {
                 accessorKey: 'status',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8f8f8f]'
                         title="Status"
                         column={column}
                     />
@@ -293,7 +293,7 @@ export default function Reports() {
                 accessorKey: 'finalScore',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8f8f8f]'
                         title="Final Score"
                         column={column}
                     />
@@ -308,7 +308,7 @@ export default function Reports() {
                 accessorKey: 'peerAvg',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8f8f8f]'
                         title="Peer Avg"
                         column={column}
                     />
@@ -323,7 +323,7 @@ export default function Reports() {
                 accessorKey: 'manager',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8f8f8f]'
                         title="Manager"
                         column={column}
                     />
@@ -338,7 +338,7 @@ export default function Reports() {
                 accessorKey: 'self',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8f8f8f]'
                         title="Self"
                         column={column}
                     />
@@ -418,9 +418,9 @@ export default function Reports() {
                         variant="ghost"
                         size="icon"
                         onClick={() => router.back()}
-                        className="h-[40px] w-[40px] bg-white rounded-full"
+                        className="h-[28px] w-[28px] border border-gray-200 bg-white rounded-full"
                     >
-                        <ArrowLeft className="size-5 text-gray-800" />
+                        <ArrowLeft className="size-4 text-gray-800" />
                     </Button>
                     <h1 className="text-[24px]/[30px] font-semibold text-[#353535]">
                         H1 2025 Mid-Year Review Report
@@ -429,23 +429,22 @@ export default function Reports() {
                 <div className="flex gap-[12px]">
                     <Button
                         variant="outline"
-                        className="h-[40px] px-[16px] flex items-center gap-[8px]"
+                        className="h-[40px] px-[16px] text-primary-950 font-semibold text-[14px]/[20px] flex items-center gap-[8px] rounded-[8px]"
                     >
-                        <Star className="size-4" />
+                        <Sparkles className="size-4" />
                         Summarize
                     </Button>
                     <Button
                         variant="outline"
-                        className="h-[40px] px-[16px] flex items-center gap-[8px]"
+                        className="h-[40px] px-[16px] text-primary-950 font-semibold text-[14px]/[20px] flex items-center gap-[8px] rounded-[8px]"
                     >
-                        <Download className="size-4" />
                         Download Report
                     </Button>
                 </div>
             </div>
 
             {/* Summary Metrics */}
-            <div className="mt-[32px] grid grid-cols-1 md:grid-cols-4 gap-[40px] bg-white rounded-[12px] p-[24px] lg:w-[900px] w-full">
+            <div className="mt-[32px] grid grid-cols-1 md:grid-cols-4 gap-[40px] bg-white rounded-[12px] p-[24px] lg:w-[900px] w-full border border-[#e9e9e9]">
                 <div className="border-r border-[#e9e9e9]">
                     <div className="text-[16px]/[24px] text-[#0D978B]">120</div>
                     <div className="text-[13px] text-[#8f8f8f] mt-[4px]">Total Employees Reviewed</div>
@@ -511,12 +510,12 @@ export default function Reports() {
                         placeholder="Search"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="ps-9 w-[300px] h-[40px]"
+                        className="ps-9 w-[180px] h-[40px] bg-transparent"
                     />
                 </div>
                 <Button
                     variant="outline"
-                    className="h-[40px] px-[16px] flex items-center gap-[8px]"
+                    className="h-[40px] px-[16px] flex items-center gap-[8px] bg-transparent"
                 >
                     <ListFilter className="size-4" />
                     Filter
@@ -531,7 +530,7 @@ export default function Reports() {
                     recordCount={filteredData?.length || 0}
                     onRowClick={(row) => console.log('Row clicked:', row)}
                 >
-                    <div className="mt-[24px] w-full rounded-[12px] overflow-hidden relative">
+                    <div className="mt-[24px] w-full overflow-hidden relative">
                         {filteredData.length === 0 ? (
                             <div className="flex items-center justify-center h-[200px] text-[#8f8f8f]">
                                 No employees found

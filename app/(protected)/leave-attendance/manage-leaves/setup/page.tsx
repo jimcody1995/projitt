@@ -61,7 +61,7 @@ export default function SetupSickLeave() {
                     </Button>
                 </div>
             </div>
-            <div className="mt-[28px] bg-white border-[#E9E9E9] rounded-[12px] flex">
+            <div className="mt-[28px] bg-white border-[#E9E9E9] rounded-[8px] flex">
                 <div className="w-[324px] pt-[42px] px-[48px]  sm:block hidden">
                     <SickLeaveStepper currentStep={currentStep} />
                 </div>

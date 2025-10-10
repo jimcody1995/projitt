@@ -16,8 +16,10 @@ import {
     RefreshCw,
     Briefcase,
     MapPin,
-    PieChart
+    PieChart,
+    Search
 } from "lucide-react";
+import Bag from "./bag";
 
 interface ReportDetailProps {
     isOpen: boolean;
@@ -41,6 +43,10 @@ interface ReportDetailProps {
 export default function ReportDetail({ isOpen, onClose, employee }: ReportDetailProps) {
     const [notes, setNotes] = useState("");
     const [selectedAction, setSelectedAction] = useState("");
+    const [selectedTargetRole, setSelectedTargetRole] = useState("");
+    const [selectedCareerPath, setSelectedCareerPath] = useState("");
+    const [selectedMentor, setSelectedMentor] = useState("");
+    const [searchEmployee, setSearchEmployee] = useState("");
 
     // Mock data for the employee
     const mockEmployee = employee || {
@@ -154,7 +160,7 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
                             variant="ghost"
                             size="icon"
                             onClick={onClose}
-                            className="h-8 w-8"
+                            className="h-8 w-8 border border-gray-500"
                         >
                             <X className="size-4" />
                         </Button>
@@ -166,8 +172,10 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
                     <div className="space-y-4">
                         <div className="flex justify-between items-start">
                             <div>
-                                <h1 className="text-[24px]/[32px] font-semibold text-[#0d978b]">
-                                    {mockEmployee.name}
+                                <h1 className="text-[24px]/[32px] font-semibold text-[#0d978b] border-[#0d978b]">
+                                    <span className="border-b-2 ">
+                                        {mockEmployee.name}
+                                    </span>
                                 </h1>
                                 <p className="text-[16px] text-[#8f8f8f]">
                                     {mockEmployee.position} ~ Chicago, USA
@@ -180,12 +188,12 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
                         </div>
 
                         <div className="flex items-center gap-6 text-[14px] text-[#8f8f8f]">
-                            <div className="flex items-center gap-2">
-                                <PieChart className="size-4 text-[#00D47D]" />
+                            <div className="flex items-center gap-1 text-[14px]/[18px]">
+                                <PieChart className="size-4 text-[#00D47D] " />
                                 <span>{mockEmployee.department}</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <Briefcase className="size-4" />
+                            <div className="flex text-[14px]/[18px] items-center gap-1">
+                                <Bag />
                                 <span>Fulltime</span>
                             </div>
                         </div>
@@ -229,11 +237,88 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
                                     <SelectValue placeholder="Select Action" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="promotion">Promotion</SelectItem>
-                                    <SelectItem value="training">Training</SelectItem>
-                                    <SelectItem value="succession">Succession Planning</SelectItem>
+                                    <SelectItem value="pool">Add to Succession Pool</SelectItem>
+                                    <SelectItem value="promotion">Recommend for Promotion</SelectItem>
+                                    <SelectItem value="path">Assign Career Path</SelectItem>
+                                    <SelectItem value="mentor">Assign Mentor</SelectItem>
                                 </SelectContent>
                             </Select>
+
+                            {/* Conditional rendering based on selected action */}
+                            {selectedAction === "pool" && (
+                                <div className="space-y-3">
+                                    <Select value={selectedTargetRole} onValueChange={setSelectedTargetRole}>
+                                        <SelectTrigger className="w-full h-[48px]">
+                                            <SelectValue placeholder="Select Target Role" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="tech-lead">Tech Lead</SelectItem>
+                                            <SelectItem value="senior-dev">Senior Developer</SelectItem>
+                                            <SelectItem value="team-lead">Team Lead</SelectItem>
+                                            <SelectItem value="manager">Manager</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <Button className="w-full h-[48px] bg-[#0d978b] hover:bg-[#0a7a6f] text-white">
+                                        Add to Succession
+                                    </Button>
+                                </div>
+                            )}
+
+                            {selectedAction === "promotion" && (
+                                <div className="space-y-3">
+                                    <Select value={selectedTargetRole} onValueChange={setSelectedTargetRole}>
+                                        <SelectTrigger className="w-full h-[48px]">
+                                            <SelectValue placeholder="Select Target Role" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="tech-lead">Tech Lead</SelectItem>
+                                            <SelectItem value="senior-dev">Senior Developer</SelectItem>
+                                            <SelectItem value="team-lead">Team Lead</SelectItem>
+                                            <SelectItem value="manager">Manager</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <Button className="w-full h-[48px] bg-[#0d978b] hover:bg-[#0a7a6f] text-white">
+                                        Add to Succession
+                                    </Button>
+                                </div>
+                            )}
+
+                            {selectedAction === "path" && (
+                                <div className="space-y-3">
+                                    <Select value={selectedTargetRole} onValueChange={setSelectedTargetRole}>
+                                        <SelectTrigger className="w-full h-[48px]">
+                                            <SelectValue placeholder="Select Target Role" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="tech-lead">Tech Lead</SelectItem>
+                                            <SelectItem value="senior-dev">Senior Developer</SelectItem>
+                                            <SelectItem value="team-lead">Team Lead</SelectItem>
+                                            <SelectItem value="manager">Manager</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <Button className="w-full h-[48px] bg-[#0d978b] hover:bg-[#0a7a6f] text-white">
+                                        Add to Succession
+                                    </Button>
+                                </div>
+                            )}
+
+                            {selectedAction === "mentor" && (
+                                <div className="space-y-3">
+                                    <div className="relative">
+                                        <Input
+                                            placeholder="Search Employee"
+                                            value={searchEmployee}
+                                            onChange={(e) => setSearchEmployee(e.target.value)}
+                                            className="w-full h-[48px] pl-10"
+                                        />
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 size-4 text-gray-400" />
+                                    </div>
+                                    <Button className="w-full h-[48px] bg-[#0d978b] hover:bg-[#0a7a6f] text-white">
+                                        Add to Succession
+                                    </Button>
+                                </div>
+                            )}
+
                             <div className="text-[14px] text-[#353535]">
                                 <span className="text-[#8f8f8f]">Recommended: </span>
                                 <span className="text-[#0d978b] cursor-pointer hover:underline">
@@ -289,7 +374,7 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
 
                     {/* Score Breakdown Section */}
                     <div className="space-y-4">
-                        <h3 className="text-[16px] font-semibold text-[#353535] uppercase">
+                        <h3 className="text-[16px]  text-[#8F8F8F] uppercase">
                             SCORE BREAKDOWN
                         </h3>
                         <div className="space-y-3">
@@ -310,7 +395,7 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
 
                     {/* Avg Score by Competency Section */}
                     <div className="space-y-4">
-                        <h3 className="text-[16px] font-semibold text-[#353535] uppercase">
+                        <h3 className="text-[16px]  text-[#8F8F8F] uppercase">
                             AVG SCORE BY COMPETENCY
                         </h3>
                         <div className="space-y-3">
@@ -325,7 +410,7 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
 
                     {/* Manager Section */}
                     <div className="space-y-4">
-                        <h3 className="text-[16px] font-semibold text-[#353535] uppercase">
+                        <h3 className="text-[16px] text-[#8F8F8F] uppercase">
                             MANAGER
                         </h3>
                         <div className="space-y-3">
@@ -340,7 +425,7 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
                                         <div>
                                             <p className="text-[14px] font-medium text-[#353535]">Joe Brady</p>
                                             <p className="text-[14px] text-[#353535] mt-1">
-                                                Consistently owned UI work and collaborated deeply with devs.
+                                                <span className="text-gray-400">Consistently owned:</span> UI work and collaborated deeply with devs.
                                             </p>
                                             <span className="text-[14px] text-[#0d978b] cursor-pointer hover:underline">
                                                 View Full Feedback
@@ -356,7 +441,7 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
 
                     {/* Peer Feedback Section */}
                     <div className="space-y-4">
-                        <h3 className="text-[16px] font-semibold text-[#353535] uppercase">
+                        <h3 className="text-[16px]  text-[#8F8F8F] uppercase">
                             PEER FEEDBACK & COMMENTS
                         </h3>
                         <div className="space-y-4">
@@ -372,7 +457,7 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
                                         <div>
                                             <p className="text-[14px] font-medium text-[#353535]">Anonymous</p>
                                             <p className="text-[14px] text-[#353535] mt-1">
-                                                Consistently owned UI work and collaborated deeply with devs.
+                                                <span className="text-gray-400">Consistently owned:</span> UI work and collaborated deeply with devs.
                                             </p>
                                             <span className="text-[14px] text-[#0d978b] cursor-pointer hover:underline">
                                                 View Full Feedback
@@ -406,7 +491,7 @@ export default function ReportDetail({ isOpen, onClose, employee }: ReportDetail
                                     <div>
                                         <p className="text-[14px] font-medium text-[#353535]">Personal Appearance & Image</p>
                                         <p className="text-[14px] text-[#353535] mt-1">
-                                            Consistently owned UI work and collaborated deeply with devs.
+                                            <span className="text-gray-400">Consistently owned:</span> UI work and collaborated deeply with devs.
                                         </p>
                                         <p className="text-[14px] text-green-600 mt-1">Score: 4.7 / 5</p>
                                     </div>

@@ -18,7 +18,7 @@ export default function CreateReviewCycle() {
     const [competenciesFormData, setCompetenciesFormData] = useState<any>(null);
     const competenciesValidationRef = useRef<(() => boolean) | null>(null);
     return (
-        <div className=" bg-gray-50 min-h-screen">
+        <div className=" bg-gray-50 min-h-screen px-[8px] py-[6px]">
             {/* Breadcrumb */}
             <div className="flex w-full justify-between items-center">
                 <div className="flex flex-col gap-[4px]">
@@ -31,8 +31,8 @@ export default function CreateReviewCycle() {
                     <p className="text-[24px]/[30px] font-semibold text-[#353535]">Create Review Cycle</p>
                 </div>
                 <div className='flex gap-[10px]'>
-                    <Button className='h-[42px]' variant="ghost">Save & Exit</Button>
-                    {step !== 1 && <Button className='h-[42px] px-4' variant="outline" onClick={() => setStep(step - 1)}>Back</Button>}
+                    <Button className='h-[42px] font-semibold' variant="ghost">Save & Exit</Button>
+                    {step !== 1 && <Button className='h-[42px] px-4 text-primary-950 font-semibold' variant="outline" onClick={() => setStep(step - 1)}>Back</Button>}
                     <Button
                         onClick={() => {
                             if (step === 3) {
@@ -42,7 +42,7 @@ export default function CreateReviewCycle() {
                             console.log("asdf123");
 
                         }}
-                        className='h-[42px]  px-7'
+                        className='h-[42px]  px-7 font-semibold'
                     >
                         {step !== 3 ? "Continue" : "Launch"}
                     </Button>

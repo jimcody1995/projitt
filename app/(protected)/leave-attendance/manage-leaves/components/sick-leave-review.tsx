@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Edit, Users, ExternalLink, X, Maximize2Icon, Pen } from 'lucide-react';
+import { Edit, Users, ExternalLink, X, Maximize2Icon, Pen, PenLine } from 'lucide-react';
 
 export default function SickLeaveReview() {
     const [isPublishing, setIsPublishing] = useState(false);
@@ -108,7 +108,7 @@ export default function SickLeaveReview() {
                                 onClick={() => handleEdit(1)}
                                 className="text-[#0d978b] hover:text-[#0d978b] w-6 h-6 sm:w-7 sm:h-7"
                             >
-                                <Pen className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                                <PenLine className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                             </Button>
                         </div>
                         <div className="space-y-3">
@@ -145,7 +145,7 @@ export default function SickLeaveReview() {
                                 onClick={() => handleEdit(2)}
                                 className="text-white hover:text-[#0d978b] w-6 h-6 sm:w-7 sm:h-7"
                             >
-                                <Pen className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                                <PenLine className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                             </Button>
                         </div>
                         <div className="space-y-3">
@@ -184,7 +184,7 @@ export default function SickLeaveReview() {
                                 onClick={() => handleEdit(3)}
                                 className="text-white hover:text-[#0d978b] w-6 h-6 sm:w-7 sm:h-7"
                             >
-                                <Pen className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                                <PenLine className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                             </Button>
                         </div>
                         <div className="space-y-2 text-[12px]/[16px] sm:text-[14px]/[16px]">
@@ -202,16 +202,16 @@ export default function SickLeaveReview() {
                 <SheetContent side="right" className="w-full sm:w-[400px] p-0" close={false}>
                     <SheetHeader className="px-4 pt-4 pb-0 sm:px-6 sm:pt-6 sm:pb-0">
                         <div className="flex items-center justify-between">
-                            <SheetTitle className="text-lg sm:text-xl font-semibold text-gray-900">
+                            <SheetTitle className="text-lg sm:text-[22px]/[30px] font-medium text-gray-900">
                                 Eligible Employees ({employees.length})
                             </SheetTitle>
                             <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setShowEmployeeList(false)}
-                                className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-gray-100 border border-gray-200"
+                                className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-gray-100 border border-gray-600"
                             >
-                                <X className="h-3 w-3 sm:h-4 sm:w-4" />
+                                <X className="h-3 w-3 sm:h-4 sm:w-4 text-gray-600" />
                             </Button>
                         </div>
                     </SheetHeader>
@@ -221,13 +221,13 @@ export default function SickLeaveReview() {
                             <div className="space-y-0">
                                 {employees.map((employee, index) => (
                                     <div key={employee.id} className="flex items-center gap-2 sm:gap-3 py-3 sm:py-4 border-b border-gray-100 last:border-b-0">
-                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#D6EEEC] flex items-center justify-center flex-shrink-0">
+                                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#D6EEEC] flex items-center justify-center flex-shrink-0">
                                             <span className="text-xs sm:text-sm font-medium text-[#053834]">
                                                 {employee.initials}
                                             </span>
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">{employee.name}</p>
+                                            <p className="text-xs sm:text-[14px]/[22px] font-medium text-gray-900 truncate">{employee.name}</p>
                                         </div>
                                     </div>
                                 ))}

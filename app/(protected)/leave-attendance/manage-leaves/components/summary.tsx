@@ -22,7 +22,7 @@ export const Summary = () => {
                         <label className="text-[15px]/[16px] text-[#8F8F8F] mb-[9px] block">
                             Description
                         </label>
-                        <p className="text-[15px]/[20px] font-medium text-[#353535] leading-[20px]">
+                        <p className="text-[15px]/[20px] font-medium text-[#353535] leading-[20px] w-[388px]">
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text.
                         </p>
                     </div>

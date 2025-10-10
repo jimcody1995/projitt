@@ -11,6 +11,7 @@ import {
     Row,
     useReactTable,
 } from '@tanstack/react-table';
+import { PiUsersThreeLight } from 'react-icons/pi';
 import { DataGridTable } from "@/components/ui/data-grid-table";
 import { DataGridColumnHeader } from "@/components/ui/data-grid-column-header";
 import { DropdownMenuContent, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
@@ -130,10 +131,6 @@ const mockLeaveRequests = [
 export default function LeaveManagement() {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState('pending');
-    const [pagination, setPagination] = useState<PaginationState>({
-        pageIndex: 0,
-        pageSize: 10,
-    });
     const [sorting, setSorting] = useState<SortingState>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilters, setShowFilters] = useState(false);
@@ -234,7 +231,7 @@ export default function LeaveManagement() {
                         type="checkbox"
                         checked={table.getIsAllPageRowsSelected()}
                         onChange={(e) => table.toggleAllPageRowsSelected(e.target.checked)}
-                        className="size-4 rounded bg-gray-50 border-2 border-[#E9E9E9]"
+                        className="size-4 rounded  border border-[#4B4B4B]    bg-[#EEF3F2] appearance-none checked:bg-[#0D978B]"
                     />
                 ),
                 cell: ({ row }) => (
@@ -242,11 +239,15 @@ export default function LeaveManagement() {
                         type="checkbox"
                         checked={row.getIsSelected()}
                         onChange={(e) => row.toggleSelected(e.target.checked)}
-                        className="size-4 bg-gray-50 rounded border-2 border-[#E9E9E9]"
+                        className="size-4 rounded  border border-[#4B4B4B]    bg-white appearance-none checked:bg-[#0D978B]"
                     />
                 ),
                 enableSorting: false,
                 size: 50,
+                meta: {
+                    headerClassName: 'rounded-tl-[12px] bg-[#EEF3F2]',
+                    cellClassName: 'bg-white',
+                },
             },
             {
                 accessorKey: 'employeeId',
@@ -264,6 +265,10 @@ export default function LeaveManagement() {
                 ),
                 enableSorting: false,
                 size: 100,
+                meta: {
+                    headerClassName: "bg-[#EEF3F2]",
+                    cellClassName: 'bg-white',
+                }
             },
             {
                 accessorKey: 'employeeName',
@@ -293,6 +298,10 @@ export default function LeaveManagement() {
                 ),
                 enableSorting: false,
                 size: 180,
+                meta: {
+                    headerClassName: "bg-[#EEF3F2]",
+                    cellClassName: 'bg-white',
+                }
             },
             {
                 accessorKey: 'balance',
@@ -310,6 +319,10 @@ export default function LeaveManagement() {
                 ),
                 enableSorting: false,
                 size: 100,
+                meta: {
+                    headerClassName: "bg-[#EEF3F2]",
+                    cellClassName: 'bg-white',
+                }
             },
             {
                 accessorKey: 'startDate',
@@ -327,6 +340,10 @@ export default function LeaveManagement() {
                 ),
                 enableSorting: false,
                 size: 120,
+                meta: {
+                    headerClassName: "bg-[#EEF3F2]",
+                    cellClassName: 'bg-white',
+                }
             },
             {
                 accessorKey: 'endDate',
@@ -344,6 +361,10 @@ export default function LeaveManagement() {
                 ),
                 enableSorting: false,
                 size: 120,
+                meta: {
+                    headerClassName: "bg-[#EEF3F2]",
+                    cellClassName: 'bg-white',
+                }
             },
             {
                 accessorKey: 'days',
@@ -361,6 +382,10 @@ export default function LeaveManagement() {
                 ),
                 enableSorting: false,
                 size: 80,
+                meta: {
+                    headerClassName: "bg-[#EEF3F2]",
+                    cellClassName: 'bg-white',
+                }
             },
             {
                 accessorKey: 'type',
@@ -380,6 +405,10 @@ export default function LeaveManagement() {
                 ),
                 enableSorting: false,
                 size: 100,
+                meta: {
+                    headerClassName: "bg-[#EEF3F2]",
+                    cellClassName: 'bg-white',
+                }
             },
             {
                 accessorKey: 'request',
@@ -399,6 +428,10 @@ export default function LeaveManagement() {
                 ),
                 enableSorting: false,
                 size: 180,
+                meta: {
+                    headerClassName: "bg-[#EEF3F2]",
+                    cellClassName: 'bg-white',
+                }
             },
             {
                 id: 'actions',
@@ -412,6 +445,10 @@ export default function LeaveManagement() {
                 cell: ({ row }) => <ActionsCell row={row} />,
                 enableSorting: false,
                 size: 180,
+                meta: {
+                    headerClassName: 'bg-[#EEF3F2] rounded-tr-[12px]',
+                    cellClassName: 'bg-white',
+                },
             },
         ],
         []
@@ -420,17 +457,13 @@ export default function LeaveManagement() {
     const table = useReactTable({
         columns: columns as ColumnDef<any, any>[],
         data: filteredData,
-        pageCount: Math.ceil((filteredData?.length || 0) / pagination.pageSize),
         getRowId: (row: any) => row.id,
         state: {
-            pagination,
             sorting,
         },
-        onPaginationChange: setPagination,
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
     });
 
     function ActionsCell({ row }: { row: Row<any> }) {
@@ -487,15 +520,15 @@ export default function LeaveManagement() {
     }
 
     return (
-        <div className="w-full h-full bg-[#F8F9FA] min-h-screen">
+        <div className="w-full h-full bg-[#F8F9FA] min-h-screen px-[9px] py-[12px]">
             {/* Header */}
-            <div className="flex w-full justify-between items-center px-[24px] py-[24px] flex-col sm:flex-row gap-4 sm:gap-0">
-                <h1 className="text-[24px]/[30px] font-medium text-[#353535]">
+            <div className="flex w-full justify-between items-center  flex-col sm:flex-row gap-4 sm:gap-0 mb-[25px]">
+                <h1 className="text-[24px]/[30px] font-semibold text-[#353535]">
                     Leave Management
                 </h1>
                 <Button
                     variant="outline"
-                    className="h-[42px] px-[16px] flex items-center gap-[8px] border-gray-200 text-[#053834] text-[14px]/[20px] hover:bg-white w-full sm:w-auto"
+                    className="h-[42px] px-[16px] flex items-center gap-[8px] border-gray-200 text-[#053834] text-[14px]/[20px] hover:bg-white w-full sm:w-auto font-semibold"
                     onClick={() => router.push("./manage-leaves")}
                 >
                     <Settings className="size-4 text-[#053834]" />
@@ -503,10 +536,10 @@ export default function LeaveManagement() {
                 </Button>
             </div>
             {/* Statistics Cards */}
-            <div className="mb-[24px]">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-[24px] overflow-x-auto px-[24px]">
+            <div className="mb-[18px]">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-[16px] overflow-x-auto">
                     {/* Currently On Leave */}
-                    <div className="bg-white rounded-[8px] p-[16px] border border-[#E9E9E9]  flex-shrink-0">
+                    <div className="bg-white rounded-[12px] p-[16px] border border-[#E9E9E9]  flex-shrink-0">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-[14px]/[22px] text-[#8F8F8F]">
@@ -516,13 +549,13 @@ export default function LeaveManagement() {
                                     12
                                 </div>
                             </div>
-                            <div className="w-[32px] h-[32px] bg-[#FFDFC0] rounded-[6px] flex items-center justify-center">
-                                <User className="size-4 text-gray-900" />
+                            <div className="w-[32px] h-[32px] bg-[#FFDFC0] rounded-[4px] flex items-center justify-center">
+                                <PiUsersThreeLight className="size-5 text-gray-900" />
                             </div>
                         </div>
                     </div>
                     {/* Average Leave per Employee */}
-                    <div className="bg-white rounded-[8px] p-[16px] border border-[#E9E9E9]  flex-shrink-0">
+                    <div className="bg-white rounded-[12px] p-[16px] border border-[#E9E9E9]  flex-shrink-0">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-[14px]/[22px] text-[#8F8F8F]">
@@ -532,13 +565,13 @@ export default function LeaveManagement() {
                                     2.5 days
                                 </div>
                             </div>
-                            <div className="w-[32px] h-[32px] bg-green-100 rounded-[6px] flex items-center justify-center">
+                            <div className="w-[32px] h-[32px] bg-green-100 rounded-[4px] flex items-center justify-center">
                                 <Calendar className="size-4 text-gray-900" />
                             </div>
                         </div>
                     </div>
                     {/* Most Utilized Leave */}
-                    <div className="bg-white rounded-[8px] p-[16px] border border-[#E9E9E9]  flex-shrink-0">
+                    <div className="bg-white rounded-[12px] p-[16px] border border-[#E9E9E9]  flex-shrink-0">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-[14px]/[22px] text-[#8F8F8F]">
@@ -548,7 +581,7 @@ export default function LeaveManagement() {
                                     Sick Leave
                                 </div>
                             </div>
-                            <div className="w-[32px] h-[32px] bg-blue-100 rounded-[6px] flex items-center justify-center">
+                            <div className="w-[32px] h-[32px] bg-blue-100 rounded-[4px] flex items-center justify-center">
                                 <TrendingUp className="size-4 text-gray-900" />
                             </div>
                         </div>
@@ -557,11 +590,11 @@ export default function LeaveManagement() {
             </div>
 
             {/* Leave Requests Section */}
-            <div className="px-[16px] md:px-[24px]">
+            <div className="">
                 <div>
                     {/* Section Header */}
-                    <div className="py-[20px]">
-                        <h2 className="text-[18px] font-medium text-[#353535]">
+                    <div className="py-[18px]">
+                        <h2 className="text-[20px]/[30px] font-medium text-[#353535]">
                             Leave Requests
                         </h2>
                     </div>
@@ -578,7 +611,7 @@ export default function LeaveManagement() {
                                     key={tab.key}
                                     className={`py-[12px] text-[14px] font-medium transition-colors duration-200 border-b-2 px-[36px] whitespace-nowrap ${activeTab === tab.key
                                         ? 'text-[#0d978b] border-[#0d978b]'
-                                        : 'text-[#8f8f8f] border-transparent hover:text-[#353535]'
+                                        : 'text-[#4B4B4B] border-transparent hover:text-[#353535]'
                                         }`}
                                     onClick={() => setActiveTab(tab.key)}
                                 >
@@ -596,7 +629,7 @@ export default function LeaveManagement() {
                                 placeholder="Search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="ps-9 w-full sm:w-[200px] h-[36px] border-[#E9E9E9] text-[14px] rounded-[8px] bg-gray-50"
+                                className="ps-9 w-full sm:w-[280px] h-[36px] border-[#E9E9E9] text-[14px] rounded-[8px] bg-gray-50"
                             />
                         </div>
                         <Button
@@ -640,10 +673,17 @@ export default function LeaveManagement() {
                     {/* Data Table */}
                     <div className="pb-[24px]">
                         <DataGrid
-                            className="w-full border-none"
+                            className="w-full"
                             table={table}
                             recordCount={filteredData?.length || 0}
                             onRowClick={(row) => console.log('Row clicked:', row)}
+                            tableLayout={{
+                                rowBorder: true,
+                                headerBorder: true,
+
+
+                            }
+                            }
                         >
                             <div className="w-full overflow-x-auto">
                                 {filteredData.length === 0 ? (
@@ -652,10 +692,10 @@ export default function LeaveManagement() {
                                     </div>
                                 ) : (
                                     <>
-                                        <div className="min-w-[900px] ">
+                                        <div className="min-w-[900px] [&>table]:border [&>table]:border-gray-200 [&_tbody>tr:last-child>td:last-child]:!rounded-br-[12px] [&_tbody>tr:last-child>td:first-child]:!rounded-bl-[12px]"
+                                        >
                                             <DataGridTable />
                                         </div>
-                                        <DataGridPagination className="mt-[24px]" />
                                     </>
                                 )}
                             </div>

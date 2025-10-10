@@ -51,7 +51,7 @@ export default function BasicLeaveInfo() {
 
                 <div className="space-y-7">
                     {/* Leave Name */}
-                    <div className="space-y-3">
+                    <div className="gap-2 flex flex-col">
                         <Label className="text-[14px]/[16px] text-black font-medium">Leave Name</Label>
                         <Input
                             placeholder={formData.leaveName}
@@ -64,9 +64,9 @@ export default function BasicLeaveInfo() {
                     </div>
 
                     {/* Upload Policy Document */}
-                    <div className="space-y-2">
+                    <div className="gap-2 flex flex-col">
                         <Label className="text-[14px]/[16px] text-black font-medium">Upload Policy Document</Label>
-                        <div className="mt-2">
+                        <div className="">
                             {file && (
                                 <div className="w-full border border-[#bcbcbc] rounded-[8px] p-[20px] cursor-pointer">
                                     <div className="flex justify-between">
@@ -83,7 +83,7 @@ export default function BasicLeaveInfo() {
                             {!file && (
                                 <div
                                     {...getRootProps()}
-                                    className="mt-[6px] w-full border-1 border-dashed rounded-xl p-[15px] text-center cursor-pointer transition border-gray-300 hover:border-teal-400"
+                                    className="w-full border-1 border-dashed rounded-xl p-[15px] text-center cursor-pointer transition border-gray-300 hover:border-teal-400"
                                     data-test-id="file-drop-zone"
                                 >
                                     <input {...getInputProps()} data-test-id="file-input" />
@@ -110,7 +110,7 @@ export default function BasicLeaveInfo() {
                     </div>
 
                     {/* Description */}
-                    <div className="space-y-2">
+                    <div className="gap-2 flex flex-col">
                         <Label className="text-[14px]/[16px] text-black font-medium">Description</Label>
                         <Textarea
                             value={formData.description}
@@ -124,7 +124,7 @@ export default function BasicLeaveInfo() {
                     </div>
 
                     {/* Minimum Notice Period */}
-                    <div className="space-y-2">
+                    <div className="gap-2 flex flex-col">
                         <Label className="text-[14px]/[16px] text-black font-medium">Minimum Notice Period</Label>
                         <p className="text-[12px]/[12px] text-gray-600">How early an employee can apply for leave after joining company</p>
                         <div className="relative">
@@ -142,7 +142,7 @@ export default function BasicLeaveInfo() {
                     </div>
 
                     {/* Allow to apply leave during notice period */}
-                    <div className="space-y-2">
+                    <div className="gap-2 flex flex-col">
                         <Label className="text-[14px]/[16px] text-blackfont-medium">Allow to apply leave during notice period</Label>
                         <RadioGroup
                             value={formData.allowApplyDuringNoticePeriod}
@@ -161,7 +161,7 @@ export default function BasicLeaveInfo() {
                     </div>
 
                     {/* Leave Usage waiting period */}
-                    <div className="space-y-2">
+                    <div className="gap-2 flex flex-col">
                         <Label className="text-[14px]/[16px] text-black font-medium">Leave Usage waiting period</Label>
                         <p className="text-[12px]/[12px] text-gray-600">Time after hire before an employee becomes eligible</p>
                         <div className="relative">
@@ -179,7 +179,7 @@ export default function BasicLeaveInfo() {
                     </div>
 
                     {/* Require document submission */}
-                    <div className="space-y-2">
+                    <div className="gap-2 flex flex-col">
                         <Label className="text-[14px]/[16px] text-black font-medium">Require document submission</Label>
                         <p className="text-[12px]/[18px] text-[#8F8F8F]">Is a document (e.g., medical note) mandatory for approval?</p>
                         <RadioGroup
@@ -199,7 +199,7 @@ export default function BasicLeaveInfo() {
                     </div>
 
                     {/* Leave Gifting Allowed */}
-                    <div className="space-y-2">
+                    <div className="gap-2 flex flex-col">
                         <Label className="text-[14px]/[16px] text-black font-medium">Leave Gifting Allowed</Label>
                         <RadioGroup
                             value={formData.leaveGiftingAllowed}

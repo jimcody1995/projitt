@@ -124,7 +124,7 @@ export default function Competencies({ onFormDataChange, onValidation }: Compete
                     <div
                         key={competency.id}
                         className={`relative p-[18px] w-[170px] h-[92px] border rounded-[12px] cursor-pointer transition-all duration-200 hover:shadow-md ${selectedCompetency === competency.id
-                            ? 'border-[#0d978b] '
+                            ? 'border-[#0d978b] bg-white '
                             : 'border-[#E9E9E9] bg-white hover:border-[#0d978b]'
                             }`}
                         onClick={() => handleCompetencyToggle(competency.id)}

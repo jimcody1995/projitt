@@ -161,7 +161,7 @@ export default function Courses() {
                 accessorKey: 'title',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Course Title"
                         column={column}
                         data-testid="course-title-header"
@@ -175,7 +175,7 @@ export default function Courses() {
                         {row.original.title}
                     </span>
                 ),
-                enableSorting: false,
+                enableSorting: true,
                 size: 200,
                 meta: {
                     headerClassName: '',
@@ -185,7 +185,7 @@ export default function Courses() {
                 accessorKey: 'category',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Category"
                         column={column}
                         data-testid="category-header"
@@ -195,13 +195,13 @@ export default function Courses() {
                     const getCategoryColor = (category: string) => {
                         switch (category) {
                             case 'Leadership':
-                                return 'bg-[#d6eeec] text-[#0D978B]';
+                                return 'bg-[#D8D2FA] text-[#282A33]';
                             case 'Design':
-                                return 'bg-[#d4edda] text-[#155724]';
+                                return 'bg-[#C3F3CD] text-[#282A33]';
                             case 'Team Management':
-                                return 'bg-[#f8d7da] text-[#721c24]';
+                                return 'bg-[#F1C6C5] text-[#282A33]';
                             case 'Product':
-                                return 'bg-[#fff3cd] text-[#856404]';
+                                return 'bg-[#F8CCF3] text-[#282A33]';
                             default:
                                 return 'bg-muted text-foreground';
                         }
@@ -209,7 +209,7 @@ export default function Courses() {
 
                     return (
                         <span
-                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${getCategoryColor(row.original.category)}`}
+                            className={`inline-flex items-center rounded-full px-3 py-1 text-xs  ${getCategoryColor(row.original.category)}`}
                             data-testid={`category-badge-${row.original.id}`}
                         >
                             {row.original.category}
@@ -226,7 +226,7 @@ export default function Courses() {
                 accessorKey: 'duration',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Duration"
                         column={column}
                         data-testid="duration-header"
@@ -250,7 +250,7 @@ export default function Courses() {
                 accessorKey: 'assignedPaths',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Assigned Paths"
                         column={column}
                         data-testid="assigned-paths-header"
@@ -274,7 +274,7 @@ export default function Courses() {
                 accessorKey: 'assignedUsers',
                 header: ({ column }: { column: any }) => (
                     <DataGridColumnHeader
-                        className='text-[14px] font-medium'
+                        className='text-[14px] font-medium text-[#8C8E8E]'
                         title="Assigned Users"
                         column={column}
                         data-testid="assigned-users-header"
@@ -424,7 +424,7 @@ export default function Courses() {
                                 placeholder="Search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="ps-9 w-[243px] h-[42px]"
+                                className="ps-9 w-[243px] h-[42px] bg-transparent"
                                 data-testid="search-input"
                                 id="search-input"
                             />
@@ -470,7 +470,7 @@ export default function Courses() {
                                 >
                                     <DataGridTable />
                                 </div>
-                                <DataGridPagination data-testid="pagination-controls" className="mt-[25px]" />
+                                <DataGridPagination data-testid="pagination-controls" className="mt-[25px] boreder-t border-gray-900" />
                             </>
                         )}
                     </div>

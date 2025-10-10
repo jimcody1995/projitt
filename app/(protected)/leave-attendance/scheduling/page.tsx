@@ -29,7 +29,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useRouter } from 'next/navigation';
-
+import { BiMapPin } from 'react-icons/bi';
 
 interface Employee {
     id: string;
@@ -83,7 +83,7 @@ const ShiftCell = ({ shift, onEdit, onDelete }: {
 }) => {
     if (!shift) {
         return (
-            <div className="min-h-[50px] sm:min-h-[60px] lg:min-h-[80px] flex items-center justify-center group border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
+            <div className="max-h-[50px] flex items-center justify-center group border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
                 <Button
                     variant="ghost"
                     size="sm"
@@ -97,7 +97,7 @@ const ShiftCell = ({ shift, onEdit, onDelete }: {
     }
 
     return (
-        <div className={`${shift.color} border rounded-lg p-2 sm:p-3 lg:p-4 min-h-[50px] sm:min-h-[60px] lg:min-h-[80px] flex flex-col justify-center group relative hover:shadow-sm transition-shadow`}>
+        <div className={`${shift.color} border rounded-[3px] p-2 sm:p-3 lg:p-4 max-h-[60px] flex flex-col justify-center group relative hover:shadow-sm transition-shadow`}>
             <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
                 <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-gray-600 flex-shrink-0" />
                 <span className="text-xs sm:text-sm font-medium text-gray-700 truncate">
@@ -105,7 +105,7 @@ const ShiftCell = ({ shift, onEdit, onDelete }: {
                 </span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
-                <User className="h-3 w-3 sm:h-4 sm:w-4 text-gray-600 flex-shrink-0" />
+                <BiMapPin className="h-3 w-3 sm:h-4 sm:w-4 text-gray-600 flex-shrink-0" />
                 <span className="text-xs sm:text-sm text-gray-600 truncate">
                     {shift.location}
                 </span>
@@ -141,7 +141,7 @@ const ShiftCell = ({ shift, onEdit, onDelete }: {
 
 const EmployeeCell = ({ employee }: { employee: Employee }) => (
     <div className="flex items-center gap-2 sm:gap-3">
-        <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center flex-shrink-0 border border-blue-200">
+        <div className="w-8 h-8  rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center flex-shrink-0 border border-blue-200">
             <span className="text-xs sm:text-sm font-semibold text-blue-700">
                 {employee.initials}
             </span>
@@ -249,9 +249,9 @@ export default function SchedulingPage() {
         <div className="w-full h-full min-h-screen bg-gray-50">
             {/* Header Section */}
             <div className=" ">
-                <div className="px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-6">
+                <div className="px-3 sm:px-4 lg:px-1 py-3 sm:py-4 lg:py-8">
                     {/* Title */}
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-3 sm:mb-4">Scheduling</h1>
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-3 sm:mb-7">Scheduling</h1>
 
                     {/* Date Navigation and Actions */}
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
@@ -264,7 +264,7 @@ export default function SchedulingPage() {
                                     onClick={handlePreviousWeek}
                                     className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 p-0 hover:bg-gray-100 bg-gray-50"
                                 >
-                                    <ChevronLeft className="h-3 w-3 sm:h-4  sm:w-4" />
+                                    <ChevronLeft className="h-3 w-3 sm:h-5  sm:w-5 text-primary-950" />
                                 </Button>
                                 <span className="text-sm sm:text-base font-medium text-gray-700 min-w-[140px] sm:min-w-[160px] lg:min-w-[180px] text-center px-2">
                                     {currentWeek}
@@ -275,7 +275,7 @@ export default function SchedulingPage() {
                                     onClick={handleNextWeek}
                                     className="h-8 w-8 sm:h-9 sm:w-9 lg:h-10 lg:w-10 p-0 hover:bg-gray-100 bg-gray-50"
                                 >
-                                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                                    <ChevronRight className="h-3 w-3 sm:h-5 sm:w-5 text-primary-950" />
                                 </Button>
                             </div>
                         </div>
@@ -289,7 +289,7 @@ export default function SchedulingPage() {
                                 onClick={() => setShowFilters(!showFilters)}
                                 className="h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11 p-0 hover:bg-gray-50 border-gray-300 flex-shrink-0"
                             >
-                                <ListFilter className="h-8 w-8" />
+                                <ListFilter className="h-8 w-8 text-gray-800" />
                             </Button>
 
                             {/* Button Row */}
@@ -300,12 +300,12 @@ export default function SchedulingPage() {
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none justify-between text-primary-950"
+                                            className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none font-medium justify-between text-primary-950 bg-transparent"
                                         >
                                             <span className="hidden sm:inline">Swap Requests</span>
                                             <span className="sm:hidden">Swap</span>
                                             <span className="ml-1">({swapRequestsCount})</span>
-                                            <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 ml-2" />
+                                            <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 ml-2 text-primary-950" />
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="w-48">
@@ -321,7 +321,7 @@ export default function SchedulingPage() {
                                     variant="outline"
                                     size="sm"
                                     onClick={handleAutoSchedule}
-                                    className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none text-primary-950"
+                                    className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none font-medium text-primary-950 bg-transparent"
                                 >
                                     <span className="hidden sm:inline !text-primary-950">Auto-Schedule</span>
                                     <span className="sm:hidden">Auto</span>
@@ -374,7 +374,7 @@ export default function SchedulingPage() {
             </div>
 
             {/* Main Schedule Grid */}
-            <div className="p-3 sm:p-4 lg:p-6">
+            <div className="px-3 sm:px-4 lg:px-1">
                 <div className="rounded-lg border-none overflow-hidden">
                     {/* Mobile View - Card Layout */}
                     <div className="block lg:hidden">
@@ -440,61 +440,61 @@ export default function SchedulingPage() {
                             <Table>
                                 <TableHeader>
                                     <TableRow className="border-b border-gray-200 bg-white">
-                                        <TableHead className="w-[200px] xl:w-[250px] px-4 py-3  border-r border-gray-200 border-l-0 border-r-0 ">
-                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Name</span>
+                                        <TableHead className="w-[200px] xl:w-[250px] px-8 py-5  border-r border-gray-200 border-l-0 border-r-0 ">
+                                            <span className="text-[14px]/[22px] font-medium text-[#8C8E8E] ">Name</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r border-gray-200">
-                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Monday</span>
+                                            <span className="text-[14px]/[22px] font-medium text-gray-900">Monday</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r border-gray-200">
-                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Tuesday</span>
+                                            <span className="text-[14px]/[22px] font-medium text-gray-900">Tuesday</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r border-gray-200">
-                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Wednesday</span>
+                                            <span className="text-[14px]/[22px] font-medium text-gray-900">Wednesday</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r border-gray-200">
-                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Thursday</span>
+                                            <span className="text-[14px]/[22px] font-medium text-gray-900">Thursday</span>
                                         </TableHead>
                                         <TableHead className="w-[150px] xl:w-[180px] px-4 py-3 border-r-0">
-                                            <span className="text-[14px]/[22px] font-medium text-gray-700">Friday</span>
+                                            <span className="text-[14px]/[22px] font-medium text-gray-900">Friday</span>
                                         </TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody className="bg-gray-50">
                                     {filteredData.map(({ employee, monday, tuesday, wednesday, thursday, friday }, index) => (
-                                        <TableRow key={employee.id} className={`${index < filteredData.length - 1 ? '' : ''} hover:bg-gray-100 border-b border-gray-200`}>
-                                            <TableCell className="px-4 py-4 border-r-0 border-l-0  left-0 bg-gray-50 ">
+                                        <TableRow key={employee.id} className={`${index < filteredData.length - 1 ? '' : ''} hover:bg-gray-100 border-b border-gray-200 `}>
+                                            <TableCell className="px-8 pb-3 pt-7border-r-0 border-l-0  left-0 bg-gray-50 ">
                                                 <EmployeeCell employee={employee} />
                                             </TableCell>
-                                            <TableCell className="px-4 py-4  border-r border-gray-200">
+                                            <TableCell className="px-4 pb-3 pt-7 border-r border-gray-200">
                                                 <ShiftCell
                                                     shift={monday}
                                                     onEdit={() => handleEditShift(employee.id, 'monday')}
                                                     onDelete={() => handleDeleteShift(employee.id, 'monday')}
                                                 />
                                             </TableCell>
-                                            <TableCell className="px-4 py-4  border-r border-gray-200">
+                                            <TableCell className="px-4 pb-3 pt-7 border-r border-gray-200">
                                                 <ShiftCell
                                                     shift={tuesday}
                                                     onEdit={() => handleEditShift(employee.id, 'tuesday')}
                                                     onDelete={() => handleDeleteShift(employee.id, 'tuesday')}
                                                 />
                                             </TableCell>
-                                            <TableCell className="px-4 py-4 border-r border-gray-200">
+                                            <TableCell className="px-4 pb-3 pt-7 border-r border-gray-200">
                                                 <ShiftCell
                                                     shift={wednesday}
                                                     onEdit={() => handleEditShift(employee.id, 'wednesday')}
                                                     onDelete={() => handleDeleteShift(employee.id, 'wednesday')}
                                                 />
                                             </TableCell>
-                                            <TableCell className="px-4 py-4 border-r border-gray-200">
+                                            <TableCell className="px-4 pb-3 pt-7 border-r border-gray-200">
                                                 <ShiftCell
                                                     shift={thursday}
                                                     onEdit={() => handleEditShift(employee.id, 'thursday')}
                                                     onDelete={() => handleDeleteShift(employee.id, 'thursday')}
                                                 />
                                             </TableCell>
-                                            <TableCell className="px-4 py-4 ">
+                                            <TableCell className="px-4 pb-3 pt-7">
                                                 <ShiftCell
                                                     shift={friday}
                                                     onEdit={() => handleEditShift(employee.id, 'friday')}
@@ -522,7 +522,7 @@ export default function SchedulingPage() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => setShowAutoSchedule(false)}
-                                className="h-8 w-8 sm:h-9 sm:w-9 p-0 hover:bg-gray-100 border border-gray-200"
+                                className="h-8 w-8 sm:h-9 sm:w-9 p-0 hover:bg-gray-100"
                             >
                                 <X className="h-4 w-4 sm:h-5 sm:w-5" />
                             </Button>
@@ -565,7 +565,7 @@ export default function SchedulingPage() {
                                 {/* Selected Department Tags */}
                                 <div className="flex flex-wrap gap-2 mt-3">
                                     {selectedDepartments.map((dept) => (
-                                        <div key={dept} className="flex items-center gap-1 bg-[#D6EEEC] text-primary px-3 py-1.5 rounded-full text-sm">
+                                        <div key={dept} className="flex items-center gap-1 bg-[#D6EEEC] text-primary px-3 py-1.5 rounded-[8px] text-sm">
                                             {dept}
                                             <button
                                                 onClick={() => setSelectedDepartments(prev => prev.filter(d => d !== dept))}
@@ -615,9 +615,9 @@ export default function SchedulingPage() {
                                 </Label>
                                 <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
                                     {['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'].map((day) => (
-                                        <div key={day} className="flex items-center gap-0.5">
+                                        <div key={day} className="flex items-center gap-1">
                                             <Checkbox
-                                                className='size-4'
+                                                className='w-[14px] h-[14px]'
                                                 id={day}
                                                 checked={selectedDays.includes(day)}
                                                 onCheckedChange={(checked: boolean) => {
@@ -656,11 +656,11 @@ export default function SchedulingPage() {
                                 {/* Selected Timeslot Tags */}
                                 <div className="flex flex-wrap gap-2 mt-3">
                                     {selectedTimeslots.map((timeslot) => (
-                                        <div key={timeslot} className="flex items-center gap-1 bg-[#D6EEEC] text-primary px-3 py-1.5 rounded-full text-sm">
+                                        <div key={timeslot} className="flex items-center gap-1 bg-[#D6EEEC] text-primary px-3 py-1.5 rounded-[8px] text-sm">
                                             {timeslot}
                                             <button
                                                 onClick={() => setSelectedTimeslots(prev => prev.filter(t => t !== timeslot))}
-                                                className="ml-1 hover:bg-teal-600 rounded-full p-0.5 text-primary"
+                                                className="ml-1 hover:bg-teal-600 rounded-[8px] p-0.5 text-primary"
                                             >
                                                 <X className="h-3 w-3" />
                                             </button>
@@ -688,10 +688,10 @@ export default function SchedulingPage() {
 
             {/* Shift Edit Dialog */}
             <Dialog open={showShiftDialog} onOpenChange={setShowShiftDialog}>
-                <DialogContent className="w-[95vw] sm:w-[450px] lg:w-[400px] max-h-[400px] p-0" close={false}>
-                    <div className="p-4 sm:p-6 space-y-4 sm:space-y-4 overflow-y-auto">
+                <DialogContent className="w-[95vw] sm:w-[400px] lg:w-[400px] max-h-[400px] p-0  border border-gray-200 !rounded-[30px]" close={false}>
+                    <div className="p-4 sm:p-6 space-y-4 sm:space-y-4 overflow-y-auto  rounded-[16px]">
                         {/* Current Timeslot Display */}
-                        <div className="rounded-lg px-4 pt-4 pb-0">
+                        <div className="">
                             <div className="flex items-start flex-col justify-between">
                                 <div>
                                     <div className="text-[14px]/[20px] text-gray-600">
@@ -713,7 +713,7 @@ export default function SchedulingPage() {
                         </div>
 
                         {/* Current Project Display */}
-                        <div className=" rounded-lg p-3 sm:p-4">
+                        <div className="">
                             <div className="flex items-start flex-col justify-between">
                                 <div>
                                     <div className="text-[14px]/[20px] text-gray-600">
@@ -744,7 +744,7 @@ export default function SchedulingPage() {
                                 value={currentTimeslot}
                                 onValueChange={setCurrentTimeslot}
                             >
-                                <SelectTrigger className="w-full h-10 sm:h-11">
+                                <SelectTrigger className="w-full h-10 sm:h-11 rounded-[10px]">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -766,7 +766,7 @@ export default function SchedulingPage() {
                                 value={currentProject}
                                 onValueChange={setCurrentProject}
                             >
-                                <SelectTrigger className="w-full h-10 sm:h-11">
+                                <SelectTrigger className="px-4 w-full h-10 sm:h-11 rounded-[10px]">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>

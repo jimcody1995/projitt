@@ -45,8 +45,8 @@ export default function ManageLeaves() {
     return (
         <div className="w-full h-full bg-[#F8F9FA] min-h-screen">
             {/* Header */}
-            <div className="flex w-full justify-between md:flex-row flex-col items-center">
-                <div className="px-[24px] py-[24px]">
+            <div className="flex w-full justify-between md:flex-row flex-col items-center mb-[6px]">
+                <div className="px-[9px] py-[12px]">
                     {/* Breadcrumb */}
                     <div className="flex items-center gap-2 mb-[8px]">
                         <span className="text-[14px]/[20px] text-[#8F8F8F] cursor-pointer"
@@ -72,7 +72,7 @@ export default function ManageLeaves() {
             </div>
 
             {/* Search */}
-            <div className="px-[24px] mb-[24px]">
+            <div className="px-[9px] mb-[24px]">
                 <div className="relative w-full sm:w-[320px]">
                     <Search className="size-4 text-[#8f8f8f] absolute start-3 top-1/2 -translate-y-1/2" />
                     <Input
@@ -85,7 +85,7 @@ export default function ManageLeaves() {
             </div>
 
             {/* Leave Types Grid */}
-            <div className="px-[24px] pb-[24px]">
+            <div className="px-[9px] pb-[24px]">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-[16px]">
                     {filteredLeaveTypes.map((leave) => (
                         <Card

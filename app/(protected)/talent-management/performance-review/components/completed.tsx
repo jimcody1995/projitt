@@ -216,9 +216,9 @@ export default function Completed() {
 
                     {/* Expanded Details */}
                     {cycle.isExpanded && (
-                        <div className="px-[24px] pb-[24px] border-t border-[#e9e9e9]">
-                            <div className="pt-[24px] w-full ">
-                                <div className="flex justify-between items-center">
+                        <div className=" pb-[24px] border-t border-[#e9e9e9]">
+                            <div className=" w-full ">
+                                <div className="flex py-[24px] px-[24px] justify-between items-center !bg-[#FAFAFA]">
                                     <div className="flex gap-[32px]">
                                         <div>
                                             <span className="text-[14px] text-[#8f8f8f]">Competencies:</span>
@@ -240,7 +240,7 @@ export default function Completed() {
                                             <Search className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2" />
                                             <Input
                                                 placeholder="Search"
-                                                className="ps-9 h-[40px]"
+                                                className="ps-9 h-[40px] !bg-[#FAFAFA]"
                                             />
                                         </div>
                                         <Button
@@ -252,12 +252,12 @@ export default function Completed() {
                                     </div>
                                 </div>
                                 {/* Employee Table */}
-                                <div className="mt-[24px]">
+                                <div className="">
                                     <div className="overflow-x-auto">
                                         <table className="w-full">
                                             <thead>
-                                                <tr className="border-b border-[#e9e9e9]">
-                                                    <th className="text-left py-[12px] px-[16px] text-[14px] font-medium text-[#8f8f8f]">
+                                                <tr className="border-b border-[#e9e9e9] !bg-[#FAFAFA]">
+                                                    <th className="text-left py-[12px] px-[24px] text-[14px] font-medium text-[#8f8f8f]">
                                                         Employee Name
                                                     </th>
                                                     <th className="text-left py-[12px] px-[16px] text-[14px] font-medium text-[#8f8f8f]">
@@ -275,7 +275,7 @@ export default function Completed() {
                                             <tbody>
                                                 {employees.map((employee, index) => (
                                                     <tr key={employee.id} className="border-b border-[#e9e9e9] last:border-b-0">
-                                                        <td className="py-[12px] px-[16px]">
+                                                        <td className="py-[12px] px-[24px]">
                                                             <div className="flex items-center gap-[12px]">
                                                                 <Avatar className="size-8">
                                                                     <AvatarFallback className="bg-[#d6eeec] text-[#0d978b] text-[12px] font-medium">

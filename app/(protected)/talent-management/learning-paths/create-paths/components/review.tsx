@@ -11,7 +11,9 @@ import {
     Calendar,
     Tag,
     Target,
-    FileText
+    FileText,
+    PenLine,
+    Pen
 } from 'lucide-react';
 
 interface LearningPathData {
@@ -103,7 +105,7 @@ export default function Review() {
             </div>
 
             {/* Main Review Card */}
-            <Card className="border border-gray-200 mt-[20px] bg-[#FAFAFA]">
+            <Card className="border border-gray-200 mt-[20px] bg-[#FAFAFA] max-w-[600px]">
                 <CardContent className="p-8 flex justify-between">
                     <div className="space-y-6 max-w-[600px]">
                         <div className='flex justify-between'>
@@ -155,7 +157,7 @@ export default function Review() {
                                 <label className="text-sm font-medium text-gray-500 block mb-2">Tags</label>
                                 <div className="flex flex-wrap gap-2">
                                     {learningPathData.tags.map((tag, index) => (
-                                        <div key={index} className="border-gray-300 text-[14px]/[20px] text-gray-700">
+                                        <div key={index} className="border-gray-500  text-gray-900">
                                             {tag}
                                         </div>
                                     ))}
@@ -168,7 +170,7 @@ export default function Review() {
                         onClick={() => handleEdit(1)}
                         className="border-[#0d978b] hover:bg-[#0d978b] hover:text-white"
                     >
-                        <Edit className="h-4 w-4" />
+                        <PenLine className="h-4 w-4" />
                     </Button>
                 </CardContent>
             </Card>

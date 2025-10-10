@@ -213,9 +213,9 @@ export default function AttendanceTracking() {
             case 'absent':
                 return <span className="text-[#DC2626] text-[14px]/[22px] font-medium">Absent</span>;
             case 'overtime':
-                return <span className="text-[#3B82F6] text-[14px]/[22px] font-medium">Overtime</span>;
+                return <span className="text-[#428BC1] text-[14px]/[22px] font-medium">Overtime</span>;
             case 'late':
-                return <span className="text-[#F59E0B] text-[14px]/[22px] font-medium">Late</span>;
+                return <span className="text-[#E97400] text-[14px]/[22px] font-medium">Late</span>;
             case 'leave':
                 return <span className="text-[#374151] text-[14px]/[22px] font-medium">Leave</span>;
             default:
@@ -225,7 +225,7 @@ export default function AttendanceTracking() {
 
     const getHoursWorkedColor = (status: Employee['status'], hoursWorked: string) => {
         if (status === 'overtime') {
-            return 'text-[#F59E0B]';
+            return 'text-[#E97400]';
         }
         return 'text-[#353535]';
     };
@@ -306,8 +306,7 @@ export default function AttendanceTracking() {
 
     return (
         <div className="w-full h-full bg-[#F8F9FA] min-h-screen">
-            {/* Header */}
-            <div className="px-[16px] sm:px-[24px] py-[16px] sm:py-[24px]">
+            <div className="px-[16px] sm:px-[8px] py-[16px] sm:py-[12px]">
                 <div className="flex items-center justify-between">
                     <div>
                         {/* Title */}
@@ -349,13 +348,13 @@ export default function AttendanceTracking() {
 
                 {/* Tabs */}
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-[16px] lg:gap-0 mb-[16px] sm:mb-[24px]">
-                    <div className="relative w-full sm:w-auto">
+                    <div className="relative w-full ">
                         <Search className="size-4 text-[#6B7280] absolute left-3 top-1/2 -translate-y-1/2" />
                         <Input
                             placeholder="Search"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-9 h-[36px] w-full sm:w-[200px] border-[#E9E9E9] text-[12px] sm:text-[14px] rounded-[8px] bg-gray-50"
+                            className="pl-9 h-[36px] w-full sm:w-[280px] border-[#E9E9E9] text-[12px] sm:text-[14px] rounded-[8px] bg-gray-50"
                         />
                     </div>
 
@@ -510,13 +509,13 @@ export default function AttendanceTracking() {
                         <Table>
                             <TableHeader>
                                 <TableRow className="border-b border-[#E9E9E9]">
-                                    <TableHead className="w-[50px]  bg-[#EEF3F2]">
-                                        <Checkbox className="bg-[#EEF3F2]"
+                                    <TableHead className="w-[40px]  bg-[#EEF3F2]">
+                                        <Checkbox className="bg-[#EEF3F2] w-[14px] h-[14px]"
                                             checked={selectedEmployees.length === filteredEmployees.length && filteredEmployees.length > 0}
                                             onCheckedChange={handleSelectAll}
                                         />
                                     </TableHead>
-                                    <TableHead className="text-[12px] sm:text-[14px]  bg-[#EEF3F2] leading-[16px] sm:leading-[22px] font-medium text-[#8C8E8E] min-w-[150px]">Name</TableHead>
+                                    <TableHead className="text-[12px] sm:text-[14px]  bg-[#EEF3F2] leading-[16px] sm:leading-[22px] font-medium text-[#8C8E8E] min-w-[150px] py-[21px]">Name</TableHead>
                                     <TableHead className="text-[12px] sm:text-[14px]  bg-[#EEF3F2] leading-[16px] sm:leading-[22px] font-medium text-[#8C8E8E] min-w-[100px]">Clock In</TableHead>
                                     <TableHead className="text-[12px] sm:text-[14px]  bg-[#EEF3F2] leading-[16px] sm:leading-[22px] font-medium text-[#8C8E8E] min-w-[100px]">Clock Out</TableHead>
                                     <TableHead className="text-[12px] sm:text-[14px]  bg-[#EEF3F2] leading-[16px] sm:leading-[22px] font-medium text-[#8C8E8E] min-w-[120px]">Hours Worked</TableHead>
@@ -531,7 +530,7 @@ export default function AttendanceTracking() {
                                         <TableCell className=" ">
                                             <Checkbox
                                                 checked={selectedEmployees.includes(employee.id)}
-                                                className="bg-gray-50"
+                                                className="bg-gray-50 w-[14px] h-[14px]"
                                                 onCheckedChange={() => handleSelectEmployee(employee.id)}
                                             />
                                         </TableCell>
@@ -541,7 +540,7 @@ export default function AttendanceTracking() {
                                                     <img
                                                         src={employee.avatar}
                                                         alt={employee.name}
-                                                        className="w-[24px] h-[24px] sm:w-[32px] sm:h-[32px] rounded-full object-cover flex-shrink-0"
+                                                        className="w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] rounded-full object-cover flex-shrink-0"
                                                     />
                                                 ) : (
                                                     <div className="w-[24px] h-[24px] sm:w-[32px] sm:h-[32px] rounded-full bg-[#0d978b] flex items-center justify-center text-white text-[10px] sm:text-[14px] leading-[12px] sm:leading-[22px] font-medium flex-shrink-0">
@@ -577,7 +576,7 @@ export default function AttendanceTracking() {
                                             {employee.status !== 'leave' && (
                                                 <div className="flex items-center gap-[4px] sm:gap-[8px]">
                                                     <div
-                                                        className="h-[28px] sm:h-[32px] px-[6px] sm:px-[12px] bg-[#D6EEEC] text-primary rounded-[21px] font-medium text-[12px]/[22px] sm:text-[12px] items-center justify-center flex"
+                                                        className="px-[8px] h-[28px] sm:px-[12px] bg-[#D6EEEC] text-primary rounded-[21px] font-medium text-[12px]/[22px] sm:text-[12px] items-center justify-center flex"
                                                         onClick={() => handleApprove(employee.id)}
                                                     >
                                                         <span className="hidden sm:inline">Approve</span>

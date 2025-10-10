@@ -5,6 +5,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetBody, SheetFooter } 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { PlayCircle, Users, Maximize2, MoreHorizontal, FileText, Minimize2 } from 'lucide-react';
+import { HiOutlineUserGroup } from 'react-icons/hi2';
+import { FaRegCirclePlay } from 'react-icons/fa6';
 
 interface LearningPathDetailProps {
     isOpen: boolean;
@@ -61,7 +63,7 @@ export default function LearningPathDetail({ isOpen, onClose, learningPath }: Le
                         <div className="flex items-start justify-between">
                             <div className="flex-1">
                                 <div className="flex items-center gap-3 mb-3">
-                                    <Badge className="bg-[#0d978b] text-white px-3 py-1 rounded-md text-[14px]/[14px] font-medium">
+                                    <Badge className="bg-[#0d978b] text-white px-3 py-1 rounded-[4px] text-[14px]/[14px] font-medium h-[26px]">
                                         {learningPath.status}
                                     </Badge>
                                 </div>
@@ -106,7 +108,7 @@ export default function LearningPathDetail({ isOpen, onClose, learningPath }: Le
                                     : 'text-gray-600 hover:text-gray-900'
                                     }`}
                             >
-                                <PlayCircle size={20} />
+                                <FaRegCirclePlay size={20} />
                                 <span className="text-[15px]/[20px] font-medium">{learningPath.courses} courses</span>
                             </button>
 
@@ -117,7 +119,7 @@ export default function LearningPathDetail({ isOpen, onClose, learningPath }: Le
                                     : 'text-gray-600 hover:text-gray-900'
                                     }`}
                             >
-                                <Users size={20} />
+                                <HiOutlineUserGroup size={20} />
                                 <span className="text-[15px]/[20px] font-medium">{learningPath.employees} employees</span>
                             </button>
                         </div>
@@ -135,7 +137,7 @@ export default function LearningPathDetail({ isOpen, onClose, learningPath }: Le
                                 </thead>
                                 <tbody>
                                     {employees.map((employee) => (
-                                        <tr key={employee.id} className="border-b border-gray-200 hover:bg-gray-50">
+                                        <tr key={employee.id} className="border-b border-gray-200 hover:bg-gray-50 ">
                                             <td className="py-3 pl-[32px]">
                                                 <div className="flex items-center gap-3">
                                                     <div className="w-[28px] h-[28px] bg-[#D6EEEC] rounded-full flex items-center justify-center">
@@ -188,10 +190,10 @@ export default function LearningPathDetail({ isOpen, onClose, learningPath }: Le
                     {/* Footer Actions */}
                     <SheetFooter className="p-6 pt-4 border-t border-gray-200">
                         <div className="flex items-center justify-between w-full">
-                            <Button variant="ghost" className="text-[#353535] hover:text-[#353535] p-0 h-auto">
+                            <Button variant="ghost" className="text-[#353535] hover:text-[#353535] p-0 font-semibold h-auto">
                                 Move to Draft
                             </Button>
-                            <Button variant="outline" className="text-[#053834]  px-6">
+                            <Button variant="outline" className="text-[#053834]  px-3 font-semibold">
                                 Edit Details
                             </Button>
                         </div>
