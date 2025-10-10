@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { CreditCard, MoreVertical } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import PaystubSheet from './paystub-sheet';
+import PaymentInfoIcon from './paymentInfoIcon';
 
 export default function TaxPayroll() {
     const [isPaystubOpen, setIsPaystubOpen] = useState(false);
@@ -127,7 +128,7 @@ export default function TaxPayroll() {
             {/* Payment Information Card */}
             <div className="bg-white rounded-[12px] border border-[#E9E9E9] p-[20px]">
                 <div className="flex items-center gap-2 mb-6">
-                    <CreditCard className="w-5 h-5 text-gray-500" />
+                    <PaymentInfoIcon />
                     <h2 className="text-lg font-semibold text-gray-800">Payment Information</h2>
                 </div>
 

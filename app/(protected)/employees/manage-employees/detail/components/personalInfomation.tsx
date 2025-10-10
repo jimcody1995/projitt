@@ -1,4 +1,7 @@
-import { BookMinus, BriefcaseBusiness, CircleUser, Edit, User, UserRound } from "lucide-react";
+import { BriefcaseBusiness, CircleUser, Edit, User, UserRound } from "lucide-react";
+import BookXIcon from "./bookIcon";
+import PersonalInfoIcon from "./personalInfoIcon";
+import EmployeeOverviewIcon from "./employeeOverviewIcon";
 
 export default function PersonalInfomation() {
     return <div>
@@ -7,7 +10,7 @@ export default function PersonalInfomation() {
                 <div className="w-full rounded-[12px] bg-white border border-[#e9e9e9] p-[20px] pb-[39px]">
                     <div className="flex justify-between">
                         <div className="flex items-center gap-[6px]">
-                            <BookMinus className="size-[16px] text-[#8f8f8f]" />
+                            <BookXIcon />
                             <p className="text-[16px]/[20px] font-semibold text-[#353535]">Contact Information</p>
                         </div>
                         <button
@@ -43,7 +46,7 @@ export default function PersonalInfomation() {
                 <div className="w-full rounded-[12px] bg-white border border-[#e9e9e9] p-[20px] pb-[39px]">
                     <div className="flex justify-between">
                         <div className="flex items-center gap-[6px]">
-                            <BriefcaseBusiness className="size-[16px] text-white fill-[#8F8F8F]" />
+                            <EmployeeOverviewIcon />
                             <p className="text-[16px]/[20px] font-semibold text-[#353535]">Employment Overview</p>
                         </div>
                         {/* <button
@@ -91,7 +94,7 @@ export default function PersonalInfomation() {
                 <div className="w-full rounded-[12px] bg-white border border-[#e9e9e9] p-[20px] pb-[39px]">
                     <div className="flex justify-between">
                         <div className="flex items-center gap-[6px]">
-                            <UserRound className="size-[16px] fill-[#8F8F8F] text-white" />
+                            <PersonalInfoIcon />
                             <p className="text-[16px]/[20px] font-semibold text-[#353535]">Personal Information</p>
                         </div>
                         <button

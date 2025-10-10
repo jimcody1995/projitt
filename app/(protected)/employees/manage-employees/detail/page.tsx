@@ -1,6 +1,6 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Banknote, BookText, ChevronDown, ChevronLeft, ChevronRight, Clock, File, LogOut, Medal, User, UserRound, Users } from "lucide-react";
+import { ArrowLeft, Banknote, BookText, ChevronDown, ChevronLeft, ChevronRight, File, LogOut, Medal, User, UserRound, Users } from "lucide-react";
 import { useRef, useState, useEffect } from "react";
 import Offboarding from "./components/offboarding";
 import PersonalInfomation from "./components/personalInfomation";
@@ -9,6 +9,16 @@ import LeaveAttendence from "./components/leave-attendence";
 import TalentManagement from "./components/talent-management";
 import TaxPayroll from "./components/tax-payroll";
 import { useRouter } from "next/navigation";
+import BriefIcon from "./components/brefIcon";
+import BriefIconActive from "./components/breifIconActive";
+import UserIconActive from "./components/userIconActive";
+import UserIcon from "./components/userIcon";
+import ClockIconActive from "./components/clockIconActive";
+import MedalIconActive from "./components/medalIconActive";
+import MedalIcon from "./components/medalIcon";
+import ClockIcon from "./components/clockIcon";
+import TaxIcon from "./components/taxIcon";
+import TaxIconActive from "./components/taxIconActive";
 
 export default function Detail() {
     const [activeSection, setActiveSection] = useState<'offboarding' | 'personal-information' | 'document' | 'leave-attendance' | 'talent-management' | 'tax-payroll'>('personal-information');
@@ -20,35 +30,35 @@ export default function Detail() {
     });
 
     const menu = [
-        // {
-        //     label: 'Offboarding',
-        //     value: 'offboarding',
-        //     icon: LogOut
-        // },
         {
             label: 'Personal Information',
             value: 'personal-information',
-            icon: UserRound
+            icon: UserIcon,
+            activeIcon: UserIconActive
         },
         {
             label: 'Document',
             value: 'document',
-            icon: BookText
+            icon: BriefIcon,
+            activeIcon: BriefIconActive
         },
         {
             label: 'Leave & Attendance',
             value: 'leave-attendance',
-            icon: Clock
+            icon: ClockIcon,
+            activeIcon: ClockIconActive
         },
         {
             label: 'Talent Management',
             value: 'talent-management',
-            icon: Medal
+            icon: MedalIcon,
+            activeIcon: MedalIconActive
         },
         {
             label: 'Tax & Payroll',
             value: 'tax-payroll',
-            icon: Banknote
+            icon: TaxIcon,
+            activeIcon: TaxIconActive
         }
     ]
 
@@ -122,11 +132,12 @@ export default function Detail() {
                             <div
                                 key={index}
                                 ref={(el) => { tabRefs.current[item.value] = el; }}
-                                className={`py-[11px] px-[16px] text-[15px]/[20px] font-medium cursor-pointer flex items-center gap-[10px] transition-colors duration-200 ${activeSection === item.value ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
+                                className={`py-[11px] px-[16px] text-[15px]/[20px] font-medium cursor-pointer flex items-center gap-[4px] transition-colors duration-200 ${activeSection === item.value ? 'text-[#0d978b]' : 'text-[#626262]'}`}
                                 onClick={() => setActiveSection(item.value as 'offboarding' | 'personal-information' | 'document' | 'leave-attendance' | 'talent-management' | 'tax-payroll')}
                                 data-testid={`${item.value}-tab-button`}
                             >
-                                <item.icon className='size-[20px] ' />
+                                {activeSection === item.value ?
+                                    <item.activeIcon /> : <item.icon />}
                                 <p className='whitespace-nowrap text-center'>{item.label}</p>
                             </div>
                         ))
