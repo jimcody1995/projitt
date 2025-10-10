@@ -144,12 +144,12 @@ export default function LearningPathDetail({ isOpen, onClose, learningPath }: Le
                                                         <span className="text-[#053834] text-[10px]/[12px] font-medium">{employee.avatar}</span>
                                                     </div>
                                                     <div>
-                                                        <div className="text-[14px]/[22px] font-medium text-gray-900">{employee.name}</div>
+                                                        <div className="text-[14px]/[22px] font-medium text-gray-800">{employee.name}</div>
                                                         <div className="text-[11px]/[14px] text-[#8F8F8F]">{employee.role}</div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="text-sm text-gray-900 py-3">{employee.department}</td>
+                                            <td className="text-[13px]/[22px] text-gray-800 py-3">{employee.department}</td>
                                         </tr>
                                     ))}
                                 </tbody>

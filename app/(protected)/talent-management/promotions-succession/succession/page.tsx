@@ -18,7 +18,7 @@ export default function PromotionsSuccession() {
         <div className="p-6 space-y-6">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-[4px] text-[24px]/[30px] font-semibold text-[#353535]">
-                    <ArrowLeft className="w-6 h-6 border border-[#E9E9E9] rounded-[56.84px]" onClick={() => router.back()} />
+                    <ArrowLeft className="w-6 h-6 border border-[#E9E9E9] rounded-[56.84px] bg-white" onClick={() => router.back()} />
                     Successions
                 </div>
                 <Button className="h-[42px] bg-[#0D978B] text-white px-4">
@@ -63,7 +63,7 @@ export default function PromotionsSuccession() {
                             </div>
                             <p className="text-[14px]/[22px] text-[#053834]">Alice Fernadez</p>
                         </div>
-                        <div className="border border-[#e9e9e9] rounded-[12px] p-[8px] text-[14px]">
+                        <div className="border border-[#e9e9e9] rounded-[6px] p-[8px] text-[14px]">
                             +2
                         </div>
                     </div>
@@ -120,9 +120,10 @@ export default function PromotionsSuccession() {
                                         </thead>
                                         <tbody className="sm:text-[14px] text-[9px]">
                                             <tr className="border-b border-[#E9E9E9] hover:bg-[#D6EEEC]/20 transition-colors">
-                                                <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0"><GripVertical /></td>
                                                 <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0">
-                                                    <span className="w-[24px] h-[24px] rounded-full bg-[#D6EEEC] text-[#053834] p-1 ">
+                                                    <GripVertical className="w-[14px] h-[14px]" /></td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0">
+                                                    <span className="w-[24px] h-[24px] rounded-full bg-[#D6EEEC] text-[#053834] p-1 mr-1 ">
                                                         AF
                                                     </span>Alice Fernandez</td>
                                                 <td className=" font-medium text-[#353535] px-4 py-3  border-[#E9E9E9] last:border-r-0">Senior Data <br /><span className="text-[12px] font-medium text-[#8F8F8F]">USA</span></td>
@@ -149,8 +150,8 @@ export default function PromotionsSuccession() {
                                                 </td>
                                             </tr>
                                             <tr className="border-b border-[#E9E9E9] hover:bg-[#D6EEEC]/20 transition-colors last:border-b-0">
-                                                <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0"><GripVertical /></td>
-                                                <td className=" font-medium text-[#353535] px-4 py-3  border-[#E9E9E9] last:border-r-0"><span className="w-[24px] h-[24px] rounded-full bg-[#D6EEEC] text-[#053834] p-1 ">
+                                                <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0"><GripVertical className="w-[14px] h-[14px]" /></td>
+                                                <td className=" font-medium text-[#353535] px-4 py-3  border-[#E9E9E9] last:border-r-0"><span className="w-[24px] h-[24px] rounded-full bg-[#D6EEEC] text-[#053834] p-1 mr-1">
                                                     EH
                                                 </span>Bob Wilson</td>
                                                 <td className=" font-medium text-[#353535] px-4 py-3 border-[#E9E9E9] last:border-r-0">Marketing Manager<br /><span className="text-[12px] font-medium text-[#8F8F8F]">USA</span></td>

@@ -78,9 +78,9 @@ export default function LearningPaths() {
 
     const getRoleColor = (index: number) => {
         const colors = [
-            'bg-green-100 text-gray-800',
+            'bg-green-200 text-gray-800',
             'bg-pink-100 text-gray-800',
-            'bg-purple-100 text-gray-800',
+            'bg-purple-200 text-gray-800',
             'bg-gray-100 text-gray-800'
         ];
         return colors[index % colors.length];

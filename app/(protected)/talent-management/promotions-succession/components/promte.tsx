@@ -34,7 +34,7 @@ export default function PromteSheet({ open, onOpenChange }: PromteSheetProps) {
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
             <SheetContent side="right" className="!max-w-[610px] p-0" close={false}>
-                <SheetHeader className="p-6 border-b border-gray-200">
+                <SheetHeader className="p-6 border-b border-gray-200 bg-gray-50">
                     <div className="flex flex-col gap-[18px]">
                         <X className="h-8 w-8 p-[6px] text-[#787878] border border-[#787878] rounded-[6px]" onClick={() => onOpenChange(false)} />
                         <SheetTitle className="text-[22px]/[30px] font-semibold text-gray-900">
@@ -55,7 +55,7 @@ export default function PromteSheet({ open, onOpenChange }: PromteSheetProps) {
                                 placeholder="Senior Data Analyst"
                                 value={currentRole}
                                 onChange={(e) => setCurrentRole(e.target.value)}
-                                className="h-[42px] text-[14px]/[20px] rounded-[10px]"
+                                className="h-[42px] text-[14px]/[20px] rounded-[10px] bg-gray-50"
                             />
                         </div>
                     </div>
@@ -70,7 +70,7 @@ export default function PromteSheet({ open, onOpenChange }: PromteSheetProps) {
                                 placeholder="Sarah has consistently exceeded expectations in her role"
                                 value={justification}
                                 onChange={(e) => setJustification(e.target.value)}
-                                className="pl-10 h-[42px] text-[14px]/[20px] rounded-[10px]"
+                                className="bg-gray-50 h-[56px] text-[14px]/[20px] rounded-[10px]"
                             />
                         </div>
                     </div>
