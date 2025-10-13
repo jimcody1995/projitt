@@ -129,6 +129,7 @@ export const MENU_SIDEBAR: MenuConfig = [
       { title: 'Leave Management', path: '/leave-attendance/leave-management' },
       { title: 'Attendance Tracking', path: '/leave-attendance/attendance-tracking' },
       { title: 'Scheduling', path: '/leave-attendance/scheduling' },
+      { title: 'Audit & Reporting', path: '/leave-attendance/audit-reporting' },
     ],
   },
   {

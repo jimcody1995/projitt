@@ -119,6 +119,14 @@ export default function Profile() {
                 >
                     <p className='whitespace-nowrap text-center'>Checklist</p>
                 </div>
+                <div
+                    ref={(el) => { tabRefs.current.checklist = el; }}
+                    className={`py-[18px] px-[52px] text-[15px]/[20px] font-medium cursor-pointer transition-colors duration-200 ${activeSection === 'checklist' ? 'text-[#0d978b]' : 'text-[#353535] hover:text-[#0d978b]'}`}
+                    onClick={() => setActiveSection('checklist')}
+                    data-testid="checklist-tab-button"
+                >
+                    <p className='whitespace-nowrap text-center'>Reference</p>
+                </div>
             </div>
         </div>
         <div className="mt-[34px]">

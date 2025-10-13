@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Filter, ListFilter, MoreVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FilterTool } from "./components/filter";
 
 // Mock data for payment runs
 const paymentRuns = [
@@ -47,16 +48,8 @@ const paymentRuns = [
         amountPaid: "$235,525,00",
         status: "Pending" as const
     },
-    {
-        id: 4,
-        payPeriod: "Run for Mar 25th - Mar 26th",
-        employees: 252,
-        payDate: "15 Mar, 2025",
-        amountPaid: "$235,525,00",
-        status: "Approved" as const
-    },
     ...Array.from({ length: 9 }, (_, i) => ({
-        id: i + 5,
+        id: i + 4,
         payPeriod: "Run for Mar 25th - Mar 26th",
         employees: 252,
         payDate: "15 Mar, 2025",
@@ -71,8 +64,6 @@ const getStatusVariant = (status: string) => {
             return "secondary";
         case "Pending":
             return "default";
-        case "Approved":
-            return "outline";
         case "Paid":
             return "default";
         default:
@@ -86,8 +77,6 @@ const getStatusColor = (status: string) => {
             return "bg-gray-100 text-gray-800";
         case "Pending":
             return "bg-[#FFDFC0] text-[#934900]";
-        case "Approved":
-            return "bg-[#C2EBFF] text-blue-900";
         case "Paid":
             return "bg-[#D6EEEC] text-[#0D978B]";
         default:
@@ -97,9 +86,20 @@ const getStatusColor = (status: string) => {
 
 export default function PaymentRun() {
     const [filterOpen, setFilterOpen] = useState(false);
+    const [selectedPayDates, setSelectedPayDates] = useState<string[]>([]);
+    const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const router = useRouter();
+
+    // Filter payment runs based on selected filters
+    const filteredPaymentRuns = useMemo(() => {
+        return paymentRuns.filter((run) => {
+            const payDateMatch = selectedPayDates.length === 0 || selectedPayDates.includes(run.payDate);
+            const statusMatch = selectedStatuses.length === 0 || selectedStatuses.includes(run.status);
+            return payDateMatch && statusMatch;
+        });
+    }, [selectedPayDates, selectedStatuses]);
     return (
-        <div className="p-4 sm:p-6 min-h-screen">
+        <div className="p-4 sm:px-[8px] sm:py-[12px] min-h-screen">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                 <div>
@@ -107,7 +107,7 @@ export default function PaymentRun() {
                 </div>
                 <div className="flex items-center gap-4">
                     <Button
-                        className="bg-teal-600 hover:bg-teal-700 text-white px-4 sm:px-6 py-2 rounded-lg h-10 sm:h-12 text-[14px] sm:text-[16px] font-semibold w-full sm:w-auto"
+                        className="bg-teal-600 hover:bg-teal-700 text-white px-4 sm:px-6 py-2 rounded-[8px] h-10 sm:h-12 text-[14px] sm:text-[16px] font-semibold w-full sm:w-auto"
                         onClick={() => { router.push('/payroll/payment-run/create-payment-run') }}
                     >
                         <span className="hidden sm:inline">Create Payment Run</span>
@@ -115,6 +115,7 @@ export default function PaymentRun() {
                     </Button>
                 </div>
             </div>
+
 
             {/* Filter Button */}
             <div className="mb-3">
@@ -128,11 +129,22 @@ export default function PaymentRun() {
                 </Button>
             </div>
 
+            {/* Filter Tool */}
+            {filterOpen && (
+                <FilterTool
+                    selectedPayDates={selectedPayDates}
+                    selectedStatuses={selectedStatuses}
+                    setSelectedPayDates={setSelectedPayDates}
+                    setSelectedStatuses={setSelectedStatuses}
+                />
+            )}
+
+
             {/* Payment Runs Table */}
             <div className="bg-white rounded-[16px] border border-gray-200 overflow-hidden">
                 {/* Mobile Card View */}
                 <div className="block sm:hidden">
-                    {paymentRuns.map((run) => (
+                    {filteredPaymentRuns.map((run) => (
                         <div key={run.id} className="p-4 border-b border-gray-200 last:border-b-0">
                             <div className="flex justify-between items-start mb-2">
                                 <div className="flex-1">
@@ -185,7 +197,7 @@ export default function PaymentRun() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {paymentRuns.map((run) => (
+                            {filteredPaymentRuns.map((run) => (
                                 <TableRow key={run.id} className="hover:bg-gray-50 border-b border-gray-200">
                                     <TableCell className="text-gray-900 text-[14px]/[22px] py-[19px] px-[16px]">
                                         {run.payPeriod}

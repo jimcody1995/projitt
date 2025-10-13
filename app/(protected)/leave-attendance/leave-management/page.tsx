@@ -23,6 +23,7 @@ import { DataGrid } from "@/components/ui/data-grid";
 import { Input } from "@/components/ui/input";
 import { DataGridPagination } from "@/components/ui/data-grid-pagination";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
 import { LeaveFilterTool } from "../components/leaveFilterTool";
 import { useRouter } from "next/navigation";
 
@@ -227,19 +228,20 @@ export default function LeaveManagement() {
             {
                 id: 'select',
                 header: ({ table }) => (
-                    <input
-                        type="checkbox"
+                    <Checkbox
                         checked={table.getIsAllPageRowsSelected()}
-                        onChange={(e) => table.toggleAllPageRowsSelected(e.target.checked)}
-                        className="size-4 rounded  border border-[#4B4B4B]    bg-[#EEF3F2] appearance-none checked:bg-[#0D978B]"
+                        onCheckedChange={(checked) => table.toggleAllPageRowsSelected(!!checked)}
+                        aria-label="Select all"
+                        className="bg-[#EEF3F2] checked:bg-[#0D978B] size-4"
+
                     />
                 ),
                 cell: ({ row }) => (
-                    <input
-                        type="checkbox"
+                    <Checkbox
                         checked={row.getIsSelected()}
-                        onChange={(e) => row.toggleSelected(e.target.checked)}
-                        className="size-4 rounded  border border-[#4B4B4B]    bg-white appearance-none checked:bg-[#0D978B]"
+                        onCheckedChange={(checked) => row.toggleSelected(!!checked)}
+                        aria-label="Select row"
+                        className="size-4"
                     />
                 ),
                 enableSorting: false,
