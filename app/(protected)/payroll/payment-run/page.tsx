@@ -26,36 +26,100 @@ import { FilterTool } from "./components/filter";
 const paymentRuns = [
     {
         id: 1,
-        payPeriod: "Run for Mar 25th - Mar 26th",
-        employees: 252,
-        payDate: "15 Mar, 2025",
-        amountPaid: "$235,525,00",
+        payPeriod: "Run for Apr 1st - Apr 15th",
+        employees: 268,
+        payDate: "16 Apr, 2025",
+        amountPaid: "$312,450.00",
         status: "Draft" as const
     },
     {
         id: 2,
-        payPeriod: "Run for Mar 25th - Mar 26th",
+        payPeriod: "Run for Mar 25th - Mar 31st",
         employees: 252,
-        payDate: "15 Mar, 2025",
-        amountPaid: "$235,525,00",
+        payDate: "01 Apr, 2025",
+        amountPaid: "$235,525.00",
         status: "Pending" as const
     },
     {
         id: 3,
-        payPeriod: "Run for Mar 25th - Mar 26th",
-        employees: 252,
-        payDate: "15 Mar, 2025",
-        amountPaid: "$235,525,00",
+        payPeriod: "Run for Mar 15th - Mar 24th",
+        employees: 245,
+        payDate: "25 Mar, 2025",
+        amountPaid: "$198,750.00",
         status: "Pending" as const
     },
-    ...Array.from({ length: 9 }, (_, i) => ({
-        id: i + 4,
-        payPeriod: "Run for Mar 25th - Mar 26th",
-        employees: 252,
+    {
+        id: 4,
+        payPeriod: "Run for Mar 1st - Mar 14th",
+        employees: 240,
         payDate: "15 Mar, 2025",
-        amountPaid: "$235,525,00",
+        amountPaid: "$287,320.00",
         status: "Paid" as const
-    }))
+    },
+    {
+        id: 5,
+        payPeriod: "Run for Feb 16th - Feb 28th",
+        employees: 238,
+        payDate: "01 Mar, 2025",
+        amountPaid: "$265,890.00",
+        status: "Paid" as const
+    },
+    {
+        id: 6,
+        payPeriod: "Run for Feb 1st - Feb 15th",
+        employees: 235,
+        payDate: "16 Feb, 2025",
+        amountPaid: "$221,480.00",
+        status: "Paid" as const
+    },
+    {
+        id: 7,
+        payPeriod: "Run for Jan 16th - Jan 31st",
+        employees: 230,
+        payDate: "01 Feb, 2025",
+        amountPaid: "$298,675.00",
+        status: "Paid" as const
+    },
+    {
+        id: 8,
+        payPeriod: "Run for Jan 1st - Jan 15th",
+        employees: 228,
+        payDate: "16 Jan, 2025",
+        amountPaid: "$245,320.00",
+        status: "Paid" as const
+    },
+    {
+        id: 9,
+        payPeriod: "Run for Dec 16th - Dec 31st",
+        employees: 225,
+        payDate: "01 Jan, 2025",
+        amountPaid: "$315,890.00",
+        status: "Paid" as const
+    },
+    {
+        id: 10,
+        payPeriod: "Run for Dec 1st - Dec 15th",
+        employees: 220,
+        payDate: "16 Dec, 2024",
+        amountPaid: "$267,540.00",
+        status: "Paid" as const
+    },
+    {
+        id: 11,
+        payPeriod: "Run for Nov 16th - Nov 30th",
+        employees: 218,
+        payDate: "01 Dec, 2024",
+        amountPaid: "$289,760.00",
+        status: "Paid" as const
+    },
+    {
+        id: 12,
+        payPeriod: "Run for Nov 1st - Nov 15th",
+        employees: 215,
+        payDate: "16 Nov, 2024",
+        amountPaid: "$254,320.00",
+        status: "Paid" as const
+    }
 ];
 
 const getStatusVariant = (status: string) => {
@@ -145,22 +209,45 @@ export default function PaymentRun() {
                 {/* Mobile Card View */}
                 <div className="block sm:hidden">
                     {filteredPaymentRuns.map((run) => (
-                        <div key={run.id} className="p-4 border-b border-gray-200 last:border-b-0">
+                        <div
+                            key={run.id}
+                            className={`p-4 border-b border-gray-200 last:border-b-0 ${(run.status === 'Pending' || run.status === 'Paid') ? 'cursor-pointer' : ''}`}
+                            onClick={() => {
+                                if (run.status === 'Pending') {
+                                    router.push('/payroll/payment-run/pendingDetail');
+                                } else if (run.status === 'Paid') {
+                                    router.push('/payroll/payment-run/paidDetail');
+                                }
+                            }}
+                        >
                             <div className="flex justify-between items-start mb-2">
                                 <div className="flex-1">
                                     <h3 className="font-medium text-gray-900 text-sm">{run.payPeriod}</h3>
                                     <p className="text-xs text-gray-500 mt-1">{run.employees} employees</p>
                                 </div>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" className="h-8 w-8 p-0">
-                                            <MoreVertical className="h-4 w-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="rounded-[12px]" align="end">
-                                        <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B] h-[48px]">View Details</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <div onClick={(e) => e.stopPropagation()}>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                                <MoreVertical className="h-4 w-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent className="rounded-[12px]" align="end">
+                                            <DropdownMenuItem
+                                                className="text-[12px]/[18px] text-[#4B4B4B] h-[48px]"
+                                                onClick={() => {
+                                                    if (run.status === 'Pending') {
+                                                        router.push('/payroll/payment-run/pendingDetail');
+                                                    } else if (run.status === 'Paid') {
+                                                        router.push('/payroll/payment-run/paidDetail');
+                                                    }
+                                                }}
+                                            >
+                                                View Details
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
                             </div>
                             <div className="grid grid-cols-2 gap-2 text-xs">
                                 <div>
@@ -198,7 +285,17 @@ export default function PaymentRun() {
                         </TableHeader>
                         <TableBody>
                             {filteredPaymentRuns.map((run) => (
-                                <TableRow key={run.id} className="hover:bg-gray-50 border-b border-gray-200">
+                                <TableRow
+                                    key={run.id}
+                                    className={`hover:bg-gray-50 border-b border-gray-200 ${(run.status === 'Pending' || run.status === 'Paid') ? 'cursor-pointer' : ''}`}
+                                    onClick={() => {
+                                        if (run.status === 'Pending') {
+                                            router.push('/payroll/payment-run/pendingDetail');
+                                        } else if (run.status === 'Paid') {
+                                            router.push('/payroll/payment-run/paidDetail');
+                                        }
+                                    }}
+                                >
                                     <TableCell className="text-gray-900 text-[14px]/[22px] py-[19px] px-[16px]">
                                         {run.payPeriod}
                                     </TableCell>
@@ -218,7 +315,7 @@ export default function PaymentRun() {
                                             {run.status}
                                         </Badge>
                                     </TableCell>
-                                    <TableCell className="py-[19px] px-[16px]">
+                                    <TableCell className="py-[19px] px-[16px]" onClick={(e) => e.stopPropagation()}>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant="ghost" className="h-8 w-8 p-0">
@@ -226,7 +323,16 @@ export default function PaymentRun() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent className="rounded-[12px]" align="end">
-                                                <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B] h-[48px]">View Details</DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    className="text-[12px]/[18px] text-[#4B4B4B] h-[48px]"
+                                                    onClick={() => {
+                                                        if (run.status === 'Pending' || run.status === 'Paid') {
+                                                            router.push(`/payroll/payment-run/${run.id}?status=${run.status}`);
+                                                        }
+                                                    }}
+                                                >
+                                                    View Details
+                                                </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>

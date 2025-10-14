@@ -8,10 +8,14 @@ import BasicPay from "./components/basic-pay";
 import Prepare from "./components/prepare";
 import ValidateDetails from "./components/validate-details";
 import DisburseFunds from "./components/disburse-funds";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { customToast } from "@/components/common/toastr";
+import { CircleAlert, CircleCheck } from "lucide-react";
 
 export default function CreatePaymentRun() {
     const [currentStep, setCurrentStep] = useState(1);
     const [payrollData, setPayrollData] = useState<any>({});
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const router = useRouter();
 
     const handleNext = () => {
@@ -27,10 +31,27 @@ export default function CreatePaymentRun() {
     };
 
     const handleComplete = () => {
+        setIsConfirmModalOpen(true);
+    };
+
+    const handleConfirmDisburse = () => {
         // Handle payment processing
         console.log("Payment processed", payrollData);
-        // Navigate back to payment runs page
-        router.push("/payroll/payment-run");
+
+        // Close modal
+        setIsConfirmModalOpen(false);
+
+        // Show success toast
+        customToast(
+            "Payroll Disbursement Successful",
+            "Funds have been successfully disbursed to all employees.",
+            "success"
+        );
+
+        // Navigate back to payment runs page after a short delay
+        // setTimeout(() => {
+        //     router.push("/payroll/payment-run");
+        // }, 2000);
     };
 
     const handleBackToList = () => {
@@ -71,6 +92,14 @@ export default function CreatePaymentRun() {
                             Continue
                         </Button>
                     )}
+                    {currentStep === 4 && (
+                        <Button
+                            className="h-[40px] sm:h-[48px] flex-1 sm:flex-none sm:min-w-[125px] bg-[#0D978B] hover:bg-[#0c8679] font-semibold text-[14px]/[20px]"
+                            onClick={handleComplete}
+                        >
+                            Disburse Funds
+                        </Button>
+                    )}
                 </div>
             </div>
 
@@ -102,6 +131,46 @@ export default function CreatePaymentRun() {
                     )}
                 </div>
             </div>
+            <Dialog
+                open={isConfirmModalOpen}
+                onOpenChange={setIsConfirmModalOpen}
+            >
+                <DialogContent className="sm:max-w-[414px] sm:max-h-[244px] p-0 gap-0 !rounded-[12px]" close={false}>
+                    <div className="flex flex-col items-center pt-[24px] pb-[24px] px-[20px]">
+                        {/* Icon */}
+                        <div className="w-[40px] h-[40px] rounded-full bg-[#D6EEEC] flex items-center justify-center mb-[18px]">
+                            <CircleAlert className="w-[20px] h-[20px] text-[#0D978B]" />
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="text-[16px]/[24px] font-semibold text-[#353535] mb-[4px] text-center">
+                            Confirm Payroll Disbursement
+                        </h3>
+
+                        {/* Description */}
+                        <p className="text-[14px]/[20px] text-[#787878] text-center mb-[18px] max-w-[320px]">
+                            This action will process all employee payments and no further edits will be possible. Please review all details carefully before proceeding.
+                        </p>
+
+                        {/* Buttons */}
+                        <div className="flex gap-[12px] justify-center">
+                            <Button
+                                variant="outline"
+                                className="flex-1 w-[100px] h-[36px] rounded-[8px] border-[#D1D1D1] text-[14px]/[20px] font-medium text-[#353535] hover:bg-gray-50"
+                                onClick={() => setIsConfirmModalOpen(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                className="flex-1 h-[36px] w-[156px] rounded-[8px] bg-[#0D978B] hover:bg-[#0c8679] text-[14px]/[20px] font-medium"
+                                onClick={handleConfirmDisburse}
+                            >
+                                Confirm & Disburse
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

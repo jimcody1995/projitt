@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CircleCheck, MoreVertical, TriangleAlert, Clock, X } from "lucide-react";
+import { CircleCheck, MoreVertical, TriangleAlert, Clock, X, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import AttendanceRecord from "./attendance-record";
 import LeaveRecord from "./leave-record";
@@ -140,6 +140,7 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
     const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
+    const [isNotifyManagerModalOpen, setIsNotifyManagerModalOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
     const [clockIn, setClockIn] = useState("");
     const [clockOut, setClockOut] = useState("");
@@ -318,7 +319,13 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                                             <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]">
                                                 Leave
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]">
+                                            <DropdownMenuItem
+                                                className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setIsNotifyManagerModalOpen(true);
+                                                }}
+                                            >
                                                 Notify Manager
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
@@ -502,6 +509,377 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                             </div>
                         </div>
                     )}
+                </DialogContent>
+            </Dialog>
+
+            {/* Notify Manager Modal - Reconcile All */}
+            <Dialog open={isNotifyManagerModalOpen} onOpenChange={setIsNotifyManagerModalOpen}>
+                <DialogContent className="w-[95vw] max-w-[1010px] max-h-[90vh] bg-white !rounded-[16px] p-0 overflow-hidden" close={false}>
+                    <div className="relative w-full h-full flex flex-col">
+                        {/* Header */}
+                        <div className="flex items-center justify-between p-4 sm:p-5">
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6 p-0 border border-[#E9E9E9] rounded-full"
+                                    onClick={() => setIsNotifyManagerModalOpen(false)}
+                                >
+                                    <ArrowLeft />
+                                </Button>
+                                <h2 className="text-[18px]/[24px] font-semibold text-[#353535]">
+                                    Reconcile All
+                                </h2>
+                            </div>
+                            <Button className="bg-[#0D978B] hover:bg-[#0c8679] h-[32px] px-[16px] text-[14px]/[20px] font-medium rounded-[8px]">
+                                Notify Manager(s)
+                            </Button>
+                        </div>
+
+                        {/* Table Content */}
+                        <div className="flex-1 overflow-auto p-4 sm:px-5 sm:pt-0">
+                            <div className="bg-white border border-[#E9E9E9] rounded-[8px] sm:rounded-[12px] overflow-hidden">
+                                <div className="overflow-x-auto">
+                                    <Table className="min-w-[900px]">
+                                        <TableHeader>
+                                            <TableRow className="bg-[#EEF3F2] border-b border-[#E9E9E9]">
+                                                <TableHead className="text-[14px]/[22px] py-[13px] px-[16px] font-medium text-[#8C8E8E]">
+                                                    ID
+                                                </TableHead>
+                                                <TableHead className="text-[14px]/[22px] py-[13px] px-[16px] font-medium text-[#8C8E8E]">
+                                                    Employee
+                                                </TableHead>
+                                                <TableHead className="text-[14px]/[22px] py-[13px] px-[16px] font-medium text-[#8C8E8E]">
+                                                    Date
+                                                </TableHead>
+                                                <TableHead className="text-[14px]/[22px] py-[13px] px-[16px] font-medium text-[#8C8E8E]">
+                                                    Manager
+                                                </TableHead>
+                                                <TableHead className="text-[14px]/[22px] py-[13px] px-[16px] font-medium text-[#8C8E8E]">
+                                                    Clock In
+                                                </TableHead>
+                                                <TableHead className="text-[14px]/[22px] py-[13px] px-[16px] font-medium text-[#8C8E8E]">
+                                                    Clock Out
+                                                </TableHead>
+                                                <TableHead className="text-[14px]/[22px] py-[13px] px-[16px] font-medium text-[#8C8E8E]">
+                                                    Total Hours
+                                                </TableHead>
+                                                <TableHead className="w-[50px]"></TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {/* Employee 1 - Alice Fernandez */}
+                                            <TableRow className="border-b border-[#E9E9E9]">
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535] font-medium" rowSpan={4}>
+                                                    #E0001
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] border-r border-[#E9E9E9]" rowSpan={4}>
+                                                    <div className="flex items-center gap-[12px]">
+                                                        <Avatar className="h-[28px] w-[28px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[12px]">
+                                                                AF
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">Alice Fernandez</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Mar 21
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[8px]">
+                                                        <Avatar className="h-[20px] w-[20px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[10px]">
+                                                                JK
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">James King</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Leave
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Leave
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Leave
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <MoreVertical className="h-4 w-4" />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow className="border-b border-[#E9E9E9]">
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Mar 22
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[8px]">
+                                                        <Avatar className="h-[20px] w-[20px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[10px]">
+                                                                JK
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">James King</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    -
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    -
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    0h 0m
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <MoreVertical className="h-4 w-4" />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow className="border-b border-[#E9E9E9]">
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Mar 23
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[8px]">
+                                                        <Avatar className="h-[20px] w-[20px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[10px]">
+                                                                JK
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">James King</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    -
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    -
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    0h 0m
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <MoreVertical className="h-4 w-4" />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow className="border-b border-[#E9E9E9]">
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Mar 24
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[8px]">
+                                                        <Avatar className="h-[20px] w-[20px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[10px]">
+                                                                JK
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">James King</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    -
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    -
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    0h
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <MoreVertical className="h-4 w-4" />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+
+                                            {/* Employee 2 - Eva Kim */}
+                                            <TableRow className="border-b border-[#E9E9E9]">
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535] font-medium">
+                                                    #E0005
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[12px]">
+                                                        <Avatar className="h-[28px] w-[28px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[12px]">
+                                                                EK
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">Eva Kim</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Mar 25
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[8px]">
+                                                        <Avatar className="h-[20px] w-[20px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[10px]">
+                                                                JK
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">James King</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    08:5AM
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    -
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    7h 35m
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <MoreVertical className="h-4 w-4" />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+
+                                            {/* Employee 3 - Frank Lee */}
+                                            <TableRow className="border-b border-[#E9E9E9]">
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535] font-medium">
+                                                    #E0006
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[12px]">
+                                                        <Avatar className="h-[28px] w-[28px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[12px]">
+                                                                FL
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">Frank Lee</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Mar 21
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[8px]">
+                                                        <Avatar className="h-[20px] w-[20px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[10px]">
+                                                                PR
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">Peter Robinson</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    08:5AM
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    08:5AM
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    7h 35m
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <MoreVertical className="h-4 w-4" />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+
+                                            {/* Employee 4 - Daniel Johnson */}
+                                            <TableRow className="border-b border-[#E9E9E9]">
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535] font-medium">
+                                                    #E0007
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[12px]">
+                                                        <Avatar className="h-[28px] w-[28px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[12px]">
+                                                                DJ
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">Daniel Johnson</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Mar 21
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[8px]">
+                                                        <Avatar className="h-[20px] w-[20px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[10px]">
+                                                                JK
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">James King</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    -
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    -
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    7h 35m
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <MoreVertical className="h-4 w-4" />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+
+                                            {/* Employee 5 - Grace Miller */}
+                                            <TableRow className="border-b border-[#E9E9E9]">
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535] font-medium">
+                                                    #E0008
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[12px]">
+                                                        <Avatar className="h-[28px] w-[28px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[12px]">
+                                                                GM
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">Grace Miller</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    Mar 21
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <div className="flex items-center gap-[8px]">
+                                                        <Avatar className="h-[20px] w-[20px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[10px]">
+                                                                JK
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[14px]/[22px] text-[#353535]">James King</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    08:5AM
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    -
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px] text-[14px]/[22px] text-[#353535]">
+                                                    7h 35m
+                                                </TableCell>
+                                                <TableCell className="px-[16px] py-[12px]">
+                                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                                        <MoreVertical className="h-4 w-4" />
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </DialogContent>
             </Dialog>
         </div>

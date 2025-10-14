@@ -1,88 +1,228 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Printer } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 
 interface DisburseFundsProps {
     onBack: () => void;
     onComplete: () => void;
 }
 
+const activityLogData = [
+    {
+        id: 1,
+        title: "Created Payroll Run",
+        user: "Javier Chang",
+        initials: "AF",
+        date: "Jul 12, 2025"
+    },
+    {
+        id: 2,
+        title: "Imported Attendance",
+        user: "Javier Chang",
+        initials: "AF",
+        date: "Jul 12, 2025"
+    },
+    {
+        id: 3,
+        title: "Resolved Validation Issue",
+        user: "Javier Chang",
+        initials: "AF",
+        date: "Jul 12, 2025"
+    },
+    {
+        id: 4,
+        title: "Revalidated Employee",
+        user: "Javier Chang",
+        initials: "AF",
+        date: "Jul 12, 2025"
+    },
+    {
+        id: 5,
+        title: "Resolved Validation Issue",
+        user: "Javier Chang",
+        initials: "AF",
+        date: "Jul 12, 2025"
+    }
+];
+
 export default function DisburseFunds({ onBack, onComplete }: DisburseFundsProps) {
+    const [showActivityLog, setShowActivityLog] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const popupRef = useRef<HTMLDivElement>(null);
+
+    const handleGridClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        // Get click position relative to viewport
+        const x = e.clientX;
+        const y = e.clientY;
+
+        setPosition({ x, y });
+        setShowActivityLog(true);
+    };
+
+    // Close popup when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+                setShowActivityLog(false);
+            }
+        };
+
+        if (showActivityLog) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showActivityLog]);
+
     return (
-        <div className="w-full max-w-[600px]">
-            <h2 className="text-[20px] sm:text-[24px]/[30px] font-semibold text-[#353535] mb-[20px] sm:mb-[32px]">
+        <div className="w-full">
+            <h2 className="text-[16px] sm:text-[18px]/[24px] font-medium text-[#353535] mb-[30px] sm:mb-[42px]">
                 Disburse Funds
             </h2>
 
-            <div className="space-y-[24px] sm:space-y-[32px]">
-                {/* Summary Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-[16px] sm:gap-[24px]">
-                    {/* Employees Count */}
-                    <div className="bg-white border border-[#E9E9E9] rounded-[8px] sm:rounded-[12px] p-[16px] sm:p-[24px]">
-                        <div className="text-[12px] sm:text-[14px]/[20px] text-[#787878] mb-[8px]">
+            <div className="bg-white border border-[#E9E9E9] rounded-[8px] sm:rounded-[16px] p-[32px] sm:py-[62px] sm:px-[48px] relative"
+                onClick={handleGridClick}>
+                {/* Grid Layout */}
+                <div
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-y-[40px] sm:gap-y-[60px] gap-x-[40px] cursor-pointer"
+                >
+                    {/* Row 1 - Employees */}
+                    <div>
+                        <div className="text-[18px] sm:text-[24px]/[36px] font-medium text-[#353535] mb-[3px]">
+                            125
+                        </div>
+                        <div className="sm:text-[18px]/[30px] text-[14px] text-[#8F8F8F]">
                             Employees
                         </div>
-                        <div className="text-[24px] sm:text-[32px]/[40px] font-semibold text-[#353535]">
-                            165
+                    </div>
+
+                    {/* Row 1 - Pay Period */}
+                    <div>
+                        <div className="text-[18px] sm:text-[24px]/[36px] font-medium text-[#353535] mb-[3px]">
+                            Mar 25th - Mar 26th
+                        </div>
+                        <div className="sm:text-[18px]/[30px] text-[14px] text-[#8F8F8F]">
+                            Pay period
                         </div>
                     </div>
 
-                    {/* Pay Period */}
-                    <div className="bg-white border border-[#E9E9E9] rounded-[8px] sm:rounded-[12px] p-[16px] sm:p-[24px]">
-                        <div className="text-[12px] sm:text-[14px]/[20px] text-[#787878] mb-[8px]">
-                            Pay Period
+                    {/* Row 2 - Gross Pay (Left) */}
+                    <div>
+                        <div className="text-[18px] sm:text-[24px]/[36px] font-medium text-[#353535] mb-[3px]">
+                            $231,450.50
                         </div>
-                        <div className="text-[16px] sm:text-[18px]/[24px] font-semibold text-[#353535]">
-                            Mar 20th - Mar 26th
-                        </div>
-                    </div>
-                </div>
-
-                {/* Payment Amounts */}
-                <div className="space-y-[12px] sm:space-y-[16px]">
-                    {/* Gross Pay */}
-                    <div className="bg-white border border-[#E9E9E9] rounded-[8px] sm:rounded-[12px] p-[16px] sm:p-[24px]">
-                        <div className="text-[12px] sm:text-[14px]/[20px] text-[#787878] mb-[8px]">
+                        <div className="sm:text-[18px]/[30px] text-[14px] text-[#8F8F8F]">
                             Gross Pay
                         </div>
-                        <div className="text-[24px] sm:text-[32px]/[40px] font-semibold text-[#353535]">
-                            $231,400.50
+                    </div>
+
+                    {/* Row 2 - Gross Pay (Right) */}
+                    <div>
+                        <div className="text-[18px] sm:text-[24px]/[36px] font-medium text-[#353535] mb-[3px]">
+                            $231,450.50
+                        </div>
+                        <div className="sm:text-[18px]/[30px] text-[14px] text-[#8F8F8F]">
+                            Gross Pay
                         </div>
                     </div>
 
-                    {/* Deductions */}
-                    <div className="bg-white border border-[#E9E9E9] rounded-[8px] sm:rounded-[12px] p-[16px] sm:p-[24px]">
-                        <div className="text-[12px] sm:text-[14px]/[20px] text-[#787878] mb-[8px]">
+                    {/* Row 3 - Total Deductions */}
+                    <div>
+                        <div className="text-[18px] sm:text-[24px]/[36px] font-medium text-[#353535] mb-[3px]">
+                            $11,450.50
+                        </div>
+                        <div className="sm:text-[18px]/[30px] text-[14px] text-[#8F8F8F]">
                             Total Deductions
                         </div>
-                        <div className="text-[24px] sm:text-[32px]/[40px] font-semibold text-[#353535]">
-                            $11,405.0
-                        </div>
                     </div>
 
-                    {/* Net Pay */}
-                    <div className="bg-[#D6EEEC] border border-[#0D978B] rounded-[8px] sm:rounded-[12px] p-[16px] sm:p-[24px]">
-                        <div className="text-[12px] sm:text-[14px]/[20px] text-[#0D978B] mb-[8px]">
+                    {/* Row 3 - Net Pay */}
+                    <div>
+                        <div className="text-[18px] sm:text-[24px]/[36px] font-medium text-[#0D978B] mb-[3px]">
+                            $231,450.50
+                        </div>
+                        <div className="sm:text-[18px]/[30px] text-[14px] text-[#8F8F8F]">
                             Net Pay
                         </div>
-                        <div className="text-[28px] sm:text-[36px]/[44px] font-bold text-[#0D978B]">
-                            $231,400.50
-                        </div>
-                        <div className="text-[11px] sm:text-[12px]/[16px] text-[#0D978B] mt-[4px]">
-                            Total amount to be disbursed
-                        </div>
                     </div>
                 </div>
 
-                {/* Action Button */}
-                <div className="pt-[12px] sm:pt-[16px]">
-                    <Button
-                        onClick={onComplete}
-                        className="w-full bg-[#0D978B] hover:bg-[#0c8679] text-white h-[44px] sm:h-[48px] px-[20px] sm:px-[24px] rounded-[8px] font-semibold text-[14px] sm:text-[16px]"
+                {/* Activity Log Popup */}
+                {showActivityLog && (
+                    <div
+                        ref={popupRef}
+                        style={{
+                            position: 'fixed',
+                            left: `${position.x}px`,
+                            top: `${position.y}px`,
+                            zIndex: 1000
+                        }}
+                        className="bg-white border border-[#E9E9E9] shadow-xl rounded-[12px] w-[389px] h-[531px] flex flex-col"
                     >
-                        Process Payment
-                    </Button>
-                </div>
+                        {/* Header */}
+                        <div className="px-[24px] pt-[24px] pb-[16px] flex-shrink-0 border-b border-[#E9E9E9]">
+                            <h3 className="text-[14px]/[18px] font-medium text-gray-800">
+                                Activity Log
+                            </h3>
+                        </div>
+
+                        {/* Activity List with Timeline */}
+                        <div className="flex-1 overflow-y-auto p-[24px]">
+                            <div className="relative">
+                                {activityLogData.map((activity, index) => (
+                                    <div
+                                        key={activity.id}
+                                        className="relative pb-[8px] last:pb-0"
+                                    >
+                                        {/* Timeline container */}
+                                        <div className="flex gap-[8px] h-fit">
+                                            {/* Timeline - Left side stepper */}
+                                            <div className="relative flex flex-col items-center flex-shrink-0">
+                                                {/* Teal dot indicator */}
+                                                <div className="w-[14px] h-[14px] bg-[#0D978B] rounded-full z-10 flex-shrink-0"></div>
+
+                                                {/* Connecting line */}
+                                                {index !== activityLogData.length - 1 && (
+                                                    <div className="w-[1px] h-[60px] bg-[#D9D9D9] mt-[8px]"></div>
+                                                )}
+                                            </div>
+
+                                            {/* Content */}
+                                            <div className="flex-1 min-w-0">
+                                                {/* Title */}
+                                                <div className="text-[14px]/[16px] font-medium text-[#4B4B4B] mb-[4px]">
+                                                    {activity.title}
+                                                </div>
+
+                                                {/* User Info */}
+                                                <div className="flex items-center gap-[4px] mb-[4px]">
+                                                    <Avatar className="h-[20px] w-[20px]">
+                                                        <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[8px] font-medium">
+                                                            {activity.initials}
+                                                        </AvatarFallback>
+                                                    </Avatar>
+                                                    <span className="text-[12px]/[18px] text-[#353535]">
+                                                        {activity.user}
+                                                    </span>
+                                                </div>
+
+                                                {/* Date */}
+                                                <div className="text-[10px]/[12px] text-[#A5A5A5]">
+                                                    {activity.date}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
