@@ -19,6 +19,7 @@ import {
   Euro,
   Eye,
   File,
+  UserLock,
   FileQuestion,
   FileText,
   Flag,
@@ -78,11 +79,17 @@ export const MENU_SIDEBAR: MenuConfig = [
   {
     title: 'Communication',
     icon: MessageSquareMore,
+    path: '/communication',
   },
   {
     title: 'Company',
     icon: Settings,
     path: '/company',
+  },
+  {
+    title: 'User Access',
+    icon: UserLock,
+    path: '/user-access',
   },
   {
     heading: 'HR Management',
