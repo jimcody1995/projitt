@@ -14,7 +14,8 @@ const ReactQuill = dynamic(() => import('react-quill-new'), {
     loading: () => <div className="min-h-[120px] bg-gray-50 animate-pulse rounded border" />
 });
 
-import { Redo, Smile, Undo } from "lucide-react";
+import { Redo, Smile, Undo, Search, PaperclipIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 /**
  * @description
@@ -37,6 +38,27 @@ export default function Message({
     const [message, setMessage] = useState('');
     const quillRef = useRef<HTMLDivElement | null>(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+    const [showTemplateModal, setShowTemplateModal] = useState(false);
+    const [templateSearch, setTemplateSearch] = useState('');
+
+    // Template data
+    const templates = [
+        'Onboarding Invite',
+        'Template 1',
+        'Template 2',
+        'Template 3'
+    ];
+
+    // Filter templates based on search
+    const filteredTemplates = templates.filter(template =>
+        template.toLowerCase().includes(templateSearch.toLowerCase())
+    );
+
+    // Handle template selection
+    const handleTemplateSelect = (template: string) => {
+        setShowTemplateModal(false);
+        setTemplateSearch('');
+    };
 
     /**
         * Inserts emoji at cursor position in Quill editor
@@ -213,10 +235,57 @@ export default function Message({
                                 />
                             </div>
                         </div>
-                        <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 pt-[16px] sm:pt-[26px] mt-auto">
-                            <Button variant={"outline"} className="px-4 h-[36px] sm:h-[42px] border border-[#053834] text-[#053834] font-semibold text-[12px]/[18px] sm:text-[14px]/[20px] w-full sm:w-auto" data-testid="send-message-button">Use Template</Button>
+                        <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 pt-[16px] sm:pt-[26px] mt-auto items-center">
+                            <Button
+                                variant={"outline"}
+                                className="px-4 h-[36px] sm:h-[42px] border border-[#053834] text-[#053834] font-semibold text-[12px]/[18px] sm:text-[14px]/[20px] w-full sm:w-auto"
+                                data-testid="use-template-button"
+                                onClick={() => setShowTemplateModal(true)}
+                            >
+                                Use Template
+                            </Button>
+                            <PaperclipIcon className="w-5 h-5 ml-auto mr-5 items-center font-regular text-[#4b4b4b]" />
                             <Button className="w-full sm:w-[158px] h-[36px] sm:h-[42px]" variant={"primary"} onClick={handleSendMessage} data-testid="send-message-button">Send Message</Button>
                         </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Template Selection Modal */}
+            <Dialog open={showTemplateModal} onOpenChange={setShowTemplateModal}>
+                <DialogContent className="w-[188px] h-[230px] p-0" close={false}>
+                    <DialogTitle className="sr-only">Select Template</DialogTitle>
+                    {/* Search Input */}
+                    <div className="p-3 border-b border-gray-100">
+                        <div className="relative">
+                            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                            <Input
+                                type="text"
+                                placeholder="Search Templates"
+                                value={templateSearch}
+                                onChange={(e) => setTemplateSearch(e.target.value)}
+                                className="pl-8 h-8 text-sm border-gray-200 focus:border-gray-300 focus:ring-0"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Template List */}
+                    <div className="p-2 max-h-[170px] overflow-y-auto">
+                        {filteredTemplates.length > 0 ? (
+                            filteredTemplates.map((template, index) => (
+                                <div
+                                    key={index}
+                                    className="px-2 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer rounded"
+                                    onClick={() => handleTemplateSelect(template)}
+                                >
+                                    {template}
+                                </div>
+                            ))
+                        ) : (
+                            <div className="px-2 py-2 text-sm text-gray-500 text-center">
+                                No templates found
+                            </div>
+                        )}
                     </div>
                 </DialogContent>
             </Dialog>
