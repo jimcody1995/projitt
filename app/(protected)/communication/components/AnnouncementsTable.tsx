@@ -36,7 +36,7 @@ const announcements: Announcement[] = [
 
 export default function AnnouncementsTable() {
     return (
-        <div className="rounded-[12px] overflow-hidden">
+        <div className="rounded-[12px] overflow-hidden bg-white shadow-sm">
             <div className="overflow-x-auto">
                 <table className="w-full min-w-[600px]">
                     <thead className="bg-[#EEF3F2] h-[50px] sm:h-[60px]">
@@ -80,7 +80,8 @@ export default function AnnouncementsTable() {
                                 </td>
                                 <td className="px-[12px] sm:px-[16px] py-[12px] sm:py-[16px] text-right">
                                     <button className="flex items-center gap-1 text-[#0D978B] hover:text-[#0D978B]/80 text-[12px]/[16px] sm:text-[14px]/[20px] font-medium">
-                                        View Announcement →
+                                        <span className="hidden sm:inline">View Announcement →</span>
+                                        <span className="sm:hidden">View →</span>
                                     </button>
                                 </td>
                             </tr>

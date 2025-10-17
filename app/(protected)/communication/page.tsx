@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import Message from './components/message';
 import EventsTable from './components/EventsTable';
 import AnnouncementsTable from './components/AnnouncementsTable';
+import CreateAnnouncementSheet from './components/CreateAnnouncementSheet';
 
 interface Message {
     id: string;
@@ -63,6 +64,8 @@ export default function Communication() {
     ]);
     const [newMessage, setNewMessage] = useState('');
     const [showComposeModal, setShowComposeModal] = useState(false);
+    const [showEventsPreviewSheet, setShowEventsPreviewSheet] = useState(false);
+    const [showAnnouncementSheet, setShowAnnouncementSheet] = useState(false);
 
     const messages: Message[] = [
         {
@@ -170,7 +173,7 @@ export default function Communication() {
     };
 
     return (
-        <div className="py-[19px] px-2  bg-[#F8F9FA] min-h-screen">
+        <div className="py-4 px-2 sm:py-[19px] sm:px-4 lg:px-6 bg-[#F8F9FA] min-h-screen">
             {/* Header */}
             <div className="mb-7">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -197,17 +200,19 @@ export default function Communication() {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-48">
-                                <DropdownMenuItem>Send Message</DropdownMenuItem>
-                                <DropdownMenuItem>Create Template</DropdownMenuItem>
-                                <DropdownMenuItem>Export Messages</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setShowAnnouncementSheet(true)}>New Announcement</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => {
+                                    setActiveTab('Events');
+                                    setShowEventsPreviewSheet(true);
+                                }}>New Event</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
                 </div>
 
                 {/* Navigation Tabs */}
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-8 items-start sm:items-center justify-between border-b border-gray-200 mb-6">
-                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
+                <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-8 items-start lg:items-center justify-between border-b border-gray-200 mb-6">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 w-full lg:w-auto">
                         <button
                             onClick={() => setActiveTab('Messages')}
                             className={`py-[14px] px-4 sm:px-8 text-[14px]/[18px] sm:text-[15px]/[20px] font-medium border-b-2 transition-colors relative ${activeTab === 'Messages'
@@ -239,7 +244,7 @@ export default function Communication() {
                             Events
                         </button>
                     </div>
-                    <div className="relative w-full sm:w-[175px]">
+                    <div className="relative w-full sm:w-[200px] lg:w-[175px]">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                         <Input
                             placeholder="Search Message"
@@ -255,7 +260,7 @@ export default function Communication() {
             {activeTab === 'Messages' && (
                 <>
                     {/* Messages Table */}
-                    <div className="rounded-[12px] overflow-hidden">
+                    <div className="rounded-[12px] overflow-hidden bg-white shadow-sm">
                         <div className="overflow-x-auto">
                             <table className="w-full min-w-[600px]">
                                 <thead className="bg-[#EEF3F2] h-[50px] sm:h-[60px]">
@@ -313,8 +318,8 @@ export default function Communication() {
                     </div>
 
                     {/* Pagination at bottom of screen */}
-                    <div className=" bg-transparent bottom-0 border-t border-gray-200 px-6 py-4  w-full">
-                        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="bg-white border-t border-gray-200 px-4 sm:px-6 py-4 w-full mt-4 rounded-[12px] shadow-sm">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-2">
                                 <div className="flex items-center gap-2">
                                     <span className="text-[13px]/[18px] sm:text-[14px]/[20px] text-[#6B7280]">Show per page</span>
@@ -435,7 +440,10 @@ export default function Communication() {
 
             {/* Events Tab Content */}
             {activeTab === 'Events' && (
-                <EventsTable />
+                <EventsTable
+                    showPreviewSheet={showEventsPreviewSheet}
+                    onClosePreviewSheet={() => setShowEventsPreviewSheet(false)}
+                />
             )}
 
             {/* Announcements Tab Content */}
@@ -445,7 +453,7 @@ export default function Communication() {
 
             {/* Chat Sheet */}
             <Sheet open={!!selectedMessage} onOpenChange={() => setSelectedMessage(null)}>
-                <SheetContent side="right" className="w-full sm:min-w-[400px] md:min-w-[600px] p-0" close={false}>
+                <SheetContent side="right" className="w-full sm:w-[400px] md:w-[500px] lg:w-[600px] p-0" close={false}>
                     <div className="flex flex-col h-full" >
                         {/* Chat Header */}
                         <SheetHeader className="px-4 sm:px-8 py-4 sm:py-7 border-b border-gray-200 bg-[#FAFAFA]">
@@ -547,6 +555,12 @@ export default function Communication() {
                     }}
                 />
             )}
+
+            {/* Create Announcement Sheet */}
+            <CreateAnnouncementSheet
+                open={showAnnouncementSheet}
+                onOpenChange={setShowAnnouncementSheet}
+            />
         </div>
     );
 }

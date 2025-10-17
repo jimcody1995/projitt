@@ -129,22 +129,22 @@ export default function CreateTemplatePage() {
     ];
 
     return (
-        <div className="py-[19px] px-2  bg-gray-50 min-h-screen ">
+        <div className="py-4 px-2 sm:py-[19px] sm:px-4 lg:px-6 bg-gray-50 min-h-screen">
             {/* Header */}
-            <div className="mb-6">
-                <div className="flex justify-between items-start mb-4">
-                    <div>
+            <div className="mb-4 sm:mb-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                    <div className="w-full sm:w-auto">
                         <p className="text-[12px]/[20px] text-gray-500 mb-1"><span className="cursor-pointer hover:text-[#0d978b]" onClick={() => router.push('/communication')}>Communication</span> <span className="text-[#353535]">/ Create Templates</span></p>
-                        <h1 className="text-[24px]/[30px] font-semibold text-[#353535]">Create Templates</h1>
+                        <h1 className="text-[20px]/[26px] sm:text-[24px]/[30px] font-semibold text-[#353535]">Create Templates</h1>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                         <Button
                             variant="ghost"
-                            className="h-[42px] px-4 border-gray-300 text-[#353535] text-[14px]/[20px] hover:bg-gray-50 font-semibold"
+                            className="h-[40px] sm:h-[42px] px-4 border-gray-300 text-[#353535] text-[14px]/[20px] hover:bg-gray-50 font-semibold w-full sm:w-auto"
                         >
                             Save as Draft
                         </Button>
-                        <Button className="bg-[#0D978B] hover:bg-teal-700 text-white h-[42px] rounded-[8px]  text-[14px]/[20px] px-4 font-semibold">
+                        <Button className="bg-[#0D978B] hover:bg-teal-700 text-white h-[40px] sm:h-[42px] rounded-[8px] text-[14px]/[20px] px-4 font-semibold w-full sm:w-auto">
                             Publish Template
                         </Button>
                     </div>
@@ -155,7 +155,7 @@ export default function CreateTemplatePage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 bg-white rounded-[12px] border border-[#E9E9E9]">
                 {/* Left Column - Template Details */}
                 <div className="lg:col-span-1">
-                    <div className=" p-6">
+                    <div className="p-4 sm:p-6">
                         {/* Template Name */}
                         <div className="mb-4">
                             <label className="block text-[14px]/[16px] text-[#1C1C1C] mb-[6px]">
@@ -209,8 +209,8 @@ export default function CreateTemplatePage() {
                 </div>
 
                 {/* Right Column - Message Editor */}
-                <div className="lg:col-span-2 border-l border-[#E9E9E9]">
-                    <div className=" p-6">
+                <div className="lg:col-span-2 border-t lg:border-t-0 lg:border-l border-[#E9E9E9]">
+                    <div className="p-4 sm:p-6">
                         {/* Smart Text Info */}
                         <div className="mb-[34px]">
                             <p className="text-[14px]/[20px] text-[#787878]">
@@ -220,10 +220,10 @@ export default function CreateTemplatePage() {
 
                         {/* Message Title and Smart Text */}
                         <div className='border border-[#E9E9E9] bg-[#F9F9F9] rounded-[12px] p-0'>
-                            <div className="p-6 flex  justify-between">
-                                <p className="text-[22px]/[30px] text-[#1c1c1c] font-bold" data-testid="message-title">Message Title</p>
+                            <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between gap-4">
+                                <p className="text-[18px]/[24px] sm:text-[22px]/[30px] text-[#1c1c1c] font-bold" data-testid="message-title">Message Title</p>
                                 <Select value="smart" data-testid="smart-text-select">
-                                    <SelectTrigger className="w-[200px] h-[32px]" id="smart-text-select-trigger" data-testid="smart-text-select-trigger">
+                                    <SelectTrigger className="w-full sm:w-[200px] h-[32px]" id="smart-text-select-trigger" data-testid="smart-text-select-trigger">
                                         <SelectValue placeholder="Select" />
                                     </SelectTrigger>
                                     <SelectContent data-testid="smart-text-select-content">
@@ -235,9 +235,9 @@ export default function CreateTemplatePage() {
                                 <div
                                     id="custom-toolbar"
                                     data-testid="custom-toolbar"
-                                    className="flex justify-between items-center !px-6 bg-white border border-[#E9E9E9] !rounded-none  !py-[16px] min-h-[60px]"
+                                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center !px-4 sm:!px-6 bg-white border border-[#E9E9E9] !rounded-none !py-[12px] sm:!py-[16px] min-h-[80px] sm:min-h-[60px] gap-3 sm:gap-0"
                                 >
-                                    <div className="flex  items-center  min-w-0">
+                                    <div className="flex flex-wrap items-center min-w-0 gap-1 sm:gap-2">
                                         <button className="ql-bold w-4 h-4 " data-testid="bold-button" />
                                         <button className="ql-italic w-4 h-4 " data-testid="italic-button" />
                                         <button className="ql-underline w-4 h-4 " data-testid="underline-button" />
@@ -263,10 +263,10 @@ export default function CreateTemplatePage() {
                                             <Redo className="text-[#4b4b4b] w-4 h-4" />
                                         </button>
                                     </div>
-                                    <div className="items-center -pl-[24px]">
+                                    <div className="flex items-center w-full sm:w-auto">
                                         <Button
                                             variant="ghost"
-                                            className="flex items-center gap-2 py-1 h-auto min-w-[106px] text-sm"
+                                            className="flex items-center gap-2 py-1 h-auto min-w-[106px] text-sm w-full sm:w-auto justify-center sm:justify-start"
                                             onClick={handleGenerateClick}
                                         >
                                             <SparklesIcon
@@ -301,7 +301,7 @@ export default function CreateTemplatePage() {
                                         placeholder="Enter the job description..."
                                         theme="snow"
                                         modules={modules}
-                                        className="w-full h-[600px] bg-white border border-[#E9E9E9]"
+                                        className="w-full h-[400px] sm:h-[500px] lg:h-[600px] bg-white border border-[#E9E9E9]"
                                         id="job-description-editor"
                                         data-testid="job-description-editor"
                                     />
@@ -313,73 +313,80 @@ export default function CreateTemplatePage() {
             </div>
             {/* Generate Dialog */}
             <Dialog open={showGenerateDialog} onOpenChange={setShowGenerateDialog}>
-                <DialogContent className="max-w-[400px] min-h-[290px] p-0" close={false}>
-                    <DialogTitle className="text-[14px]/[16px]  border-b border-[#E9E9E9]  flex items-center justify-between p-4">
+                <DialogContent className="w-[95vw] max-w-[400px] min-h-[320px] sm:min-h-[290px] p-0 mx-auto" close={false}>
+                    <DialogTitle className="text-[14px]/[16px] border-b border-[#E9E9E9] flex items-center justify-between p-3 sm:p-4">
                         <div className="flex items-center gap-2">
                             <SparklesIcon
                                 className="w-4 h-4 text-[#0D978B]"
                             />
-                            <p className="text-[#353535] font-semibold text-[14px]/[16px]" >Generate</p>
+                            <p className="text-[#353535] font-semibold text-[14px]/[16px]">Generate</p>
                         </div>
                         <button
                             onClick={() => setShowGenerateDialog(false)}
-                            className="text-gray-400 hover:text-gray-600"
+                            className="text-gray-400 hover:text-gray-600 p-1"
                         >
-                            <X className="w-3 h-3 text-[#787878]" />
+                            <X className="w-4 h-4 sm:w-3 sm:h-3 text-[#787878]" />
                         </button>
                     </DialogTitle>
 
-                    <div className="space-y-4 p-4">
+                    <div className="space-y-4 p-3 sm:p-4">
                         {/* Tone Selection */}
-                        <div className="space-y-2 mb-3">
-                            <div className="flex gap-2">
+                        <div className="space-y-3 mb-4">
+                            <p className="text-[13px]/[16px] sm:text-[14px]/[18px] text-[#4B4B4B] font-medium">Select Tone:</p>
+                            <div className="flex flex-wrap gap-2 sm:gap-3">
                                 <button
                                     onClick={() => setSelectedTone('formal')}
-                                    className={`flex h-6 items-center gap-2 px-3 py-2 rounded-full text-[12px]/[16px] font-medium transition-colors ${selectedTone === 'formal'
+                                    className={`flex h-8 sm:h-6 items-center gap-1 sm:gap-2 px-3 sm:px-3 py-2 rounded-full text-[11px]/[14px] sm:text-[12px]/[16px] font-medium transition-colors ${selectedTone === 'formal'
                                         ? 'bg-[#0D978B] text-white'
                                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
-                                    ✍️Formal
+                                    <span className="text-[14px] sm:text-[12px]">✍️</span>
+                                    <span className="hidden sm:inline">Formal</span>
+                                    <span className="sm:hidden">Formal</span>
                                 </button>
                                 <button
                                     onClick={() => setSelectedTone('friendly')}
-                                    className={`flex h-6 items-center gap-2 px-3 py-2 rounded-full text-[12px]/[16px] font-medium transition-colors ${selectedTone === 'friendly'
+                                    className={`flex h-8 sm:h-6 items-center gap-1 sm:gap-2 px-3 sm:px-3 py-2 rounded-full text-[11px]/[14px] sm:text-[12px]/[16px] font-medium transition-colors ${selectedTone === 'friendly'
                                         ? 'bg-[#0D978B] text-white'
                                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
-                                    😎 Friendly
+                                    <span className="text-[14px] sm:text-[12px]">😎</span>
+                                    <span className="hidden sm:inline">Friendly</span>
+                                    <span className="sm:hidden">Friendly</span>
                                 </button>
                                 <button
                                     onClick={() => setSelectedTone('inspirational')}
-                                    className={`flex h-6 items-center gap-2 px-3 py-2 rounded-full text-[12px]/[16px] font-medium transition-colors ${selectedTone === 'inspirational'
+                                    className={`flex h-8 sm:h-6 items-center gap-1 sm:gap-2 px-3 sm:px-3 py-2 rounded-full text-[11px]/[14px] sm:text-[12px]/[16px] font-medium transition-colors ${selectedTone === 'inspirational'
                                         ? 'bg-[#0D978B] text-white'
                                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
-                                    💪
-                                    Inspirational
+                                    <span className="text-[14px] sm:text-[12px]">💪</span>
+                                    <span className="hidden sm:inline">Inspirational</span>
+                                    <span className="sm:hidden">Inspire</span>
                                 </button>
                             </div>
                         </div>
 
                         {/* Description Input */}
                         <div className="space-y-2">
+                            <p className="text-[13px]/[16px] sm:text-[14px]/[18px] text-[#4B4B4B] font-medium">Description:</p>
                             <Textarea
                                 placeholder="Describe the type of template you want to create"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                className="w-full h-[100px] border-none shadow-none resize-none px-0 py-2 text-[14px]/[20px] text-[#4B4B4B]"
+                                className="w-full h-[80px] sm:h-[100px] border border-gray-200 rounded-[8px] shadow-none resize-none px-3 py-2 text-[13px]/[18px] sm:text-[14px]/[20px] text-[#4B4B4B] focus:border-[#0D978B] focus:ring-1 focus:ring-[#0D978B] focus:outline-none"
                             />
                         </div>
 
                         {/* Generate Button */}
                         <Button
                             onClick={handleGenerate}
-                            className="w-full h-[42px] bg-[#0D978B] hover:bg-[#0D978B]/90 text-white text-[14px]/[20px] font-semibold rounded-[8px]"
+                            className="w-full h-[44px] sm:h-[42px] bg-[#0D978B] hover:bg-[#0D978B]/90 text-white text-[14px]/[20px] font-semibold rounded-[8px] mt-4"
                         >
-                            Generate
+                            Generate Template
                         </Button>
                     </div>
                 </DialogContent>
@@ -387,33 +394,35 @@ export default function CreateTemplatePage() {
 
             {/* Result Dialog */}
             <Dialog open={showResultDialog} onOpenChange={setShowResultDialog}>
-                <DialogContent className="max-w-[405px] max-h-[400px] !rounded-[16px] p-0 " close={false}>
+                <DialogContent className="w-[95vw] max-w-[405px] max-h-[450px] sm:max-h-[400px] !rounded-[16px] p-0 mx-auto" close={false}>
                     <div >
                         {/* Generated Content */}
-                        <div className="max-h-[400px] p-6 overflow-y-auto border-b border-[#E9E9E9]">
+                        <div className="max-h-[300px] sm:max-h-[400px] p-3 sm:p-4 lg:p-6 overflow-y-auto border-b border-[#E9E9E9]">
                             <div
-                                className="prose prose-sm max-w-none text-[14px]/[20px] text-[#4B4B4B]"
+                                className="prose prose-sm max-w-none text-[13px]/[18px] sm:text-[14px]/[20px] text-[#4B4B4B]"
                                 dangerouslySetInnerHTML={{ __html: generatedContent }}
                             />
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="grid grid-cols-2 gap-3 p-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 p-3 sm:p-4">
                             <Button
                                 variant="ghost"
                                 onClick={handleAcceptAndInsert}
-                                className="flex items-center gap-2 text-[#0D978B] border-r border-[#E9E9E9] font-medium text-[14px]/[20px]"
+                                className="flex items-center justify-center gap-2 text-[#0D978B] sm:border-r border-b sm:border-b-0 border-[#E9E9E9] font-medium text-[13px]/[18px] sm:text-[14px]/[20px] h-[44px] sm:h-auto py-3 sm:py-2"
                             >
                                 <CheckLine className="w-4 h-4" />
-                                Accept & Insert
+                                <span className="hidden sm:inline">Accept & Insert</span>
+                                <span className="sm:hidden">Accept & Insert</span>
                             </Button>
                             <Button
                                 variant="ghost"
                                 onClick={handleTryAgain}
-                                className="flex items-center gap-2 font-medium text-[14px]/[20px]"
+                                className="flex items-center justify-center gap-2 font-medium text-[13px]/[18px] sm:text-[14px]/[20px] h-[44px] sm:h-auto py-3 sm:py-2"
                             >
                                 <RotateCcw className="w-4 h-4" />
-                                Try again
+                                <span className="hidden sm:inline">Try again</span>
+                                <span className="sm:hidden">Try again</span>
                             </Button>
                         </div>
                     </div>
