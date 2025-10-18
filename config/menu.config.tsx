@@ -158,6 +158,7 @@ export const MENU_SIDEBAR: MenuConfig = [
   {
     title: 'Report & Analytics',
     icon: PieChart,
+    path: '/report-analytics',
   },
 ];
 
