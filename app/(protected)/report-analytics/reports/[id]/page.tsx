@@ -240,7 +240,7 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
                 <PopoverTrigger asChild>
                     <Button
                         variant="outline"
-                        className={`w-full max-[425px]:w-full max-[768px]:w-32 w-30 lg:w-40 justify-between text-left font-normal border border-gray-300 rounded-lg px-3 h-8 sm:h-10 lg:text-[14px]/[20px] text-[12px] text-gray-900 bg-transparent  ${!value && "text-muted-foreground"
+                        className={`w-full !w-full max-[768px]:w-32 w-30 lg:!w-40 justify-between text-left font-normal border border-gray-300 rounded-lg px-3 h-8 sm:h-10 lg:text-[14px]/[20px] text-[12px] text-gray-900 bg-transparent  ${!value && "text-muted-foreground"
                             }`}
                     >
 
@@ -346,13 +346,13 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
             {/* Filters */}
             <div className="flex items-end gap-6 max-[425px]:flex-col max-[425px]:items-start max-[425px]:gap-4 max-[768px]:flex-wrap max-[768px]:gap-4 border-b border-gray-300 w-full pb-6 sm:px-[40px] px-[20px]">
                 {/* Report Period Filter */}
-                <div className="flex flex-col space-y-1">
+                <div className="flex flex-col space-y-1 w-full sm:w-auto">
                     <label className="text-[12px]/[18px] font-medium text-gray-500">Report Period</label>
                     <div className="relative">
                         <select
                             value={selectedDateRange}
                             onChange={(e) => handleDateRangeChange(e.target.value)}
-                            className="border border-gray-300 rounded-lg px-4 h-8 sm:h-10 lg:text-[14px]/[20px] text-[12px] sm:w-30 lg:w-40 max-[425px]:w-full max-[768px]:w-32 appearance-none pr-7"
+                            className="border border-gray-300 rounded-lg px-4 h-8 sm:h-10 lg:text-[14px]/[20px] text-[12px] !w-full sm:w-30 lg:!w-40 max-[768px]:w-32 appearance-none pr-7"
                         >
                             <option value="last-30-days">Last 30 days</option>
                             <option value="last-90-days">Last 90 days</option>
@@ -364,7 +364,7 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
                 </div>
 
                 {/* From Date Filter */}
-                <div className="flex flex-col space-y-1">
+                <div className="flex flex-col space-y-1 w-full sm:w-auto">
                     <label className="text-[12px]/[18px] font-medium text-gray-500">From</label>
                     <DateInput
                         value={fromDate}
@@ -374,7 +374,7 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
                 </div>
 
                 {/* To Date Filter */}
-                <div className="flex flex-col space-y-1">
+                <div className="flex flex-col space-y-1 w-full sm:w-auto">
                     <label className="text-[12px]/[18px] font-medium text-gray-500">To</label>
                     <DateInput
                         value={toDate}
@@ -384,10 +384,10 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
                 </div>
 
                 {/* Accounting Method Filter */}
-                <div className="flex flex-col space-y-1">
+                <div className="flex flex-col space-y-1 ">
                     <label className="text-[12px]/[18px] font-medium text-gray-500">Accounting Method</label>
                     <div className="relative">
-                        <select className="border border-gray-300 rounded-lg px-3 py-2 lg:text-[14px]/[20px] text-[12px] w-30 lg:w-40 max-[425px]:w-full max-[768px]:w-32 h-8 sm:h-10 appearance-none bg-transparent pr-8">
+                        <select className="border border-gray-300 rounded-lg px-3 py-2 lg:text-[14px]/[20px] text-[12px] !w-full !max-[425px]:w-full sm:w-30 lg:!w-40 max-[768px]:w-32 h-8 sm:h-10 appearance-none bg-transparent pr-8">
                             <option>Accrual</option>
                             <option>Cash</option>
                         </select>
@@ -396,8 +396,8 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
                 </div>
 
                 {/* Filter Button */}
-                <div className="ml-auto">
-                    <button className="flex items-center border border-gray-300 text-gray-700 px-4 h-8 sm:h-10 text-[14px] lg:text-[16px]/[20px]  rounded-lg hover:bg-gray-50 transition-colors">
+                <div className="ml-auto max-[425px]:ml-0 w-full sm:w-auto">
+                    <button className="flex items-center border border-gray-300 text-gray-700 px-4 h-8 sm:h-10 text-[14px] lg:text-[16px]/[20px] rounded-lg hover:bg-gray-50 transition-colors w-full sm:w-auto">
                         <ListFilter className="w-4 h-4 mr-2" />
                         Filter
                     </button>
@@ -405,8 +405,8 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
             </div>
 
             {/* Report Content */}
-            <div className="p-6 sm:px-[120px] px-[100px]">
-                <div className=" border border-gray-200 px-6 ">
+            <div className="sm:p-6 p-2 sm:px-[120px] px-[60px]">
+                <div className=" sm:border sm:border-gray-200 sm:px-6 ">
                     {/* Report Header */}
                     <div className="border-b border-gray-200 px-6 py-4">
                         <div className="text-center">
