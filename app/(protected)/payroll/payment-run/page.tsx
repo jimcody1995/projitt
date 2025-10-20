@@ -993,7 +993,6 @@ export default function PaymentRun() {
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
                                     <div className="flex items-center gap-3">
-
                                         <div>
                                             <p className="font-medium text-gray-900">Holiday Bonus</p>
                                             <p className="text-sm text-gray-600">All Employees • Dec 15, 2024</p>
@@ -1007,7 +1006,6 @@ export default function PaymentRun() {
 
                                 <div className="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg">
                                     <div className="flex items-center gap-3">
-
                                         <div>
                                             <p className="font-medium text-gray-900">Late Fee</p>
                                             <p className="text-sm text-gray-600">John Doe • Dec 10, 2024</p>
@@ -1021,7 +1019,6 @@ export default function PaymentRun() {
 
                                 <div className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
                                     <div className="flex items-center gap-3">
-
                                         <div>
                                             <p className="font-medium text-gray-900">Overtime Pay</p>
                                             <p className="text-sm text-gray-600">Jane Smith • Dec 8, 2024</p>
