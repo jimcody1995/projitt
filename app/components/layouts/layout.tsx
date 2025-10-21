@@ -86,7 +86,7 @@ export function Layout({ children }: { children: ReactNode }) {
     loadDesignation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Runs only once on mount
-  
+
   useEffect(() => {
     const loadEmploymentType = async () => {
       const response = await getEmploymentType();

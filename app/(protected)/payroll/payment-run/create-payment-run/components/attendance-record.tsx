@@ -80,7 +80,11 @@ const attendanceData = [
     },
 ];
 
-export default function AttendanceRecord() {
+interface AttendanceRecordProps {
+    onEditEntry?: (employee: any) => void;
+}
+
+export default function AttendanceRecord({ onEditEntry }: AttendanceRecordProps) {
     return (
         <div className="max-h-[400px] overflow-auto rounded-[12px] border border-[#E9E9E9]">
             <Table>
@@ -148,7 +152,10 @@ export default function AttendanceRecord() {
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="rounded-[12px] min-w-[132px]">
-                                        <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]">
+                                        <DropdownMenuItem
+                                            className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]"
+                                            onClick={() => onEditEntry?.(record)}
+                                        >
                                             Edit Entry
                                         </DropdownMenuItem>
                                         <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]">

@@ -224,7 +224,7 @@ HR Team`
                 {/* Left Panel - Template Settings */}
                 <div className="lg:w-80 space-y-6 border-r border-[#e9e9e9]">
                     <div className="px-[32px] py-[24px] space-y-4">
-                        <div className="space-y-2">
+                        <div className="flex flex-col gap-[6px]">
                             <Label className="text-[14px]/[16px] font-medium text-gray-700">Template Name</Label>
                             <Input
                                 value={formData.templateName}
@@ -234,7 +234,7 @@ HR Team`
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="flex flex-col gap-[6px]">
                             <Label className="text-sm font-medium text-gray-700">Template Type</Label>
                             <Select value={formData.templateType} onValueChange={(value) => handleInputChange('templateType', value)}>
                                 <SelectTrigger className="w-full h-[48px]">
@@ -255,6 +255,7 @@ HR Team`
                                 <Checkbox
                                     checked={formData.setAsDefault}
                                     onCheckedChange={(checked) => handleInputChange('setAsDefault', checked)}
+                                    className='w-4 h-4'
                                 />
                                 <Label className="text-sm font-medium text-gray-700">Set as Default</Label>
                             </div>
@@ -277,91 +278,110 @@ HR Team`
                             </p>
                         </div>
 
-                        <div className="flex sm:items-center items-start justify-between sm:flex-row flex-col sm:gap-[14px] gap-2">
-                            <Select onValueChange={insertSmartText}>
-                                <SelectTrigger className="w-[310px] h-[32px] rounded-[4px]">
-                                    <SelectValue placeholder="Insert Smart Text" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {smartTextOptions.map((option) => (
-                                        <SelectItem key={option} value={option}>
-                                            {option}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                        <div className='flex flex-col border border-[#e9e9e9] rounded-[8px] overflow-hidden'>
+                            <div className="flex sm:items-center items-start justify-between sm:flex-row flex-col sm:gap-[14px] gap-2 sm:px-[16px] py-[17px] bg-[#F9F9F9] border-b border-[#e9e9e9]">
+                                <Select onValueChange={insertSmartText}>
+                                    <SelectTrigger className="w-[310px] h-[32px] rounded-[4px]">
+                                        <SelectValue placeholder="Insert Smart Text" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {smartTextOptions.map((option) => (
+                                            <SelectItem key={option} value={option}>
+                                                {option}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
 
-                            <Button
-                                variant="outline"
-                                className="text-[#0d978b] border-[#0d978b] hover:bg-[#0d978b] hover:text-white flex items-center gap-1 px-4 py-2 h-[32px]"
-                            >
-                                <Sparkles className="h-4 w-4 mr-2" />
-                                Write with AI
-                            </Button>
-                        </div>
-
-                        {/* Rich Text Editor */}
-                        <div className="border border-gray-200 rounded-lg overflow-hidden relative">
-                            <div
-                                id="custom-toolbar"
-                                data-testid="custom-toolbar"
-                                className="w-full flex justify-between flex-wrap !px-[16px] !py-[17px]"
-                            >
-                                <div className="flex sm:gap-[14px] items-center">
-                                    <button className="ql-bold" />
-                                    <button className="ql-italic" />
-                                    <button className="ql-underline" />
-
-                                    <button className="ql-align" value="" />
-                                    <button className="ql-align" value="center" />
-                                    <button className="ql-align" value="right" />
-                                    <button className="ql-align" value="justify" />
-                                    <button className="ql-link" />
-                                    <button className="ql-list" value="ordered" data-testid="ordered-list-button" />
-                                    <button className="ql-list" value="bullet" data-testid="unordered-list-button" />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                                        className="flex items-center justify-center w-8 h-8 hover:bg-gray-100 rounded"
-                                        title="Insert emoji"
-                                    >
-                                        <Smile className="size-4 text-[#4b4b4b]" />
-                                    </button>
-                                </div>
-                                <div className="flex sm:gap-[14px] items-center">
-                                    <button type="button" onClick={handleUndo} data-testid="undo-button">
-                                        <Undo className="text-[#4b4b4b]" />
-                                    </button>
-                                    <button type="button" onClick={handleRedo} data-testid="redo-button">
-                                        <Redo className="text-[#4b4b4b]" />
-                                    </button>
-                                </div>
+                                <Button
+                                    variant="ghost"
+                                    className="text-[#0d978b] border-[#0d978b] bg-transparent hover:text-white flex items-center gap-1 sm:px-4 py-2 h-[32px]"
+                                >
+                                    <Sparkles className="h-4 w-4 mr-2" />
+                                    <span className='text-[14px]/[22px] font-medium text-[#0d978b]' style={{ background: 'linear-gradient(90deg, #0D978B 0%, #04312D 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Write with AI</span>
+                                </Button>
                             </div>
-                            {showEmojiPicker && (
-                                <div className="absolute z-50 mt-2 right-0 emoji-picker-container">
-                                    <Picker
-                                        data={data}
-                                        onEmojiSelect={insertEmoji}
-                                        theme="light"
-                                        set="native"
-                                        previewPosition="none"
-                                        skinTonePosition="none"
+
+                            {/* Rich Text Editor */}
+                            <div className="border-t border-[#e9e9e9] overflow-hidden relative">
+                                <div
+                                    id="custom-toolbar"
+                                    data-testid="custom-toolbar"
+                                    className="w-full flex justify-between flex-wrap px-[16px] py-[17px] bg-white border-b !rounded-tr-none !rounded-tl-none border-[#e9e9e9] "
+                                >
+                                    <div className="flex sm:gap-[14px] gap-[12px] items-center">
+                                        <button className="ql-bold w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent" title="Bold" />
+                                        <button className="ql-italic w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent" title="Italic" />
+                                        <button className="ql-underline w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent" title="Underline" />
+
+                                        <div className="w-px h-6 bg-[#e9e9e9] mx-2" />
+
+                                        <button className="ql-align w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent" value="" title="Align Left" />
+                                        <button className="ql-align w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent" value="center" title="Align Center" />
+                                        <button className="ql-align w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent" value="right" title="Align Right" />
+                                        <button className="ql-align w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent" value="justify" title="Justify" />
+
+                                        <div className="w-px h-6 bg-[#e9e9e9] mx-2" />
+
+                                        <button className="ql-link w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent" title="Insert Link" />
+                                        <button className="ql-list w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent" value="ordered" data-testid="ordered-list-button" title="Numbered List" />
+                                        <button className="ql-list w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent" value="bullet" data-testid="unordered-list-button" title="Bullet List" />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                            className="flex items-center justify-center w-8 h-8 hover:bg-gray-100 rounded border-0 bg-transparent"
+                                            title="Insert emoji"
+                                        >
+                                            <Smile className="size-4 text-[#4b4b4b]" />
+                                        </button>
+                                    </div>
+                                    <div className="flex gap-[14px] items-center">
+                                        <button
+                                            type="button"
+                                            onClick={handleUndo}
+                                            data-testid="undo-button"
+                                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent"
+                                            title="Undo"
+                                        >
+                                            <Undo className="text-[#4b4b4b] w-4 h-4" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleRedo}
+                                            data-testid="redo-button"
+                                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded border-0 bg-transparent"
+                                            title="Redo"
+                                        >
+                                            <Redo className="text-[#4b4b4b] w-4 h-4" />
+                                        </button>
+                                    </div>
+                                </div>
+                                {showEmojiPicker && (
+                                    <div className="absolute z-50 mt-2 right-0 emoji-picker-container">
+                                        <Picker
+                                            data={data}
+                                            onEmojiSelect={insertEmoji}
+                                            theme="light"
+                                            set="native"
+                                            previewPosition="none"
+                                            skinTonePosition="none"
+                                        />
+                                    </div>
+                                )}
+
+                                <div ref={quillRef}>
+                                    <ReactQuill
+                                        value={formData.content}
+                                        onChange={(value) => handleInputChange('content', value)}
+                                        placeholder="Enter your template content here..."
+                                        theme="snow"
+                                        modules={modules}
+                                        className="w-full h-[400px] !border-none"
+                                        id="template-editor"
+                                        data-testid="template-editor"
+                                        readOnly={disabled}
                                     />
                                 </div>
-                            )}
-
-                            <div ref={quillRef}>
-                                <ReactQuill
-                                    value={formData.content}
-                                    onChange={(value) => handleInputChange('content', value)}
-                                    placeholder="Enter your template content here..."
-                                    theme="snow"
-                                    modules={modules}
-                                    className="w-full h-[400px]"
-                                    id="template-editor"
-                                    data-testid="template-editor"
-                                    readOnly={disabled}
-                                />
                             </div>
                         </div>
 

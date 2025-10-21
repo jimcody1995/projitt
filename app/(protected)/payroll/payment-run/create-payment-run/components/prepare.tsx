@@ -168,6 +168,9 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
     };
 
     const getInitials = (name: string) => {
+        if (!name || typeof name !== 'string') {
+            return '??';
+        }
         return name
             .split(" ")
             .map((n) => n[0])
@@ -176,7 +179,12 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
     };
 
     const handleEditEntry = (employee: any) => {
-        setSelectedEmployee(employee);
+        // Ensure the employee object has a name field
+        const employeeWithName = {
+            ...employee,
+            name: employee.name || 'Unknown Employee'
+        };
+        setSelectedEmployee(employeeWithName);
         setClockIn("8:50am");
         setClockOut("1:00pm");
         setReason("");
@@ -196,20 +204,23 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
 
     return (
         <div className="w-full">
-            <div className="mb-[16px] sm:mb-[21px]">
+            <div className="mb-[16px] sm:mb-[21px] w-full">
                 <h2 className="text-[16px] sm:text-[18px]/[24px] font-medium text-[#353535]">
                     Prepare
                 </h2>
-                <div className="flex flex-wrap gap-[8px] sm:gap-[16px] items-center mt-[12px] sm:mt-[16px] text-[12px] sm:text-[14px]/[20px] text-[#787878]">
-                    <div>
-                        <span className="text-[#0D978B]">{validatedCount}</span>
-                        <span className="text-[#0D978B] ml-[2px]">Employees ready for payroll</span>
+                <div className="flex flex-col sm:flex-row w-full justify-between gap-[8px] sm:gap-[16px] items-center mt-[12px] sm:mt-[16px] text-[12px] sm:text-[14px]/[20px] text-[#787878]">
+                    <div className="flex flex-row gap-[8px] sm:gap-[16px] items-center">
+                        <div>
+                            <span className="text-[#0D978B]">{validatedCount}</span>
+                            <span className="text-[#0D978B] ml-[2px]">Employees ready for payroll</span>
+                        </div>
+                        <div className="w-[2px] h-[2px] bg-[#A5A5A5] rounded-full hidden sm:block"></div>
+                        <div>
+                            <span className="text-[#FFA750]">{unresolvedCount}</span>
+                            <span className="text-[#FFA750] ml-[2px]">Unresolved</span>
+                        </div>
                     </div>
-                    <div className="w-[2px] h-[2px] bg-[#A5A5A5] rounded-full hidden sm:block"></div>
-                    <div>
-                        <span className="text-[#FFA750]">{unresolvedCount}</span>
-                        <span className="text-[#FFA750] ml-[2px]">Unresolved</span>
-                    </div>
+                    <Button variant="outline" className="text-[14px]/[22px] font-medium text-[#4B4B4B] border border-[#4B4B4B] h-8 bg-transparent" >Reconcile All</Button>
                 </div>
             </div>
 
@@ -309,7 +320,7 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                                         <DropdownMenuContent align="end" className="rounded-[12px] min-w-[132px]">
                                             <DropdownMenuItem
                                                 className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]"
-                                                onClick={() => handleEditEntry(employee)}
+
                                             >
                                                 Edit Entry
                                             </DropdownMenuItem>
@@ -406,7 +417,7 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                                 </TabsList>
 
                                 <TabsContent value="attendance" className="mt-[16px]">
-                                    <AttendanceRecord />
+                                    <AttendanceRecord onEditEntry={handleEditEntry} />
                                 </TabsContent>
                                 <TabsContent value="leave" className="mt-[16px]">
                                     <LeaveRecord />

@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Upload, Edit, Trash2, Plus, Eye, EyeOff } from 'lucide-react';
+import { Upload, Edit, Trash2, Plus, Eye, EyeOff, PencilLine, Trash } from 'lucide-react';
 import { Switch, SwitchWrapper } from '@/components/ui/switch';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useState, useEffect } from 'react';
@@ -29,7 +29,7 @@ interface GeneralProps {
     handleInputChange: (field: string, value: any) => void;
     handleAddressEdit: (index: number) => void;
     handleAddressDelete: (index: number) => void;
-    handleAddAddress: () => void;
+    handleAddLocation: () => void;
     handleSaveChanges: () => void;
 }
 
@@ -40,7 +40,7 @@ export default function General({
     handleInputChange,
     handleAddressEdit,
     handleAddressDelete,
-    handleAddAddress,
+    handleAddLocation,
     handleSaveChanges
 }: GeneralProps) {
     const [showPassword, setShowPassword] = useState(false);
@@ -92,17 +92,17 @@ export default function General({
     return (
         <>
             <div className='flex-1'>
-                <div className="space-y-8 md:w-[409px] w-full">
+                <div className="space-y-8 md:w-[561px] w-full">
                     {/* Company Details Section */}
                     <div id="company-details">
                         <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Company Details</p>
-                        <div className="space-y-6">
+                        <div className="space-y-5">
                             {/* Company Logo */}
                             <div>
                                 <p className='text-[12px]/[18px] text-[#8F8F8F]'>Company Logo</p>
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-[4px]">
                                     <img src="/images/zaidLLC.png" alt="Company Logo" className="h-[32px] rounded-lg" />
-                                    <Button variant="outline" className="w-fit">
+                                    <Button variant="outline" className="w-fit bg-transparent">
                                         <Upload className="w-4 h-4 mr-2" />
                                         Upload
                                     </Button>
@@ -110,34 +110,34 @@ export default function General({
                             </div>
                             {/* Form Fields */}
                             <div className="flex flex-col gap-[20px]">
-                                <div className="space-y-2">
-                                    <Label htmlFor="legalName">Legal Name</Label>
+                                <div className="flex flex-col gap-[6px]">
+                                    <Label htmlFor="legalName" className='text-[13px]/[21px] text[#353535]'>Legal Name</Label>
                                     <Input
                                         id="legalName"
                                         value={formData.legalName}
                                         onChange={(e) => handleInputChange('legalName', e.target.value)}
-                                        className={errors.legalName ? 'border-red-500' : ''}
+                                        className={`bg-transparent text-[14px]/[20px] text[#4B4B4B] ${errors.legalName ? 'border-red-500' : ''}`}
                                     />
                                     {errors.legalName && (
                                         <p className="text-sm text-red-600">{errors.legalName}</p>
                                     )}
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="website">Website</Label>
+                                <div className="flex flex-col gap-[6px]">
+                                    <Label htmlFor="website" className='text-[13px]/[21px] text[#353535]'>Website</Label>
                                     <Input
                                         id="website"
                                         value={formData.website}
                                         onChange={(e) => handleInputChange('website', e.target.value)}
-                                        className={errors.website ? 'border-red-500' : ''}
+                                        className={`bg-transparent text-[14px]/[20px] text[#4B4B4B] ${errors.website ? 'border-red-500' : ''}`}
                                     />
                                     {errors.website && (
                                         <p className="text-sm text-red-600">{errors.website}</p>
                                     )}
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="industry">Select Industry</Label>
+                                <div className="flex flex-col gap-[6px]">
+                                    <Label htmlFor="industry" className='text-[13px]/[21px] text[#353535]'>Select Industry</Label>
                                     <Select value={formData.industry} onValueChange={(value) => handleInputChange('industry', value)}>
-                                        <SelectTrigger className={errors.industry ? 'border-red-500' : ''}>
+                                        <SelectTrigger className={`bg-transparent text-[14px]/[20px] text[#4B4B4B] ${errors.industry ? 'border-red-500' : ''}`}>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -151,10 +151,10 @@ export default function General({
                                         <p className="text-sm text-red-600">{errors.industry}</p>
                                     )}
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="timezone">Select Timezone</Label>
+                                <div className="flex flex-col gap-[6px]">
+                                    <Label htmlFor="timezone" className='text-[13px]/[21px] text[#353535]'>Select Timezone</Label>
                                     <Select value={formData.timezone} onValueChange={(value) => handleInputChange('timezone', value)}>
-                                        <SelectTrigger className={errors.timezone ? 'border-red-500' : ''}>
+                                        <SelectTrigger className={`bg-transparent text-[14px]/[20px] text[#4B4B4B] ${errors.timezone ? 'border-red-500' : ''}`}>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -167,10 +167,10 @@ export default function General({
                                         <p className="text-sm text-red-600">{errors.timezone}</p>
                                     )}
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="language">Select Language</Label>
+                                <div className="flex flex-col gap-[6px]">
+                                    <Label htmlFor="language" className='text-[13px]/[21px] text[#353535]'>Select Language</Label>
                                     <Select value={formData.language} onValueChange={(value) => handleInputChange('language', value)}>
-                                        <SelectTrigger className={errors.language ? 'border-red-500' : ''}>
+                                        <SelectTrigger className={`bg-transparent text-[14px]/[20px] text[#4B4B4B] ${errors.language ? 'border-red-500' : ''}`}>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -186,19 +186,19 @@ export default function General({
                             </div>
 
                             {/* Company Addresses */}
-                            <div className="space-y-4">
-                                <Label>Select Company Address(es)</Label>
+                            <div className="flex flex-col gap-[8px]">
+                                <Label className='text-[13px]/[21px] text[#353535]'>Select Company Address(es)</Label>
                                 <div className="space-y-3">
                                     {formData.addresses.map((address: any, index: any) => (
-                                        <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                                            <span className="text-sm text-gray-700">{address}</span>
-                                            <div className="flex gap-2">
+                                        <div key={index} className="flex flex-row items-center justify-start gap-3">
+                                            <span className="text-[14px]/[20px] font-medium text-[#353535]">{address}</span>
+                                            <div className="flex flex-row gap-1">
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
                                                     onClick={() => handleAddressEdit(index)}
                                                 >
-                                                    <Edit className="w-4 h-4" />
+                                                    <PencilLine className="w-4 h-4 text-[#4B4B4B]" />
                                                 </Button>
                                                 <Button
                                                     variant="ghost"
@@ -206,17 +206,17 @@ export default function General({
                                                     onClick={() => handleAddressDelete(index)}
                                                     disabled={formData.addresses.length <= 1}
                                                 >
-                                                    <Trash2 className="w-4 h-4" />
+                                                    <Trash className="w-4 h-4 text-[#4B4B4B]" />
                                                 </Button>
                                             </div>
                                         </div>
                                     ))}
                                     <Button
-                                        variant="outline"
-                                        onClick={handleAddAddress}
-                                        className="w-full"
+                                        variant="ghost"
+                                        onClick={handleAddLocation}
+                                        className=" text-[14px]/[20px] text-[#0D978B] font-semibold p-0 hover:text-[#0D978B]/80"
                                     >
-                                        <Plus className="w-4 h-4 mr-2" />
+                                        <Plus className="w-4 h-4 mr-1" />
                                         Add Location
                                     </Button>
                                 </div>
@@ -238,8 +238,7 @@ export default function General({
                                         id="password"
                                         type={showPassword ? 'text' : 'password'}
                                         value="************"
-                                        readOnly
-                                        className="pr-10"
+                                        className="px-0 border-none !bg-transparent shadow-none"
                                     />
                                     <Button
                                         type="button"
@@ -251,102 +250,114 @@ export default function General({
                                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                     </Button>
                                 </div>
-                                <Button variant="outline" className=" h-[32px]">
+                                <Button variant="outline" className=" h-[32px] rounded-[8px] text-[14px]/[20px] text-[#053834] font-medium bg-transparent">
                                     Change Password
                                 </Button>
                             </div>
                             <div className="space-y-2 flex flex-col items-start">
                                 <Label className='text-[12px]/[18px] text-[#8f8f8f]'>2FA Authentication</Label>
-                                <Button variant="outline" className="w-[75px] h-[32px]">
+                                <Button variant="outline" className="w-[75px] text-[#053834] font-medium bg-transparent h-[32px]">
                                     Set up
                                 </Button>
                             </div>
                         </div>
 
                     </div>
-                </div>
-                {/* Notifications Section */}
-                <div id="notifications">
-                    <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Notifications</p>
-                    <div className="space-y-6 mt-[16px]">
-                        {/* Notification Toggles */}
-                        <div className="space-y-6">
-                            <div className="flex items-center justify-between border-b border-[#e9e9e9] pb-[20px]">
-                                <div className="space-y-1">
-                                    <Label>Email Notification</Label>
-                                    <p className="text-sm text-gray-600">
-                                        Sends this alert to your registered email address immediately or as part of a digest.
-                                    </p>
-                                </div>
-                                <SwitchWrapper>
-                                    <Switch
-                                        checked={formData.emailNotification}
-                                        shape="square"
-                                        onCheckedChange={(checked) => handleInputChange('emailNotification', checked)}
-                                    />
-                                </SwitchWrapper>
-                            </div>
 
-                            <div className="flex items-center justify-between border-b border-[#e9e9e9] pb-[20px]">
-                                <div className="space-y-1">
-                                    <Label>Push Notification</Label>
-                                    <p className="text-sm text-gray-600">
-                                        Sends a real-time notification to your device, even when you're not actively using the platform. Works on supported browsers and mobile apps.
-                                    </p>
-                                </div>
-                                <SwitchWrapper>
-                                    <Switch
-                                        shape="square"
-                                        checked={formData.pushNotification}
-                                        onCheckedChange={(checked) => handleInputChange('pushNotification', checked)}
-                                    />
-                                </SwitchWrapper>
-                            </div>
-
-                            <div className="flex items-center justify-between ">
-                                <div className="space-y-1">
-                                    <Label>SMS Notification</Label>
-                                    <p className="text-sm text-gray-600">
-                                        Delivers a brief text message to your phone for critical updates only. Standard rates may apply.
-                                    </p>
-                                </div>
-                                <SwitchWrapper>
-                                    <Switch
-                                        shape="square"
-                                        checked={formData.smsNotification}
-                                        onCheckedChange={(checked) => handleInputChange('smsNotification', checked)}
-                                    />
-                                </SwitchWrapper>
-                            </div>
-                        </div>
-
-                        {/* Notification Categories */}
-                        <div className="mt-[27px]">
-                            <Label className='text-[14px]/[16px] text-[#1c1c1c]'>Notification Categories</Label>
-                            <div className="space-y-4 mt-[12px]">
-                                {[
-                                    { key: 'recruitment', label: 'Recruitment', description: 'Alerts for job applications, interviews, and hiring updates.' },
-                                    { key: 'onboarding', label: 'Onboarding', description: 'Updates about new hires, document submissions, training schedules, and onboarding progress.' },
-                                    { key: 'leaveManagement', label: 'Leave Management', description: 'Stay informed on leave requests and approvals.' },
-                                    { key: 'timeAttendance', label: 'Time & Attendance', description: 'Notifications for clock-ins, time tracking issues, shift changes, and time edit requests.' },
-                                    { key: 'payroll', label: 'Payroll', description: 'Reminders and confirmations for payroll runs, payslip availability, salary changes, and tax actions.' }
-                                ].map((category) => (
-                                    <div key={category.key} className="flex items-start gap-3">
-                                        <Checkbox
-                                            checked={formData[category.key as keyof typeof formData] as boolean}
-                                            onCheckedChange={(checked) => handleInputChange(category.key, checked)}
-                                            className="mt-1"
-                                        />
-                                        <div className="space-y-1">
-                                            <Label className="text-sm font-medium">{category.label}</Label>
-                                            <p className="text-sm text-gray-600">{category.description}</p>
-                                        </div>
+                    {/* Notifications Section */}
+                    <div id="notifications">
+                        <p className='text-[16px]/[24px] font-medium text-[#1c1c1c]'>Notifications</p>
+                        <div className="space-y-6 mt-[16px]">
+                            {/* Notification Toggles */}
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between border-b border-[#e9e9e9] pb-[20px]">
+                                    <div className="space-y-1">
+                                        <Label>Email Notification</Label>
+                                        <p className="text-sm text-gray-600">
+                                            Sends this alert to your registered email address immediately or as part of a digest.
+                                        </p>
                                     </div>
-                                ))}
+                                    <SwitchWrapper>
+                                        <Switch
+                                            checked={formData.emailNotification}
+                                            shape="square"
+                                            onCheckedChange={(checked) => handleInputChange('emailNotification', checked)}
+                                        />
+                                    </SwitchWrapper>
+                                </div>
+
+                                <div className="flex items-center justify-between border-b border-[#e9e9e9] pb-[20px]">
+                                    <div className="space-y-1">
+                                        <Label>Push Notification</Label>
+                                        <p className="text-sm text-gray-600">
+                                            Sends a real-time notification to your device, even when you're not actively using the platform. Works on supported browsers and mobile apps.
+                                        </p>
+                                    </div>
+                                    <SwitchWrapper>
+                                        <Switch
+                                            shape="square"
+                                            checked={formData.pushNotification}
+                                            onCheckedChange={(checked) => handleInputChange('pushNotification', checked)}
+                                        />
+                                    </SwitchWrapper>
+                                </div>
+
+                                <div className="flex items-center justify-between ">
+                                    <div className="space-y-1">
+                                        <Label>SMS Notification</Label>
+                                        <p className="text-sm text-gray-600">
+                                            Delivers a brief text message to your phone for critical updates only. Standard rates may apply.
+                                        </p>
+                                    </div>
+                                    <SwitchWrapper>
+                                        <Switch
+                                            shape="square"
+                                            checked={formData.smsNotification}
+                                            onCheckedChange={(checked) => handleInputChange('smsNotification', checked)}
+                                        />
+                                    </SwitchWrapper>
+                                </div>
+                            </div>
+
+                            {/* Notification Categories */}
+                            <div className="mt-[27px]">
+                                <Label className='text-[14px]/[16px] text-[#1c1c1c]'>Notification Categories</Label>
+                                <div className="space-y-4 mt-[12px]">
+                                    {[
+                                        { key: 'recruitment', label: 'Recruitment', description: 'Alerts for job applications, interviews, and hiring updates.' },
+                                        { key: 'onboarding', label: 'Onboarding', description: 'Updates about new hires, document submissions, training schedules, and onboarding progress.' },
+                                        { key: 'leaveManagement', label: 'Leave Management', description: 'Stay informed on leave requests and approvals.' },
+                                        { key: 'timeAttendance', label: 'Time & Attendance', description: 'Notifications for clock-ins, time tracking issues, shift changes, and time edit requests.' },
+                                        { key: 'payroll', label: 'Payroll', description: 'Reminders and confirmations for payroll runs, payslip availability, salary changes, and tax actions.' }
+                                    ].map((category) => (
+                                        <div key={category.key} className="flex items-start gap-3">
+                                            <Checkbox
+                                                checked={formData[category.key as keyof typeof formData] as boolean}
+                                                onCheckedChange={(checked) => handleInputChange(category.key, checked)}
+                                                className="mt-1"
+                                            />
+                                            <div className="space-y-1">
+                                                <Label className="text-sm font-medium">{category.label}</Label>
+                                                <p className="text-sm text-gray-600">{category.description}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div className="pt-20">
+                    <Button
+                        variant="primary"
+                        onClick={handleSaveChanges}
+                        className="text-[14px]/[20px] text-white font-medium  h-[32px] rounded-[8px]"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Saving...' : 'Save Changes'}
+                    </Button>
+                </div>
+
             </div>
             {/* Sidebar - Hidden on mobile, visible on desktop */}
             <div className="hidden lg:block w-64 p-6 sticky  top-20 h-fit">

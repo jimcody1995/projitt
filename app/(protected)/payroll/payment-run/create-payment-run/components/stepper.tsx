@@ -11,6 +11,7 @@ const steps = [
     { title: "Basic Pay", description: "Enter payroll details" },
     { title: "Prepare", description: "Review employee data" },
     { title: "Validate Details", description: "Verify payment information" },
+    { title: "Tax & Deductions", description: "Tax and Deductions" },
     { title: "Disburse Funds", description: "Complete payment run" },
 ];
 

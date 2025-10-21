@@ -84,9 +84,9 @@ export default function FacilityManagement() {
 
                                 {/* File Information Bar - Overlay at bottom of image */}
                                 <div className="absolute bottom-0 left-0 right-0 bg-[#00000080] text-white p-2 sm:p-3 lg:p-4 flex items-center justify-between w-full">
-                                    <div className="flex items-center">
-                                        <span className="font-medium text-[12px]/[16px] sm:text-[13px]/[18px] lg:text-[14px]/[20px]">Building Image Title</span>
-                                        <span className="ml-2 sm:ml-3 lg:ml-4 text-gray-300 text-[11px]/[15px] sm:text-[12px]/[16px] lg:text-[13px]/[18px]">PNG • 52MB</span>
+                                    <div className="flex flex-col items-start">
+                                        <div className="font-medium text-[12px]/[16px] sm:text-[13px]/[18px] lg:text-[14px]/[20px]">Building Image Title</div>
+                                        <div className=" text-gray-300 text-[11px]/[15px] sm:text-[12px]/[16px] lg:text-[13px]/[18px]">PNG • 52MB</div>
                                     </div>
 
                                     <DropdownMenu>

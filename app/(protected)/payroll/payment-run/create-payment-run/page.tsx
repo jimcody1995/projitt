@@ -11,6 +11,9 @@ import DisburseFunds from "./components/disburse-funds";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { customToast } from "@/components/common/toastr";
 import { CircleAlert, CircleCheck } from "lucide-react";
+import TaxDeductions from "./components/tax-deduction";
+
+const MAX_STEPS = 5;
 
 export default function CreatePaymentRun() {
     const [currentStep, setCurrentStep] = useState(1);
@@ -19,7 +22,7 @@ export default function CreatePaymentRun() {
     const router = useRouter();
 
     const handleNext = () => {
-        if (currentStep < 4) {
+        if (currentStep < MAX_STEPS) {
             setCurrentStep(currentStep + 1);
         }
     };
@@ -84,7 +87,7 @@ export default function CreatePaymentRun() {
                     >
                         Back
                     </Button>
-                    {currentStep < 4 && (
+                    {currentStep < MAX_STEPS && (
                         <Button
                             className="h-[40px] sm:h-[48px] flex-1 sm:flex-none sm:min-w-[125px] bg-[#0D978B] hover:bg-[#0c8679] font-semibold text-[14px]/[20px]"
                             onClick={handleNext}
@@ -92,7 +95,7 @@ export default function CreatePaymentRun() {
                             Continue
                         </Button>
                     )}
-                    {currentStep === 4 && (
+                    {currentStep === MAX_STEPS && (
                         <Button
                             className="h-[40px] sm:h-[48px] flex-1 sm:flex-none sm:min-w-[125px] bg-[#0D978B] hover:bg-[#0c8679] font-semibold text-[14px]/[20px]"
                             onClick={handleComplete}
@@ -127,6 +130,9 @@ export default function CreatePaymentRun() {
                         <ValidateDetails onNext={handleNext} onBack={handleBack} />
                     )}
                     {currentStep === 4 && (
+                        <TaxDeductions onNext={handleNext} onBack={handleBack} />
+                    )}
+                    {currentStep === 5 && (
                         <DisburseFunds onBack={handleBack} onComplete={handleComplete} />
                     )}
                 </div>
