@@ -220,7 +220,12 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                             <span className="text-[#FFA750] ml-[2px]">Unresolved</span>
                         </div>
                     </div>
-                    <Button variant="outline" className="text-[14px]/[22px] font-medium text-[#4B4B4B] border border-[#4B4B4B] h-8 bg-transparent" >Reconcile All</Button>
+                    <Button variant="outline" className="text-[14px]/[22px] font-medium text-[#4B4B4B] border border-[#4B4B4B] h-8 bg-transparent"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsNotifyManagerModalOpen(true);
+                        }}
+                    >Reconcile All</Button>
                 </div>
             </div>
 
@@ -258,7 +263,7 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                             <TableRow
                                 key={employee.id}
                                 className="border-b border-[#E9E9E9] hover:bg-gray-50 cursor-pointer"
-                                onClick={() => handleRowClick(employee)}
+
                             >
                                 <TableCell onClick={(e) => e.stopPropagation()}>
                                     <Checkbox
@@ -320,24 +325,9 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                                         <DropdownMenuContent align="end" className="rounded-[12px] min-w-[132px]">
                                             <DropdownMenuItem
                                                 className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]"
-
+                                                onClick={() => handleRowClick(employee)}
                                             >
-                                                Edit Entry
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]">
-                                                Mark as Absent
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]">
-                                                Leave
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem
-                                                className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setIsNotifyManagerModalOpen(true);
-                                                }}
-                                            >
-                                                Notify Manager
+                                                Reconcile
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>

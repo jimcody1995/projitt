@@ -52,7 +52,64 @@ export default function BasicPay({
     const [apiKey, setApiKey] = useState('');
     const [isDragOver, setIsDragOver] = useState(false);
 
+    // Validation state
+    const [errors, setErrors] = useState<{
+        payrollType?: string;
+        startDate?: string;
+        endDate?: string;
+        payDate?: string;
+    }>({});
+    const [touched, setTouched] = useState<{
+        payrollType?: boolean;
+        startDate?: boolean;
+        endDate?: boolean;
+        payDate?: boolean;
+    }>({});
+
+    // Validation functions
+    const validateField = (field: string, value: any) => {
+        switch (field) {
+            case 'payrollType':
+                return !value ? 'Please select a payroll type' : '';
+            case 'startDate':
+                return !value ? 'Please select a start date' : '';
+            case 'endDate':
+                return !value ? 'Please select an end date' : '';
+            case 'payDate':
+                return !value ? 'Please select a pay date' : '';
+            default:
+                return '';
+        }
+    };
+
+    const validateForm = () => {
+        const newErrors: any = {};
+        const newTouched: any = {};
+
+        // Validate all fields
+        newErrors.payrollType = validateField('payrollType', payrollData.payrollType);
+        newErrors.startDate = validateField('startDate', startDate);
+        newErrors.endDate = validateField('endDate', endDate);
+        newErrors.payDate = validateField('payDate', payDate);
+
+        // Mark all fields as touched
+        newTouched.payrollType = true;
+        newTouched.startDate = true;
+        newTouched.endDate = true;
+        newTouched.payDate = true;
+
+        setErrors(newErrors);
+        setTouched(newTouched);
+
+        // Return true if no errors
+        return !Object.values(newErrors).some(error => error !== '');
+    };
+
     const handleSaveAndImport = () => {
+        if (!validateForm()) {
+            return; // Don't proceed if validation fails
+        }
+
         // Save data to parent state
         setPayrollData({
             ...payrollData,
@@ -64,7 +121,40 @@ export default function BasicPay({
         onNext();
     };
 
+    // Field change handlers with validation
+    const handlePayrollTypeChange = (value: string) => {
+        setPayrollData({ ...payrollData, payrollType: value });
+        setTouched({ ...touched, payrollType: true });
+        const error = validateField('payrollType', value);
+        setErrors({ ...errors, payrollType: error });
+    };
+
+    const handleStartDateChange = (date: Date | undefined) => {
+        setStartDate(date);
+        setTouched({ ...touched, startDate: true });
+        const error = validateField('startDate', date);
+        setErrors({ ...errors, startDate: error });
+    };
+
+    const handleEndDateChange = (date: Date | undefined) => {
+        setEndDate(date);
+        setTouched({ ...touched, endDate: true });
+        const error = validateField('endDate', date);
+        setErrors({ ...errors, endDate: error });
+    };
+
+    const handlePayDateChange = (date: Date | undefined) => {
+        setPayDate(date);
+        setTouched({ ...touched, payDate: true });
+        const error = validateField('payDate', date);
+        setErrors({ ...errors, payDate: error });
+    };
+
     const handleCalculatePayroll = async () => {
+        if (!validateForm()) {
+            return; // Don't proceed if validation fails
+        }
+
         setIsCalculating(true);
         setCalculationLogs([]);
         setCalculationModalOpen(true);
@@ -220,14 +310,15 @@ export default function BasicPay({
                         Select Payroll Type
                     </Label>
                     <Select
-                        value={payrollData.payrollType || "Salary"}
-                        onValueChange={(value) =>
-                            setPayrollData({ ...payrollData, payrollType: value })
-                        }
+                        value={payrollData.payrollType || ""}
+                        onValueChange={handlePayrollTypeChange}
                     >
                         <SelectTrigger
                             id="payroll-type"
-                            className="w-full h-[44px] rounded-[8px] border-[#BCBCBC]"
+                            className={`w-full h-[44px] rounded-[8px] ${touched.payrollType && errors.payrollType
+                                ? 'border-red-500'
+                                : 'border-[#BCBCBC]'
+                                }`}
                         >
                             <SelectValue placeholder="Select payroll type" />
                         </SelectTrigger>
@@ -237,6 +328,9 @@ export default function BasicPay({
                             <SelectItem value="Commission">Commission</SelectItem>
                         </SelectContent>
                     </Select>
+                    {touched.payrollType && errors.payrollType && (
+                        <p className="text-red-500 text-sm">{errors.payrollType}</p>
+                    )}
                 </div>
 
                 {/* Pay Period */}
@@ -246,52 +340,68 @@ export default function BasicPay({
                     </Label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-[12px] sm:gap-[16px]">
                         {/* Start Date */}
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    className={cn(
-                                        "w-full h-[44px] justify-start text-left font-normal rounded-[8px] border-[#BCBCBC]",
-                                        !startDate && "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {startDate ? format(startDate, "MMM d, yyyy") : "Start date"}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                    mode="single"
-                                    selected={startDate}
-                                    onSelect={setStartDate}
-                                    initialFocus
-                                />
-                            </PopoverContent>
-                        </Popover>
+                        <div className="flex flex-col gap-[5px]">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className={cn(
+                                            "w-full h-[44px] justify-start text-left font-normal rounded-[8px]",
+                                            touched.startDate && errors.startDate
+                                                ? "border-red-500"
+                                                : "border-[#BCBCBC]",
+                                            !startDate && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {startDate ? format(startDate, "MMM d, yyyy") : "Start date"}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={startDate}
+                                        onSelect={handleStartDateChange}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                            {touched.startDate && errors.startDate && (
+                                <p className="text-red-500 text-sm">{errors.startDate}</p>
+                            )}
+                        </div>
 
                         {/* End Date */}
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    className={cn(
-                                        "w-full h-[44px] justify-start text-left font-normal rounded-[8px] border-[#BCBCBC]",
-                                        !endDate && "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {endDate ? format(endDate, "MMM d, yyyy") : "End date"}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                    mode="single"
-                                    selected={endDate}
-                                    onSelect={setEndDate}
-                                    initialFocus
-                                />
-                            </PopoverContent>
-                        </Popover>
+                        <div className="flex flex-col gap-[5px]">
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className={cn(
+                                            "w-full h-[44px] justify-start text-left font-normal rounded-[8px]",
+                                            touched.endDate && errors.endDate
+                                                ? "border-red-500"
+                                                : "border-[#BCBCBC]",
+                                            !endDate && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {endDate ? format(endDate, "MMM d, yyyy") : "End date"}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={endDate}
+                                        onSelect={handleEndDateChange}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                            {touched.endDate && errors.endDate && (
+                                <p className="text-red-500 text-sm">{errors.endDate}</p>
+                            )}
+                        </div>
                     </div>
                 </div>
 
@@ -300,28 +410,36 @@ export default function BasicPay({
                     <Label className="text-[13px] sm:text-[14px]/[16px] font-medium text-[#1C1C1C]">
                         Pay Date
                     </Label>
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                className={cn(
-                                    "w-full h-[44px] justify-start text-left font-normal rounded-[8px] border-[#BCBCBC]",
-                                    !payDate && "text-muted-foreground"
-                                )}
-                            >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {payDate ? format(payDate, "MMM d, yyyy") : "Select pay date"}
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                                mode="single"
-                                selected={payDate}
-                                onSelect={setPayDate}
-                                initialFocus
-                            />
-                        </PopoverContent>
-                    </Popover>
+                    <div className="flex flex-col gap-[5px]">
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    className={cn(
+                                        "w-full h-[44px] justify-start text-left font-normal rounded-[8px]",
+                                        touched.payDate && errors.payDate
+                                            ? "border-red-500"
+                                            : "border-[#BCBCBC]",
+                                        !payDate && "text-muted-foreground"
+                                    )}
+                                >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {payDate ? format(payDate, "MMM d, yyyy") : "Select pay date"}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    mode="single"
+                                    selected={payDate}
+                                    onSelect={handlePayDateChange}
+                                    initialFocus
+                                />
+                            </PopoverContent>
+                        </Popover>
+                        {touched.payDate && errors.payDate && (
+                            <p className="text-red-500 text-sm">{errors.payDate}</p>
+                        )}
+                    </div>
                 </div>
 
                 {/* Action Buttons */}
@@ -334,13 +452,13 @@ export default function BasicPay({
                         <Upload className="h-4 w-4 mr-2" />
                         Import Data
                     </Button>
-                    <Button
+                    {/* <Button
                         className="flex-1 h-[44px] rounded-[8px] bg-[#0D978B] hover:bg-[#0c8679] text-white font-medium"
                         onClick={handleCalculatePayroll}
                     >
                         <Calculator className="h-4 w-4 mr-2" />
                         Calculate Payroll
-                    </Button>
+                    </Button> */}
                 </div>
 
                 {/* Calculation Preview */}

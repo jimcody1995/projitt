@@ -176,28 +176,153 @@ export default function TaxDeductions({ onNext, onBack }: TaxDeductionsProps) {
 
     return (
         <div className="w-full">
-            <div className="mb-[16px] sm:mb-[21px] flex flex-col justify-between items-start gap-3 sm:gap-7">
-                <h2 className="text-[16px] sm:text-[18px]/[24px] font-medium text-[#353535]">
+            {/* Header Section - Responsive */}
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-[16px] sm:mb-[21px] gap-3 sm:gap-7">
+                <div className="text-[16px] sm:text-[18px]/[24px] font-medium text-[#353535]">
                     Tax & Deductions
-                </h2>
-                <div className="flex items-center gap-4">
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <Button
                         variant="outline"
-                        className="text-[#353535] border-[#BCBCBC] bg-white hover:bg-gray-50"
-                        onClick={onBack}
-                    >
-                        Back
-                    </Button>
-                    <Button
-                        className="bg-[#0d978b] hover:bg-[#0b8277] text-white"
-                        onClick={onNext}
+                        className="text-[#4B4B4B] border-[#4B4B4B] text-[12px] sm:text-[14px]/[20px] text-semibold bg-white hover:bg-gray-50 w-full sm:w-auto"
                     >
                         Submit Tax Information
                     </Button>
                 </div>
             </div>
 
-            <div className="bg-white border border-[#E9E9E9] rounded-[8px] sm:rounded-[12px] overflow-x-auto -mx-[16px] sm:mx-0">
+            {/* Mobile Card View - Hidden on larger screens */}
+            <div className="block md:hidden space-y-3">
+                {taxDeductionData.map((employee) => (
+                    <div key={employee.id} className="bg-white border border-[#E9E9E9] rounded-[8px] p-4">
+                        <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                                <Checkbox
+                                    checked={selectedEmployees.includes(employee.id)}
+                                    onCheckedChange={() => toggleEmployee(employee.id)}
+                                    className="w-[18px] h-[18px]"
+                                />
+                                <div className="flex items-center gap-[12px]">
+                                    <Avatar className="h-[32px] w-[32px]">
+                                        <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[12px]">
+                                            {getInitials(employee.name)}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <div className="text-[14px]/[18px] font-medium text-gray-900">
+                                            {employee.name}
+                                        </div>
+                                        <div className="text-[12px]/[16px] text-[#8F8F8F]">
+                                            {employee.employeeId} • {employee.payRate}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                            <div className="space-y-2">
+                                <div className="flex justify-between">
+                                    <span className="text-[#8C8E8E]">Federal Tax:</span>
+                                    <span className="font-medium">{employee.federalTax}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-[#8C8E8E]">State Tax:</span>
+                                    <span className="font-medium">{employee.stateTax}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-[#8C8E8E]">401k:</span>
+                                    <span className="font-medium">{employee.k401Contribution}</span>
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="flex justify-between">
+                                    <span className="text-[#8C8E8E]">Health Insurance:</span>
+                                    <span className="font-medium">{employee.healthInsurance}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-[#8C8E8E]">Federal Tax 2:</span>
+                                    <span className="font-medium">{employee.federalTax2}</span>
+                                </div>
+                                <div className="flex justify-between bg-[#C30606] text-white px-2 py-1 rounded">
+                                    <span className="font-medium">Total:</span>
+                                    <span className="font-bold">{employee.totalDeductions}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Tablet View - Medium screens */}
+            <div className="hidden md:block lg:hidden">
+                <div className="space-y-3">
+                    {taxDeductionData.map((employee) => (
+                        <div key={employee.id} className="bg-white border border-[#E9E9E9] rounded-[8px] p-4">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-3">
+                                    <Checkbox
+                                        checked={selectedEmployees.includes(employee.id)}
+                                        onCheckedChange={() => toggleEmployee(employee.id)}
+                                        className="w-[18px] h-[18px]"
+                                    />
+                                    <div className="flex items-center gap-[12px]">
+                                        <Avatar className="h-[32px] w-[32px]">
+                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[12px]">
+                                                {getInitials(employee.name)}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <div className="text-[14px]/[18px] font-medium text-gray-900">
+                                                {employee.name}
+                                            </div>
+                                            <div className="text-[12px]/[16px] text-[#8F8F8F]">
+                                                {employee.employeeId} • {employee.payRate}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-4 text-sm">
+                                <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                        <span className="text-[#8C8E8E]">Federal Tax:</span>
+                                        <span className="font-medium">{employee.federalTax}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#8C8E8E]">State Tax:</span>
+                                        <span className="font-medium">{employee.stateTax}</span>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                        <span className="text-[#8C8E8E]">401k:</span>
+                                        <span className="font-medium">{employee.k401Contribution}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span className="text-[#8C8E8E]">Health Insurance:</span>
+                                        <span className="font-medium">{employee.healthInsurance}</span>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between">
+                                        <span className="text-[#8C8E8E]">Federal Tax 2:</span>
+                                        <span className="font-medium">{employee.federalTax2}</span>
+                                    </div>
+                                    <div className="flex justify-between bg-[#C30606] text-white px-2 py-1 rounded">
+                                        <span className="font-medium">Total:</span>
+                                        <span className="font-bold">{employee.totalDeductions}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Desktop Table View - Large screens */}
+            <div className="hidden lg:block bg-white border border-[#E9E9E9] rounded-[8px] sm:rounded-[12px] overflow-x-auto">
                 <Table className="min-w-[1200px]">
                     <TableHeader>
                         <TableRow className="bg-[#EEF3F2] border-b border-[#E9E9E9]">
@@ -229,10 +354,9 @@ export default function TaxDeductions({ onNext, onBack }: TaxDeductionsProps) {
                             <TableHead className="text-[12px]/[22px] py-[9px] font-medium text-[#8C8E8E] w-[120px]">
                                 Federal Tax
                             </TableHead>
-                            <TableHead className="text-[12px]/[22px] py-[9px] font-medium text-white w-[140px] bg-[#E53E3E]">
+                            <TableHead className="text-[12px]/[22px] py-[9px] font-medium text-white w-[140px] bg-[#C30606]">
                                 Total Deductions
                             </TableHead>
-                            <TableHead className="w-[84px]"></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -285,23 +409,6 @@ export default function TaxDeductions({ onNext, onBack }: TaxDeductionsProps) {
                                 </TableCell>
                                 <TableCell className="text-[14px]/[22px] text-gray-900 font-semibold">
                                     {employee.totalDeductions}
-                                </TableCell>
-                                <TableCell>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                                <MoreVertical className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className="rounded-[12px] min-w-[132px]">
-                                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]">
-                                                View Details
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]">
-                                                Edit
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
                                 </TableCell>
                             </TableRow>
                         ))}
