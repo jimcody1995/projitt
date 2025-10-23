@@ -17,11 +17,16 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { CalendarIcon, Calculator, Upload, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { CalendarIcon, Upload, AlertCircle, CheckCircle2, FileText, Link2, X } from "lucide-react";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import Papa from "papaparse";
+import { customToast } from "@/components/common/toastr";
 
 interface BasicPayProps {
     onNext: () => void;
@@ -29,6 +34,17 @@ interface BasicPayProps {
     payrollData: any;
     setPayrollData: (data: any) => void;
 }
+
+interface DataRow {
+    [key: string]: string;
+}
+
+interface ValidationError {
+    row: number;
+    column: string;
+    message: string;
+}
+
 
 export default function BasicPay({
     onNext,
@@ -39,262 +55,121 @@ export default function BasicPay({
     const [startDate, setStartDate] = useState<Date>();
     const [endDate, setEndDate] = useState<Date>();
     const [payDate, setPayDate] = useState<Date>();
-    const [calculationModalOpen, setCalculationModalOpen] = useState(false);
     const [importModalOpen, setImportModalOpen] = useState(false);
-    const [isCalculating, setIsCalculating] = useState(false);
-    const [calculationLogs, setCalculationLogs] = useState<string[]>([]);
-    const [calculationData, setCalculationData] = useState<any>(null);
-    const [importMethod, setImportMethod] = useState<'csv' | 'api'>('csv');
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState(0);
-    const [apiEndpoint, setApiEndpoint] = useState('');
-    const [apiKey, setApiKey] = useState('');
-    const [isDragOver, setIsDragOver] = useState(false);
 
-    // Validation state
-    const [errors, setErrors] = useState<{
-        payrollType?: string;
-        startDate?: string;
-        endDate?: string;
-        payDate?: string;
-    }>({});
-    const [touched, setTouched] = useState<{
-        payrollType?: boolean;
-        startDate?: boolean;
-        endDate?: boolean;
-        payDate?: boolean;
-    }>({});
+    // Import modal state
+    const [uploadMethod, setUploadMethod] = useState<"csv" | "api">("csv");
+    const [apiUrl, setApiUrl] = useState("");
+    const [data, setData] = useState<DataRow[]>([]);
+    const [headers, setHeaders] = useState<string[]>([]);
+    const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
+    const [isDragging, setIsDragging] = useState(false);
+    const [fileName, setFileName] = useState("");
 
-    // Validation functions
-    const validateField = (field: string, value: any) => {
-        switch (field) {
-            case 'payrollType':
-                return !value ? 'Please select a payroll type' : '';
-            case 'startDate':
-                return !value ? 'Please select a start date' : '';
-            case 'endDate':
-                return !value ? 'Please select an end date' : '';
-            case 'payDate':
-                return !value ? 'Please select a pay date' : '';
-            default:
-                return '';
-        }
-    };
+    const validateData = (rows: DataRow[]): ValidationError[] => {
+        const errors: ValidationError[] = [];
 
-    const validateForm = () => {
-        const newErrors: any = {};
-        const newTouched: any = {};
-
-        // Validate all fields
-        newErrors.payrollType = validateField('payrollType', payrollData.payrollType);
-        newErrors.startDate = validateField('startDate', startDate);
-        newErrors.endDate = validateField('endDate', endDate);
-        newErrors.payDate = validateField('payDate', payDate);
-
-        // Mark all fields as touched
-        newTouched.payrollType = true;
-        newTouched.startDate = true;
-        newTouched.endDate = true;
-        newTouched.payDate = true;
-
-        setErrors(newErrors);
-        setTouched(newTouched);
-
-        // Return true if no errors
-        return !Object.values(newErrors).some(error => error !== '');
-    };
-
-    const handleSaveAndImport = () => {
-        if (!validateForm()) {
-            return; // Don't proceed if validation fails
-        }
-
-        // Save data to parent state
-        setPayrollData({
-            ...payrollData,
-            payrollType: payrollData.payrollType || "Salary",
-            startDate,
-            endDate,
-            payDate,
-        });
-        onNext();
-    };
-
-    // Field change handlers with validation
-    const handlePayrollTypeChange = (value: string) => {
-        setPayrollData({ ...payrollData, payrollType: value });
-        setTouched({ ...touched, payrollType: true });
-        const error = validateField('payrollType', value);
-        setErrors({ ...errors, payrollType: error });
-    };
-
-    const handleStartDateChange = (date: Date | undefined) => {
-        setStartDate(date);
-        setTouched({ ...touched, startDate: true });
-        const error = validateField('startDate', date);
-        setErrors({ ...errors, startDate: error });
-    };
-
-    const handleEndDateChange = (date: Date | undefined) => {
-        setEndDate(date);
-        setTouched({ ...touched, endDate: true });
-        const error = validateField('endDate', date);
-        setErrors({ ...errors, endDate: error });
-    };
-
-    const handlePayDateChange = (date: Date | undefined) => {
-        setPayDate(date);
-        setTouched({ ...touched, payDate: true });
-        const error = validateField('payDate', date);
-        setErrors({ ...errors, payDate: error });
-    };
-
-    const handleCalculatePayroll = async () => {
-        if (!validateForm()) {
-            return; // Don't proceed if validation fails
-        }
-
-        setIsCalculating(true);
-        setCalculationLogs([]);
-        setCalculationModalOpen(true);
-
-        // Simulate calculation process
-        const logs = [
-            "Starting payroll calculation...",
-            "Loading employee data...",
-            "Calculating gross pay...",
-            "Computing deductions...",
-            "Calculating taxes...",
-            "Processing benefits...",
-            "Finalizing net pay...",
-            "Calculation completed successfully!"
-        ];
-
-        for (let i = 0; i < logs.length; i++) {
-            setTimeout(() => {
-                setCalculationLogs(prev => [...prev, logs[i]]);
-                if (i === logs.length - 1) {
-                    setIsCalculating(false);
-                    setCalculationData({
-                        totalEmployees: 268,
-                        grossPay: 350000,
-                        deductions: 37500,
-                        taxes: 52500,
-                        netPay: 260000,
-                        breakdown: [
-                            { category: "Basic Salary", amount: 280000 },
-                            { category: "Overtime", amount: 35000 },
-                            { category: "Bonus", amount: 35000 },
-                            { category: "Health Insurance", amount: 15000 },
-                            { category: "Retirement", amount: 14000 },
-                            { category: "Tax", amount: 52500 },
-                            { category: "Other Deductions", amount: 8500 }
-                        ]
+        rows.forEach((row, index) => {
+            Object.entries(row).forEach(([key, value]) => {
+                if (!value || value.trim() === "") {
+                    errors.push({
+                        row: index,
+                        column: key,
+                        message: "Field cannot be empty"
                     });
                 }
-            }, i * 1000);
-        }
-    };
-
-    const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            setSelectedFile(file);
-        }
-    };
-
-    const handleFileUpload = async () => {
-        if (!selectedFile) return;
-
-        setIsUploading(true);
-        setUploadProgress(0);
-
-        // Simulate file upload progress
-        const progressInterval = setInterval(() => {
-            setUploadProgress(prev => {
-                if (prev >= 100) {
-                    clearInterval(progressInterval);
-                    setIsUploading(false);
-                    // Simulate successful upload
-                    setTimeout(() => {
-                        setImportModalOpen(false);
-                        setSelectedFile(null);
-                        setUploadProgress(0);
-                        // You can add success notification here
-                    }, 500);
-                    return 100;
-                }
-                return prev + 10;
             });
-        }, 200);
+        });
+
+        return errors;
     };
 
-    const handleApiImport = async () => {
-        if (!apiEndpoint || !apiKey) return;
+    const handleFileUpload = (file: File) => {
+        setFileName(file.name);
 
-        setIsUploading(true);
-        setUploadProgress(0);
+        Papa.parse(file, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (results: any) => {
+                const parsedData = results.data as DataRow[];
+                if (parsedData.length > 0) {
+                    setHeaders(Object.keys(parsedData[0]));
+                    setData(parsedData);
+                    const errors = validateData(parsedData);
+                    setValidationErrors(errors);
 
-        // Simulate API import progress
-        const progressInterval = setInterval(() => {
-            setUploadProgress(prev => {
-                if (prev >= 100) {
-                    clearInterval(progressInterval);
-                    setIsUploading(false);
-                    // Simulate successful API import
-                    setTimeout(() => {
-                        setImportModalOpen(false);
-                        setApiEndpoint('');
-                        setApiKey('');
-                        setUploadProgress(0);
-                        // You can add success notification here
-                    }, 500);
-                    return 100;
+                    if (errors.length === 0) {
+                        customToast("File uploaded successfully", `${parsedData.length} rows imported with no errors.`, "success");
+                    } else {
+                        customToast("File uploaded with warnings", `${errors.length} validation error(s) found.`, "warning");
+                    }
                 }
-                return prev + 15;
-            });
-        }, 300);
-    };
-
-    const handleImport = () => {
-        if (importMethod === 'csv') {
-            handleFileUpload();
-        } else {
-            handleApiImport();
-        }
-    };
-
-    const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragOver(true);
-    };
-
-    const handleDragLeave = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragOver(false);
+            },
+            error: (error: any) => {
+                customToast("Upload failed", error.message || "Unknown error", "error");
+                console.error(error);
+            }
+        });
     };
 
     const handleDrop = (e: React.DragEvent) => {
         e.preventDefault();
-        e.stopPropagation();
-        setIsDragOver(false);
+        setIsDragging(false);
 
-        const files = e.dataTransfer.files;
-        if (files && files.length > 0) {
-            const file = files[0];
-            // Check if file type is supported
-            const supportedTypes = ['.csv', '.xlsx', '.xls'];
-            const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
-
-            if (supportedTypes.includes(fileExtension)) {
-                setSelectedFile(file);
-            } else {
-                alert('Please select a supported file type (CSV, XLSX, XLS)');
-            }
+        const file = e.dataTransfer.files[0];
+        if (file && (file.type === "text/csv" || file.name.endsWith('.csv'))) {
+            handleFileUpload(file);
+        } else {
+            customToast("Invalid file type", "Please upload a CSV file.", "error");
         }
+    };
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        console.log("File selected:", file);
+        if (file) {
+            handleFileUpload(file);
+        }
+    };
+
+    const handleApiImport = async () => {
+        try {
+            const response = await fetch(apiUrl);
+            const jsonData = await response.json();
+
+            if (Array.isArray(jsonData) && jsonData.length > 0) {
+                setHeaders(Object.keys(jsonData[0]));
+                setData(jsonData);
+                const errors = validateData(jsonData);
+                setValidationErrors(errors);
+
+                customToast("API import successful", `${jsonData.length} rows imported.`, "success");
+            }
+        } catch (error) {
+            customToast("API import failed", "Could not fetch data from the provided URL.", "error");
+        }
+    };
+
+    const hasError = (rowIndex: number, column: string) => {
+        return validationErrors.some(
+            (error) => error.row === rowIndex && error.column === column
+        );
+    };
+
+    const getErrorMessage = (rowIndex: number, column: string) => {
+        const error = validationErrors.find(
+            (error) => error.row === rowIndex && error.column === column
+        );
+        return error?.message;
+    };
+
+    const handleProcess = () => {
+        if (validationErrors.length > 0) {
+            customToast("Cannot process", "Please fix all validation errors before processing.", "error");
+            return;
+        }
+
+        customToast("Processing data", `Processing ${data.length} rows...`, "info");
     };
 
     return (
@@ -311,14 +186,11 @@ export default function BasicPay({
                     </Label>
                     <Select
                         value={payrollData.payrollType || ""}
-                        onValueChange={handlePayrollTypeChange}
+                        onValueChange={(value) => setPayrollData({ ...payrollData, payrollType: value })}
                     >
                         <SelectTrigger
                             id="payroll-type"
-                            className={`w-full h-[44px] rounded-[8px] ${touched.payrollType && errors.payrollType
-                                ? 'border-red-500'
-                                : 'border-[#BCBCBC]'
-                                }`}
+                            className="w-full h-[44px] rounded-[8px] border-[#BCBCBC]"
                         >
                             <SelectValue placeholder="Select payroll type" />
                         </SelectTrigger>
@@ -328,9 +200,6 @@ export default function BasicPay({
                             <SelectItem value="Commission">Commission</SelectItem>
                         </SelectContent>
                     </Select>
-                    {touched.payrollType && errors.payrollType && (
-                        <p className="text-red-500 text-sm">{errors.payrollType}</p>
-                    )}
                 </div>
 
                 {/* Pay Period */}
@@ -346,10 +215,7 @@ export default function BasicPay({
                                     <Button
                                         variant="outline"
                                         className={cn(
-                                            "w-full h-[44px] justify-start text-left font-normal rounded-[8px]",
-                                            touched.startDate && errors.startDate
-                                                ? "border-red-500"
-                                                : "border-[#BCBCBC]",
+                                            "w-full h-[44px] justify-start text-left font-normal rounded-[8px] border-[#BCBCBC]",
                                             !startDate && "text-muted-foreground"
                                         )}
                                     >
@@ -361,14 +227,11 @@ export default function BasicPay({
                                     <Calendar
                                         mode="single"
                                         selected={startDate}
-                                        onSelect={handleStartDateChange}
+                                        onSelect={(date) => setStartDate(date)}
                                         initialFocus
                                     />
                                 </PopoverContent>
                             </Popover>
-                            {touched.startDate && errors.startDate && (
-                                <p className="text-red-500 text-sm">{errors.startDate}</p>
-                            )}
                         </div>
 
                         {/* End Date */}
@@ -378,10 +241,7 @@ export default function BasicPay({
                                     <Button
                                         variant="outline"
                                         className={cn(
-                                            "w-full h-[44px] justify-start text-left font-normal rounded-[8px]",
-                                            touched.endDate && errors.endDate
-                                                ? "border-red-500"
-                                                : "border-[#BCBCBC]",
+                                            "w-full h-[44px] justify-start text-left font-normal rounded-[8px] border-[#BCBCBC]",
                                             !endDate && "text-muted-foreground"
                                         )}
                                     >
@@ -393,14 +253,11 @@ export default function BasicPay({
                                     <Calendar
                                         mode="single"
                                         selected={endDate}
-                                        onSelect={handleEndDateChange}
+                                        onSelect={(date) => setEndDate(date)}
                                         initialFocus
                                     />
                                 </PopoverContent>
                             </Popover>
-                            {touched.endDate && errors.endDate && (
-                                <p className="text-red-500 text-sm">{errors.endDate}</p>
-                            )}
                         </div>
                     </div>
                 </div>
@@ -416,10 +273,7 @@ export default function BasicPay({
                                 <Button
                                     variant="outline"
                                     className={cn(
-                                        "w-full h-[44px] justify-start text-left font-normal rounded-[8px]",
-                                        touched.payDate && errors.payDate
-                                            ? "border-red-500"
-                                            : "border-[#BCBCBC]",
+                                        "w-full h-[44px] justify-start text-left font-normal rounded-[8px] border-[#BCBCBC]",
                                         !payDate && "text-muted-foreground"
                                     )}
                                 >
@@ -431,14 +285,10 @@ export default function BasicPay({
                                 <Calendar
                                     mode="single"
                                     selected={payDate}
-                                    onSelect={handlePayDateChange}
-                                    initialFocus
+                                    onSelect={(date) => setPayDate(date)}
                                 />
                             </PopoverContent>
                         </Popover>
-                        {touched.payDate && errors.payDate && (
-                            <p className="text-red-500 text-sm">{errors.payDate}</p>
-                        )}
                     </div>
                 </div>
 
@@ -452,325 +302,194 @@ export default function BasicPay({
                         <Upload className="h-4 w-4 mr-2" />
                         Import Data
                     </Button>
-                    {/* <Button
-                        className="flex-1 h-[44px] rounded-[8px] bg-[#0D978B] hover:bg-[#0c8679] text-white font-medium"
-                        onClick={handleCalculatePayroll}
-                    >
-                        <Calculator className="h-4 w-4 mr-2" />
-                        Calculate Payroll
-                    </Button> */}
                 </div>
-
-                {/* Calculation Preview */}
-                {calculationData && (
-                    <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                        <div className="flex items-center gap-2 mb-3">
-                            <CheckCircle2 className="h-5 w-5 text-green-600" />
-                            <h3 className="font-medium text-green-800">Calculation Complete</h3>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div>
-                                <span className="text-green-700">Total Employees:</span>
-                                <span className="font-medium ml-2">{calculationData.totalEmployees}</span>
-                            </div>
-                            <div>
-                                <span className="text-green-700">Net Pay:</span>
-                                <span className="font-medium ml-2">${calculationData.netPay.toLocaleString()}</span>
-                            </div>
-                        </div>
-                    </div>
-                )}
             </div>
-
-            {/* Calculation Modal */}
-            <Dialog open={calculationModalOpen} onOpenChange={setCalculationModalOpen}>
-                <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                            <Calculator className="h-5 w-5" />
-                            Payroll Calculation
-                        </DialogTitle>
-                    </DialogHeader>
-
-                    <div className="space-y-6">
-                        {/* Calculation Status */}
-                        <div className="bg-gray-50 p-4 rounded-lg">
-                            <h3 className="font-medium mb-3">Calculation Status</h3>
-                            <div className="space-y-2">
-                                {calculationLogs.map((log, index) => (
-                                    <div key={index} className="flex items-center gap-2 text-sm">
-                                        {isCalculating && index === calculationLogs.length - 1 ? (
-                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-teal-600"></div>
-                                        ) : (
-                                            <CheckCircle2 className="h-4 w-4 text-green-600" />
-                                        )}
-                                        <span className={isCalculating && index === calculationLogs.length - 1 ? "text-teal-600" : "text-gray-600"}>
-                                            {log}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Calculation Results */}
-                        {calculationData && (
-                            <div className="space-y-4">
-                                <h3 className="font-medium">Calculation Results</h3>
-
-                                {/* Summary Cards */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    <div className="bg-blue-50 p-4 rounded-lg">
-                                        <p className="text-sm text-gray-600">Total Employees</p>
-                                        <p className="text-2xl font-bold text-blue-600">{calculationData.totalEmployees}</p>
-                                    </div>
-                                    <div className="bg-green-50 p-4 rounded-lg">
-                                        <p className="text-sm text-gray-600">Gross Pay</p>
-                                        <p className="text-2xl font-bold text-green-600">${calculationData.grossPay.toLocaleString()}</p>
-                                    </div>
-                                    <div className="bg-red-50 p-4 rounded-lg">
-                                        <p className="text-sm text-gray-600">Deductions</p>
-                                        <p className="text-2xl font-bold text-red-600">${calculationData.deductions.toLocaleString()}</p>
-                                    </div>
-                                    <div className="bg-teal-50 p-4 rounded-lg">
-                                        <p className="text-sm text-gray-600">Net Pay</p>
-                                        <p className="text-2xl font-bold text-teal-600">${calculationData.netPay.toLocaleString()}</p>
-                                    </div>
-                                </div>
-
-                                {/* Detailed Breakdown */}
-                                <div className="bg-white border rounded-lg">
-                                    <div className="p-4 border-b">
-                                        <h4 className="font-medium">Earnings & Deductions Breakdown</h4>
-                                    </div>
-                                    <div className="overflow-x-auto">
-                                        <table className="w-full">
-                                            <thead className="bg-gray-50">
-                                                <tr>
-                                                    <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">Category</th>
-                                                    <th className="px-4 py-2 text-right text-sm font-medium text-gray-500">Amount</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {calculationData.breakdown.map((item: any, index: number) => (
-                                                    <tr key={index} className="border-b">
-                                                        <td className="px-4 py-2 font-medium">{item.category}</td>
-                                                        <td className="px-4 py-2 text-right font-mono">
-                                                            ${item.amount.toLocaleString()}
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="flex justify-end gap-2 pt-4">
-                        <Button variant="outline" onClick={() => setCalculationModalOpen(false)}>
-                            Close
-                        </Button>
-                        {calculationData && (
-                            <Button
-                                className="bg-teal-600 hover:bg-teal-700"
-                                onClick={() => {
-                                    setCalculationModalOpen(false);
-                                    onNext();
-                                }}
-                            >
-                                Continue to Next Step
-                            </Button>
-                        )}
-                    </div>
-                </DialogContent>
-            </Dialog>
 
             {/* Import Data Modal */}
             <Dialog open={importModalOpen} onOpenChange={setImportModalOpen}>
-                <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
-                            <Upload className="h-5 w-5" />
-                            Import Employee Data
-                        </DialogTitle>
-                    </DialogHeader>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto" close={false}>
+                    <div className="min-h-screen bg-background p-3">
+                        <div className="max-w-6xl mx-auto space-y-8">
+                            <div>
+                                <div className="flex flex-row justify-between items-center">
+                                    <div>
+                                        <h1 className="text-4xl font-bold mb-2">Data Import</h1>
 
-                    <div className="space-y-6">
-                        {/* Import Method Selection */}
-                        <div className="space-y-4">
-                            <h4 className="font-medium">Choose Import Method</h4>
-                            <div className="grid grid-cols-2 gap-4">
-                                <button
-                                    onClick={() => setImportMethod('csv')}
-                                    className={`p-4 border-2 rounded-lg text-left transition-colors ${importMethod === 'csv'
-                                        ? 'border-teal-500 bg-teal-50'
-                                        : 'border-gray-200 hover:border-gray-300'
-                                        }`}
-                                >
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <Upload className="h-5 w-5" />
-                                        <span className="font-medium">CSV Upload</span>
                                     </div>
-                                    <p className="text-sm text-gray-600">Upload CSV or Excel file</p>
-                                </button>
-                                <button
-                                    onClick={() => setImportMethod('api')}
-                                    className={`p-4 border-2 rounded-lg text-left transition-colors ${importMethod === 'api'
-                                        ? 'border-teal-500 bg-teal-50'
-                                        : 'border-gray-200 hover:border-gray-300'
-                                        }`}
-                                >
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <Calculator className="h-5 w-5" />
-                                        <span className="font-medium">API Import</span>
-                                    </div>
-                                    <p className="text-sm text-gray-600">Connect via API endpoint</p>
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* CSV Upload Section */}
-                        {importMethod === 'csv' && (
-                            <div className="space-y-4">
-                                <div
-                                    className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${isDragOver
-                                        ? 'border-teal-500 bg-teal-50'
-                                        : 'border-gray-300 hover:border-teal-400'
-                                        }`}
-                                    onDragOver={handleDragOver}
-                                    onDragLeave={handleDragLeave}
-                                    onDrop={handleDrop}
-                                >
-                                    <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                                    <h3 className="text-lg font-medium mb-2">Upload CSV File</h3>
-                                    <p className="text-gray-600 mb-4">Drag and drop your CSV file here, or click to browse</p>
-
-                                    <input
-                                        type="file"
-                                        id="file-upload"
-                                        accept=".csv,.xlsx,.xls"
-                                        onChange={handleFileSelect}
-                                        className="hidden"
-                                        ref={(input) => {
-                                            if (input) {
-                                                // Store reference for programmatic access
-                                                (window as any).fileInputRef = input;
-                                            }
-                                        }}
-                                    />
-                                    <Button
-                                        type="button"
-                                        className="bg-teal-600 hover:bg-teal-700 cursor-pointer"
-                                        onClick={() => {
-                                            const fileInput = document.getElementById('file-upload') as HTMLInputElement;
-                                            if (fileInput) {
-                                                fileInput.click();
-                                            }
-                                        }}
-                                    >
-                                        Choose File
+                                    <Button variant="outline" className="rounded-2" onClick={() => { setImportModalOpen(false) }} >
+                                        <X className="w-6 h-6 text-black" />
                                     </Button>
 
-                                    {selectedFile && (
-                                        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                                            <div className="flex items-center gap-2">
-                                                <CheckCircle2 className="h-4 w-4 text-green-600" />
-                                                <span className="text-sm font-medium text-green-800">
-                                                    Selected: {selectedFile.name}
-                                                </span>
-                                            </div>
-                                            <p className="text-xs text-green-600 mt-1">
-                                                Size: {(selectedFile.size / 1024).toFixed(1)} KB
+                                </div>
+                                <p className="text-muted-foreground">Upload CSV files or import data via API</p>
+                            </div>
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Import Method</CardTitle>
+                                    <CardDescription>Choose how you want to import your data</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    <div className="flex gap-4">
+                                        <Button
+                                            variant={uploadMethod === "csv" ? "primary" : "outline"}
+                                            onClick={() => setUploadMethod("csv")}
+                                            className="flex-1"
+                                            size="lg"
+                                        >
+                                            <Upload className="mr-2 h-4 w-4" />
+                                            Upload CSV
+                                        </Button>
+                                        <Button
+                                            variant={uploadMethod === "api" ? "primary" : "outline"}
+                                            onClick={() => setUploadMethod("api")}
+                                            className="flex-1"
+                                            size="lg"
+                                        >
+                                            <Link2 className="mr-2 h-4 w-4" />
+                                            Import via API
+                                        </Button>
+                                    </div>
+
+                                    {uploadMethod === "csv" ? (
+                                        <div
+                                            onDrop={handleDrop}
+                                            onDragOver={(e) => {
+                                                e.preventDefault();
+                                                setIsDragging(true);
+                                            }}
+                                            onDragLeave={() => setIsDragging(false)}
+                                            onClick={() => {
+                                                const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+                                                if (fileInput) {
+                                                    fileInput.click();
+                                                }
+                                            }}
+                                            className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors cursor-pointer ${isDragging
+                                                ? "border-primary bg-primary/5"
+                                                : "border-border hover:border-primary/50"
+                                                }`}
+                                        >
+                                            <FileText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                                            <p className="text-lg font-medium mb-2">
+                                                *Drag and drop* your CSV file here
                                             </p>
+                                            <p className="text-sm text-muted-foreground mb-4">or</p>
+                                            <Button
+                                                variant="secondary"
+                                                onClick={() => {
+                                                    const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+                                                    if (fileInput) {
+                                                        fileInput.click();
+                                                    }
+                                                }}
+                                            >
+                                                Browse Files
+                                            </Button>
+                                            <Input
+                                                id="file-upload"
+                                                type="file"
+                                                accept=".csv,.txt"
+                                                className="hidden"
+                                                onChange={handleFileSelect}
+                                            />
+                                            {fileName && (
+                                                <p className="text-sm text-muted-foreground mt-4">
+                                                    Selected: {fileName}
+                                                </p>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-4">
+                                            <div>
+                                                <Label htmlFor="api-url">API Endpoint URL</Label>
+                                                <Input
+                                                    id="api-url"
+                                                    type="url"
+                                                    placeholder="https://api.example.com/data"
+                                                    value={apiUrl}
+                                                    onChange={(e) => setApiUrl(e.target.value)}
+                                                />
+                                            </div>
+                                            <Button onClick={handleApiImport} className="w-full" size="lg">
+                                                Import Data
+                                            </Button>
                                         </div>
                                     )}
+                                </CardContent>
+                            </Card>
 
-                                    <p className="text-sm text-gray-500 mt-2">Supported formats: CSV, Excel (.xlsx, .xls)</p>
-                                </div>
-                            </div>
-                        )}
+                            {validationErrors.length > 0 && (
+                                <Alert variant="destructive">
+                                    <AlertCircle className="h-4 w-4" />
+                                    <AlertDescription>
+                                        Found {validationErrors.length} validation error(s). Please review and fix them below.
+                                    </AlertDescription>
+                                </Alert>
+                            )}
 
-                        {/* API Import Section */}
-                        {importMethod === 'api' && (
-                            <div className="space-y-4">
-                                <h4 className="font-medium">API Configuration</h4>
-                                <div className="space-y-2">
-                                    <Label htmlFor="api-endpoint">API Endpoint</Label>
-                                    <Input
-                                        id="api-endpoint"
-                                        value={apiEndpoint}
-                                        onChange={(e) => setApiEndpoint(e.target.value)}
-                                        placeholder="https://api.example.com/employees"
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="api-key">API Key</Label>
-                                    <Input
-                                        id="api-key"
-                                        type="password"
-                                        value={apiKey}
-                                        onChange={(e) => setApiKey(e.target.value)}
-                                        placeholder="Enter your API key"
-                                    />
-                                </div>
-                            </div>
-                        )}
+                            {data.length > 0 && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Data Preview</CardTitle>
+                                        <CardDescription>
+                                            Review your data before processing ({data.length} rows)
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="rounded-md border overflow-auto max-h-96">
+                                            <Table>
+                                                <TableHeader>
+                                                    <TableRow>
+                                                        <TableHead className="w-12">#</TableHead>
+                                                        {headers.map((header) => (
+                                                            <TableHead key={header}>{header}</TableHead>
+                                                        ))}
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody>
+                                                    {data.map((row, rowIndex) => (
+                                                        <TableRow key={rowIndex}>
+                                                            <TableCell className="font-medium">{rowIndex + 1}</TableCell>
+                                                            {headers.map((header) => {
+                                                                const hasErr = hasError(rowIndex, header);
+                                                                const errorMsg = getErrorMessage(rowIndex, header);
 
-                        {/* Upload Progress */}
-                        {isUploading && (
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                    <span>Uploading...</span>
-                                    <span>{uploadProgress}%</span>
-                                </div>
-                                <div className="w-full bg-gray-200 rounded-full h-2">
-                                    <div
-                                        className="bg-teal-600 h-2 rounded-full transition-all duration-300"
-                                        style={{ width: `${uploadProgress}%` }}
-                                    ></div>
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="bg-yellow-50 p-4 rounded-lg">
-                            <div className="flex items-start gap-2">
-                                <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
-                                <div>
-                                    <h4 className="font-medium text-yellow-800">Data Validation</h4>
-                                    <p className="text-sm text-yellow-700 mt-1">
-                                        The system will validate all imported data and show any errors before processing.
-                                        You can preview and correct data before final import.
-                                    </p>
-                                </div>
-                            </div>
+                                                                return (
+                                                                    <TableCell
+                                                                        key={`${rowIndex}-${header}`}
+                                                                        className={hasErr ? "bg-destructive/10" : ""}
+                                                                    >
+                                                                        <div className="space-y-1">
+                                                                            <div>{row[header]}</div>
+                                                                            {hasErr && (
+                                                                                <div className="flex items-center gap-1 text-xs text-destructive">
+                                                                                    <AlertCircle className="h-3 w-3" />
+                                                                                    {errorMsg}
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    </TableCell>
+                                                                );
+                                                            })}
+                                                        </TableRow>
+                                                    ))}
+                                                </TableBody>
+                                            </Table>
+                                        </div>
+                                        <div className="mt-6 flex justify-end">
+                                            <Button
+                                                onClick={handleProcess}
+                                                disabled={validationErrors.length > 0}
+                                                size="lg"
+                                            >
+                                                <CheckCircle2 className="mr-2 h-4 w-4" />
+                                                Process Data
+                                            </Button>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
                         </div>
-                    </div>
-
-                    <div className="flex justify-end gap-2 pt-4">
-                        <Button
-                            variant="outline"
-                            onClick={() => {
-                                setImportModalOpen(false);
-                                setSelectedFile(null);
-                                setApiEndpoint('');
-                                setApiKey('');
-                                setUploadProgress(0);
-                            }}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            className="bg-teal-600 hover:bg-teal-700"
-                            onClick={handleImport}
-                            disabled={
-                                isUploading ||
-                                (importMethod === 'csv' && !selectedFile) ||
-                                (importMethod === 'api' && (!apiEndpoint || !apiKey))
-                            }
-                        >
-                            {isUploading ? 'Importing...' : 'Import Data'}
-                        </Button>
                     </div>
                 </DialogContent>
             </Dialog>
