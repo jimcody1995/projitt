@@ -147,6 +147,7 @@ export const MENU_SIDEBAR: MenuConfig = [
       { title: 'Tax Filing', path: '/payroll/tax-filing' },
       { title: 'Year End Processing', path: '/payroll/year-end-processing' },
       { title: 'Reports & Analytics', path: '/payroll/reports-analytics' },
+      { title: 'Payroll Operations', path: '/payroll/payroll-operations' },
 
     ],
   },

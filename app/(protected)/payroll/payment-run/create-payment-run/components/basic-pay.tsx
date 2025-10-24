@@ -56,6 +56,7 @@ export default function BasicPay({
     const [endDate, setEndDate] = useState<Date>();
     const [payDate, setPayDate] = useState<Date>();
     const [importModalOpen, setImportModalOpen] = useState(false);
+    const [batchId, setBatchId] = useState("")
 
     // Import modal state
     const [uploadMethod, setUploadMethod] = useState<"csv" | "api">("csv");
@@ -179,6 +180,13 @@ export default function BasicPay({
             </h2>
 
             <div className="space-y-[24px] sm:space-y-[32px]">
+                {/**Batch ID */}
+                <div className="flex flex-col gap-[10px]">
+                    <Label htmlFor="batch-id" className="text-[13px] sm:text-[14px]/[16px] font-medium text-[#1C1C1C]">
+                        Batch ID
+                    </Label>
+                    <Input id="batch-id" value={batchId} onChange={(e) => setBatchId(e.target.value)} type="text" className="w-full h-[44px] rounded-[8px] border-[#BCBCBC] p-[10px]" placeholder="PAYRUN-2025-01-09" />
+                </div>
                 {/* Select Payroll Type */}
                 <div className="flex flex-col gap-[10px]">
                     <Label htmlFor="payroll-type" className="text-[13px] sm:text-[14px]/[16px] font-medium text-[#1C1C1C]">
