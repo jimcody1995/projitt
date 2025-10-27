@@ -284,7 +284,7 @@ export default function LeaveManagement() {
                 cell: ({ row }) => (
                     <div className="flex items-center gap-[12px]">
                         <Avatar className="size-7">
-                            <AvatarFallback className="bg-[#d6eeec] text-[#0d978b] text-[12px] font-medium">
+                            <AvatarFallback className="bg-[#d6eeec] text-[#053834] text-[12px] font-medium">
                                 {row.original.initials}
                             </AvatarFallback>
                         </Avatar>

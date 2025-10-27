@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Stepper from "./components/stepper";
@@ -10,18 +10,61 @@ import ValidateDetails from "./components/validate-details";
 import DisburseFunds from "./components/disburse-funds";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { customToast } from "@/components/common/toastr";
-import { CircleAlert, CircleCheck, Shield, CheckCircle } from "lucide-react";
+import { CircleAlert, CircleCheck, Shield, CheckCircle, LayoutList } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import TaxDeductions from "./components/tax-deduction";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const MAX_STEPS = 5;
+
+const activityLogData = [
+    {
+        id: 1,
+        title: "Created Payroll Run",
+        user: "Javier Chang",
+        initials: "AF",
+        date: "Jul 12, 2025"
+    },
+    {
+        id: 2,
+        title: "Imported Attendance",
+        user: "Javier Chang",
+        initials: "AF",
+        date: "Jul 12, 2025"
+    },
+    {
+        id: 3,
+        title: "Resolved Validation Issue",
+        user: "Javier Chang",
+        initials: "AF",
+        date: "Jul 12, 2025"
+    },
+    {
+        id: 4,
+        title: "Revalidated Employee",
+        user: "Javier Chang",
+        initials: "AF",
+        date: "Jul 12, 2025"
+    },
+    {
+        id: 5,
+        title: "Resolved Validation Issue",
+        user: "Javier Chang",
+        initials: "AF",
+        date: "Jul 12, 2025"
+    }
+];
 
 export default function CreatePaymentRun() {
     const [currentStep, setCurrentStep] = useState(1);
     const [payrollData, setPayrollData] = useState<any>({});
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const router = useRouter();
+    const [isActivityLogOpen, setIsActivityLogOpen] = useState(false);
+    useEffect(() => {
+        setIsActivityLogOpen(false);
+    }, [currentStep]);
 
     // Confirmation data for payment gateway and reconciliation
     const confirmData = [
@@ -158,7 +201,7 @@ export default function CreatePaymentRun() {
             </div>
 
             {/* Main Content */}
-            <div className="flex bg-white rounded-[8px] border border-[#E9E9E9] overflow-hidden">
+            <div className="flex bg-white rounded-[8px] border border-[#E9E9E9]  relative">
                 {/* Stepper Sidebar */}
                 <div className="hidden lg:block min-w-[324px] border-r border-[#E9E9E9] min-h-[calc(100vh-120px)] p-[24px]">
                     <Stepper currentStep={currentStep} />
@@ -187,6 +230,76 @@ export default function CreatePaymentRun() {
                         <DisburseFunds onBack={handleBack} onComplete={handleComplete} />
                     )}
                 </div>
+                {/**Activity Logs */}
+                <div className="absolute right-0 -bottom-[20px]  flex items-end flex-col justify-center gap-[12px] h-fit">
+                    {isActivityLogOpen && (
+                        <div
+                            className="bg-white border border-[#E9E9E9] shadow-xl rounded-[12px] w-[389px] h-[531px] flex flex-col"
+                        >
+                            {/* Header */}
+                            <div className="px-[24px] pt-[24px] pb-[16px] flex-shrink-0 border-b border-[#E9E9E9]">
+                                <h3 className="text-[14px]/[18px] font-medium text-gray-800">
+                                    Activity Log
+                                </h3>
+                            </div>
+
+                            {/* Activity List with Timeline */}
+                            <div className="flex-1 overflow-y-auto p-[24px]">
+                                <div className="relative">
+                                    {activityLogData.map((activity, index) => (
+                                        <div
+                                            key={activity.id}
+                                            className="relative pb-[8px] last:pb-0"
+                                        >
+                                            {/* Timeline container */}
+                                            <div className="flex gap-[8px] h-fit">
+                                                {/* Timeline - Left side stepper */}
+                                                <div className="relative flex flex-col items-center flex-shrink-0">
+                                                    {/* Teal dot indicator */}
+                                                    <div className="w-[14px] h-[14px] bg-[#0D978B] rounded-full z-10 flex-shrink-0"></div>
+
+                                                    {/* Connecting line */}
+                                                    {index !== activityLogData.length - 1 && (
+                                                        <div className="w-[1px] h-[60px] bg-[#D9D9D9] mt-[8px]"></div>
+                                                    )}
+                                                </div>
+
+                                                {/* Content */}
+                                                <div className="flex-1 min-w-0">
+                                                    {/* Title */}
+                                                    <div className="text-[14px]/[16px] font-medium text-[#4B4B4B] mb-[4px]">
+                                                        {activity.title}
+                                                    </div>
+
+                                                    {/* User Info */}
+                                                    <div className="flex items-center gap-[4px] mb-[4px]">
+                                                        <Avatar className="h-[20px] w-[20px]">
+                                                            <AvatarFallback className="bg-[#E9E9E9] text-[#4b4b4b] text-[8px] font-medium">
+                                                                {activity.initials}
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <span className="text-[12px]/[18px] text-[#353535]">
+                                                            {activity.user}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Date */}
+                                                    <div className="text-[10px]/[12px] text-[#A5A5A5]">
+                                                        {activity.date}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    <div className="rounded-full bg-white border border-[#E9E9E9] p-2 cursor-pointer hover:bg-gray-100 transition-all duration-200 w-[60px] h-[60px] flex items-center justify-center" onClick={() => setIsActivityLogOpen(!isActivityLogOpen)}>
+                        <LayoutList className="w-[28x] h-[28px] text-[#4B4B4B]" />
+                    </div>
+                </div>
+
             </div>
             <Dialog
                 open={isConfirmModalOpen}

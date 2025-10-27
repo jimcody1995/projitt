@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DndContext, DragEndEvent, DragStartEvent, closestCenter, DragOverlay } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useSortable } from '@dnd-kit/sortable';
@@ -237,7 +237,7 @@ export default function Eligibility() {
             id: '2',
             type: 'isManager',
             operator: 'is',
-            value: true
+            value: false
         },
         {
             id: '3',
@@ -245,7 +245,78 @@ export default function Eligibility() {
             selectedValues: []
         }
     ]);
+    // Function to generate dynamic description based on criteria
+    const generateDescription = () => {
+        const validCriteria = criteria.filter(c => {
+            if (c.type === 'role') {
+                return c.selectedValues && c.selectedValues.length > 0;
+            }
+            if (c.type === 'isManager') {
+                return c.value !== undefined;
+            }
+            if (c.type === 'department') {
+                return c.selectedValues && c.selectedValues.length > 0;
+            }
+            if (c.type === 'experience') {
+                return c.value !== undefined;
+            }
+            if (c.type === 'custom') {
+                return c.value;
+            }
+            return false;
+        });
 
+        if (validCriteria.length === 0) {
+            return "No criteria defined";
+        }
+
+        const descriptions = validCriteria.map(criterion => {
+            switch (criterion.type) {
+                case 'role':
+                    const roles = criterion.selectedValues || [];
+                    if (roles.length === 0) return '';
+                    if (roles.length === 1) {
+                        return `Employee's role is <strong style='color: #0D978B !important'>${roles[0]}</strong>`;
+                    } else {
+                        const lastRole = roles[roles.length - 1];
+                        const otherRoles = roles.slice(0, -1);
+                        const otherRolesText = otherRoles.join('</strong>, <strong style=\'color: #0D978B !important\'>');
+                        return `Employee's role are any of <strong style='color: #0D978B !important'>${otherRolesText}</strong><span style='color: #0D978B !important'> or </span><strong style='color: #0D978B !important'>${lastRole}</strong>`;
+                    }
+
+                case 'isManager':
+                    const isManager = criterion.value as boolean;
+                    return isManager ?
+                        `Employee is a <strong style='color: #0D978B !important'>Manager</strong>` :
+                        `Employee is <strong style='color: black !important'>NOT</strong> a <strong style='color: #0D978B !important'>Manager</strong>`;
+
+                case 'department':
+                    const departments = criterion.selectedValues || [];
+                    if (departments.length === 0) return '';
+                    if (departments.length === 1) {
+                        return `Employee's department is <strong style='color: #0D978B !important'>${departments[0]}</strong>`;
+                    } else {
+                        const lastDept = departments.pop();
+                        const otherDepts = departments.join('</strong>, <strong style=\'color: #0D978B !important\'>');
+                        return `Employee's department are any of <strong style='color: #0D978B !important'>${otherDepts}</strong><span style='color: #0D978B !important'> or </span><strong style='color: #0D978B !important'>${lastDept}</strong>`;
+                    }
+
+                case 'experience':
+                    const hasExperience = criterion.value as boolean;
+                    return hasExperience ?
+                        `has <strong style='color: #0D978B !important'>experience</strong>` :
+                        `does <strong style='color: black !important'>NOT</strong> have <strong style='color: #0D978B !important'>experience</strong>`;
+
+                case 'custom':
+                    return `<strong style='color: #0D978B !important'>${criterion.value}</strong>`;
+
+                default:
+                    return '';
+            }
+        }).filter(desc => desc !== '');
+
+        return descriptions.join(' <span style=\'color: black !important\'>AND</span> ');
+    };
     const [employees] = useState<Employee[]>([
         { id: '1', name: 'Alice Fernadez', role: 'Senior Data Analyst', initials: 'AF' },
         { id: '2', name: 'John Smith', role: 'Brand Designer', initials: 'JS' },
@@ -349,10 +420,10 @@ export default function Eligibility() {
                     </div>
                     {/* Summary */}
                     <div className="bg-[#D6EEEC] rounded-[12px] py-[10px] pl-[10px] pr-[10px] sm:pr-[38px] mb-6">
-                        <p className="text-xs sm:text-sm text-gray-500">
-                            Employee's role are any of <strong className='text-primary'>Brand Designer</strong><span className='text-primary'>or</span> <strong className='text-primary'>AI Engineer</strong>
-                            <span className='text-black' >AND</span>is <strong className='text-black'>NOT</strong> a <strong className='text-primary'>Manager</strong>
-                        </p>
+                        <p
+                            className="text-xs sm:text-sm text-gray-500"
+                            dangerouslySetInnerHTML={{ __html: generateDescription() }}
+                        />
                     </div>
                     <div className="space-y-4 w-full">
                         <SortableContext items={criteria.map(c => c.id)} strategy={verticalListSortingStrategy}>
@@ -407,7 +478,7 @@ export default function Eligibility() {
                         {eligibleEmployees.map((employee) => (
                             <div key={employee.id} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 border-b -px-3 border-gray-200">
                                 <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#D6EEEC] flex items-center justify-center flex-shrink-0">
-                                    <span className="text-xs sm:text-[10px]/[12px] font-medium text-[#353535]">
+                                    <span className="text-xs sm:text-[12px]/[14px] font-medium text-[#053834]">
                                         {employee.initials}
                                     </span>
                                 </div>

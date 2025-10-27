@@ -141,8 +141,8 @@ const ShiftCell = ({ shift, onEdit, onDelete }: {
 
 const EmployeeCell = ({ employee }: { employee: Employee }) => (
     <div className="flex items-center gap-2 sm:gap-3">
-        <div className="w-8 h-8  rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center flex-shrink-0 border border-blue-200">
-            <span className="text-xs sm:text-sm font-semibold text-blue-700">
+        <div className="w-8 h-8  rounded-full bg-[#D6EEEC] flex items-center justify-center flex-shrink-0 border border-blue-200">
+            <span className="text-[10px] sm:text-[12px] text-[#053834]">
                 {employee.initials}
             </span>
         </div>

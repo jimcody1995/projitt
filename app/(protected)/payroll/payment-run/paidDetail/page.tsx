@@ -28,6 +28,7 @@ import { ArrowLeft, ListFilter, MoreVertical, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import { EmployeeFilterTool } from "../[id]/components/employee-filter";
+import PaystubSheet, { PaystubEmployee } from "../components/PaystubSheet";
 import * as XLSX from 'xlsx';
 
 // Mock employee payment data
@@ -174,6 +175,75 @@ const paymentData = [
     },
 ];
 
+// Transform payment data to PaystubEmployee format
+const transformToPaystubData = (paymentData: any[]): PaystubEmployee[] => {
+    return paymentData.map(emp => ({
+        id: emp.id,
+        name: emp.name,
+        email: emp.email.includes('€') ? `${emp.name.toLowerCase().replace(/\s+/g, '')}@company.com` : emp.email,
+        phone: "+44 12 3456 7890", // Mock phone
+        address: "123 Highland Drive, Anytown, CA", // Mock address
+        employeeId: emp.employeeId,
+        niNumber: "123412568712", // Mock NI number
+        taxCode: "12508", // Mock tax code
+        bankDetails: "Wells Fargo - 1232249218", // Mock bank details
+        paymentMethod: "Direct Deposit",
+        payPeriod: "May 1 - May 31, 2025",
+        payDate: "June 1, 2025",
+        payrollNumber: "12345687",
+        payType: emp.workType,
+        earnings: [
+            {
+                description: "Standard Pay",
+                hours: 40,
+                rate: 12.5,
+                current: parseFloat(emp.grossPay.replace(/[€¥$,]/g, '')) * 0.8 || 2000,
+                ytd: parseFloat(emp.grossPay.replace(/[€¥$,]/g, '')) * 0.8 || 2000,
+            },
+            {
+                description: "Overtime",
+                hours: 8,
+                rate: 12.5,
+                current: parseFloat(emp.grossPay.replace(/[€¥$,]/g, '')) * 0.2 || 500,
+                ytd: parseFloat(emp.grossPay.replace(/[€¥$,]/g, '')) * 0.2 || 500,
+            }
+        ],
+        deductions: [
+            {
+                description: "PAYE Tax",
+                current: parseFloat(emp.tax.replace(/[€¥$,]/g, '')) || 500,
+                ytd: parseFloat(emp.tax.replace(/[€¥$,]/g, '')) || 500,
+            },
+            {
+                description: "Health Insurance",
+                current: 200,
+                ytd: 200,
+            },
+            {
+                description: "401k",
+                current: 300,
+                ytd: 300,
+            }
+        ],
+        contributions: [
+            {
+                description: "Employer 401k Match",
+                current: 300,
+                ytd: 300,
+            },
+            {
+                description: "Health Insurance Contribution",
+                current: 150,
+                ytd: 150,
+            }
+        ],
+        grossPay: parseFloat(emp.grossPay.replace(/[€¥$,]/g, '')) || 2000,
+        totalDeductions: (parseFloat(emp.tax.replace(/[€¥$,]/g, '')) || 500) + 200 + 300,
+        totalContributions: 300 + 150,
+        netPay: parseFloat(emp.netPay.replace(/[€¥$,]/g, '')) || 1500,
+    }));
+};
+
 export default function PaidDetail() {
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState("");
@@ -181,7 +251,9 @@ export default function PaidDetail() {
     const [selectedWorkTypes, setSelectedWorkTypes] = useState<string[]>([]);
     const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
     const [isPaystubOpen, setIsPaystubOpen] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
+
+    // Transform data for paystub component
+    const paystubData = useMemo(() => transformToPaystubData(paymentData), []);
 
     const getInitials = (name: string) => {
         return name
@@ -463,10 +535,7 @@ export default function PaidDetail() {
                                         <DropdownMenuContent align="end" className="rounded-[12px] min-w-[132px]">
                                             <DropdownMenuItem
                                                 className="text-[12px]/[18px] text-[#4B4B4B] h-[32px]"
-                                                onClick={() => {
-                                                    setSelectedEmployee(employee);
-                                                    setIsPaystubOpen(true);
-                                                }}
+                                                onClick={() => setIsPaystubOpen(true)}
                                             >
                                                 View Summary
                                             </DropdownMenuItem>
@@ -482,209 +551,14 @@ export default function PaidDetail() {
                 </Table>
             </div>
 
-            {/* Paystub Sheet */}
-            <Sheet open={isPaystubOpen} onOpenChange={setIsPaystubOpen}>
-                <SheetContent className="w-full sm:max-w-[700px] sm:min-w-[700px] p-0 overflow-y-auto" close={false}>
-                    {selectedEmployee && (
-                        <div className="h-full flex flex-col">
-                            {/* Header */}
-                            <div className="px-[16px] sm:px-[32px] py-[20px] sm:py-[29px] flex items-center justify-between flex-shrink-0">
-                                <h2 className="text-[18px]/[24px] sm:text-[22px]/[30px] font-semibold text-[#353535]">Paystub</h2>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-[32px] w-[32px] p-0 hover:bg-gray-100 rounded-[6px] border border-[#E9E9E9]"
-                                    onClick={() => setIsPaystubOpen(false)}
-                                >
-                                    <X className="h-[16px] w-[16px] text-[#4B4B4B]" />
-                                </Button>
-                            </div>
-
-                            {/* Content */}
-                            <div className="flex-1 overflow-y-auto">
-                                {/* Employee Info Table */}
-                                <div className="mb-[24px] sm:mb-[47px] border border-[#E9E9E9] rounded-[8px] overflow-hidden px-[16px] sm:px-[32px]">
-                                    <div className="grid grid-cols-1 sm:grid-cols-2">
-                                        {/* Row 1 */}
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b sm:border-r border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Full Name</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">{selectedEmployee.name}</div>
-                                        </div>
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Phone</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">+44 12 3456 7890</div>
-                                        </div>
-
-                                        {/* Row 2 */}
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b sm:border-r border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Email</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">alicefernadez@gmail.com</div>
-                                        </div>
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Address</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">123 Highland Drive, Anytown, CA</div>
-                                        </div>
-
-                                        {/* Row 3 */}
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b sm:border-r border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Pay Period</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">May 1 - May 31, 2025</div>
-                                        </div>
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Pay Type</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">Monthly</div>
-                                        </div>
-
-                                        {/* Row 4 */}
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b sm:border-r border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Pay Date</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">June 1, 2025</div>
-                                        </div>
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Payroll #</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">12345687</div>
-                                        </div>
-
-                                        {/* Row 5 */}
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b sm:border-r border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Payroll #</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">12345687</div>
-                                        </div>
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">NI Number</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">123412568712</div>
-                                        </div>
-
-                                        {/* Row 6 */}
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b sm:border-r border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Tax Code</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">12508</div>
-                                        </div>
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Bank</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">Wells Fargo - 1232249218</div>
-                                        </div>
-
-                                        {/* Row 7 - Full Width */}
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b sm:border-r border-[#E9E9E9] bg-white">
-                                            <div className="text-[12px]/[18px] text-[#8F8F8F]">Payment Method</div>
-                                            <div className="text-[12px]/[22px] text-[#1C1C1C]">Direct Deposit</div>
-                                        </div>
-                                        <div className="px-[12px] pt-[12px] pb-[6px] flex flex-row justify-between border-b border-[#E9E9E9] bg-white">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* EARNINGS Section */}
-                                <div className="mb-[24px] sm:mb-[32px] px-[16px] sm:px-[32px]">
-                                    <h3 className="text-[14px]/[26px] font-medium text-[#4b4b4b] mb-[6px]">EARNINGS</h3>
-
-                                    <div className="overflow-x-auto -mx-[16px] sm:mx-0 px-[16px] sm:px-0">
-                                        <div className="min-w-[500px] sm:min-w-0">
-                                            {/* Table Header */}
-                                            <div className="grid grid-cols-5 bg-[#D6EEEC] border-b border-[#E9E9E9] items-start">
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">Description</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">Hours</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">Rate</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">Current ($)</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">YTD ($)</div>
-                                            </div>
-
-                                            {/* Table Rows */}
-                                            <div className="grid grid-cols-5 border-b border-[#E9E9E9]">
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">Standard Pay</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">48</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">12.5</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                            </div>
-
-                                            <div className="grid grid-cols-5 border-b border-[#E9E9E9]">
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">Overtime</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">5</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">12.5</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                            </div>
-
-                                            <div className="grid grid-cols-5 border-b border-[#E9E9E9]">
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">Overtime</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">5</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">12.5</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                            </div>
-
-                                            {/* Total Row */}
-                                            <div className="grid grid-cols-5">
-                                                <div className="py-[10px] px-[12px] text-[14px]/[18px] font-semibold text-[#0D978B] col-span-3">Total</div>
-                                                <div className="py-[10px] px-[12px] text-[14px]/[18px] font-semibold text-[#0D978B]">$18,000<span className="text-[#0D978B66]">.00</span></div>
-                                                <div className="py-[10px] px-[12px] text-[14px]/[18px] font-semibold text-[#0D978B]">$18,000<span className="text-[#0D978B66]">.00</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* DEDUCTIONS Section */}
-                                <div className="mb-[24px] sm:mb-[32px] px-[16px] sm:px-[32px]">
-                                    <h3 className="text-[14px]/[18px] font-semibold text-[#4B4B4B] mb-[12px]">DEDUCTIONS</h3>
-
-                                    <div className="overflow-x-auto -mx-[16px] sm:mx-0 px-[16px] sm:px-0">
-                                        <div className="min-w-[400px] sm:min-w-0">
-                                            {/* Table Header */}
-                                            <div className="grid grid-cols-3 bg-[#D7ECEA] border-b border-[#E9E9E9]">
-                                                <div className="py-[8px] px-[12px] text-[12px]/[18px] font-medium text-[#353535]">Description</div>
-                                                <div className="py-[8px] px-[12px] text-[12px]/[18px] font-medium text-[#353535]">Current ($)</div>
-                                                <div className="py-[8px] px-[12px] text-[12px]/[18px] font-medium text-[#353535]">YTD ($)</div>
-                                            </div>
-
-                                            {/* Table Rows */}
-                                            <div className="grid grid-cols-3 border-b border-[#E9E9E9]">
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">PAYE Tax</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                            </div>
-
-                                            <div className="grid grid-cols-3 border-b border-[#E9E9E9]">
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">Health Insurance</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                            </div>
-
-                                            <div className="grid grid-cols-3 border-b border-[#E9E9E9]">
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">401k</div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                                <div className="py-[8px] px-[12px] text-[14px]/[18px] text-[#4B4B4B]">500<span className="text-[#A5A5A5]">.00</span></div>
-                                            </div>
-
-                                            {/* Total Row */}
-                                            <div className="grid grid-cols-3">
-                                                <div className="py-[10px] px-[12px] text-[14px]/[18px] font-semibold text-[#4B4B4B]">Total</div>
-                                                <div className="py-[10px] px-[12px] text-[14px]/[18px] font-semibold text-[#4B4B4B]">$18,000<span className="text-[#4B4B4B]">.00</span></div>
-                                                <div className="py-[10px] px-[12px] text-[14px]/[18px] font-semibold text-[#4B4B4B]">$18,000<span className="text-[#4B4B4B]">.00</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* NET PAY Section */}
-                                <div className="mb-[40px] sm:mb-[73px] px-[16px] sm:px-[32px]">
-                                    <div className="text-[14px]/[26px] font-medium text-[#4B4B4B] mb-[4px]">NET PAY</div>
-                                    <div className="text-[16px]/[18px] font-semiBold text-[#0D978B] mb-[2px]">$18,000.00</div>
-                                    <div className="text-[12px]/[18px] text-[#787878]">Wired via Direct Deposit on June 1, 2025</div>
-                                </div>
-
-                                {/* Download Button */}
-                                <div className="pb-[24px] sm:pb-[32px] pt-[16px] sm:pt-[23px] border-t border-[#E9E9E9] px-[16px] sm:px-[32px] flex justify-center sm:justify-end">
-                                    <Button className="w-full sm:w-[182px] h-[42px] bg-[#0D978B] hover:bg-[#0c8679] text-white font-semibold text-[14px]/[20px] rounded-[12px]">
-                                        Download
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </SheetContent>
-            </Sheet>
+            {/* Enhanced Paystub Sheet */}
+            <PaystubSheet
+                isOpen={isPaystubOpen}
+                onClose={() => setIsPaystubOpen(false)}
+                employees={paystubData}
+                companyLogo="/images/logo.png"
+                companyName="Projitt HR"
+            />
         </div>
     );
 }

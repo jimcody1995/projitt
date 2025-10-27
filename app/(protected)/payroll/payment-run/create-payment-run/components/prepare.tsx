@@ -29,10 +29,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CircleCheck, MoreVertical, TriangleAlert, Clock, X, ArrowLeft } from "lucide-react";
+import { CircleCheck, MoreVertical, TriangleAlert, Clock, X, ArrowLeft, Download } from "lucide-react";
 import { useState } from "react";
 import AttendanceRecord from "./attendance-record";
 import LeaveRecord from "./leave-record";
+import { customToast } from "@/components/common/toastr";
 
 interface PrepareProps {
     onNext: () => void;
@@ -202,6 +203,195 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
         setIsDetailsDialogOpen(true);
     };
 
+    //for notify manager all
+    const handleNotifyManagerAll = () => {
+        console.log("Notifying manager all");
+        customToast("Success", "Notification for all employees sent successfully", "success");
+    };
+
+    //for notify manager
+    const handleNotifyManager = () => {
+        console.log("Notifying manager");
+        customToast("Success", "Notification sent successfully", "success");
+    };
+
+    // CSV Export function
+    const handleExportCSV = () => {
+        // Table data for CSV export
+        const csvData = [
+            {
+                ID: "#E0001",
+                Employee: "Alice Fernandez",
+                Date: "Mar 21",
+                Manager: "James King",
+                "Clock In": "Leave",
+                "Clock Out": "Leave",
+                "Total Hours": "Leave"
+            },
+            {
+                ID: "#E0001",
+                Employee: "Alice Fernandez",
+                Date: "Mar 22",
+                Manager: "James King",
+                "Clock In": "08:30AM",
+                "Clock Out": "05:30PM",
+                "Total Hours": "9h 00m"
+            },
+            {
+                ID: "#E0001",
+                Employee: "Alice Fernandez",
+                Date: "Mar 23",
+                Manager: "James King",
+                "Clock In": "08:45AM",
+                "Clock Out": "05:15PM",
+                "Total Hours": "8h 30m"
+            },
+            {
+                ID: "#E0001",
+                Employee: "Alice Fernandez",
+                Date: "Mar 24",
+                Manager: "James King",
+                "Clock In": "09:00AM",
+                "Clock Out": "06:00PM",
+                "Total Hours": "9h 00m"
+            },
+            {
+                ID: "#E0002",
+                Employee: "John Smith",
+                Date: "Mar 21",
+                Manager: "James King",
+                "Clock In": "08:15AM",
+                "Clock Out": "05:45PM",
+                "Total Hours": "9h 30m"
+            },
+            {
+                ID: "#E0002",
+                Employee: "John Smith",
+                Date: "Mar 22",
+                Manager: "James King",
+                "Clock In": "08:00AM",
+                "Clock Out": "05:30PM",
+                "Total Hours": "9h 30m"
+            },
+            {
+                ID: "#E0002",
+                Employee: "John Smith",
+                Date: "Mar 23",
+                Manager: "James King",
+                "Clock In": "08:30AM",
+                "Clock Out": "05:00PM",
+                "Total Hours": "8h 30m"
+            },
+            {
+                ID: "#E0002",
+                Employee: "John Smith",
+                Date: "Mar 24",
+                Manager: "James King",
+                "Clock In": "08:45AM",
+                "Clock Out": "06:15PM",
+                "Total Hours": "9h 30m"
+            },
+            {
+                ID: "#E0008",
+                Employee: "Grace Miller",
+                Date: "Mar 21",
+                Manager: "James King",
+                "Clock In": "08:5AM",
+                "Clock Out": "-",
+                "Total Hours": "7h 35m"
+            }
+        ];
+
+        // Convert to CSV
+        const headers = Object.keys(csvData[0]);
+        const csvContent = [
+            headers.join(','),
+            ...csvData.map(row =>
+                headers.map(header => `"${row[header as keyof typeof row]}"`).join(',')
+            )
+        ].join('\n');
+
+        // Create and download file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'reconcile-all-data.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        customToast("Export Successful", "CSV file has been downloaded successfully", "success");
+    };
+
+    // CSV Export function for individual employee
+    const handleExportIndividualCSV = () => {
+        if (!selectedEmployee) return;
+
+        // Individual employee data for CSV export
+        const csvData = [
+            {
+                ID: selectedEmployee.employeeId,
+                Employee: selectedEmployee.name,
+                Date: "Mar 21",
+                Manager: "John Dauda",
+                "Clock In": "Leave",
+                "Clock Out": "Leave",
+                "Total Hours": "Leave"
+            },
+            {
+                ID: selectedEmployee.employeeId,
+                Employee: selectedEmployee.name,
+                Date: "Mar 22",
+                Manager: "John Dauda",
+                "Clock In": "08:30AM",
+                "Clock Out": "05:30PM",
+                "Total Hours": "9h 00m"
+            },
+            {
+                ID: selectedEmployee.employeeId,
+                Employee: selectedEmployee.name,
+                Date: "Mar 23",
+                Manager: "John Dauda",
+                "Clock In": "08:45AM",
+                "Clock Out": "05:15PM",
+                "Total Hours": "8h 30m"
+            },
+            {
+                ID: selectedEmployee.employeeId,
+                Employee: selectedEmployee.name,
+                Date: "Mar 24",
+                Manager: "John Dauda",
+                "Clock In": "09:00AM",
+                "Clock Out": "06:00PM",
+                "Total Hours": "9h 00m"
+            }
+        ];
+
+        // Convert to CSV
+        const headers = Object.keys(csvData[0]);
+        const csvContent = [
+            headers.join(','),
+            ...csvData.map(row =>
+                headers.map(header => `"${row[header as keyof typeof row]}"`).join(',')
+            )
+        ].join('\n');
+
+        // Create and download file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `${selectedEmployee.name.replace(' ', '-')}-attendance-data.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        customToast("Export Successful", "Individual employee CSV file has been downloaded successfully", "success");
+    };
+
     return (
         <div className="w-full">
             <div className="mb-[16px] sm:mb-[21px] w-full">
@@ -369,7 +559,15 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                                 </div>
                                 <div className="flex items-center gap-[16px]">
                                     <Button
-                                        className="bg-[#0D978B] hover:bg-[#0c8679] h-[32px] px-[16px] text-[16px]/[20px] font-medium rounded-[8px]"
+                                        variant="outline"
+                                        className="h-[32px] px-[16px] text-[14px]/[20px] font-medium rounded-[8px] border-[#E9E9E9] text-[#4B4B4B]"
+                                        onClick={handleExportIndividualCSV}
+                                    >
+                                        <Download className="h-4 w-4 mr-2" />
+                                        Export as CSV
+                                    </Button>
+                                    <Button
+                                        className="bg-[#0D978B] hover:bg-[#0c8679] h-[32px] px-[16px] text-[16px]/[20px] font-medium rounded-[8px]" onClick={handleNotifyManager}
                                     >
                                         Notify Manager
                                     </Button>
@@ -532,9 +730,19 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                                     Reconcile All
                                 </h2>
                             </div>
-                            <Button className="bg-[#0D978B] hover:bg-[#0c8679] h-[32px] px-[16px] text-[14px]/[20px] font-medium rounded-[8px]">
-                                Notify Manager(s)
-                            </Button>
+                            <div className="flex gap-2">
+                                <Button
+                                    variant="outline"
+                                    className="h-[32px] px-[16px] text-[14px]/[20px] font-medium rounded-[8px] border-[#E9E9E9] text-[#4B4B4B]"
+                                    onClick={handleExportCSV}
+                                >
+                                    <Download className="h-4 w-4 mr-2" />
+                                    Export as CSV
+                                </Button>
+                                <Button className="bg-[#0D978B] hover:bg-[#0c8679] h-[32px] px-[16px] text-[14px]/[20px] font-medium rounded-[8px]" onClick={handleNotifyManagerAll}>
+                                    Notify Manager(s)
+                                </Button>
+                            </div>
                         </div>
 
                         {/* Table Content */}

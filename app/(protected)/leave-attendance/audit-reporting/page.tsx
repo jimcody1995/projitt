@@ -26,7 +26,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, Download, FileDown, FileSpreadsheet, FileText } from "lucide-react";
+import { CalendarIcon, Download, FileDown, FileSpreadsheet, FileText, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -407,37 +407,50 @@ export default function AuditReporting() {
                         Audit & Reporting
                     </h1>
                 </div>
-                <div className="flex gap-[8px] flex-wrap">
-                    <Button
-                        variant="outline"
-                        onClick={() => handleExport("pdf")}
-                        className="h-[40px] sm:h-[44px] px-[16px] border-[#E9E9E9] text-[#4B4B4B] text-[14px]"
-                    >
-                        <FileText className="h-4 w-4 mr-2" />
-                        PDF
-                    </Button>
-                    <Button
-                        variant="outline"
-                        onClick={() => handleExport("excel")}
-                        className="h-[40px] sm:h-[44px] px-[16px] border-[#E9E9E9] text-[#4B4B4B] text-[14px]"
-                    >
-                        <FileSpreadsheet className="h-4 w-4 mr-2" />
-                        Excel
-                    </Button>
-                    <Button
-                        variant="outline"
-                        onClick={() => handleExport("csv")}
-                        className="h-[40px] sm:h-[44px] px-[16px] border-[#E9E9E9] text-[#4B4B4B] text-[14px]"
-                    >
-                        <FileDown className="h-4 w-4 mr-2" />
-                        CSV
-                    </Button>
-                </div>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            className="h-[40px] px-[16px] bg-[#0D978B] hover:bg-[#0c8679] text-white text-[14px] font-medium"
+                        >
+                            <Download className="h-4 w-4 mr-2" />
+                            Export
+                            <ChevronDown className="h-4 w-4 ml-2" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-2" align="end">
+                        <div className="space-y-1">
+                            <Button
+                                variant="ghost"
+                                onClick={() => handleExport("pdf")}
+                                className="w-full justify-start h-[40px] px-3 text-[14px] hover:bg-gray-100"
+                            >
+                                <FileText className="h-4 w-4 mr-3 text-[#0D978B]" />
+                                PDF
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                onClick={() => handleExport("excel")}
+                                className="w-full justify-start h-[40px] px-3 text-[14px] hover:bg-gray-100"
+                            >
+                                <FileSpreadsheet className="h-4 w-4 mr-3 text-[#0D978B]" />
+                                Excel
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                onClick={() => handleExport("csv")}
+                                className="w-full justify-start h-[40px] px-3 text-[14px] hover:bg-gray-100"
+                            >
+                                <FileDown className="h-4 w-4 mr-3 text-[#0D978B]" />
+                                CSV
+                            </Button>
+                        </div>
+                    </PopoverContent>
+                </Popover>
             </div>
 
             {/* Filters Section */}
             <div className="bg-white rounded-[8px] border border-[#E9E9E9] p-[16px] sm:p-[24px] mb-[16px] sm:mb-[20px]">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[12px] sm:gap-[16px]">
+                <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-[12px] sm:gap-[16px]">
                     {/* Employee Filter */}
                     <div className="flex flex-col gap-[8px]">
                         <Label className="text-[13px] sm:text-[14px] font-medium text-[#1C1C1C]">
@@ -580,30 +593,30 @@ export default function AuditReporting() {
             </div>
 
             {/* Report Tabs */}
-            <div className="bg-white rounded-[8px] border border-[#E9E9E9] overflow-hidden">
+            <div className="overflow-hidden">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <TabsList className="w-full justify-start border-b border-[#E9E9E9] rounded-none bg-white p-0 h-auto overflow-x-auto">
+                    <TabsList variant="line" className="bg-transparent p-0 w-full lg:w-auto mb-[16px] sm:mb-[20px]">
                         <TabsTrigger
                             value="leave-balance"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#0D978B] px-[20px] sm:px-[36px] py-[11px] text-[13px] sm:text-[15px]/[20px] font-medium data-[state=active]:text-[#0D978B] text-[#8F8F8F] whitespace-nowrap"
+                            className="text-[14px] sm:text-[15px] leading-[18px] sm:leading-[20px] font-medium px-[20px] sm:px-[36px] py-[8px] sm:py-[11px] flex-1 lg:flex-none"
                         >
                             Leave Balance
                         </TabsTrigger>
                         <TabsTrigger
                             value="taken-leave"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#0D978B] px-[20px] sm:px-[36px] py-[11px] text-[13px] sm:text-[15px]/[20px] font-medium data-[state=active]:text-[#0D978B] text-[#8F8F8F] whitespace-nowrap"
+                            className="text-[14px] sm:text-[15px] leading-[18px] sm:leading-[20px] font-medium px-[20px] sm:px-[36px] py-[8px] sm:py-[11px] flex-1 lg:flex-none"
                         >
                             Taken Leave
                         </TabsTrigger>
                         <TabsTrigger
                             value="approval-history"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#0D978B] px-[20px] sm:px-[36px] py-[11px] text-[13px] sm:text-[15px]/[20px] font-medium data-[state=active]:text-[#0D978B] text-[#8F8F8F] whitespace-nowrap"
+                            className="text-[14px] sm:text-[15px] leading-[18px] sm:leading-[20px] font-medium px-[20px] sm:px-[36px] py-[8px] sm:py-[11px] flex-1 lg:flex-none"
                         >
                             Approval History
                         </TabsTrigger>
                         <TabsTrigger
                             value="attendance-summary"
-                            className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#0D978B] px-[20px] sm:px-[36px] py-[11px] text-[13px] sm:text-[15px]/[20px] font-medium data-[state=active]:text-[#0D978B] text-[#8F8F8F] whitespace-nowrap"
+                            className="text-[14px] sm:text-[15px] leading-[18px] sm:leading-[20px] font-medium px-[20px] sm:px-[36px] py-[8px] sm:py-[11px] flex-1 lg:flex-none"
                         >
                             Attendance Summary
                         </TabsTrigger>

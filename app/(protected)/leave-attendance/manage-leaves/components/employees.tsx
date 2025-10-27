@@ -44,7 +44,7 @@ export const Employees = ({ filteredEmployees }: { filteredEmployees: any }) => 
                                 <TableCell className="py-[12px] px-[32px]">
                                     <div className="flex items-center gap-[12px]">
                                         <Avatar className="size-7">
-                                            <AvatarFallback className="bg-[#d6eeec] text-[#0d978b] text-[11px] font-medium">
+                                            <AvatarFallback className="bg-[#d6eeec] text-[#053834] text-[11px] font-medium">
                                                 {employee.initials}
                                             </AvatarFallback>
                                         </Avatar>

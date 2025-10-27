@@ -184,9 +184,9 @@ export default function TaxDeductions({ onNext, onBack }: TaxDeductionsProps) {
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     <Button
                         variant="outline"
-                        className="text-[#4B4B4B] border-[#4B4B4B] text-[12px] sm:text-[14px]/[20px] text-semibold bg-white hover:bg-gray-50 w-full sm:w-auto"
+                        className="text-[#053834] border-[#BCBCBC] text-[12px] sm:text-[14px]/[20px] text-semibold bg-white hover:bg-gray-50 w-full sm:w-auto"
                     >
-                        Submit Tax Information
+                        Deductions Mapping
                     </Button>
                 </div>
             </div>

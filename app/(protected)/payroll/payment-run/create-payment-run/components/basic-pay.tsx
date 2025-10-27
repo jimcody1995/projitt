@@ -99,11 +99,6 @@ export default function BasicPay({
                     const errors = validateData(parsedData);
                     setValidationErrors(errors);
 
-                    if (errors.length === 0) {
-                        customToast("File uploaded successfully", `${parsedData.length} rows imported with no errors.`, "success");
-                    } else {
-                        customToast("File uploaded with warnings", `${errors.length} validation error(s) found.`, "warning");
-                    }
                 }
             },
             error: (error: any) => {
@@ -171,6 +166,17 @@ export default function BasicPay({
         }
 
         customToast("Processing data", `Processing ${data.length} rows...`, "info");
+    };
+
+    const handleCsvImport = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!fileName) {
+            customToast("No file selected", "Please select a CSV file first.", "error");
+            return;
+        }
+
+        customToast("CSV Import Started", "Processing your CSV file...", "info");
     };
 
     return (
@@ -401,9 +407,14 @@ export default function BasicPay({
                                                 onChange={handleFileSelect}
                                             />
                                             {fileName && (
-                                                <p className="text-sm text-muted-foreground mt-4">
-                                                    Selected: {fileName}
-                                                </p>
+                                                <div className="mt-4">
+                                                    <p className="text-sm text-muted-foreground mb-4">
+                                                        Selected: {fileName}
+                                                    </p>
+                                                    <Button onClick={handleCsvImport} className="w-full" size="lg">
+                                                        Import Leave/Attandence Data
+                                                    </Button>
+                                                </div>
                                             )}
                                         </div>
                                     ) : (
@@ -419,7 +430,7 @@ export default function BasicPay({
                                                 />
                                             </div>
                                             <Button onClick={handleApiImport} className="w-full" size="lg">
-                                                Import Data
+                                                Import Leave/Attandence Data
                                             </Button>
                                         </div>
                                     )}
@@ -486,12 +497,18 @@ export default function BasicPay({
                                         </div>
                                         <div className="mt-6 flex justify-end">
                                             <Button
-                                                onClick={handleProcess}
+                                                onClick={() => {
+                                                    customToast(
+                                                        "Data Imported Successfully",
+                                                        "Your data has been processed and imported successfully.",
+                                                        "success"
+                                                    );
+                                                }}
                                                 disabled={validationErrors.length > 0}
                                                 size="lg"
                                             >
                                                 <CheckCircle2 className="mr-2 h-4 w-4" />
-                                                Process Data
+                                                Import Data
                                             </Button>
                                         </div>
                                     </CardContent>
