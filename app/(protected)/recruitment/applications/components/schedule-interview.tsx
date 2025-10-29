@@ -1,6 +1,7 @@
 import { ArrowLeft, ChevronDown, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
+import Image from "next/image";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -113,22 +114,22 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                             <SelectContent>
                                 <SelectItem value="google_meet">
                                     <div className="flex gap-[10px] items-center">
-                                        <img src="/images/meeting/google.png" className="size-[20px]" alt="" />Google Meet
+                                        <Image src="/images/meeting/google.png" width={20} height={20} className="size-[20px]" alt="" />Google Meet
                                     </div>
                                 </SelectItem>
                                 <SelectItem value="zoom">
                                     <div className="flex gap-[10px] items-center">
-                                        <img src="/images/meeting/zoom.png" className="size-[20px]" alt="" />Zoom
+                                        <Image src="/images/meeting/zoom.png" width={20} height={20} className="size-[20px]" alt="" />Zoom
                                     </div>
                                 </SelectItem>
                                 <SelectItem value="projitt_video_conference">
                                     <div className="flex gap-[10px] items-center">
-                                        <img src="/images/meeting/projit.png" className="size-[20px]" alt="" />Projitt Video Conferencing
+                                        <Image src="/images/meeting/projit.png" width={20} height={20} className="size-[20px]" alt="" />Projitt Video Conferencing
                                     </div>
                                 </SelectItem>
                                 <SelectItem value="microsoft_team">
                                     <div className="flex gap-[10px] items-center">
-                                        <img src="/images/meeting/team.png" className="size-[20px]" alt="" />Microsoft Teams
+                                        <Image src="/images/meeting/team.png" width={20} height={20} className="size-[20px]" alt="" />Microsoft Teams
                                     </div>
                                 </SelectItem>
                             </SelectContent>
@@ -294,7 +295,7 @@ export default function ScheduleInterview({ setActive, onOpenChange, selectedApp
                     <DialogHeader>
                         <DialogTitle></DialogTitle>
                         <div className="flex flex-col items-center">
-                            <img src="/images/applicant/success.png" alt="" className="w-[120px] h-[120px]" />
+                            <Image src="/images/applicant/success.png" alt="" width={120} height={120} className="w-[120px] h-[120px]" />
                             <span className="text-[28px]/[36px] font-semibold mt-[28px] text-[#353535]">{schedulingType === 'propose_time' ? 'Interview Invite Sent' : 'Availability Request Sent'}</span>
                             <span className="text-[14px]/[24px] text-[#626262] mt-[8px] text-center">{schedulingType === 'propose_time' ? 'Your interview request has been sent to Alice Fernadez. They have been invited to confirm the proposed time.' : 'We have asked Alice Fernadez to share their availability. You will be notified once they submit their preferred time slots.'}</span>
                             <Button className="mt-[24px] w-[300px] h-[42px]" onClick={() => { setIsSent(false); onOpenChange(false); }}>Return to Applicants List</Button>

@@ -34,7 +34,7 @@ export function SidebarMenu() {
 
   // Global classNames for consistent styling
   const classNames: AccordionMenuClassNames = {
-    root: 'space-y-2',
+    root: 'space-y-2 pr-3',
     group: 'gap-px',
     label:
       'uppercase text-xs font-medium text-muted-foreground/70 pt-2.25 pb-px',
@@ -89,7 +89,7 @@ export function SidebarMenu() {
         >
           <Link
             href={item.path || '#'}
-            className="flex items-center grow gap-2"
+            className="flex items-center gap-0"
           >
             {item.icon && <item.icon data-slot="accordion-menu-icon" className="w-[14px] h-[14px]" />}
             <span data-slot="accordion-menu-title" className="whitespace-nowrap">{item.title}</span>
@@ -234,7 +234,7 @@ export function SidebarMenu() {
 
   return (
     <div className='flex flex-col justify-between '>
-      <div className={`kt-scrollable-y-hover flex grow shrink-0 pt-[48px] px-[${settings.layouts.demo1.sidebarCollapse ? '14px' : '24px'}] lg:max-h-[calc(100vh-5.5rem)]`}>
+      <div className={`kt-scrollable-y-hover scrollbar-hidden flex grow shrink-0 pt-[48px] px-[${settings.layouts.demo1.sidebarCollapse ? '14px' : '24px'}] lg:max-h-[calc(100vh-5.5rem)]`}>
         <AccordionMenu
           selectedValue={pathname}
           matchPath={matchPath}

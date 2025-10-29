@@ -3,6 +3,7 @@
 import { JSX, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -109,12 +110,15 @@ export default function Page(): JSX.Element {
       <div className="w-full h-full flex flex-col justify-between gap-[30px]">
         {/* Logo Section */}
         <div className="pt-[60px] flex justify-center w-full">
-          <img
+          <Image
             src="/images/zaidLLC.png"
             alt="logo"
+            width={192}
+            height={48}
             className="h-[48px]"
             id="login-page-logo"
             data-testid="login-page-logo"
+            priority
           />
         </div>
 
@@ -209,9 +213,11 @@ export default function Page(): JSX.Element {
                           {passwordVisible ? (
                             <EyeOff className="text-muted-foreground" />
                           ) : (
-                            <img
+                            <Image
                               src="/images/icons/eye.svg"
                               alt="Show password"
+                              width={15}
+                              height={15}
                               className="w-[15px]"
                               id="eye-icon"
                               data-testid="eye-icon"

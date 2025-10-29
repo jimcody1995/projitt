@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -91,7 +92,7 @@ export default function Page() {
     <>
       <div className="w-full h-full flex flex-col justify-between gap-[30px]">
         <div className="pt-[60px] flex justify-center w-full">
-          <img src="/images/logo.png" alt="logo" className="h-[48px]" />
+          <Image src="/images/logo.png" alt="logo" width={192} height={48} className="h-[48px]" priority />
         </div>
         <div className="w-full flex-1 flex justify-center items-center pb-[10px]">
           <div className="w-[482px] border border-[#e9e9e9] rounded-[16px] bg-white py-[40px] px-[40px]">
@@ -145,7 +146,7 @@ export default function Page() {
                           {passwordVisible ? (
                             <EyeOff className="text-muted-foreground" />
                           ) : (
-                            <img src="/images/icons/eye.svg" alt="eye" className="w-[15px]" />
+                            <Image src="/images/icons/eye.svg" alt="eye" width={15} height={15} className="w-[15px]" />
                           )}
                         </Button>
                       </div>
@@ -189,7 +190,7 @@ export default function Page() {
                           {passwordConfirmationVisible ? (
                             <EyeOff className="text-muted-foreground" />
                           ) : (
-                            <img src="/images/icons/eye.svg" alt="eye" className="w-[15px]" />
+                            <Image src="/images/icons/eye.svg" alt="eye" width={15} height={15} className="w-[15px]" />
                           )}
                         </Button>
                       </div>

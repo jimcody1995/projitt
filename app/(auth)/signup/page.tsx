@@ -12,6 +12,7 @@
 import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Check } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -169,19 +170,19 @@ export default function Page(): JSX.Element {
     <div className="w-[100vw] h-[100vh] bg-[#fafafa] relative overflow-y-auto" id="signup-root" data-testid="signup-root">
       <div className="flex h-full">
         <div className="lg:block hidden flex-1 relative bg-[#0D978B] overflow-hidden pt-[60px] xl:pl-[68px] xl:pr-[146px] pl-[50px] pr-[50px]" id="signup-left-panel" data-testid="signup-left-panel">
-          <img src="/images/white-logo.svg" alt="logo" className="h-[40px]" id="signup-left-logo" data-testid="signup-left-logo" />
+          <Image src="/images/white-logo.svg" alt="logo" width={160} height={40} className="h-[40px]" id="signup-left-logo" data-testid="signup-left-logo" priority />
           <p className="text-[28px]/[36px] text-[#fff] mt-[97px] font-semibold md:break-words break-all" id="signup-left-description" data-testid="signup-left-description">
             <span className="opacity-[72%]">Join businesses using Projitt to streamline</span> HR
             operations, automate workflows, and empower growth
           </p>
           <div className="absolute xl:top-[387px] top-[550px] w-[1015px] right-[130px] rounded-[16px] bg-[#FFFFFF33] overflow-hidden p-[16px]" id="signup-left-image-container" data-testid="signup-left-image-container">
-            <img src="/images/signup/dashboard.png" alt="logo" className="rounded-[12px] " id="signup-left-dashboard-image" data-testid="signup-left-dashboard-image" />
+            <Image src="/images/signup/dashboard.png" alt="logo" width={1015} height={600} className="rounded-[12px] " id="signup-left-dashboard-image" data-testid="signup-left-dashboard-image" loading="lazy" />
           </div>
         </div>
         {!checkEmail ? (
           <div className="lg:w-[50%] w-full lg:min-w-[737px] md:px-[136px] px-[30px] lg:pt-[130px] pt-[40px] pb-[80px] bg-white" id="signup-form-panel" data-testid="signup-form-panel">
             <div className="w-full flex justify-center mb-[20px] lg:hidden">
-              <img src="/images/logo.png" alt="logo" className="h-[48px]" id="signup-mobile-logo" data-testid="signup-mobile-logo" />
+              <Image src="/images/logo.png" alt="logo" width={192} height={48} className="h-[48px]" id="signup-mobile-logo" data-testid="signup-mobile-logo" priority />
             </div>
             <Suspense>
               <Form {...form}>
@@ -518,7 +519,7 @@ export default function Page(): JSX.Element {
         ) : (
           <div className="lg:w-[50%] w-full lg:min-w-[737px] md:px-[136px] px-[30px] lg:pt-[130px] pt-[40px] pb-[80px] bg-white flex flex-col justify-center items-center" id="signup-verify-panel" data-testid="signup-verify-panel">
             <div className="w-full flex justify-center mb-[20px] lg:hidden">
-              <img src="/images/logo.png" alt="logo" className="h-[48px]" id="signup-verify-mobile-logo" data-testid="signup-verify-mobile-logo" />
+              <Image src="/images/logo.png" alt="logo" width={192} height={48} className="h-[48px]" id="signup-verify-mobile-logo" data-testid="signup-verify-mobile-logo" priority />
             </div>
             <div className="sm:w-[560px] w-full sm:px-[48px] px-[20px] h-full flex flex-col justify-center items-center" id="signup-verify-form-container" data-testid="signup-verify-form-container">
               <Form {...verifyForm}>
