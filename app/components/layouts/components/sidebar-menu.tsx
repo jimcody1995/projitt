@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, useCallback } from 'react';
+import { JSX, useCallback, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { MENU_SIDEBAR } from '@/config/menu.config';
@@ -24,6 +24,7 @@ import { useSettings } from '@/providers/settings-provider';
 export function SidebarMenu() {
   const pathname = usePathname();
   const { settings } = useSettings();
+  const [isHRManagementCollapsed, setIsHRManagementCollapsed] = useState(false);
 
   // Memoize matchPath to prevent unnecessary re-renders
   const matchPath = useCallback(
@@ -48,15 +49,50 @@ export function SidebarMenu() {
   };
 
   const buildMenu = (items: MenuConfig): JSX.Element[] => {
+    let isInHRManagementSection = false;
+
     return items.map((item: MenuItem, index: number) => {
       if (item.heading) {
-        return buildMenuHeading(item, index);
+        // Check if this is the HR Management heading
+        if (item.heading === 'HR Management') {
+          isInHRManagementSection = true;
+          return buildMenuHeading(item, index, true);
+        }
+        return buildMenuHeading(item, index, false);
       } else if (item.disabled) {
+        // Check if this item should be hidden when HR Management is collapsed
+        if (isInHRManagementSection && isHRManagementCollapsed) {
+          // Check if this is "HR Settings" - this is the last item to hide
+          if (item.title === 'HR Settings') {
+            isInHRManagementSection = false; // End HR Management section after HR Settings
+            return null; // Hide HR Settings when collapsed
+          }
+          // Hide all other items in HR Management section when collapsed
+          return null;
+        }
+        // If we encounter HR Settings, end the section
+        if (item.title === 'HR Settings') {
+          isInHRManagementSection = false;
+        }
         return buildMenuItemRootDisabled(item, index);
       } else {
+        // Check if this item should be hidden when HR Management is collapsed
+        if (isInHRManagementSection && isHRManagementCollapsed) {
+          // Check if this is "HR Settings" - this is the last item to hide
+          if (item.title === 'HR Settings') {
+            isInHRManagementSection = false; // End HR Management section after HR Settings
+            return null; // Hide HR Settings when collapsed
+          }
+          // Hide all other items in HR Management section when collapsed
+          return null;
+        }
+        // If we encounter HR Settings, end the section
+        if (item.title === 'HR Settings') {
+          isInHRManagementSection = false;
+        }
         return buildMenuItemRoot(item, index);
       }
-    });
+    }).filter((item): item is JSX.Element => item !== null);
   };
 
 
@@ -214,8 +250,22 @@ export function SidebarMenu() {
     );
   };
 
-  const buildMenuHeading = (item: MenuItem, index: number): JSX.Element => {
-    return <AccordionMenuLabel className={`text-[11px]/[16px] text-[#a5a5a5] pt-[18px] mb-[8px] ${settings.layouts.demo1.sidebarCollapse ? 'ml-[14px]' : ''}`} key={index}>{item.heading}</AccordionMenuLabel>;
+  const buildMenuHeading = (item: MenuItem, index: number, isCollapsible: boolean = false): JSX.Element => {
+    if (isCollapsible && item.heading === 'HR Management') {
+      return (
+        <div
+          key={index}
+          onClick={() => setIsHRManagementCollapsed(!isHRManagementCollapsed)}
+          className={cn(
+            'text-[11px]/[16px] text-[#a5a5a5] pt-[18px] mb-[8px] cursor-pointer select-none ',
+            settings.layouts.demo1.sidebarCollapse ? 'ml-[14px] ' : 'pl-[8px]'
+          )}
+        >
+          {settings.layouts.demo1.sidebarCollapse ? 'HR.M' : item.heading}
+        </div>
+      );
+    }
+    return <AccordionMenuLabel className={`text-[11px]/[16px] text-[#a5a5a5] pt-[18px] mb-[8px] ${settings.layouts.demo1.sidebarCollapse ? 'ml-[14px] ' : ''}`} key={index}>{item.heading}</AccordionMenuLabel>;
   };
 
   const { setSession, setLoading } = useSession();
