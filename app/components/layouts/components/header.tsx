@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { NotificationsSheet } from '../../partials/topbar/notifications-sheet';
 import { UserDropdownMenu } from '../../partials/topbar/user-dropdown-menu';
 import {
@@ -95,7 +96,7 @@ export function Header() {
                     <div className='pl-[22px] pr-[19px] mb-[25px]'>
                       <div className='w-full rounded-[8px] bg-[#f9f9f9] py-[14px] px-[12px] flex items-center justify-between'>
                         <div className='flex items-center gap-[12px]'>
-                          <img src="/images/photo.png" alt="" className='w-[32px] h-[32px] rounded-full' />
+                          <Image src="/images/photo.png" alt="" width={32} height={32} className='w-[32px] h-[32px] rounded-full' />
                           <div>
                             <p className='font-medium text-[#4b4b4b] text-[14px]/[20px]'>Abubar Ali</p>
                             <p className='text-[#a5a5a5] text-[12px]/[15px]'>HR Management</p>
@@ -147,7 +148,7 @@ export function Header() {
               <LanguageDropdown
                 trigger={
                   <div className='flex gap-[10px] items-center cursor-pointer'>
-                    <img src="/images/flags/US.png" alt="" className="size-[18px]" />
+                    <Image src="/images/flags/US.png" alt="" width={18} height={18} className="size-[18px]" />
                     <span>EN</span>
                     <ChevronDown className="size-[18px]! text-[#4b4b4b]" />
                   </div>

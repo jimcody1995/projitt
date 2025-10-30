@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 import { useSettings } from '@/providers/settings-provider';
 import { SidebarHeader } from './sidebar-header';
 import { SidebarMenu } from './sidebar-menu';
@@ -44,7 +45,7 @@ export function Sidebar() {
         <div className='w-full flex justify-center mb-[25px]'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <img src="/images/photo.png" alt="" className='w-[32px] h-[32px] rounded-full' />
+              <Image src="/images/photo.png" alt="" width={32} height={32} className='w-[32px] h-[32px] rounded-full' />
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" align="end">
               <div className="cursor-pointer hover:bg-[#e9e9e9] text-[14px]/[20px] py-[7px] px-[12px] rounded-[8px] flex items-center gap-[12px]" onClick={handleLogout}>
@@ -59,7 +60,7 @@ export function Sidebar() {
 
           <div className='w-full rounded-[8px] bg-[#f9f9f9] py-[14px] px-[12px] flex items-center justify-between'>
             <div className='flex items-center gap-[12px]'>
-              <img src="/images/photo.png" alt="" className='w-[32px] h-[32px] rounded-full' />
+              <Image src="/images/photo.png" alt="" width={32} height={32} className='w-[32px] h-[32px] rounded-full' />
               <div>
                 <p className='font-medium text-[#4b4b4b] text-[14px]/[20px]'>Abubar Ali</p>
                 <p className='text-[#a5a5a5] text-[12px]/[15px]'>HR Management</p>

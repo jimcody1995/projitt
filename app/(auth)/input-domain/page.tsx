@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
@@ -55,7 +56,7 @@ export default function InputDomain(): JSX.Element {
         <div className="w-full h-full flex flex-col justify-between">
           {/* Form container */}
           <div className="mt-[60px] flex flex-col items-center w-full relative z-[3] px-[10px]">
-            <img src="/images/logo.png" alt="logo" className="h-[52px]" id="projitt-logo" />
+            <Image src="/images/logo.png" alt="logo" width={208} height={52} className="h-[52px]" id="projitt-logo" priority />
 
             <div
               id="domain-form-container"
