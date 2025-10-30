@@ -424,7 +424,7 @@ export default function BackgroundCheckTable({ searchQuery }: { searchQuery: str
         );
     }
     return (
-        <div className='w-full mt-[22px]'>
+        <div className='w-full'>
             <DataGrid
                 className='w-full'
                 table={table}

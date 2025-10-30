@@ -10,7 +10,7 @@ import YourPlan from './components/your-plan'
 import LastPayroll from './components/last-payroll'
 export default function Dashboard() {
     return (
-        <div className="px-4 sm:px-6 lg:px-8">
+        <div className="">
             <p
                 className="text-[20px]/[26px] sm:text-[22px]/[28px] lg:text-[24px]/[30px] text-[#1C1C1C] font-semibold"
                 id="dashboard-title"

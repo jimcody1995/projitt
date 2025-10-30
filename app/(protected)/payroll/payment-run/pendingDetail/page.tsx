@@ -288,7 +288,7 @@ export default function PendingDetail() {
     };
 
     return (
-        <div className="p-4 sm:px-[8px] sm:py-[12px] w-full min-h-screen bg-[#F9F9F9]">
+        <div className=" w-full min-h-screen bg-[#F9F9F9]">
             {/* Header */}
             <div className="flex flex-wrap items-center gap-[12px] sm:gap-[16px] mb-[20px] sm:mb-[31px]">
                 <Button

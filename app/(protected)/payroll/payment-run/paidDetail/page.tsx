@@ -316,7 +316,7 @@ export default function PaidDetail() {
     };
 
     return (
-        <div className="p-4 sm:px-[8px] sm:py-[12px] w-full min-h-screen bg-[#F9F9F9]">
+        <div className="w-full min-h-screen bg-[#F9F9F9]">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-[12px] sm:gap-[16px] mb-[20px] sm:mb-[31px]">
                 <div className="flex items-center gap-[12px] sm:gap-[16px]">

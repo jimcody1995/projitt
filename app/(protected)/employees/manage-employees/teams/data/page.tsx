@@ -383,7 +383,7 @@ export default function DepartmentsDataPage() {
     };
 
     return (
-        <div className='px-[8px] py-[6px] relative h-full'>
+        <div className=' relative h-full'>
             {/* Header */}
             <div className="flex items-center justify-between mb-6 sm:flex-row flex-col gap-[10px]">
                 <div className="flex items-center gap-4 w-full justify-start">

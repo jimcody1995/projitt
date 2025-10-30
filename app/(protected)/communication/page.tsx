@@ -173,7 +173,7 @@ export default function Communication() {
     };
 
     return (
-        <div className="py-4 px-2 sm:py-[19px] sm:px-4 lg:px-6 bg-[#F8F9FA] min-h-screen">
+        <div className=" bg-[#F8F9FA] min-h-screen">
             {/* Header */}
             <div className="mb-7">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">

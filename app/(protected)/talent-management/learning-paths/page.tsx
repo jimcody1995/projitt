@@ -87,7 +87,7 @@ export default function LearningPaths() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 ">
             {/* Header Section */}
             <div className="mb-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">

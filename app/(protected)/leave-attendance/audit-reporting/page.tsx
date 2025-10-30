@@ -396,7 +396,7 @@ export default function AuditReporting() {
     };
 
     return (
-        <div className="p-4 sm:px-[16px] sm:py-[12px] w-full min-h-screen bg-[#F9F9F9]">
+        <div className=" w-full min-h-screen bg-[#F9F9F9]">
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-[16px] sm:mb-[23px]">
                 <div>

@@ -18,7 +18,7 @@ export default function CreateReviewCycle() {
     const [competenciesFormData, setCompetenciesFormData] = useState<any>(null);
     const competenciesValidationRef = useRef<(() => boolean) | null>(null);
     return (
-        <div className=" bg-gray-50 min-h-screen px-[8px] py-[6px]">
+        <div className=" bg-gray-50 min-h-screen">
             {/* Breadcrumb */}
             <div className="flex w-full justify-between items-center">
                 <div className="flex flex-col gap-[4px]">

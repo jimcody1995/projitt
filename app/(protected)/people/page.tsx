@@ -24,7 +24,7 @@ export default function People() {
     const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || EmployeeTable;
 
     return (
-        <div className="py-4 px-4 sm:py-6 sm:px-6 lg:py-6 lg:px-7">
+        <div className="">
             {/* Header */}
             <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
                 <h1 className="text-[20px]/[26px] sm:text-[22px]/[28px] lg:text-[24px]/[30px] font-semibold text-[#353535]">People</h1>

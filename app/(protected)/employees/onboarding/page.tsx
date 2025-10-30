@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Settings, X } from "lucide-react";
+import { Search, Settings, Users, X } from "lucide-react";
 import OnboardingTable from "./components/onboarding-table";
 import BackgroundCheck from "../manage-employees/components/background-check";
 import { useState } from "react";
@@ -13,10 +13,10 @@ export default function Onboarding() {
     const [message, setMessage] = useState<string>('');
     const [searchQuery, setSearchQuery] = useState('');
     return <div className="py-[15px] px-[10px]">
-        <div className="w-full justify-between flex lg:flex-row flex-col gap-[10px]">
-            <p className="text-[24px]/[30px] font-semibold text-[#1C1C1C]" data-testid="page-title" id="page-title">Onboarding</p>
-            <div className="gap-[10px] flex items-center sm:flex-row flex-col">
-                <div className="relative">
+        <div className="w-full flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
+            <p className="text-xl font-semibold text-[#1C1C1C] lg:text-[24px]/[30px]" data-testid="page-title" id="page-title">Onboarding</p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:gap-2 sm:items-center w-full lg:w-auto">
+                <div className="relative w-full sm:w-[200px]">
                     <Search
                         className="size-4 text-muted-foreground absolute start-3 top-1/2 -translate-y-1/2"
                         data-testid="search-icon"
@@ -26,7 +26,7 @@ export default function Onboarding() {
                         placeholder="Search by name, ID"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="ps-9 w-[243px] h-[42px]"
+                        className="ps-9 h-[42px] w-full"
                         data-testid="search-input"
                         id="search-input"
                     />
@@ -45,7 +45,15 @@ export default function Onboarding() {
                 </div>
                 <Button
                     variant="outline"
-                    className="h-[42px] text-[14px]/[22px] font-medium text-[#053834] border-[#053834] flex items-center gap-2"
+                    className="h-[42px] w-full sm:w-auto text-[14px]/[22px] lg:text-[13px]/[20px] font-medium text-[#053834] border-[#053834] flex items-center justify-center gap-2 lg:gap-1 px-4 lg:px-2"
+                    onClick={() => router.push('/employees/onboarding/references')}
+                >
+                    <Users className="size-4" />
+                    References
+                </Button>
+                <Button
+                    variant="outline"
+                    className="h-[42px] w-full sm:w-auto text-[14px]/[22px] lg:text-[13px]/[20px] font-medium text-[#053834] border-[#053834] flex items-center justify-center gap-2 lg:gap-1 px-4 lg:px-2"
                     onClick={() => router.push('/employees/onboarding/background-checks')}
                 >
                     <Settings className="size-4" />

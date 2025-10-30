@@ -426,7 +426,7 @@ export default function CreateRoles() {
     };
 
     return (
-        <div className="px-2 py-4">
+        <div className="">
             {/* Header */}
             <div className="mb-7 flex justify-between items-center">
                 {/* Breadcrumb */}

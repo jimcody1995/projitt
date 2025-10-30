@@ -522,7 +522,7 @@ export default function LeaveManagement() {
     }
 
     return (
-        <div className="w-full h-full bg-[#F8F9FA] min-h-screen px-[9px] py-[12px]">
+        <div className="w-full h-full bg-[#F8F9FA] min-h-screen ">
             {/* Header */}
             <div className="flex w-full justify-between items-center  flex-col sm:flex-row gap-4 sm:gap-0 mb-[25px]">
                 <h1 className="text-[24px]/[30px] font-semibold text-[#353535]">

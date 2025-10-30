@@ -36,7 +36,7 @@ export default function Profile() {
     }, [activeSection]);
 
     return <div>
-        <div className="flex w-full justify-between items-center px-[8px] py-[6px]">
+        <div className="flex w-full justify-between items-center py-[15px] px-[10px]">
             <div className="flex flex-col gap-[4px]">
                 <p className="text-[12px]/[20px] text-[#A5A5A5]"><span className="cursor-pointer " onClick={() => router.push('/employees/onboarding')}>Onboarding</span> <span className="text-[#0d978b]">/ Profile</span></p>
                 <p className="text-[24px]/[30px] font-semibold text-[#353535]">Profile</p>

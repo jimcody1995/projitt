@@ -82,7 +82,7 @@ export default function TaxFiling() {
     };
 
     return (
-        <div className="p-4 sm:px-[8px] sm:py-[12px] w-full min-h-screen bg-[#F9F9F9]">
+        <div className=" w-full min-h-screen bg-[#F9F9F9]">
             {/* Header */}
             <div className="mb-[16px] sm:mb-[20px]">
                 <h1 className="text-[18px]/[24px] sm:text-[24px]/[30px] font-semibold text-[#353535] mb-[16px] sm:mb-[24px]">

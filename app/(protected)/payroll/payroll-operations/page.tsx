@@ -113,7 +113,7 @@ export default function PayrollOperations() {
     };
 
     return (
-        <div className="p-4 sm:px-[8px] sm:py-[12px]  min-h-screen">
+        <div className=" min-h-screen">
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-[20px] sm:text-[24px] font-semibold text-gray-900">Payroll Operations Dashboard</h1>

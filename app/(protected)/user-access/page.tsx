@@ -11,7 +11,7 @@ export default function UserAccess() {
 
 
     return (
-        <div className="p-2 sm:p-4 lg:p-6">
+        <div className="">
             {/* Header */}
             <div className="mb-4 sm:mb-6">
                 <h1 className="text-[20px]/[26px] sm:text-[24px]/[30px] font-semibold text-[#353535] mb-4 sm:mb-[26px]">

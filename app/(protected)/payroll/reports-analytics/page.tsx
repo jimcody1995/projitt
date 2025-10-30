@@ -61,7 +61,7 @@ export default function ReportsAnalytics() {
     });
 
     return (
-        <div className="p-[12px] sm:p-[16px] md:px-[8px] md:py-[12px] w-full min-h-screen bg-[#F9F9F9]">
+        <div className=" w-full min-h-screen bg-[#F9F9F9]">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-[12px] sm:gap-[24px] mb-[12px] sm:mb-[14px] md:mb-[16px]">
                 <h1 className="text-[18px]/[24px] sm:text-[20px]/[26px] md:text-[24px]/[30px] font-semibold text-[#353535]">

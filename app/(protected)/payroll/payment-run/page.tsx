@@ -188,7 +188,7 @@ export default function PaymentRun() {
 
 
     return (
-        <div className="p-4 sm:px-[8px] sm:py-[12px] min-h-screen">
+        <div className=" min-h-screen">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                 <div>

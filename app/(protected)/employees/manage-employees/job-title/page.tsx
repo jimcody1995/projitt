@@ -343,7 +343,7 @@ export default function TeamsPage() {
     });
 
     return (
-        <div className='px-[8px] py-[6px] relative h-full'>
+        <div className=' relative h-full'>
             <div className="flex justify-between w-full sm:flex-row flex-col items-start gap-[10px]">
                 <div className='flex flex-col gap-[10px] w-full'>
                     <DropdownMenu>

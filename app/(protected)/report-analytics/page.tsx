@@ -8,7 +8,7 @@ export default function ReportAnalyticsPage() {
     const [activeTab, setActiveTab] = useState('Dashboard');
 
     return (
-        <div className="py-3 bg-gray-50 min-h-screen">
+        <div className=" bg-gray-50 min-h-screen">
             {/* Header Section */}
             <div className="mb-4 sm:mb-6">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 sm:gap-0">

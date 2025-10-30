@@ -8,6 +8,12 @@ const nextConfig = {
   poweredByHeader: false,
   generateEtags: false,
   output: 'standalone',
+  transpilePackages: [
+    '@tanstack/react-table',
+    '@tanstack/table-core',
+    '@emoji-mart/data',
+    '@emoji-mart/react',
+  ],
   
   // Image optimization configuration
   images: {
@@ -26,7 +32,6 @@ const nextConfig = {
       'lucide-react',
       'date-fns',
       'react-day-picker',
-      '@tanstack/react-table',
       'recharts',
       'apexcharts',
     ],
@@ -82,6 +87,17 @@ const nextConfig = {
         '@dnd-kit/modifiers': 'commonjs @dnd-kit/modifiers',
       });
     }
+
+    // Add rule to properly handle ES modules from node_modules
+    config.module = config.module || {};
+    config.module.rules = config.module.rules || [];
+    config.module.rules.push({
+      test: /\.m?js$/,
+      type: 'javascript/auto',
+      resolve: {
+        fullySpecified: false,
+      },
+    });
 
     // Optimize bundle size
     if (!dev && !isServer) {

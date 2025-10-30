@@ -150,7 +150,7 @@ export default function Dashboard(): JSX.Element {
     ];
 
     return (
-        <div className="flex flex-col">
+        <div className=" flex flex-col">
             <p
                 className="text-[24px]/[30px] text-[#1C1C1C] font-semibold"
                 id="dashboard-title"

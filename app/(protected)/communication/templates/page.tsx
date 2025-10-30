@@ -138,7 +138,7 @@ export default function TemplatesPage() {
     };
 
     return (
-        <div className="py-[19px] px-2  bg-gray-50 min-h-screen">
+        <div className=" bg-gray-50 min-h-screen">
             {/* Header */}
             <div className="mb-6">
                 <div className="flex justify-between items-start mb-4">

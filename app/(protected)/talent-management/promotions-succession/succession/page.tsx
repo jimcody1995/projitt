@@ -15,7 +15,7 @@ export default function PromotionsSuccession() {
     const router = useRouter();
     const [open, setOpen] = useState(false);
     return (
-        <div className="p-6 space-y-6">
+        <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-[4px] text-[24px]/[30px] font-semibold text-[#353535]">
                     <ArrowLeft className="w-6 h-6 border border-[#E9E9E9] rounded-[56.84px] bg-white" onClick={() => router.back()} />
