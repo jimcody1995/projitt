@@ -58,7 +58,7 @@ const employeesData = [
         name: "Evelyn Hayes",
         hourly: "$123,000.00/yr",
         hoursWorked: "80.00hrs",
-        attendanceStatus: "Unresolved",
+        attendanceStatus: "Validated",
         leaves: 0,
     },
     {
@@ -96,7 +96,7 @@ const employeesData = [
         name: "Jaxer Chang",
         hourly: "$25.00/hr",
         hoursWorked: "84.00hrs",
-        attendanceStatus: "Unresolved",
+        attendanceStatus: "Validated",
         leaves: 0,
     },
     {
@@ -404,11 +404,11 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                             <span className="text-[#0D978B]">{validatedCount}</span>
                             <span className="text-[#0D978B] ml-[2px]">Employees ready for payroll</span>
                         </div>
-                        <div className="w-[2px] h-[2px] bg-[#A5A5A5] rounded-full hidden sm:block"></div>
+                        {/* <div className="w-[2px] h-[2px] bg-[#A5A5A5] rounded-full hidden sm:block"></div>
                         <div>
                             <span className="text-[#FFA750]">{unresolvedCount}</span>
                             <span className="text-[#FFA750] ml-[2px]">Unresolved</span>
-                        </div>
+                        </div> */}
                     </div>
                     <Button variant="outline" className="text-[14px]/[22px] font-medium text-[#4B4B4B] border border-[#4B4B4B] h-8 bg-transparent"
                         onClick={(e) => {
@@ -741,6 +741,14 @@ export default function Prepare({ onNext, onBack }: PrepareProps) {
                                 </Button>
                                 <Button className="bg-[#0D978B] hover:bg-[#0c8679] h-[32px] px-[16px] text-[14px]/[20px] font-medium rounded-[8px]" onClick={handleNotifyManagerAll}>
                                     Notify Manager(s)
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 border border-[#787878] rounded-[6px]"
+                                    onClick={() => setIsNotifyManagerModalOpen(false)}
+                                >
+                                    <X className="h-4 w-4" />
                                 </Button>
                             </div>
                         </div>

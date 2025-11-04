@@ -17,7 +17,16 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreVertical } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { MoreVertical, ChevronDown, X } from "lucide-react";
 import { useState } from "react";
 
 interface TaxDeductionsProps {
@@ -149,8 +158,23 @@ const taxDeductionData = [
     },
 ];
 
+interface DeductionMapping {
+    id: string;
+    deductionName: string;
+    costCenter: string;
+    remittanceAccount: string;
+}
+
 export default function TaxDeductions({ onNext, onBack }: TaxDeductionsProps) {
     const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+    const [isDeductionsModalOpen, setIsDeductionsModalOpen] = useState(false);
+    const [deductionsMapping, setDeductionsMapping] = useState<DeductionMapping[]>([
+        { id: "1", deductionName: "Federal Tax", costCenter: "CC-1001", remittanceAccount: "Tax Authority Account" },
+        { id: "2", deductionName: "State Tax", costCenter: "CC-1002", remittanceAccount: "Tax Authority Account" },
+        { id: "3", deductionName: "401k Contributions", costCenter: "CC-1003", remittanceAccount: "Tax Authority Account" },
+        { id: "4", deductionName: "Health Insurance", costCenter: "CC-1004", remittanceAccount: "Tax Authority Account" },
+        { id: "5", deductionName: "PAYE Tax", costCenter: "CC-1005", remittanceAccount: "Tax Authority Account" },
+    ]);
 
     const toggleEmployee = (id: string) => {
         setSelectedEmployees((prev) =>
@@ -174,6 +198,27 @@ export default function TaxDeductions({ onNext, onBack }: TaxDeductionsProps) {
             .toUpperCase();
     };
 
+    const handleAddDeduction = () => {
+        const newId = (deductionsMapping.length + 1).toString();
+        setDeductionsMapping([
+            ...deductionsMapping,
+            { id: newId, deductionName: "", costCenter: "", remittanceAccount: "Tax Authority Account" },
+        ]);
+    };
+
+    const handleUpdateDeduction = (id: string, field: keyof DeductionMapping, value: string) => {
+        setDeductionsMapping(
+            deductionsMapping.map((deduction) =>
+                deduction.id === id ? { ...deduction, [field]: value } : deduction
+            )
+        );
+    };
+
+    const handleSaveChanges = () => {
+        // Save logic here
+        setIsDeductionsModalOpen(false);
+    };
+
     return (
         <div className="w-full">
             {/* Header Section - Responsive */}
@@ -185,6 +230,7 @@ export default function TaxDeductions({ onNext, onBack }: TaxDeductionsProps) {
                     <Button
                         variant="outline"
                         className="text-[#053834] border-[#BCBCBC] text-[12px] sm:text-[14px]/[20px] text-semibold bg-white hover:bg-gray-50 w-full sm:w-auto"
+                        onClick={() => setIsDeductionsModalOpen(true)}
                     >
                         Deductions Mapping
                     </Button>
@@ -415,6 +461,95 @@ export default function TaxDeductions({ onNext, onBack }: TaxDeductionsProps) {
                     </TableBody>
                 </Table>
             </div>
+
+            {/* Deductions Mapping Modal */}
+            <Dialog open={isDeductionsModalOpen} onOpenChange={setIsDeductionsModalOpen}>
+                <DialogContent className="sm:max-w-[800px] !rounded-[16px] max-h-[90vh] overflow-y-auto p-0 gap-0" close={false}>
+                    <div className="p-6 ">
+                        {/* Header */}
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-[18px]/[24px] font-medium text-[#353535]">Deductions Mapping</h2>
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    onClick={handleAddDeduction}
+                                    className="bg-[#0D978B] hover:bg-[#0c8679] text-white text-[14px]/[20px] font-medium h-8"
+                                >
+                                    Add
+                                </Button>
+                                <Button
+                                    onClick={handleSaveChanges}
+                                    className="bg-[#0D978B] hover:bg-[#0c8679] text-white text-[14px]/[20px] font-medium h-8"
+                                >
+                                    Save Changes
+                                </Button>
+                                <Button
+                                    onClick={() => setIsDeductionsModalOpen(false)}
+                                    className="bg-white hover:bg-gray-50 text-[#053834] border-gray-300 border w-8 text-[12px] sm:text-[14px]/[20px] text-semibold h-8"
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Table */}
+                        <div className="bg-white border border-[#E9E9E9] rounded-[8px] overflow-hidden">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow className="bg-[#EEF3F2] border-none">
+                                        <TableHead className="text-[14px]/[18px] font-medium text-[#353535] py-3 px-4">
+                                            Deduction Name
+                                        </TableHead>
+                                        <TableHead className="text-[14px]/[18px] font-medium text-[#353535] py-3 px-4">
+                                            Cost Center
+                                        </TableHead>
+                                        <TableHead className="text-[14px]/[18px] font-medium text-[#353535] py-3 px-4">
+                                            Remittance Account
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {deductionsMapping.map((deduction) => (
+                                        <TableRow key={deduction.id} className="border-b border-[#E9E9E9]">
+                                            <TableCell className="py-3 px-4">
+                                                <Input
+                                                    value={deduction.deductionName}
+                                                    onChange={(e) => handleUpdateDeduction(deduction.id, "deductionName", e.target.value)}
+                                                    className="bg-[#F5F5F5] border-0 rounded-[6px] h-[40px] text-[14px]/[20px]"
+                                                    placeholder="Enter deduction name"
+                                                />
+                                            </TableCell>
+                                            <TableCell className="py-3 px-4">
+                                                <Input
+                                                    value={deduction.costCenter}
+                                                    onChange={(e) => handleUpdateDeduction(deduction.id, "costCenter", e.target.value)}
+                                                    className="bg-[#F5F5F5] border-0 rounded-[6px] h-[40px] text-[14px]/[20px]"
+                                                    placeholder="Enter cost center"
+                                                />
+                                            </TableCell>
+                                            <TableCell className="py-3 px-4">
+                                                <Select
+                                                    value={deduction.remittanceAccount}
+                                                    onValueChange={(value) => handleUpdateDeduction(deduction.id, "remittanceAccount", value)}
+                                                >
+                                                    <SelectTrigger className="bg-[#F5F5F5] border-0 rounded-[6px] h-[40px] text-[14px]/[20px]">
+                                                        <SelectValue placeholder="Select account" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="Tax Authority Account">Tax Authority Account</SelectItem>
+                                                        <SelectItem value="Benefits Account">Benefits Account</SelectItem>
+                                                        <SelectItem value="Retirement Account">Retirement Account</SelectItem>
+                                                        <SelectItem value="Insurance Account">Insurance Account</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

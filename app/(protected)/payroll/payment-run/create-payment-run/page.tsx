@@ -18,7 +18,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 const MAX_STEPS = 5;
 
-const activityLogData = [
+const initialActivityLogData = [
     {
         id: 1,
         title: "Created Payroll Run",
@@ -62,6 +62,7 @@ export default function CreatePaymentRun() {
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const router = useRouter();
     const [isActivityLogOpen, setIsActivityLogOpen] = useState(false);
+    const [activityLogData, setActivityLogData] = useState(initialActivityLogData);
     useEffect(() => {
         setIsActivityLogOpen(false);
     }, [currentStep]);
@@ -118,9 +119,24 @@ export default function CreatePaymentRun() {
         setIsConfirmModalOpen(true);
     };
 
+    const formatDate = (date: Date) => {
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+    };
+
     const handleConfirmDisburse = () => {
         // Handle payment processing
         console.log("Payment processed", payrollData);
+
+        // Add new activity log entry
+        const newActivity = {
+            id: activityLogData.length + 1,
+            title: "Disbursed Funds",
+            user: "Javier Chang",
+            initials: "AF",
+            date: formatDate(new Date())
+        };
+        setActivityLogData([newActivity, ...activityLogData]);
 
         // Close modal
         setIsConfirmModalOpen(false);
@@ -186,7 +202,7 @@ export default function CreatePaymentRun() {
                             className="h-[40px] sm:h-[48px] flex-1 sm:flex-none sm:min-w-[125px] bg-[#0D978B] hover:bg-[#0c8679] font-semibold text-[14px]/[20px]"
                             onClick={handleNext}
                         >
-                            Continue
+                            {currentStep == 1 ? "Save & Import leave/attendance data" : "Continue"}
                         </Button>
                     )}
                     {currentStep === MAX_STEPS && (
@@ -201,9 +217,9 @@ export default function CreatePaymentRun() {
             </div>
 
             {/* Main Content */}
-            <div className="flex bg-white rounded-[8px] border border-[#E9E9E9]  relative">
+            <div className="flex flex-col xl:flex-row bg-white rounded-[8px] border border-[#E9E9E9]  relative">
                 {/* Stepper Sidebar */}
-                <div className="hidden lg:block min-w-[324px] border-r border-[#E9E9E9] min-h-[calc(100vh-120px)] p-[24px]">
+                <div className="w-full xl:max-w-[324px] border-b lg:border-b-0 lg:border-r border-[#E9E9E9] p-[24px]">
                     <Stepper currentStep={currentStep} />
                 </div>
 
@@ -244,7 +260,7 @@ export default function CreatePaymentRun() {
                             </div>
 
                             {/* Activity List with Timeline */}
-                            <div className="flex-1 overflow-y-auto p-[24px]">
+                            <div className="flex-1 overflow-y-auto p-[24px] max-h-[calc(531px-80px)]" style={{ scrollbarWidth: 'thin', scrollbarColor: '#d1d5db #f3f4f6' }}>
                                 <div className="relative">
                                     {activityLogData.map((activity, index) => (
                                         <div

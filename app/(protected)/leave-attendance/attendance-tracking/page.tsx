@@ -310,7 +310,7 @@ export default function AttendanceTracking() {
                 <div className="flex items-center justify-between">
                     <div>
                         {/* Title */}
-                        <h1 className="text-[20px] sm:text-[24px] leading-[26px] sm:leading-[30px] font-semibold text-[#353535] mb-[10px]">
+                        <h1 className="text-[20px] sm:text-[24px] leading-[26px] sm:leading-[30px] font-semibold text-[#353535] mb-[10px] ">
                             Attendance Tracking
                         </h1>
 
@@ -338,7 +338,7 @@ export default function AttendanceTracking() {
                         </div>
                     </div>
                     <Button
-                        className="h-[36px] sm:mb-[22px] px-[24px] flex items-center rounded-[8px] justify-center gap-[8px] text-[12px] sm:text-[14px] leading-[16px] sm:leading-[22px] w-full sm:w-auto"
+                        className="h-[36px] sm:mb-[22px] px-[24px] flex items-center rounded-[8px] justify-center gap-[8px] text-[12px] sm:text-[14px] leading-[16px] sm:leading-[22px] w-full sm:w-auto  sm:h-12"
                     >
                         Accept Timesheet
                     </Button>

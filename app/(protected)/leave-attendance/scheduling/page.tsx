@@ -300,7 +300,7 @@ export default function SchedulingPage() {
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none font-medium justify-between text-primary-950 bg-transparent"
+                                            className="sm:h-8 lg:h-9  px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none font-medium justify-between text-primary-950 bg-transparent"
                                         >
                                             <span className="hidden sm:inline">Swap Requests</span>
                                             <span className="sm:hidden">Swap</span>
@@ -321,7 +321,7 @@ export default function SchedulingPage() {
                                     variant="outline"
                                     size="sm"
                                     onClick={handleAutoSchedule}
-                                    className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none font-medium text-primary-950 bg-transparent"
+                                    className="h-9 sm:h-8 lg:h-9 px-3 sm:px-4 border-gray-300 hover:bg-gray-50 text-sm sm:text-base flex-1 sm:flex-none font-medium text-primary-950 bg-transparent"
                                 >
                                     <span className="hidden sm:inline !text-primary-950">Auto-Schedule</span>
                                     <span className="sm:hidden">Auto</span>
@@ -330,7 +330,7 @@ export default function SchedulingPage() {
                                 {/* Save Changes Button */}
                                 <Button
                                     onClick={handleSaveChanges}
-                                    className="h-9 sm:h-10 lg:h-11 px-3 sm:px-4 bg-primary hover:bg-green-700 text-white text-sm sm:text-base flex-1 sm:flex-none"
+                                    className="h-9 sm:h-8 lg:h-9 px-3 sm:px-4 bg-primary hover:bg-green-700 text-white text-sm sm:text-base flex-1 sm:flex-none"
                                 >
                                     <span className="hidden sm:inline">Save Changes</span>
                                     <span className="sm:hidden">Save</span>

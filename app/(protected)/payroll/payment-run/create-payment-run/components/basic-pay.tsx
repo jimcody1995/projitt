@@ -307,7 +307,7 @@ export default function BasicPay({
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 mt-8">
+                {/* <div className="flex flex-col sm:flex-row gap-3 mt-8">
                     <Button
                         variant="outline"
                         className="flex-1 h-[44px] rounded-[8px] border-[#BCBCBC] text-[#4B4B4B] font-medium"
@@ -316,7 +316,7 @@ export default function BasicPay({
                         <Upload className="h-4 w-4 mr-2" />
                         Import Data
                     </Button>
-                </div>
+                </div> */}
             </div>
 
             {/* Import Data Modal */}

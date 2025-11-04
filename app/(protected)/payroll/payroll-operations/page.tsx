@@ -212,7 +212,7 @@ export default function PayrollOperations() {
                                 <CardTitle className="text-lg font-semibold text-gray-900 font-semibold">Payroll tasks</CardTitle>
                                 <Button
                                     onClick={handleAddTask}
-                                    className="bg-primary hover:bg-primary/90 text-white h-8 text-sm"
+                                    className="bg-primary hover:bg-primary/90 text-white h-8 sm:h-10 text-sm"
                                 >
                                     <Plus className="h-4 w-4 mr-1" />
                                     Add Task

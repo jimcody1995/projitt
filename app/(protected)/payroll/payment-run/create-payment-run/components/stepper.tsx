@@ -10,7 +10,7 @@ import { JSX } from 'react';
 const steps = [
     { title: "Basic Pay", description: "Enter payroll details" },
     { title: "Prepare", description: "Review employee data" },
-    { title: "Validate Details", description: "Verify payment information" },
+    { title: "Validated Details", description: "Verify payment information" },
     { title: "Tax & Deductions", description: "Tax and Deductions" },
     { title: "Disburse Funds", description: "Complete payment run" },
 ];
@@ -24,7 +24,7 @@ const steps = [
 export default function Stepper({ currentStep }: { currentStep: number }): JSX.Element {
     return (
         <div id="vertical-stepper" data-testid="vertical-stepper">
-            <div className="flex flex-col gap-[56px] relative">
+            <div className="flex xl:flex-col flex-row md:gap-[56px] gap-[40px] relative">
                 {steps.map((step, index) => {
                     const stepNumber = index + 1;
                     const isCompleted = stepNumber < currentStep;
@@ -33,15 +33,14 @@ export default function Stepper({ currentStep }: { currentStep: number }): JSX.E
                     return (
                         <div
                             key={index}
-                            className="flex items-center gap-[12px] relative"
+                            className="flex items-center  gap-[12px] relative"
                             id={`step-${stepNumber}`}
                             data-testid={`step-${stepNumber}`}
                         >
-                            {/* Vertical line */}
+                            {/* Connecting line - horizontal on small, vertical on xl */}
                             {index !== steps.length - 1 && (
                                 <div
-                                    className={`absolute top-[41px] left-[18px] h-[46px] border-l border-[1px] border-dashed border-[#8F8F8F]
-                                         z-0`}
+                                    className="absolute top-[18px] left-[36px] md:w-[56px] w-[40px] h-[1px] border-t border-[1px] border-dashed border-[#8F8F8F] xl:top-[41px] xl:left-[18px] xl:w-[1px] xl:h-[46px] xl:border-t-0 xl:border-l z-0"
                                     id={`step-line-${stepNumber}`}
                                     data-testid={`step-line-${stepNumber}`}
                                 ></div>
@@ -49,7 +48,7 @@ export default function Stepper({ currentStep }: { currentStep: number }): JSX.E
 
                             {/* Circle */}
                             <div
-                                className="relative z-1"
+                                className="relative"
                                 id={`step-circle-${stepNumber}`}
                                 data-testid={`step-circle-${stepNumber}`}
                             >
@@ -66,7 +65,7 @@ export default function Stepper({ currentStep }: { currentStep: number }): JSX.E
 
                             {/* Labels */}
                             <div
-                                className="step-labels"
+                                className="step-labels hidden xl:block"
                                 id={`step-labels-${stepNumber}`}
                                 data-testid={`step-labels-${stepNumber}`}
                             >

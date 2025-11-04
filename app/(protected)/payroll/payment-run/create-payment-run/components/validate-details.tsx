@@ -44,7 +44,7 @@ const paymentData = [
         ytd: "€21,000.00",
         grossPay: "€21,000.00",
         netPay: "€21,000.00",
-        status: "Warning",
+        // status: "Warning",
     },
     {
         id: "2",
@@ -60,7 +60,7 @@ const paymentData = [
         ytd: "¥2,100,000.00",
         grossPay: "¥2,100,000.00",
         netPay: "¥2,100,000.00",
-        status: "Warning",
+        // status: "Warning",
     },
     {
         id: "3",
@@ -76,7 +76,7 @@ const paymentData = [
         ytd: "€21,000.00",
         grossPay: "€21,000.00",
         netPay: "€21,000.00",
-        status: "Critical",
+        // status: "Critical",
     },
     {
         id: "4",
@@ -214,12 +214,12 @@ export default function ValidateDetails({ onNext, onBack }: ValidateDetailsProps
         <div className="w-full">
             <div className="mb-[16px] sm:mb-[21px] flex flex-col justify-between items-start  gap-3 sm:gap-7">
                 <h2 className="text-[16px] sm:text-[18px]/[24px] font-medium text-[#353535]">
-                    Validate Details
+                    Validated Details
                 </h2>
                 <div className="flex flex-wrap gap-[8px] text-[12px] sm:text-[14px]/[20px]">
                     <span className="text-[#0D978B] font-medium">95 Valid</span>
-                    <span className="text-[#FFA750] font-medium">2 Warnings</span>
-                    <span className="text-[#E53E3E] font-medium">1 Critical</span>
+                    {/* <span className="text-[#FFA750] font-medium">2 Warnings</span>
+                    <span className="text-[#E53E3E] font-medium">1 Critical</span> */}
                 </div>
             </div>
 
@@ -285,13 +285,13 @@ export default function ValidateDetails({ onNext, onBack }: ValidateDetailsProps
                                 </TableCell>
                                 <TableCell className="text-[14px]/[22px] text-gray-900">
                                     <div className="flex items-center gap-[3px]">
-                                        {employee.status && (
+                                        {/* {employee.status && (
                                             employee.status === "Warning" ?
                                                 <LuTriangleAlert className="h-4 w-4 text-white fill-[#FFA750]" /> :
                                                 employee.status === "Critical" ?
                                                     <CircleSlash className="h-4 w-4 text-white fill-[#C30606] rotate-90" /> :
                                                     null
-                                        )}
+                                        )} */}
                                         {employee.employeeId}
                                     </div>
                                 </TableCell>

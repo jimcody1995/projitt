@@ -410,7 +410,7 @@ export default function AuditReporting() {
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
-                            className="h-[40px] px-[16px] bg-[#0D978B] hover:bg-[#0c8679] text-white text-[14px] font-medium"
+                            className="h-[32px] sm:h-[36px] px-[16px] bg-[#0D978B] hover:bg-[#0c8679] text-white text-[14px] font-medium"
                         >
                             <Download className="h-4 w-4 mr-2" />
                             Export
@@ -570,7 +570,7 @@ export default function AuditReporting() {
 
                 <div className="flex gap-[12px] mt-[16px]">
                     <Button
-                        className="h-[40px] sm:h-[44px] px-[20px] sm:px-[24px] bg-[#0D978B] hover:bg-[#0c8679] text-[14px]"
+                        className="h-[32px] sm:h-[36px] px-[20px] sm:px-[24px] bg-[#0D978B] hover:bg-[#0c8679] text-[14px]"
                         onClick={handleGenerateReport}
                     >
                         Generate Report

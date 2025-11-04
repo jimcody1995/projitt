@@ -20,7 +20,7 @@ export default function Performance() {
                 <div className="flex flex-col gap-[4px]">
                     <p className="text-[24px]/[30px] font-semibold text-[#353535]">Performance Review</p>
                 </div>
-                <Button className="h-[48px] px-[24px] text-[16px]/[20px] bg-[#0d978b] hover:bg-[#0b7a6f]" onClick={() => router.push('/talent-management/performance-review/create-review-cycle')}>
+                <Button className="sm:h-[42px] h-[36px] rounded-[8px] px-[24px] sm:text-[12px] text-[14px]/[20px] font-semibold bg-[#0d978b] hover:bg-[#0b7a6f]" onClick={() => router.push('/talent-management/performance-review/create-review-cycle')}>
                     Create Review Cycle
                 </Button>
             </div>

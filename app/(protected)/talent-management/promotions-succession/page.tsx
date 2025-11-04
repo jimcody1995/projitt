@@ -255,7 +255,7 @@ export default function PromotionsSuccession() {
                     <h1 className="text-[24px]/[30px] font-semibold text-gray-900">Promotions/Succession</h1>
                 </div>
                 <div>
-                    <Button className="bg-[#0D978B] hover:bg-[#0a7a6f] text-white h-[42px] w-[174px]" onClick={() => router.push('/talent-management/promotions-succession/succession')}>
+                    <Button className="bg-[#0D978B] hover:bg-[#0a7a6f] text-white rounded-[8px] h-[42px] w-[174px] sm:text-[14px]/[20px] text-sm font-semibold" onClick={() => router.push('/talent-management/promotions-succession/succession')}>
                         Manage Successions
                     </Button>
                 </div>
